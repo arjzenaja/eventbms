@@ -2,20 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-primary text-white;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  @apply font-primary;
+}
+
+.h1 {
+  @apply text-4xl xl:text-[70px] font-bold xl:leading-[78px] uppercase;
+}
+
+.h2 {
+  @apply text-3xl xl:text-[44px] leading-[120%] font-semibold;
+}
+
+.h3 {
+  @apply text-[32px] leading-[110%] font-medium;
+}
+
+.h4 {
+  @apply text-lg;
+}
+
+.pretitle {
+  @apply font-secondary text-4xl xl:text-[46px] leading-[110%] text-accent;
+}
+
+.btn {
+  @apply min-w-[112px] h-[48px] rounded-full flex items-center justify-center text-sm font-medium transition-all;
+}
+
+.btn-accent {
+  @apply bg-accent hover:bg-accent-hover;
+}
+
+.btn-secondary {
+  @apply bg-secondary;
+}
+
+.btn-tertiary {
+  @apply bg-tertiary hover:bg-tertiary-hover;
+}
+
+/* Untuk dark mode calendar */
+.rdp {
+  background: #18181b !important;
+  color: #fff !important;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.rdp-day_selected, .rdp-day_today {
+  background: #f97316 !important; /* orange */
+  color: #fff !important;
+  border-radius: 0.5rem;
+}
+.rdp-nav_button {
+  color: #fff !important;
+}
+.rdp-caption_label {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+  @apply bg-accent;
 }
