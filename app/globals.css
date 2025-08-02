@@ -32,7 +32,8 @@ body {
 }
 
 .pretitle {
-  @apply font-secondary text-4xl xl:text-[46px] leading-[110%] text-accent;
+  @apply font-secondary text-4xl xl:text-[46px] leading-[110%];
+  color: #3B82F6;
 }
 
 .btn {
@@ -40,7 +41,10 @@ body {
 }
 
 .btn-accent {
-  @apply bg-accent hover:bg-accent-hover;
+  background-color: #3B82F6;
+}
+.btn-accent:hover {
+  background-color: #2563EB;
 }
 
 .btn-secondary {
@@ -59,7 +63,7 @@ body {
   padding: 1rem;
 }
 .rdp-day_selected, .rdp-day_today {
-  background: #f97316 !important; /* orange */
+  background: #3B82F6 !important; /* blue */
   color: #fff !important;
   border-radius: 0.5rem;
 }
@@ -73,5 +77,5 @@ body {
 
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
-  @apply bg-accent;
+  background-color: #3B82F6 !important;
 }

@@ -41,25 +41,25 @@ const Timer = ({ event }) => {
   if (!isClient) {
     return (
       <div className='flex flex-wrap gap-4'>
-        <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+        <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
           <div>
             <div className='text-3xl font-semibold'>--</div>
             <div className='text-sm uppercase font-medium'>Days</div>
           </div>
         </div>
-        <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+        <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
           <div>
             <div className='text-3xl font-semibold'>--</div>
             <div className='text-sm uppercase font-medium'>Hours</div>
           </div>
         </div>
-        <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+        <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
           <div>
             <div className='text-3xl font-semibold'>--</div>
             <div className='text-sm uppercase font-medium'>Minutes</div>
           </div>
         </div>
-        <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+        <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
           <div>
             <div className='text-3xl font-semibold'>--</div>
             <div className='text-sm uppercase font-medium'>Seconds</div>
@@ -85,28 +85,28 @@ const Timer = ({ event }) => {
   return (
   <div className='flex flex-wrap gap-4'>
     {/* days */}
-    <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+    <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
       <div>
         <div className='text-3xl font-semibold'>{days}</div>
         <div className='text-sm uppercase font-medium'>Days</div>
       </div>
     </div>
     {/* hour */}
-    <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+    <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
       <div>
         <div className='text-3xl font-semibold'>{hours}</div>
         <div className='text-sm uppercase font-medium'>Hours</div>
       </div>
     </div>
     {/* minutes */}
-    <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+    <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
       <div>
         <div className='text-3xl font-semibold'>{minutes}</div>
         <div className='text-sm uppercase font-medium'>Minutes</div>
       </div>
     </div>
     {/* seconds */}
-    <div className='text-center border-[3px] border-accent rounded-full w-[100px] h-[100px] flex items-center justify-center'>
+    <div className='text-center border-[3px] border-[#3B82F6] rounded-full w-[100px] h-[100px] flex items-center justify-center'>
       <div>
         <div className='text-3xl font-semibold'>{second}</div>
         <div className='text-sm uppercase font-medium'>Seconds</div>

@@ -11,7 +11,7 @@ const EventSchedule = ({ event }) => {
     <div className='flex flex-col xl:flex-row gap-4 items-start justify-between'>
       <div className='flex items-center gap-2'>
         <div className='flex items-center gap-2'>
-          <BiCalendar className='text-2xl text-accent'/>
+          <BiCalendar className='text-2xl text-[#3B82F6]'/>
           <div>{formattedDate}</div>
         </div>
         <div className='flex items-center gap-2'>
@@ -20,7 +20,7 @@ const EventSchedule = ({ event }) => {
         </div>
       </div>
       <div className='flex items-center gap-2'>
-        <BiMap className='text-2xl text-accent'/>
+        <BiMap className='text-2xl text-[#3B82F6]'/>
         <p>{event.location}</p>
       </div>
     </div>

@@ -16,7 +16,7 @@ const EventDate = () => {
   };
   return (
     <div className="flex w-full items-center gap-[10px] xl:w-[190px]">
-      <div className="text-lg text-accent">
+              <div className="text-lg text-[#3B82F6]">
         <BiCalendar />
       </div>
       <Popover>
@@ -25,7 +25,7 @@ const EventDate = () => {
             {selectedDate ? (
               format(selectedDate, "PPP")
             ) : (
-              <span>Pick a date</span>
+              <span>Pilih Tanggal</span>
             )}
           </Button>
         </PopoverTrigger>

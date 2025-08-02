@@ -8,4 +8,4 @@ Install packages:
 npm install --force
 
 Start application:
-npm run dev
+npm run dev 

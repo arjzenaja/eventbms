@@ -29,8 +29,8 @@ const RecommendedEvent = () => {
   return (
     <section className='mb-32'>
       <div className='mb-12 text-center'>
-        <h3 className='pretitle'>Recomended For You</h3>
-        <h2 className='h2'>Events You Might Like</h2>
+        <h3 className='pretitle'>Rekomendasi Untuk Anda</h3>
+        <h2 className='h2'>Destinasi Favorit</h2>
       </div>
       {filteredRecommendedEvents.length > 0 ? (
         <Swiper 

@@ -2,92 +2,68 @@
   "events": [
     {
       "id": "1",
-      "type": "music",
-      "img_sm": "/upcoming/img/music/1-sm.png",
-      "img_lg": "/upcoming/img/music/1-lg.png",
+      "type": "wisata-alam",
+      "img_sm": "/objekwisata/hutanpinus.jpg",
+      "img_lg": "/objekwisata/hutanpinus.jpg",
       "date": "2025-11-15",
       "hour": "20:00",
-      "title": "Rock Legends Live Concert",
+      "title": "Hutan Pinus Limpakuwus",
       "location": "Banyumas, Indonesia",
-      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.",
+      "short_description": "Hutan Pinus Limpakuwus menawarkan suasana sejuk, pemandangan hijau, dan udara segar yang cocok untuk rekreasi keluarga maupun pecinta alam.",
+      "description": "Wisata alam biasanya tidak akan mengecewakan. Yap tepat sekali. Jika kalian datang ke Hutan Pinus Limpakuwus yang berada di lereng Gunung Slamet ini, kalian pasti ngga akan kecewa.\n\nHutan Pinus Limpakuwus tidak seperti hutan lainnya yang mungkin sering terasa menyeramkan. Hutan ini sudah ditata dan dikelola sedemikian rupa dan ada wahana bermain juga, sehingga cocok sebagai salah satu destinasi wisata keluarga yang ramah anak dengan pemandangan yang mempesona.  Istirahatkan diri kalian dari penatnya hiruk pikuk kehidupan kota dengan ketenangan di Hutan Pinus Limpakuwus. Objek wisata yang satu ini juga tetap bisa dikunjungi kalian yang masih sendiri lho!. ",
       "seats": [
         {
-          "seat": "frontseat",
-          "price": 100
-        },
-        {
-          "seat": "backseat",
-          "price": 60
-        },
-        {
-          "seat": "vip",
-          "price": 150
+          "seat": "Tiket Masuk",
+          "price": 25000
         }
       ],
       "organizers": [
         {
           "img_avatar": "/organizers/organizer-avt-1.png",
           "name": "Ellie Black",
-          "job": "Concert Manager",
-          "social": [
-            {
-              "icon": "/organizers/social/x.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/instagram.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/pinterest.svg",
-              "path": ""
-            }
-          ]
-        },
-        {
-          "img_avatar": "/organizers/organizer-avt-2.png",
-          "name": "Amelie Laurent",
-          "job": "Concert Manager",
-          "social": [
-            {
-              "icon": "/organizers/social/x.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/instagram.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/pinterest.svg",
-              "path": ""
-            }
-          ]
-        },
-        {
-          "img_avatar": "/organizers/organizer-avt-1.png",
-          "name": "Amelie Laurent",
-          "job": "Concert Manager",
-          "social": [
-            {
-              "icon": "/organizers/social/x.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/instagram.svg",
-              "path": ""
-            },
-            {
-              "icon": "/organizers/social/pinterest.svg",
-              "path": ""
-            }
-          ]
+          "job": "Concert Manager"
         }
       ],
-      "recommended": false
+      "recommended": false,
+      "packages": [
+        {
+          "name": "Paket Reguler",
+          "image": "/upcoming/art/img/1-sm.png",
+          "desc": "Paket Outbound Reguler",
+          "details": "Fasilitas standar, cocok untuk rombongan kecil.",
+          "prices": {
+            "weekday": 185000,
+            "weekend": 225000
+          },
+          "ketentuan": [
+            "Tiket Masuk Wisata + Asuransi",
+            "Facilitator & Crew",
+            "3 Game Non-Wahana",
+            "Makan Siang (Nasi Box)"
+          ]
+        },
+        {
+          "name": "Paket Keluarga",
+          "image": "/upcoming/art/img/2-sm.png",
+          "desc": "Paket Outbound Keluarga",
+          "details": "Fasilitas lebih lengkap, termasuk makan siang.",
+          "prices": {
+            "weekday": 250000,
+            "weekend": 300000
+          },
+          "ketentuan": [
+            "Tiket Masuk Wisata + Asuransi",
+            "Facilitator & Crew",
+            "5 Game Non-Wahana",
+            "Makan Siang (Nasi Box)",
+            "Snack"
+          ]
+        }
+      ]
     },
     {
       "id": "2",
-      "type": "music",
+      "type": "event",
       "img_sm": "/upcoming/img/music/2-sm.png",
       "img_lg": "/upcoming/img/music/2-lg.png",
       "date": "2025-11-05",
@@ -172,7 +148,7 @@
     },
     {
       "id": "3",
-      "type": "art",
+      "type": "event",
       "img_sm": "/upcoming/img/art/3-sm.png",
       "img_lg": "/upcoming/img/art/3-lg.png",
       "date": "2025-11-20",
@@ -276,7 +252,7 @@
     },
     {
       "id": "4",
-      "type": "art",
+      "type": "event",
       "img_sm": "/upcoming/img/art/2-sm.png",
       "img_lg": "/upcoming/img/art/2-lg.png",
       "date": "2025-11-01",
@@ -361,7 +337,7 @@
     },
     {
       "id": "5",
-      "type": "art",
+      "type": "event",
       "img_sm": "/upcoming/img/art/1-sm.png",
       "img_lg": "/upcoming/img/art/1-lg.png",
       "date": "2025-11-10",
@@ -446,7 +422,7 @@
     },
     {
       "id": "6",
-      "type": "food",
+      "type": "kuliner",
       "img_sm": "/upcoming/img/food/1-sm.png",
       "img_lg": "/upcoming/img/food/1-lg.png",
       "date": "2025-11-20",
@@ -531,7 +507,7 @@
     },
     {
       "id": "7",
-      "type": "food",
+      "type": "kuliner",
       "img_sm": "/upcoming/img/food/2-sm.png",
       "img_lg": "/upcoming/img/food/2-lg.png",
       "date": "2025-11-10",
@@ -597,7 +573,7 @@
     },
     {
       "id": "8",
-      "type": "sport",
+      "type": "event",
       "img_sm": "/upcoming/img/sport/2-sm.png",
       "img_lg": "/upcoming/img/sport/2-lg.png",
       "date": "2025-11-15",
@@ -663,7 +639,7 @@
     },
     {
       "id": "9",
-      "type": "sport",
+      "type": "event",
       "img_sm": "/upcoming/img/sport/1-sm.png",
       "img_lg": "/upcoming/img/sport/1-lg.png",
       "date": "2025-11-25",
@@ -767,7 +743,7 @@
     },
     {
       "id": "10",
-      "type": "music",
+      "type": "event",
       "img_sm": "/upcoming/img/music/3-sm.png",
       "img_lg": "/upcoming/img/music/3-lg.png",
       "date": "2025-11-25",
@@ -852,7 +828,7 @@
     },
     {
       "id": "11",
-      "type": "food",
+      "type": "kuliner",
       "img_sm": "/upcoming/img/food/3-sm.png",
       "img_lg": "/upcoming/img/food/3-lg.png",
       "date": "2025-11-01",
@@ -937,7 +913,7 @@
     },
     {
       "id": "12",
-      "type": "sport",
+      "type": "event",
       "img_sm": "/upcoming/img/sport/3-sm.png",
       "img_lg": "/upcoming/img/sport/3-lg.png",
       "date": "2025-11-05",
@@ -1022,7 +998,7 @@
     },
     {
       "id": "13",
-      "type": "art",
+      "type": "event",
       "img_sm": "/upcoming/img/art/4-sm.png",
       "img_lg": "/upcoming/img/art/4-lg.png",
       "date": "2025-11-10",
@@ -1107,7 +1083,7 @@
     },
     {
       "id": "14",
-      "type": "music",
+      "type": "event",
       "img_sm": "/upcoming/img/music/4-sm.png",
       "img_lg": "/upcoming/img/music/4-lg.png",
       "date": "2025-11-15",
@@ -1173,7 +1149,7 @@
     },
     {
       "id": "15",
-      "type": "food",
+      "type": "kuliner",
       "img_sm": "/upcoming/img/food/4-sm.png",
       "img_lg": "/upcoming/img/food/4-lg.png",
       "date": "2025-11-20",
@@ -1239,7 +1215,7 @@
     },
     {
       "id": "16",
-      "type": "sport",
+      "type": "event",
       "img_sm": "/upcoming/img/sport/4-sm.png",
       "img_lg": "/upcoming/img/sport/4-lg.png",
       "date": "2025-11-25",
@@ -1366,7 +1342,7 @@
     },
     {
       "id": "17",
-      "type": "art",
+      "type": "event",
       "img_sm": "/upcoming/img/art/5-sm.png",
       "img_lg": "/upcoming/img/art/5-lg.png",
       "date": "2025-11-01",
@@ -1432,7 +1408,7 @@
     },
     {
       "id": "18",
-      "type": "music",
+      "type": "event",
       "img_sm": "/upcoming/img/music/5-sm.png",
       "img_lg": "/upcoming/img/music/5-lg.png",
       "date": "2025-11-05",
@@ -1498,7 +1474,7 @@
     },
     {
       "id": "19",
-      "type": "food",
+      "type": "kuliner",
       "img_sm": "/upcoming/img/food/5-sm.png",
       "img_lg": "/upcoming/img/food/5-lg.png",
       "date": "2025-11-10",
@@ -1580,6 +1556,429 @@
         }
       ],
       "recommended": true
+    },
+    {
+      "id": "20",
+      "type": "objek-wisata",
+      "img_sm": "/upcoming/img/art/1-sm.png",
+      "img_lg": "/upcoming/img/art/1-lg.png",
+      "date": "2025-01-15",
+      "hour": "08:00",
+      "title": "Bunderan Batur",
+      "location": "Batur, Banyumas",
+      "description": "Bunderan Batur merupakan destinasi wisata alam yang menawarkan pemandangan yang memukau dengan udara yang sejuk dan segar. Tempat ini sangat cocok untuk piknik keluarga, camping, atau sekadar menikmati keindahan alam Banyumas sambil bersantai. Dengan pemandangan gunung yang mengelilingi, Bunderan Batur memberikan pengalaman wisata alam yang tak terlupakan.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 50
+        },
+        {
+          "seat": "backseat",
+          "price": 30
+        },
+        {
+          "seat": "vip",
+          "price": 75
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-1.png",
+          "name": "Dinas Pariwisata Banyumas",
+          "job": "Tourism Manager",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": true
+    },
+    {
+      "id": "21",
+      "type": "objek-wisata",
+      "img_sm": "/upcoming/img/art/2-sm.png",
+      "img_lg": "/upcoming/img/art/2-lg.png",
+      "date": "2025-01-20",
+      "hour": "09:00",
+      "title": "Menara Teratai",
+      "location": "Purwokerto, Banyumas",
+      "description": "Menara Teratai adalah landmark ikonik kota Purwokerto yang menawarkan pemandangan kota yang spektakuler dari ketinggian. Tempat ini menjadi favorit para fotografer dan wisatawan untuk mengabadikan momen indah, terutama saat matahari terbenam. Dengan arsitektur yang unik dan lokasi strategis, Menara Teratai memberikan pengalaman wisata kota yang memukau dengan pemandangan 360 derajat ke seluruh penjuru Purwokerto.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 40
+        },
+        {
+          "seat": "backseat",
+          "price": 25
+        },
+        {
+          "seat": "vip",
+          "price": 60
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-2.png",
+          "name": "Pemkot Purwokerto",
+          "job": "City Manager",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": false
+    },
+    {
+      "id": "22",
+      "type": "objek-wisata",
+      "img_sm": "/upcoming/img/art/3-sm.png",
+      "img_lg": "/upcoming/img/art/3-lg.png",
+      "date": "2025-01-25",
+      "hour": "07:00",
+      "title": "CAUB (Candi Agung Ungaran Barat)",
+      "location": "Ungaran, Banyumas",
+      "description": "CAUB (Candi Agung Ungaran Barat) adalah situs candi kuno yang memiliki nilai sejarah dan arkeologi yang sangat tinggi. Tempat ini menjadi destinasi wisata sejarah yang menarik untuk mempelajari peradaban dan budaya Jawa kuno. Dengan arsitektur yang megah dan detail ukiran yang halus, CAUB memberikan pengalaman wisata edukasi yang berharga sambil menikmati keindahan bangunan bersejarah yang telah bertahan ratusan tahun.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 35
+        },
+        {
+          "seat": "backseat",
+          "price": 20
+        },
+        {
+          "seat": "vip",
+          "price": 50
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-1.png",
+          "name": "Balai Pelestarian Cagar Budaya",
+          "job": "Heritage Manager",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": true
+    },
+    {
+      "id": "23",
+      "type": "kuliner",
+      "img_sm": "/upcoming/img/food/1-sm.png",
+      "img_lg": "/upcoming/img/food/1-lg.png",
+      "date": "2025-01-30",
+      "hour": "12:00",
+      "title": "Soto Sokaraja",
+      "location": "Sokaraja, Banyumas",
+      "description": "Soto Sokaraja adalah kuliner khas Banyumas yang terkenal dengan kuah kental dan bumbu yang khas. Disajikan dengan ketupat, tauge, dan sambal kacang.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 25
+        },
+        {
+          "seat": "backseat",
+          "price": 15
+        },
+        {
+          "seat": "vip",
+          "price": 35
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-1.png",
+          "name": "Warung Soto Sokaraja",
+          "job": "Restaurant Owner",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": true
+    },
+    {
+      "id": "24",
+      "type": "kuliner",
+      "img_sm": "/upcoming/img/food/2-sm.png",
+      "img_lg": "/upcoming/img/food/2-lg.png",
+      "date": "2025-02-05",
+      "hour": "14:00",
+      "title": "Gethuk Goreng",
+      "location": "Purwokerto, Banyumas",
+      "description": "Gethuk Goreng adalah makanan tradisional Banyumas yang terbuat dari singkong. Rasanya manis dan gurih, cocok untuk camilan.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 20
+        },
+        {
+          "seat": "backseat",
+          "price": 12
+        },
+        {
+          "seat": "vip",
+          "price": 28
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-2.png",
+          "name": "Toko Gethuk Goreng",
+          "job": "Food Vendor",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": false
+    },
+    {
+      "id": "25",
+      "type": "penginapan",
+      "img_sm": "/upcoming/img/art/4-sm.png",
+      "img_lg": "/upcoming/img/art/4-lg.png",
+      "date": "2025-02-10",
+      "hour": "15:00",
+      "title": "Hotel Purwokerto",
+      "location": "Purwokerto, Banyumas",
+      "description": "Hotel Purwokerto menawarkan akomodasi nyaman dengan fasilitas lengkap. Lokasi strategis di pusat kota dengan akses mudah ke berbagai destinasi wisata.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 200
+        },
+        {
+          "seat": "backseat",
+          "price": 150
+        },
+        {
+          "seat": "vip",
+          "price": 300
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-1.png",
+          "name": "Hotel Purwokerto",
+          "job": "Hotel Manager",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": true
+    },
+    {
+      "id": "26",
+      "type": "oleh-oleh",
+      "img_sm": "/upcoming/img/art/5-sm.png",
+      "img_lg": "/upcoming/img/art/5-lg.png",
+      "date": "2025-02-15",
+      "hour": "10:00",
+      "title": "Bakpia Pathok",
+      "location": "Purwokerto, Banyumas",
+      "description": "Bakpia Pathok adalah oleh-oleh khas Banyumas yang terkenal dengan isian kacang hijau. Cocok untuk dibawa pulang sebagai buah tangan.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 30
+        },
+        {
+          "seat": "backseat",
+          "price": 20
+        },
+        {
+          "seat": "vip",
+          "price": 45
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-2.png",
+          "name": "Toko Bakpia Pathok",
+          "job": "Shop Owner",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": false
+    },
+    {
+      "id": "27",
+      "type": "desa-wisata",
+      "img_sm": "/upcoming/img/music/1-sm.png",
+      "img_lg": "/upcoming/img/music/1-lg.png",
+      "date": "2025-02-20",
+      "hour": "08:00",
+      "title": "Desa Wisata Ketenger",
+      "location": "Ketenger, Banyumas",
+      "description": "Desa Wisata Ketenger menawarkan pengalaman wisata pedesaan dengan pemandangan alam yang indah dan budaya lokal yang kaya.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 80
+        },
+        {
+          "seat": "backseat",
+          "price": 50
+        },
+        {
+          "seat": "vip",
+          "price": 120
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-1.png",
+          "name": "Desa Wisata Ketenger",
+          "job": "Village Manager",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": true
+    },
+    {
+      "id": "28",
+      "type": "biro-perjalanan",
+      "img_sm": "/upcoming/img/music/2-sm.png",
+      "img_lg": "/upcoming/img/music/2-lg.png",
+      "date": "2025-02-25",
+      "hour": "09:00",
+      "title": "Biro Perjalanan Banyumas",
+      "location": "Purwokerto, Banyumas",
+      "description": "Biro Perjalanan Banyumas menyediakan paket wisata lengkap ke berbagai destinasi menarik di Banyumas dan sekitarnya.",
+      "seats": [
+        {
+          "seat": "frontseat",
+          "price": 100
+        },
+        {
+          "seat": "backseat",
+          "price": 75
+        },
+        {
+          "seat": "vip",
+          "price": 150
+        }
+      ],
+      "organizers": [
+        {
+          "img_avatar": "/organizers/organizer-avt-2.png",
+          "name": "Biro Perjalanan Banyumas",
+          "job": "Travel Agent",
+          "social": [
+            {
+              "icon": "/organizers/social/x.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/instagram.svg",
+              "path": ""
+            },
+            {
+              "icon": "/organizers/social/pinterest.svg",
+              "path": ""
+            }
+          ]
+        }
+      ],
+      "recommended": false
     }
   ]
 }

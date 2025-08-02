@@ -4,10 +4,12 @@ import Image from "next/image";
 import Timer from "@/components/Timer";
 import CustomSelect from "@/components/CustomSelect";
 import Organizers from "@/components/Organizers";
+import DropdownKetentuan from "./DropdownKetentuan"; // pastikan sudah di-import
 
 import { FaRegCircleCheck } from 'react-icons/fa6'
+import { BiMap } from 'react-icons/bi'
 import BuyTicket from "@/components/BuyTicket";
-
+1
 const EventDetails = async ({ params }) => {
   const { id } = await params;
 
@@ -40,9 +42,16 @@ const EventDetails = async ({ params }) => {
             <div className="flex w-full max-w-[460px] flex-col justify-center gap-8 flex-1 sm:mb-12 xl:mb-0">
               <div>
                 <h2 className="h2 mb-4">{event.title}</h2>
-                <EventSchedule event={event}/>
+                {event.type !== "objek-wisata" && event.type !== "wisata-alam" ? (
+                  <EventSchedule event={event}/>
+                ) : (
+                  <div className='flex items-center gap-2'>
+                    <BiMap className='text-2xl text-[#3B82F6]'/>
+                    <p>{event.location}</p>
+                  </div>
+                )}
               </div>
-              <Timer event={event}/>
+              {event.type !== "objek-wisata" && event.type !== "wisata-alam" && <Timer event={event}/>}
               <CustomSelect event={event}/>
               <BuyTicket event={event}/>
             </div>
@@ -52,12 +61,37 @@ const EventDetails = async ({ params }) => {
           <div className="flex flex-col xl:flex-row gap-8 xl:gap-24">
             {/* text */}
             <div className="w-full xl:max-w-[670px] flex flex-col gap-8 xl:gap-12">
-              <p className="text-grey">{event.description}</p>
+              <p className="text-grey text-justify leading-relaxed">{event.description}</p>
+              {/* Harga Paket dari database */}
+              {event.packages && event.packages.length > 0 && (
+                <div className="flex flex-col gap-4">
+                  {event.packages.map((pkg, idx) => (
+                    <div key={idx} className="bg-[#23262e] rounded-xl flex flex-col md:flex-row items-center justify-between p-4 shadow border border-[#2a2d36]">
+                      <div className="flex items-center gap-4 flex-1">
+                        <img src={pkg.image} alt={pkg.name} className="w-28 h-16 object-cover rounded-md border border-[#444]" />
+                        <div>
+                          <div className="text-lg font-bold text-white">{pkg.desc || pkg.name}</div>
+                          {/* Harga di bawah judul */}
+                          <div className="text-gray-400 text-base mb-1">
+                            Rp {pkg.prices?.weekday?.toLocaleString('id-ID')} / peserta
+                          </div>
+                          <div className="text-xs text-gray-400">{pkg.details || ''}</div>
+                          <DropdownKetentuan ketentuan={pkg.ketentuan} />
+                        </div>
+                      </div>
+                      <div className="flex flex-col md:flex-row items-center gap-4 mt-4 md:mt-0">
+                        <button className="bg-[#a4d007] hover:bg-[#8bc200] text-black font-bold px-4 py-2 rounded transition">Beli Sekarang</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* End Harga Paket */}
               <div>
                 <h3 className="h3 mb-6">Requirements for the event</h3>
                 <ul className="flex flex-col gap-4">
                   <li className="flex gap-3 items-center">
-                    <span className="text-accent text-xl"> 
+                    <span className="text-[#3B82F6] text-xl"> 
                       <FaRegCircleCheck/>
                     </span>
                     <p className="text-grey">
@@ -65,7 +99,7 @@ const EventDetails = async ({ params }) => {
                     </p>
                   </li>
                   <li className="flex gap-3 items-center">
-                    <span className="text-accent text-xl"> 
+                    <span className="text-[#3B82F6] text-xl"> 
                       <FaRegCircleCheck/>
                     </span>
                     <p className="text-grey">
@@ -73,7 +107,7 @@ const EventDetails = async ({ params }) => {
                     </p>
                   </li>
                   <li className="flex gap-3 items-center">
-                    <span className="text-accent text-xl"> 
+                    <span className="text-[#3B82F6] text-xl"> 
                       <FaRegCircleCheck/>
                     </span>
                     <p className="text-grey">
@@ -81,7 +115,7 @@ const EventDetails = async ({ params }) => {
                     </p>
                   </li>
                   <li className="flex gap-3 items-center">
-                    <span className="text-accent text-xl"> 
+                    <span className="text-[#3B82F6] text-xl"> 
                       <FaRegCircleCheck/>
                     </span>
                     <p className="text-grey">

@@ -10,12 +10,12 @@ const Hero = () => {
     <section className='h-screen xl:h-[800px] mb-16 relative'>
       <div className='container mx-auto h-full flex flex-col justify-center items-center pt-12 xl:pt-0'>
         <div className='w-full max-w-[684px] text-center mx-auto flex flex-col gap-2'>
-          <div className='pretitle'>Uncover New Moments </div>
+          <div className='pretitle'>Jelajahi Keindahan</div>
           <h1 className="h1">
-            Dicover Events <br /> & Experiences
+            TEMUKAN DESTINASI WISATA<br />BANYUMAS
           </h1>
           <p className='tax-sm xl:text-lg font-light text-white/80 mb-4 xl:mb-12 max-w-[480px] xl:max-w-none mx-auto'>
-            Join a vibrant community where you can explore globaol happenings and share memorable moments with friends and family.
+            Nikmati pengalaman wisata yang tak terlupakan dengan berbagai destinasi menarik, kuliner lezat, dan budaya yang kaya di Banyumas.
           </p>
         </div>
 
@@ -23,11 +23,11 @@ const Hero = () => {
           <Searchbar />
           <div className='w-full mt-3 relative flex flex-col justify-center'>
             <p className='text-sm italic font-light text-white/70 text-center mb-3 xl:mb-0'>
-              Please slect at least one field or leave them empty to see all events.
+              Pilih setidaknya satu kategori atau biarkan kosong untuk melihat semua destinasi.
             </p>
             {/* clear search */}
-            <button className="text-accent text-sm xl:absolute right-0" onClick={() => handleClearSearch()}>
-              Clear Search
+            <button className="text-[#3B82F6] text-sm xl:absolute right-0" onClick={() => handleClearSearch()}>
+              Hapus Pencarian
             </button>
           </div>
         </div>

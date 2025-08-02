@@ -25,7 +25,7 @@ const Searchbar = () => {
     <EventType/>
     <div className='border h-[20px] border-white/10 hidden xl:flex'></div>
     {/* submit btn */}
-    <button onClick={ handleSumbit } className='w-full xl:w-[54px] h-[54px] rounded-[40px] xl:rounded-full bg-accent hover:bg-accent-hover transition-all flex items-center justify-center'>
+            <button onClick={ handleSumbit } className='w-full xl:w-[54px] h-[54px] rounded-[40px] xl:rounded-full bg-[#3B82F6] hover:bg-[#2563EB] transition-all flex items-center justify-center'>
       <BiRightArrowAlt className='text-3xl'/>
     </button>
     </div>

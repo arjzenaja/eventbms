@@ -24,7 +24,7 @@ const BuyTicket = ({event}) => {
         {/* decrease */}
         <div 
           onClick={() => decreaseAmount()} 
-          className="cursor-pointer bg-accent w-[48px] h-[48px] flex items-center justify-center select-none rounded-full"
+          className="cursor-pointer bg-[#3B82F6] w-[48px] h-[48px] flex items-center justify-center select-none rounded-full"
         >
           <BiMinus className="text-lg"/>
         </div>
@@ -33,7 +33,7 @@ const BuyTicket = ({event}) => {
         {/* increase */}
         <div 
           onClick={() => increaseAmount()}
-          className="cursor-pointer bg-accent w-[48px] h-[48px] flex items-center justify-center select-none rounded-full"
+          className="cursor-pointer bg-[#3B82F6] w-[48px] h-[48px] flex items-center justify-center select-none rounded-full"
         >
           <BiPlus className="text-lg"/>
         </div>
@@ -41,7 +41,7 @@ const BuyTicket = ({event}) => {
       {/* buy now button */}
       <button 
         onClick={handleBuyNow}
-        className="bg-accent hover:bg-accent-hover transition-all p-4 rounded-full w-full"
+        className="bg-[#3B82F6] hover:bg-[#2563EB] transition-all p-4 rounded-full w-full"
       >
         <div className="flex items-center justify-center">
           {isLoading ? (
@@ -49,7 +49,7 @@ const BuyTicket = ({event}) => {
           ): (
             <div className="flex items-center gap-4">
               <HiTicket className="text-2xl"/>
-              <div>{`${itemAmount} x ticket - $${totalPrice}`}</div>
+              <div>{`${itemAmount} x ticket - Rp ${totalPrice}`}</div>
             </div>
           )}
         </div>

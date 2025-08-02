@@ -28,7 +28,7 @@ const EventLocation = () => {
   return (
     <div className='flex items-center gap-[10px] w-full xl:w-[190px] select-none'>
       {/* icon */}
-      <div className='text-lg text-accent'>
+              <div className='text-lg text-[#3B82F6]'>
         <BiMap />
       </div>
       <Select
@@ -36,7 +36,7 @@ const EventLocation = () => {
         onValueChange={(value) => setSelectedLocation(value)}
       >
         <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 ">
-          <SelectValue placeholder="Event Location" />
+          <SelectValue placeholder="Object Wisata" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

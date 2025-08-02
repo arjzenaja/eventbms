@@ -25,8 +25,8 @@ export default {
 			colors: {
 				primary: "#0f1017",
 				accent: {
-					DEFAULT: "#e14817",
-					hover: "#cb4419",
+					DEFAULT: "#3B82F6",
+					hover: "#2563EB",
 				},
 				secondary: {
 					DEFAULT: "#1b1c23",
@@ -39,8 +39,8 @@ export default {
 				grey: "#737373",
 			},
 			backgroundImage: {
-			hero_bg1: "url('/hero/hero-bg1.png')",
-			hero_bg2: "url('/hero/hero-bg2.png')",
+			hero_bg1: "url('/hero/menara teratai.jpg')",
+			hero_bg2: "url('/hero/caub.jpg')",
 			pattern: "url('/pattern_bg.png')", // ← gunakan path ini
 		}
 		},

@@ -26,7 +26,7 @@ const socials = [
 
 const Footer = () => {
   return (
-    <footer className='bg-accent bg-pattern bg-cover bg-blend-multiply pt-16'>
+    <footer className='bg-[#3B82F6] bg-pattern bg-cover bg-blend-multiply pt-16'>
       <div className='container mx-auto border-b border-white/40'>
         {/* text & form socials */}
         <div className='flex flex-col max-w-[550px] mx-auto text-center'>
