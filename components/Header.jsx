@@ -10,7 +10,7 @@ const Header = () => {
           {/* <Link href="/">
             <Image src="/logo.png" a lt="logo" width={70} height={70} />
           </Link> */}
-          <Link href="/" className="font-bold text-lg text-[#3B82F6] hover:text-white active:text-white px-3 py-1 rounded transition">
+          <Link href="/" className="font-bold text-lg text-blue-600 hover:text-white active:text-white px-3 py-1 rounded transition">
             Dolan Banyumas
           </Link>
           <div className='flex gap-4'>

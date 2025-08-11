@@ -23,7 +23,7 @@ const CustomSelect = ({ event }) => {
       className='custom-select bg-secondary w-full h-[64px] rounded-full flex items-center justify-between px-8 relative cursor-pointer select-none'
     >
       <div className='flex items-center gap-2 w-full'>
-        <div className='text-xl text-[#3B82F6]'>
+        <div className='text-xl text-blue-600'>
           <FaTicketAlt/>
         </div>
         <div className='flex items-center justify-between w-full'>

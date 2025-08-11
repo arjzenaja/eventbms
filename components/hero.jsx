@@ -14,7 +14,7 @@ const Hero = () => {
           <h1 className="h1">
             TEMUKAN DESTINASI WISATA<br />BANYUMAS
           </h1>
-          <p className='tax-sm xl:text-lg font-light text-white/80 mb-4 xl:mb-12 max-w-[480px] xl:max-w-none mx-auto'>
+          <p className='text-sm xl:text-lg font-light text-white/80 mb-4 xl:mb-12 max-w-[480px] xl:max-w-none mx-auto'>
             Nikmati pengalaman wisata yang tak terlupakan dengan berbagai destinasi menarik, kuliner lezat, dan budaya yang kaya di Banyumas.
           </p>
         </div>
@@ -26,7 +26,7 @@ const Hero = () => {
               Pilih setidaknya satu kategori atau biarkan kosong untuk melihat semua destinasi.
             </p>
             {/* clear search */}
-            <button className="text-[#3B82F6] text-sm xl:absolute right-0" onClick={() => handleClearSearch()}>
+            <button className="text-blue-600 text-sm xl:absolute right-0" onClick={() => handleClearSearch()}>
               Hapus Pencarian
             </button>
           </div>

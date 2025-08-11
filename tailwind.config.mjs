@@ -25,8 +25,8 @@ export default {
 			colors: {
 				primary: "#0f1017",
 				accent: {
-					DEFAULT: "#3B82F6",
-					hover: "#2563EB",
+					DEFAULT: "#10B981",
+					hover: "#059669",
 				},
 				secondary: {
 					DEFAULT: "#1b1c23",

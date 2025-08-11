@@ -62,16 +62,16 @@ export const EventProvider = ({ children }) => {
     });
   }, [events, appliedFilters]);
 
-  // fetch evet 
+  // fetch events 
   useEffect(()=> {
     const fetchEvents = async () =>{
       // start loader 
       setIsLoading(true);
       try{
-        const res  = await fetch("http://localhost:4000/events");
+        const res  = await fetch("/api/events");
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
-        setEvents(data);
+        setEvents(data.events || data); // Handle both API response format and direct data
         // stop loader
         setIsLoading(false);
       } catch(err) {

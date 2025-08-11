@@ -5,8 +5,7 @@ import "./globals.css";
 import EventProvider from "@/context/EventContext";
 import TicketProvider from "@/context/TicketContext";
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 export const metadata = {
   title: "Create Next App",
@@ -33,9 +32,9 @@ export default function RootLayout({ children }) {
           <body
             className={`${poppins.variable} ${caveat.variable} antialiased`}
           >
-            <Header/>
-            {children}
-            <Footer/>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
           </body>
         </html>
       </TicketProvider>

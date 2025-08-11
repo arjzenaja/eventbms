@@ -9,6 +9,7 @@ import EventList from "@/components/Event/EventList";
 import UpcomingEvents from "@/components/UpcomingEvents";
 import RecommendedEvent from "@/components/RecommendedEvent";
 import DownloadApp from "@/components/DownloadApp";
+ 
 
 const Home = () => {
   const { showEventlist, handleClearSearch } = useContext(EventContext);
@@ -25,6 +26,7 @@ const Home = () => {
       ) : (
         <div>
           <div className="container mx-auto">
+            
             {/* upcoming events slider */}
             <UpcomingEvents/>
             {/* download app section */}

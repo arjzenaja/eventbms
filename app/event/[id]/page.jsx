@@ -9,15 +9,22 @@ import DropdownKetentuan from "./DropdownKetentuan"; // pastikan sudah di-import
 import { FaRegCircleCheck } from 'react-icons/fa6'
 import { BiMap } from 'react-icons/bi'
 import BuyTicket from "@/components/BuyTicket";
-1
+import { headers } from 'next/headers';
+
 const EventDetails = async ({ params }) => {
   const { id } = await params;
 
   // fetch event based on the id 
   const fetchEvent = async (id) => {
-    const res = await fetch(`http://localhost:4000/events/${id}`);
+    const headersList = headers();
+    const host = headersList.get('host');
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    const baseUrl = `${protocol}://${host}`;
+    
+    const res = await fetch(`${baseUrl}/api/events/${id}`);
     if (!res.ok) throw new Error("Failed to fetch event");
-    return res.json();
+    const data = await res.json();
+    return data.event || data; // Handle both API response format and direct data
   }; 
 
   const event = await fetchEvent(id);
@@ -45,8 +52,8 @@ const EventDetails = async ({ params }) => {
                 {event.type !== "objek-wisata" && event.type !== "wisata-alam" ? (
                   <EventSchedule event={event}/>
                 ) : (
-                  <div className='flex items-center gap-2'>
-                    <BiMap className='text-2xl text-[#3B82F6]'/>
+                  <div className='flex items-center gap-2 text-white/80 mb-2'>
+                    <BiMap className='text-2xl text-blue-600'/>
                     <p>{event.location}</p>
                   </div>
                 )}
