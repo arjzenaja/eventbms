@@ -11,12 +11,12 @@ export async function GET(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find souvenir by ID
-    const souvenir = dbData.events.find(event => event.id === id && event.type === 'oleh-oleh');
+    const souvenir = dbData.souvenirs.find(item => item.id === id);
     
     if (!souvenir) {
       return NextResponse.json({
         success: false,
-        message: 'Oleh-oleh tidak ditemukan'
+        message: 'Souvenir tidak ditemukan'
       }, { status: 404 });
     }
     
@@ -43,20 +43,20 @@ export async function PUT(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find souvenir by ID
-    const souvenirIndex = dbData.events.findIndex(event => event.id === id && event.type === 'oleh-oleh');
+    const souvenirIndex = dbData.souvenirs.findIndex(item => item.id === id);
     
     if (souvenirIndex === -1) {
       return NextResponse.json({
         success: false,
-        message: 'Oleh-oleh tidak ditemukan'
+        message: 'Souvenir tidak ditemukan'
       }, { status: 404 });
     }
     
     // Update souvenir
-    dbData.events[souvenirIndex] = {
-      ...dbData.events[souvenirIndex],
+    dbData.souvenirs[souvenirIndex] = {
+      ...dbData.souvenirs[souvenirIndex],
       ...body,
-      type: 'oleh-oleh' // Ensure type remains the same
+      updated_at: new Date().toISOString()
     };
     
     // Write back to db.json
@@ -64,7 +64,7 @@ export async function PUT(request, { params }) {
     
     return NextResponse.json({
       success: true,
-      souvenir: dbData.events[souvenirIndex]
+      souvenir: dbData.souvenirs[souvenirIndex]
     });
   } catch (error) {
     console.error('Error updating souvenir:', error);
@@ -84,24 +84,24 @@ export async function DELETE(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find souvenir by ID
-    const souvenirIndex = dbData.events.findIndex(event => event.id === id && event.type === 'oleh-oleh');
+    const souvenirIndex = dbData.souvenirs.findIndex(item => item.id === id);
     
     if (souvenirIndex === -1) {
       return NextResponse.json({
         success: false,
-        message: 'Oleh-oleh tidak ditemukan'
+        message: 'Souvenir tidak ditemukan'
       }, { status: 404 });
     }
     
     // Remove souvenir
-    dbData.events.splice(souvenirIndex, 1);
+    dbData.souvenirs.splice(souvenirIndex, 1);
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
     return NextResponse.json({
       success: true,
-      message: 'Oleh-oleh berhasil dihapus'
+      message: 'Souvenir berhasil dihapus'
     });
   } catch (error) {
     console.error('Error deleting souvenir:', error);

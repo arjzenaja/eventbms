@@ -8,20 +8,25 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 export default function NewSouvenirPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    productType: 'makanan',
-    productName: '',
+    title: '',
+    location: '',
     short_description: '',
     description: '',
-    storeName: '',
-    address: '',
+    type: 'makanan',
+    category: 'Makanan',
+    price_range: '25.000 - 100.000',
     contact: '',
-    price: '',
-    packaging: '',
-    photoLinks: '', // one per line or comma separated
-    img_sm: '',
-    img_lg: '',
-    extraInfo: '',
+    address: '',
+    features: ['Produk Lokal', 'Kualitas Terjamin'],
     recommended: false,
+  });
+  const [imageFiles, setImageFiles] = useState({
+    img_sm: null,
+    img_lg: null
+  });
+  const [imagePreviews, setImagePreviews] = useState({
+    img_sm: null,
+    img_lg: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -34,12 +39,49 @@ export default function NewSouvenirPage() {
     }));
   };
 
-  const normalizePhotoLinks = (links) => {
-    if (!links) return [];
-    return links
-      .split(/\n|,/)
-      .map((s) => s.trim())
-      .filter(Boolean);
+  const handleImageChange = (e) => {
+    const { name, files } = e.target;
+    const file = files[0];
+    
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Ukuran file maksimal 5MB');
+        return;
+      }
+      
+      setImageFiles(prev => ({
+        ...prev,
+        [name]: file
+      }));
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreviews(prev => ({
+          ...prev,
+          [name]: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = (name) => {
+    setImageFiles(prev => ({
+      ...prev,
+      [name]: null
+    }));
+    setImagePreviews(prev => ({
+      ...prev,
+      [name]: null
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -48,36 +90,25 @@ export default function NewSouvenirPage() {
     setError('');
 
     try {
-      const photos = normalizePhotoLinks(formData.photoLinks);
-      const firstPhoto = photos[0] || '';
-
-      const payload = {
-        // keep list/table compatibility
-        title: formData.productName,
-        location: formData.address,
-        short_description:
-          formData.short_description ||
-          (formData.description ? `${formData.description.slice(0, 100)}...` : ''),
-        description: formData.description,
-
-        // extra metadata for oleh-oleh
-        category: formData.productType, // makanan | pakaian
-        store_name: formData.storeName,
-        address: formData.address,
-        contact: formData.contact,
-        price: formData.price,
-        packaging: formData.packaging,
-        photo_links: photos,
-        extra_info: formData.extraInfo,
-        img_sm: formData.img_sm || firstPhoto || '/upcoming/img/art/1-sm.png',
-        img_lg: formData.img_lg || firstPhoto || '/upcoming/img/art/1-lg.png',
-        recommended: formData.recommended,
-      };
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add form data
+      Object.keys(formData).forEach(key => {
+        formDataToSend.append(key, formData[key]);
+      });
+      
+      // Add image files
+      if (imageFiles.img_sm) {
+        formDataToSend.append('img_sm', imageFiles.img_sm);
+      }
+      if (imageFiles.img_lg) {
+        formDataToSend.append('img_lg', imageFiles.img_lg);
+      }
 
       const response = await fetch('/api/souvenirs', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formDataToSend,
       });
 
       const data = await response.json();
@@ -124,33 +155,35 @@ export default function NewSouvenirPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="productType" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
                       Jenis Oleh-oleh
                     </label>
                     <select
-                      id="productType"
-                      name="productType"
-                      value={formData.productType}
+                      id="type"
+                      name="type"
+                      value={formData.type}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     >
                       <option value="makanan">Makanan</option>
                       <option value="pakaian">Pakaian</option>
+                      <option value="kerajinan">Kerajinan</option>
+                      <option value="aksesoris">Aksesoris</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="productName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
                       Nama Produk *
                     </label>
                     <input
                       type="text"
-                      id="productName"
-                      name="productName"
-                      value={formData.productName}
+                      id="title"
+                      name="title"
+                      value={formData.title}
                       onChange={handleInputChange}
                       required
-                      placeholder={formData.productType === 'makanan' ? 'Contoh: Getuk Goreng Sokaraja' : 'Contoh: Batik Gajah Uling'}
+                      placeholder={formData.type === 'makanan' ? 'Contoh: Getuk Goreng Sokaraja' : 'Contoh: Batik Gajah Uling'}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
@@ -181,7 +214,7 @@ export default function NewSouvenirPage() {
                       value={formData.description}
                       onChange={handleInputChange}
                       placeholder={
-                        formData.productType === 'makanan'
+                        formData.type === 'makanan'
                           ? 'Bahan dasar, rasa, ciri khas, sejarah/asal-usul'
                           : 'Ciri khas motif, bahan, filosofi, keunikan'
                       }
@@ -190,17 +223,18 @@ export default function NewSouvenirPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="storeName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Toko/Produsen
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      Lokasi Toko/Produsen
                     </label>
                     <input
                       type="text"
-                      id="storeName"
-                      name="storeName"
-                      value={formData.storeName}
+                      id="location"
+                      name="location"
+                      value={formData.location}
                       onChange={handleInputChange}
-                      placeholder={formData.productType === 'makanan' ? 'Contoh: Sentra Oleh-oleh ...' : 'Contoh: Galeri Batik ...'}
+                      placeholder={formData.type === 'makanan' ? 'Contoh: Sentra Oleh-oleh ...' : 'Contoh: Galeri Batik ...'}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      required
                     />
                   </div>
 
@@ -235,113 +269,161 @@ export default function NewSouvenirPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                      Harga
+                    <label htmlFor="price_range" className="block text-sm font-medium text-gray-700 mb-2">
+                      Range Harga
                     </label>
                     <input
                       type="text"
-                      id="price"
-                      name="price"
-                      value={formData.price}
+                      id="price_range"
+                      name="price_range"
+                      value={formData.price_range}
                       onChange={handleInputChange}
-                      placeholder={formData.productType === 'makanan' ? 'Contoh: Rp15.000 per pack isi 10' : 'Contoh: Rp80.000 – Rp250.000'}
+                      placeholder="Contoh: 25.000 - 100.000"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="packaging" className="block text-sm font-medium text-gray-700 mb-2">
-                      Jenis Kemasan / Produk Lain
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                      Kategori
                     </label>
                     <input
                       type="text"
-                      id="packaging"
-                      name="packaging"
-                      value={formData.packaging}
+                      id="category"
+                      name="category"
+                      value={formData.category}
                       onChange={handleInputChange}
-                      placeholder={formData.productType === 'makanan' ? 'Contoh: Box, plastik kedap udara' : 'Contoh: kain, baju, syal, tas'}
+                      placeholder="Contoh: Makanan, Pakaian, Kerajinan"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
+                </div>
 
-                  <div className="md:col-span-2">
-                    <label htmlFor="photoLinks" className="block text-sm font-medium text-gray-700 mb-2">
-                      Link Foto / Galeri (satu per baris)
-                    </label>
-                    <textarea
-                      id="photoLinks"
-                      name="photoLinks"
-                      rows={3}
-                      value={formData.photoLinks}
-                      onChange={handleInputChange}
-                      placeholder="https://drive.google.com/..., https://instagram.com/..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
-                      URL Gambar Kecil (opsional)
-                    </label>
-                    <input
-                      type="url"
-                      id="img_sm"
-                      name="img_sm"
-                      value={formData.img_sm}
-                      onChange={handleInputChange}
-                      placeholder="/path/to/image-sm.jpg"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                      URL Gambar Besar (opsional)
-                    </label>
-                    <input
-                      type="url"
-                      id="img_lg"
-                      name="img_lg"
-                      value={formData.img_lg}
-                      onChange={handleInputChange}
-                      placeholder="/path/to/image-lg.jpg"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label htmlFor="extraInfo" className="block text-sm font-medium text-gray-700 mb-2">
-                      Info Tambahan
-                    </label>
-                    <textarea
-                      id="extraInfo"
-                      name="extraInfo"
-                      rows={2}
-                      value={formData.extraInfo}
-                      onChange={handleInputChange}
-                      placeholder={
-                        formData.productType === 'makanan'
-                          ? 'Varian rasa, halal, bisa dipesan online, dll.'
-                          : 'Bisa pesan motif custom, workshop tersedia, dll.'
-                      }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="recommended"
-                        name="recommended"
-                        checked={formData.recommended}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="recommended" className="ml-2 block text-sm text-gray-900">
-                        Tandai sebagai oleh-oleh yang direkomendasikan
+                {/* Image Upload Section */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Gambar Oleh-oleh</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
+                        Gambar Kecil (untuk Card/Thumbnail)
                       </label>
+                      <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                        <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
+                        <ul className="text-xs text-blue-700 space-y-1">
+                          <li>• Card oleh-oleh di halaman utama</li>
+                          <li>• Thumbnail di list pencarian</li>
+                          <li>• Preview di kategori makanan/pakaian</li>
+                          <li>• Tampilan mobile yang responsif</li>
+                        </ul>
+                        <p className="text-xs text-blue-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar dengan rasio 1:1 (persegi) untuk hasil terbaik</p>
+                      </div>
+                      <input
+                        type="file"
+                        id="img_sm"
+                        name="img_sm"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                      {imagePreviews.img_sm && (
+                        <div className="mt-2 relative">
+                          <img 
+                            src={imagePreviews.img_sm} 
+                            alt="Preview Gambar Kecil" 
+                            className="w-32 h-32 object-cover rounded-md border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage('img_sm')}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                            title="Hapus gambar"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                     </div>
+
+                    <div>
+                      <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
+                        Gambar Besar (untuk Detail/Hero)
+                      </label>
+                      <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                        <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
+                        <ul className="text-xs text-green-700 space-y-1">
+                          <li>• Halaman detail oleh-oleh</li>
+                          <li>• Hero section yang menarik</li>
+                          <li>• Galeri foto berkualitas tinggi</li>
+                          <li>• Tampilan desktop yang optimal</li>
+                        </ul>
+                        <p className="text-xs text-green-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar landscape (16:9) atau portrait (4:3) dengan resolusi tinggi</p>
+                      </div>
+                      <input
+                        type="file"
+                        id="img_lg"
+                        name="img_lg"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                      {imagePreviews.img_lg && (
+                        <div className="mt-2 relative">
+                          <img 
+                            src={imagePreviews.img_lg} 
+                            alt="Preview Gambar Besar" 
+                            className="w-32 h-32 object-cover rounded-md border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage('img_lg')}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                            title="Hapus gambar"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label htmlFor="features" className="block text-sm font-medium text-gray-700 mb-2">
+                    Fitur/Keunggulan
+                  </label>
+                  <textarea
+                    id="features"
+                    name="features"
+                    rows={2}
+                    value={formData.features.join(', ')}
+                    onChange={(e) => {
+                      const featuresArray = e.target.value.split(',').map(f => f.trim()).filter(f => f);
+                      setFormData(prev => ({
+                        ...prev,
+                        features: featuresArray
+                      }));
+                    }}
+                    placeholder="Contoh: Produk Lokal, Kualitas Terjamin, Halal, Bisa Dipesan Online"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Pisahkan dengan koma untuk multiple fitur</p>
+                </div>
+
+                <div className="md:col-span-2">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="recommended"
+                      name="recommended"
+                      checked={formData.recommended}
+                      onChange={handleInputChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="recommended" className="ml-2 block text-sm text-gray-900">
+                      Tandai sebagai oleh-oleh yang direkomendasikan
+                    </label>
                   </div>
                 </div>
 

@@ -16,11 +16,11 @@ export default function AdminSouvenirs() {
   useEffect(() => {
     const fetchSouvenirs = async () => {
       try {
-        const response = await fetch('/api/souvenirs');
+        const response = await fetch('/api/oleh_oleh');
         const data = await response.json();
         
         if (data.success) {
-          setSouvenirs(data.souvenirs);
+          setSouvenirs(data.oleh_oleh || []);
         } else {
           setError(data.message);
         }
@@ -35,27 +35,94 @@ export default function AdminSouvenirs() {
     fetchSouvenirs();
   }, []);
 
-  const filteredSouvenirs = souvenirs.filter(souvenir => {
-    const matchesSearch = souvenir.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         souvenir.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === 'all' || souvenir.type === filterType;
+  const filteredSouvenirs = souvenirs.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = filterType === 'all' || item.type === filterType;
     return matchesSearch && matchesType;
   });
 
-  const handleDeleteSouvenir = async (souvenirId) => {
+  const handleQuickView = (item) => {
+    const message = `
+Nama: ${item.title}
+Lokasi: ${item.location}
+Tipe: ${item.type}
+Kategori: ${item.category || 'Oleh-oleh'}
+Deskripsi: ${item.short_description || 'Tidak ada deskripsi'}
+Biaya: ${item.price_range || 'Tidak ada'}
+Kontak: ${item.contact || 'Tidak ada'}
+    `.trim();
+    
+    alert(message);
+  };
+
+  const handleDuplicateSouvenir = async (itemId) => {
+    if (!confirm('Apakah Anda yakin ingin menduplikasi item oleh-oleh ini?')) {
+      return;
+    }
+
+    try {
+      // Get the original item data
+      const response = await fetch(`/api/oleh_oleh/${itemId}`);
+      const data = await response.json();
+      
+      if (!data.success) {
+        alert('Gagal mengambil data oleh-oleh: ' + data.message);
+        return;
+      }
+
+      const originalItem = data.oleh_oleh;
+      
+      // Create FormData for the new item
+      const formData = new FormData();
+      formData.append('title', originalItem.title + ' (Copy)');
+      formData.append('type', originalItem.type);
+      formData.append('location', originalItem.location);
+      formData.append('category', originalItem.category);
+      formData.append('short_description', originalItem.short_description);
+      formData.append('description', originalItem.description);
+      formData.append('price_range', originalItem.price_range);
+      formData.append('contact', originalItem.contact);
+      formData.append('address', originalItem.address);
+      formData.append('features', originalItem.features ? originalItem.features.join(',') : '');
+      formData.append('recommended', originalItem.recommended ? 'true' : 'false');
+      formData.append('img_sm', originalItem.img_sm);
+      formData.append('img_lg', originalItem.img_lg);
+
+      // Create the new item
+      const createResponse = await fetch('/api/oleh_oleh', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const createData = await createResponse.json();
+
+      if (createData.success) {
+        alert('Oleh-oleh berhasil diduplikasi!');
+        await refreshData();
+      } else {
+        alert('Gagal menduplikasi oleh-oleh: ' + createData.message);
+      }
+    } catch (error) {
+      console.error('Error duplicating souvenir:', error);
+      alert('Terjadi kesalahan saat menduplikasi oleh-oleh: ' + error.message);
+    }
+  };
+
+  const handleDeleteSouvenir = async (itemId) => {
     if (!confirm('Apakah Anda yakin ingin menghapus oleh-oleh ini?')) {
       return;
     }
 
     try {
-      const response = await fetch(`/api/souvenirs/${souvenirId}`, {
+      const response = await fetch(`/api/oleh_oleh/${itemId}`, {
         method: 'DELETE',
       });
       
       const data = await response.json();
       
       if (data.success) {
-        setSouvenirs(souvenirs.filter(sou => sou.id !== souvenirId));
+        setSouvenirs(souvenirs.filter(item => item.id !== itemId));
         alert('Oleh-oleh berhasil dihapus!');
       } else {
         alert('Gagal menghapus oleh-oleh: ' + data.message);
@@ -63,6 +130,26 @@ export default function AdminSouvenirs() {
     } catch (error) {
       console.error('Error deleting souvenir:', error);
       alert('Terjadi kesalahan saat menghapus oleh-oleh');
+    }
+  };
+
+  const refreshData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/oleh_oleh');
+      const data = await response.json();
+      
+      if (data.success) {
+        setSouvenirs(data.oleh_oleh || []);
+        setError('');
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      console.error('Error refreshing souvenirs:', error);
+      setError('Terjadi kesalahan saat refresh data');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,7 +166,7 @@ export default function AdminSouvenirs() {
       <ProtectedRoute>
         <ErrorHandler 
           error={error} 
-          onRetry={() => window.location.reload()}
+          onRetry={refreshData}
           message="Gagal memuat data oleh-oleh"
         />
       </ProtectedRoute>
@@ -118,7 +205,7 @@ export default function AdminSouvenirs() {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white !bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:bg-white"
                   />
                 </div>
               </div>
@@ -127,78 +214,308 @@ export default function AdminSouvenirs() {
                 <select
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="px-3 py-2 border border-gray-300 rounded-md bg-white !bg-white text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">Semua Tipe</option>
                   <option value="pakaian">Pakaian</option>
                   <option value="makanan">Makanan</option>
                 </select>
                 
-                <button className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 flex items-center gap-2">
+                <button className="px-4 py-2 bg-white !bg-white text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">
                   <span>⚙️</span>
                   Filter
                 </button>
+                
+                <button 
+                  onClick={refreshData}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-green-400 flex items-center gap-2"
+                >
+                  <span>🔄</span>
+                  Refresh
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    console.log('Current souvenirs state:', souvenirs);
+                    console.log('Filtered souvenirs:', filteredSouvenirs);
+                    alert(`Total oleh-oleh: ${souvenirs.length}\nTersaring: ${filteredSouvenirs.length}`);
+                  }}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center gap-2"
+                  title="Debug Info"
+                >
+                  <span>🐛</span>
+                  Debug
+                </button>
+                
+                <button 
+                  onClick={async () => {
+                    if (confirm('Perbaiki ID yang tidak valid? Ini akan membersihkan data yang rusak.')) {
+                      try {
+                        const response = await fetch('/api/oleh_oleh/fix-ids', { method: 'POST' });
+                        const data = await response.json();
+                        if (data.success) {
+                          alert('ID berhasil diperbaiki! Memperbarui data...');
+                          await refreshData();
+                        } else {
+                          alert('Gagal memperbaiki ID: ' + data.message);
+                        }
+                      } catch (error) {
+                        alert('Error memperbaiki ID: ' + error.message);
+                      }
+                    }
+                  }}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 flex items-center gap-2"
+                  title="Fix Invalid IDs"
+                >
+                  <span>🔧</span>
+                  Fix IDs
+                </button>
+                
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/destinations/export?format=csv&category=oleh_oleh');
+                      if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `oleh_oleh_${new Date().toISOString().split('T')[0]}.csv`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                        alert('Data oleh-oleh berhasil diexport ke CSV!');
+                      } else {
+                        alert('Gagal export data: ' + response.statusText);
+                      }
+                    } catch (error) {
+                      alert('Error export data: ' + error.message);
+                    }
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+                  title="Export Data Oleh-Oleh"
+                >
+                  <span>📊</span>
+                  Export
+                </button>
+                
+                <button 
+                  onClick={async () => {
+                    if (confirm('Migrate types untuk standardisasi data oleh-oleh? Ini akan membuat backup otomatis.')) {
+                      try {
+                        const response = await fetch('/api/destinations/migrate-types?action=migrate', { 
+                          method: 'POST' 
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                          alert(`Migrasi berhasil! ${data.migrated_items} item telah distandarisasi.\nBackup tersimpan di: ${data.backup_file}`);
+                          await refreshData();
+                        } else {
+                          alert('Gagal migrate types: ' + data.message);
+                        }
+                      } catch (error) {
+                        alert('Error migrate types: ' + error.message);
+                      }
+                    }
+                  }}
+                  className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 flex items-center gap-2"
+                  title="Migrate Types Data Oleh-Oleh"
+                >
+                  <span>🔄</span>
+                  Migrate Types
+                </button>
+              </div>
+            </div>
+
+            {/* Summary Data Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              {/* Total Souvenir Items Card */}
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-pink-500 rounded-md flex items-center justify-center">
+                        <span className="text-white text-lg">🛍️</span>
+                      </div>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">Total Oleh-oleh</dt>
+                        <dd className="text-lg font-medium text-gray-900">{souvenirs.length}</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filtered Items Card */}
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                        <span className="text-white text-lg">🔍</span>
+                      </div>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">Tersaring</dt>
+                        <dd className="text-lg font-medium text-gray-900">{filteredSouvenirs.length}</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Souvenir Types Card */}
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                        <span className="text-white text-lg">🏷️</span>
+                      </div>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">Jenis Oleh-oleh</dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          {Array.from(new Set(souvenirs.map(item => item.type))).length}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Locations Card */}
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                        <span className="text-white text-lg">📍</span>
+                      </div>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">Lokasi</dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          {Array.from(new Set(souvenirs.map(item => item.location))).length}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Debug Info */}
+            <div className="bg-gray-100 p-4 mb-4 rounded-md">
+              <div className="text-sm text-gray-600">
+                <strong>Debug Info:</strong> Filter Type: <span className="font-mono">{filterType}</span> | 
+                Total Oleh-oleh: <span className="font-mono">{souvenirs.length}</span> | 
+                Filtered: <span className="font-mono">{filteredSouvenirs.length}</span>
+                {filterType !== 'all' && (
+                  <span> | Matching types: {souvenirs.filter(item => item.type === filterType).length}</span>
+                )}
+                {souvenirs.length > 0 && (
+                  <span> | Types in data: {Array.from(new Set(souvenirs.map(item => item.type))).join(', ')}</span>
+                )}
               </div>
             </div>
 
             {/* Data Table */}
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAME</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TYPE</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOCATION</th>
-                    
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ACTION</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TIPE</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KATEGORI</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RENTANG HARGA</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredSouvenirs.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
-                        Showing 0 of 0 results
+                      <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                        Tidak ada data oleh-oleh yang ditemukan
                       </td>
                     </tr>
                   ) : (
-                    filteredSouvenirs.map((souvenir, index) => (
-                      <tr key={souvenir.id}>
+                    filteredSouvenirs.map((item, index) => (
+                      <tr key={item.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
                               <img 
                                 className="h-10 w-10 rounded-full object-cover" 
-                                src={souvenir.img_sm || '/placeholder.jpg'} 
-                                alt={souvenir.title}
+                                src={item.img_sm || '/placeholder.jpg'} 
+                                alt={item.title}
                               />
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{souvenir.title}</div>
-                              <div className="text-sm text-gray-500">{souvenir.short_description?.substring(0, 50)}...</div>
+                              <div className="text-sm font-medium text-gray-900">{item.title}</div>
+                              <div className="text-sm text-gray-500">{item.short_description?.substring(0, 50)}...</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            {souvenir.type === 'oleh-oleh' ? 'Oleh-oleh' : souvenir.type}
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            {item.type === 'batik' ? 'Batik' : 
+                             item.type === 'keramik' ? 'Keramik' : 
+                             item.type === 'kerajinan' ? 'Kerajinan' : 
+                             item.type === 'makanan' ? 'Makanan' : 
+                             item.type === 'minuman' ? 'Minuman' : item.type}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{souvenir.location}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.category || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.price_range || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex space-x-2">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleQuickView(item)}
+                              className="text-purple-600 hover:text-purple-900 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200"
+                              title="Quick View"
+                            >
+                              👀
+                            </button>
                             <Link
-                              href={`/admin/souvenirs/${souvenir.id}`}
-                              className="text-blue-600 hover:text-blue-900"
+                              href={`/admin/souvenirs/${item.id}/view`}
+                              className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
+                              title="Lihat Detail"
                             >
-                              Edit
+                              👁️
                             </Link>
-                            <button 
-                              onClick={() => handleDeleteSouvenir(souvenir.id)}
-                              className="text-red-600 hover:text-red-900"
+                            <Link
+                              href={`/admin/souvenirs/${item.id}`}
+                              className="text-green-600 hover:text-green-900 p-2 rounded-full hover:bg-green-50 transition-colors duration-200"
+                              title="Edit"
                             >
-                              Hapus
+                              ✏️
+                            </Link>
+                            <button
+                              onClick={() => handleDuplicateSouvenir(item.id)}
+                              className="text-orange-600 hover:text-orange-900 p-2 rounded-full hover:bg-orange-50 transition-colors duration-200"
+                              title="Duplikasi"
+                            >
+                              📋
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteSouvenir(item.id)}
+                              className="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors duration-200"
+                              title="Hapus"
+                            >
+                              🗑️
                             </button>
                           </div>
                         </td>
@@ -207,33 +524,36 @@ export default function AdminSouvenirs() {
                   )}
                 </tbody>
               </table>
+              </div>
               
               {/* Pagination */}
               <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                 <div className="flex-1 flex justify-between sm:hidden">
                   <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                    Previous
+                    ← Sebelumnya
                   </button>
                   <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                    Next
+                    Selanjutnya →
                   </button>
                 </div>
                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredSouvenirs.length}</span> of{' '}
-                      <span className="font-medium">{filteredSouvenirs.length}</span> results
+                      Menampilkan <span className="font-medium">1</span> sampai <span className="font-medium">{filteredSouvenirs.length}</span> dari <span className="font-medium">{filteredSouvenirs.length}</span> hasil
                     </p>
                   </div>
-                  <div>
-                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                      <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        Previous
-                      </button>
-                      <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                        Next
-                      </button>
-                    </nav>
+                  <div className="flex items-center gap-2">
+                    <button className="px-3 py-2 text-sm border rounded-lg hover:bg-gray-100 transition-colors text-black">
+                      ← Sebelumnya
+                    </button>
+                    
+                    <button className="px-3 py-2 text-sm border rounded-lg bg-blue-600 text-white border-blue-600">
+                      1
+                    </button>
+                    
+                    <button className="px-3 py-2 text-sm border rounded-lg hover:bg-gray-100 transition-colors text-black">
+                      Selanjutnya →
+                    </button>
                   </div>
                 </div>
               </div>

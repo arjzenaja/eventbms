@@ -15,94 +15,626 @@
       "role": "admin"
     }
   ],
-  "events": [
+  "wisata": [
     {
       "id": "1",
-      "type": "wisata-alam",
-      "img_sm": "/uploads/dest_sm_1754909717874.jpg",
-      "img_lg": "/objekwisata/hutanpinus.jpg",
-      "date": "2025-11-15",
-      "hour": "20:00",
-      "title": "Hutan Pinus Limpakuwus",
+      "title": "Gunung Slamet",
       "location": "Banyumas, Indonesia",
-      "short_description": "Hutan Pinus Limpakuwus menawarkan suasana sejuk, pemandangan hijau, dan udara segar yang cocok untuk rekreasi keluarga maupun pecinta alam.",
-      "description": "Wisata alam biasanya tidak akan mengecewakan. Yap tepat sekali. Jika kalian datang ke Hutan Pinus Limpakuwus yang berada di lereng Gunung Slamet ini, kalian pasti ngga akan kecewa.\r\n\r\nHutan Pinus Limpakuwus tidak seperti hutan lainnya yang mungkin sering terasa menyeramkan. Hutan ini sudah ditata dan dikelola sedemikian rupa dan ada wahana bermain juga, sehingga cocok sebagai salah satu destinasi wisata keluarga yang ramah anak dengan pemandangan yang mempesona.  Istirahatkan diri kalian dari penatnya hiruk pikuk kehidupan kota dengan ketenangan di Hutan Pinus Limpakuwus. Objek wisata yang satu ini juga tetap bisa dikunjungi kalian yang masih sendiri lho!. ",
-      "seats": [
-        {
-          "seat": "Tiket Masuk",
-          "price": 25000
-        }
+      "type": "wisata alam",
+      "category": "wisata",
+      "short_description": "Gunung tertinggi di Jawa Tengah dengan pemandangan alam yang memukau",
+      "description": "Gunung Slamet adalah gunung berapi aktif yang menjadi destinasi favorit para pendaki. Menawarkan pemandangan alam yang indah dan pengalaman mendaki yang menantang.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7894",
+      "address": "Kecamatan Baturraden, Banyumas",
+      "features": [
+        "Pendakian",
+        "Camping",
+        "Pemandangan Alam",
+        "Fotografi"
       ],
-      "organizers": [
-        {
-          "img_avatar": "/organizers/organizer-avt-1.png",
-          "name": "Ellie Black",
-          "job": "Concert Manager"
-        }
-      ],
-      "recommended": false,
-      "packages": [
-        {
-          "name": "Paket Reguler",
-          "image": "/upcoming/art/img/1-sm.png",
-          "desc": "Paket Outbound Reguler",
-          "details": "Fasilitas standar, cocok untuk rombongan kecil.",
-          "prices": {
-            "weekday": 185000,
-            "weekend": 225000
-          },
-          "ketentuan": [
-            "Tiket Masuk Wisata + Asuransi",
-            "Facilitator & Crew",
-            "3 Game Non-Wahana",
-            "Makan Siang (Nasi Box)"
-          ]
-        },
-        {
-          "name": "Paket Keluarga",
-          "image": "/upcoming/art/img/2-sm.png",
-          "desc": "Paket Outbound Keluarga",
-          "details": "Fasilitas lebih lengkap, termasuk makan siang.",
-          "prices": {
-            "weekday": 250000,
-            "weekend": 300000
-          },
-          "ketentuan": [
-            "Tiket Masuk Wisata + Asuransi",
-            "Facilitator & Crew",
-            "5 Game Non-Wahana",
-            "Makan Siang (Nasi Box)",
-            "Snack"
-          ]
-        }
-      ]
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
     },
     {
       "id": "2",
-      "type": "wisata-taman",
-      "img_sm": "/uploads/dest_sm_1754909769483.jpg",
-      "img_lg": "/uploads/dest_lg_1754909769484.jpg",
-      "date": "2025-08-11",
-      "hour": "08:00",
-      "title": "te",
-      "location": "Jawatengah, indo",
-      "short_description": "te",
-      "description": "te",
-      "seats": [
-        {
-          "seat": "Tiket Masuk",
-          "price": 25000
-        }
+      "title": "Candi Prambanan",
+      "location": "Sleman, Yogyakarta",
+      "type": "wisata sejarah",
+      "category": "wisata",
+      "short_description": "Candi Hindu terbesar di Indonesia dengan arsitektur yang megah",
+      "description": "Candi Prambanan adalah kompleks candi Hindu terbesar di Indonesia yang dibangun pada abad ke-9. Arsitekturnya yang megah dan detail yang rumit membuatnya menjadi destinasi wisata yang wajib dikunjungi.",
+      "entrance_fee": "50.000",
+      "contact": "0274-496401",
+      "address": "Jl. Raya Solo - Yogyakarta No. 16",
+      "features": [
+        "Wisata Sejarah",
+        "Fotografi",
+        "Budaya",
+        "Arsitektur"
       ],
-      "organizers": [
-        {
-          "img_avatar": "/organizers/organizer-avt-1.png",
-          "name": "Admin",
-          "job": "Event Manager"
-        }
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "3",
+      "title": "Taman Wisata Banyumas",
+      "location": "Banyumas, Indonesia",
+      "type": "wisata taman",
+      "category": "wisata",
+      "short_description": "Taman wisata dengan berbagai wahana dan pemandangan indah",
+      "description": "Taman wisata yang menawarkan berbagai wahana permainan, taman bunga yang indah, dan area piknik yang nyaman untuk keluarga.",
+      "entrance_fee": "25.000",
+      "contact": "0812-3456-7899",
+      "address": "Jl. Taman Wisata No. 15, Banyumas",
+      "features": [
+        "Wahana Permainan",
+        "Taman Bunga",
+        "Area Piknik",
+        "Fotografi",
+        "Suasana Nyaman"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "4",
+      "title": "Wisata Alam Baturraden",
+      "location": "Baturraden, Banyumas",
+      "type": "wisata alam",
+      "category": "wisata",
+      "short_description": "Wisata alam dengan pemandangan hutan dan air terjun",
+      "description": "Wisata alam yang menawarkan pemandangan hutan pinus yang asri, air terjun yang jernih, dan berbagai aktivitas outdoor seperti hiking dan camping.",
+      "entrance_fee": "15.000",
+      "contact": "0812-3456-7900",
+      "address": "Kecamatan Baturraden, Banyumas",
+      "features": [
+        "Hutan Pinus",
+        "Air Terjun",
+        "Hiking",
+        "Camping",
+        "Pemandangan Alam",
+        "Fotografi"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "5",
+      "title": "Sanggar Batik Banyumas",
+      "location": "Banyumas, Indonesia",
+      "type": "wisata budaya",
+      "category": "wisata",
+      "short_description": "Sanggar batik tradisional dengan workshop dan galeri",
+      "description": "Sanggar batik yang menawarkan workshop membatik, galeri karya, dan pengalaman budaya khas Banyumas.",
+      "entrance_fee": "25.000",
+      "contact": "0812-3456-7901",
+      "address": "Jl. Batik Banyumas No. 10",
+      "features": [
+        "Workshop Batik",
+        "Galeri Karya",
+        "Budaya Tradisional",
+        "Fotografi"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "6",
+      "title": "Taman Safari Indonesia",
+      "location": "Cisarua, Bogor",
+      "type": "wisata buatan",
+      "category": "wisata",
+      "short_description": "Taman safari terbesar di Asia Tenggara",
+      "description": "Taman safari yang menawarkan pengalaman melihat satwa liar dari dekat dengan berbagai wahana dan atraksi.",
+      "entrance_fee": "150.000",
+      "contact": "0251-8250000",
+      "address": "Jl. Raya Puncak No. 601, Cisarua, Bogor",
+      "features": [
+        "Satwa Liar",
+        "Safari Tour",
+        "Wahana Permainan",
+        "Restaurant",
+        "Hotel"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "7",
+      "title": "Candi Borobudur",
+      "location": "Magelang, Jawa Tengah",
+      "type": "wisata religi",
+      "category": "wisata",
+      "short_description": "Candi Buddha terbesar di dunia",
+      "description": "Candi Borobudur adalah candi Buddha terbesar di dunia yang dibangun pada abad ke-8 dengan arsitektur yang megah.",
+      "entrance_fee": "75.000",
+      "contact": "0293-788266",
+      "address": "Jl. Badrawati, Borobudur, Magelang",
+      "features": [
+        "Wisata Religi",
+        "Arsitektur Megah",
+        "Fotografi",
+        "Budaya Buddha"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "8",
+      "title": "Taman Nasional Bromo Tengger Semeru",
+      "location": "Probolinggo, Jawa Timur",
+      "type": "wisata minat khusus",
+      "category": "wisata",
+      "short_description": "Taman nasional dengan pemandangan gunung dan pasir",
+      "description": "Taman nasional yang terkenal dengan pemandangan gunung Bromo, lautan pasir, dan sunrise yang memukau.",
+      "entrance_fee": "35.000",
+      "contact": "0334-441085",
+      "address": "Kecamatan Sukapura, Probolinggo",
+      "features": [
+        "Sunrise",
+        "Gunung Bromo",
+        "Lautan Pasir",
+        "Fotografi",
+        "Camping"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z"
+    }
+  ],
+  "kuliner": [
+    {
+      "id": "1",
+      "title": "Warung Makan Pak Slamet",
+      "location": "Banyumas, Indonesia",
+      "type": "rumah makan",
+      "category": "kuliner",
+      "short_description": "Warung makan tradisional dengan masakan Jawa yang autentik",
+      "description": "Warung makan yang menyajikan berbagai masakan tradisional Jawa seperti nasi goreng, sate ayam, dan berbagai macam sayur lodeh. Dikenal dengan cita rasa yang lezat dan harga yang terjangkau.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7890",
+      "address": "Jl. Raya Banyumas No. 123",
+      "features": [
+        "Masakan Tradisional",
+        "Harga Terjangkau",
+        "Suasana Nyaman",
+        "Parkir Luas"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "menu_highlight": "",
+      "price_range": "25.000 - 50.000"
+    },
+    {
+      "id": "2",
+      "title": "Cafe Banyumas",
+      "location": "Banyumas, Indonesia",
+      "type": "cafe",
+      "category": "kuliner",
+      "short_description": "Cafe modern dengan suasana nyaman dan menu kopi berkualitas",
+      "description": "Cafe yang menyajikan berbagai jenis kopi premium, makanan ringan, dan dessert. Suasana yang nyaman untuk bekerja atau bersantai dengan teman.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7891",
+      "address": "Jl. Sudirman No. 45",
+      "features": [
+        "Kopi Premium",
+        "WiFi Gratis",
+        "Suasana Modern",
+        "Live Music"
       ],
       "recommended": false,
-      "packages": []
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "menu_highlight": "",
+      "price_range": "15.000 - 75.000"
+    },
+    {
+      "id": "3",
+      "title": "Restoran Banyumas Seafood",
+      "location": "Banyumas, Indonesia",
+      "type": "resto",
+      "category": "kuliner",
+      "short_description": "Restoran seafood dengan cita rasa yang lezat",
+      "description": "Restoran yang menyajikan berbagai hidangan seafood segar dengan bumbu khas Indonesia yang menggugah selera.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7892",
+      "address": "Jl. Test No. 1",
+      "features": [
+        "Seafood Segar",
+        "Bumbu Khas",
+        "Suasana Nyaman",
+        "Parkir Luas"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-12T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "menu_highlight": "",
+      "price_range": "50.000 - 200.000"
+    },
+    {
+      "id": "4",
+      "title": "Kedai Kopi Tradisional",
+      "location": "Banyumas, Indonesia",
+      "type": "kedai",
+      "category": "kuliner",
+      "short_description": "Kedai kopi dengan suasana tradisional yang nyaman",
+      "description": "Kedai kopi yang menyajikan kopi tradisional dengan berbagai pilihan dan suasana yang nyaman untuk bersantai.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7893",
+      "address": "Jl. Kopi No. 15",
+      "features": [
+        "Kopi Tradisional",
+        "Suasana Nyaman",
+        "Harga Terjangkau",
+        "WiFi Gratis"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-12T13:57:40.461Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "menu_highlight": "",
+      "price_range": "8.000 - 25.000"
+    }
+  ],
+  "penginapan": [
+    {
+      "id": "1",
+      "title": "Hotel Banyumas Indah",
+      "location": "Banyumas, Indonesia",
+      "type": "hotel",
+      "category": "penginapan",
+      "short_description": "Hotel bintang 3 dengan pemandangan indah",
+      "description": "Hotel nyaman dengan fasilitas lengkap dan pemandangan alam yang memukau",
+      "entrance_fee": "Gratis",
+      "contact": "0281-123456",
+      "address": "Jl. Raya Banyumas No. 456",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "room_types": [
+        "Standard"
+      ],
+      "price_range": "500.000 - 1.500.000"
+    },
+    {
+      "id": "2",
+      "title": "Villa Puncak Asri",
+      "location": "Purbalingga, Indonesia",
+      "type": "vila",
+      "category": "penginapan",
+      "short_description": "Villa mewah dengan pemandangan gunung",
+      "description": "Villa eksklusif dengan fasilitas mewah dan pemandangan gunung yang indah",
+      "entrance_fee": "Gratis",
+      "contact": "0281-123457",
+      "address": "Jl. Puncak Asri No. 789",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-20T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.174Z",
+      "room_types": [
+        "Standard"
+      ],
+      "price_range": "1.200.000 - 3.000.000"
+    },
+    {
+      "id": "3",
+      "title": "Homestay Banyumas Asri",
+      "location": "Banyumas, Indonesia",
+      "type": "homestay",
+      "category": "penginapan",
+      "short_description": "Homestay nyaman dengan suasana pedesaan",
+      "description": "Homestay yang menawarkan pengalaman tinggal di pedesaan dengan suasana yang nyaman dan ramah.",
+      "entrance_fee": "Gratis",
+      "contact": "0812-3456-7893",
+      "address": "Jl. Test No. 2",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-12T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.175Z",
+      "room_types": [
+        "Standard"
+      ],
+      "price_range": "200.000 - 500.000"
+    },
+    {
+      "id": "4",
+      "img_sm": "/placeholder.jpg",
+      "img_lg": "/placeholder.jpg",
+      "title": "3e3e3",
+      "location": "dawdaw",
+      "short_description": "dawda",
+      "description": "dwadaa",
+      "type": "hotel",
+      "price_range": "500.000 - 1.000.000",
+      "rating": "3",
+      "contact": "dwada",
+      "address": "dwawda",
+      "amenities": [
+        "AC",
+        "Pool"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T04:27:13.958Z",
+      "updated_at": "2025-08-13T04:27:13.958Z"
+    }
+  ],
+  "oleh_oleh": [
+    {
+      "id": "1",
+      "title": "Batik Banyumas",
+      "location": "Banyumas, Jateng",
+      "type": "pakaian",
+      "category": "oleh_oleh",
+      "short_description": "Batik tradisional khas Banyumas dengan motif unik",
+      "description": "Batik Banyumas memiliki motif dan warna yang khas dengan corak tradisional yang mencerminkan budaya dan adat istiadat setempat.",
+      "price_range": "Gratis",
+      "contact": "0812-3456-7895",
+      "address": "Jl. Batik Banyumas No. 10",
+      "features": [
+        "Handmade",
+        "Motif Tradisional",
+        "Kualitas Premium",
+        "Souvenir Khas"
+      ],
+      "recommended": true,
+      "img_sm": "/upcoming/img/art/1-sm.png",
+      "img_lg": "/upcoming/img/art/1-lg.png",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T05:05:22.663Z"
+    },
+    {
+      "id": "2",
+      "title": "Keramik Plered",
+      "location": "Purwakarta, Jawa Barat",
+      "type": "makanan",
+      "category": "oleh_oleh",
+      "short_description": "Keramik tradisional dengan desain yang elegan",
+      "description": "Keramik Plered terkenal dengan kualitas dan desainnya yang unik. Dibuat dengan teknik tradisional yang telah diwariskan turun temurun.",
+      "price_range": "Gratis",
+      "contact": "0812-3456-7896",
+      "address": "Jl. Keramik Plered No. 24",
+      "features": [
+        "Handmade",
+        "Desain Unik",
+        "Kualitas Tinggi",
+        "Tahan Lama"
+      ],
+      "recommended": false,
+      "img_sm": "/upcoming/img/art/2-sm.png",
+      "img_lg": "/upcoming/img/art/2-lg.png",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T05:03:52.885Z"
+    },
+    {
+      "id": "3",
+      "title": "Bakpia Pathok",
+      "location": "Yogyakarta",
+      "type": "makanan",
+      "category": "oleh_oleh",
+      "short_description": "Bakpia tradisional dengan berbagai rasa",
+      "description": "Bakpia Pathok adalah makanan tradisional Yogyakarta dengan berbagai rasa yang lezat dan tekstur yang lembut.",
+      "price_range": "Gratis",
+      "contact": "0812-3456-7897",
+      "address": "Jl. Pathok No. 15, Yogyakarta",
+      "features": [
+        "Rasa Tradisional",
+        "Tekstur Lembut",
+        "Berbagai Varian",
+        "Souvenir Khas"
+      ],
+      "recommended": true,
+      "img_sm": "/upcoming/img/art/3-sm.png",
+      "img_lg": "/upcoming/img/art/3-lg.png",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T04:58:49.107Z"
+    },
+    {
+      "id": "4",
+      "title": "Keripik Singkong",
+      "location": "Banyumas, Indonesia",
+      "type": "makanan",
+      "category": "oleh_oleh",
+      "short_description": "Keripik singkong renyah dengan berbagai rasa",
+      "description": "Keripik singkong tradisional dengan berbagai rasa seperti balado, keju, dan original. Dibuat dengan bahan berkualitas dan proses yang higienis.",
+      "price_range": "Rp 10.000 - 25.000",
+      "contact": "0812-3456-7898",
+      "address": "Jl. Keripik No. 5, Banyumas",
+      "features": [
+        "Renyah",
+        "Berbagai Rasa",
+        "Higienis",
+        "Harga Terjangkau"
+      ],
+      "recommended": true,
+      "img_sm": "/upcoming/img/art/4-sm.png",
+      "img_lg": "/upcoming/img/art/4-lg.png",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T04:58:49.107Z"
+    },
+    {
+      "id": "5",
+      "title": "Tas Anyaman Bambu",
+      "location": "Banyumas, Indonesia",
+      "type": "kerajinan",
+      "category": "oleh_oleh",
+      "short_description": "Tas anyaman bambu tradisional yang kuat dan cantik",
+      "description": "Tas anyaman bambu dibuat dengan teknik tradisional yang diwariskan turun temurun. Kuat, tahan lama, dan memiliki desain yang unik.",
+      "price_range": "Rp 50.000 - 150.000",
+      "contact": "0812-3456-7899",
+      "address": "Jl. Anyaman No. 12, Banyumas",
+      "features": [
+        "Handmade",
+        "Kuat",
+        "Tahan Lama",
+        "Desain Unik"
+      ],
+      "recommended": false,
+      "img_sm": "/upcoming/img/art/5-sm.png",
+      "img_lg": "/upcoming/img/art/5-lg.png",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T04:58:49.107Z"
+    }
+  ],
+  "desa_wisata": [
+    {
+      "id": "1",
+      "title": "Desa Wisata Candirejo",
+      "location": "Magelang, Jawa Tengah",
+      "type": "desa wisata",
+      "category": "desa_wisata",
+      "short_description": "Desa wisata yang menawarkan pengalaman hidup di pedesaan",
+      "description": "Desa Candirejo menawarkan pengalaman hidup di pedesaan dengan berbagai aktivitas seperti bertani, membuat kerajinan, dan menikmati suasana desa yang asri.",
+      "entrance_fee": "25.000",
+      "contact": "0812-3456-7897",
+      "address": "Kecamatan Borobudur, Magelang",
+      "features": [
+        "Homestay",
+        "Pertanian",
+        "Kerajinan",
+        "Budaya Desa"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.175Z"
+    },
+    {
+      "id": "2",
+      "title": "Desa Wisata Pentingsari",
+      "location": "Yogyakarta",
+      "type": "desa wisata",
+      "category": "desa_wisata",
+      "short_description": "Desa wisata dengan panorama alam yang indah",
+      "description": "Desa Pentingsari terkenal dengan panorama alamnya yang indah dan berbagai aktivitas wisata yang menarik seperti trekking dan camping.",
+      "entrance_fee": "30.000",
+      "contact": "0812-3456-7898",
+      "address": "Kecamatan Imogiri, Yogyakarta",
+      "features": [
+        "Homestay",
+        "Trekking",
+        "Camping",
+        "Pemandangan Alam"
+      ],
+      "recommended": false,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.175Z"
+    }
+  ],
+  "biro_perjalanan": [
+    {
+      "id": "1",
+      "title": "PT Wisata Nusantara",
+      "location": "Jakarta, Indonesia",
+      "type": "biro perjalanan",
+      "category": "biro_perjalanan",
+      "short_description": "Biro perjalanan terpercaya dengan layanan lengkap",
+      "description": "Biro perjalanan yang menyediakan berbagai paket wisata dalam dan luar negeri dengan layanan yang profesional dan terpercaya.",
+      "entrance_fee": "Gratis",
+      "contact": "021-1234567",
+      "address": "Jl. Sudirman No. 100, Jakarta",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.175Z"
+    },
+    {
+      "id": "2",
+      "title": "CV Jaya Tour",
+      "location": "Bandung, Indonesia",
+      "type": "biro perjalanan",
+      "category": "biro_perjalanan",
+      "short_description": "Biro perjalanan lokal dengan harga terjangkau",
+      "description": "Biro perjalanan lokal yang mengkhususkan pada paket wisata dalam negeri dengan harga yang terjangkau dan layanan yang ramah.",
+      "entrance_fee": "Gratis",
+      "contact": "022-1234567",
+      "address": "Jl. Asia Afrika No. 50, Bandung",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": false,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-08-13T02:13:58.175Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "1",
+      "title": "Konser Musik Tradisional Banyumas",
+      "location": "Banyumas, Indonesia",
+      "type": "event banyumas",
+      "category": "events",
+      "short_description": "Konser musik tradisional dengan gamelan dan tembang Jawa",
+      "description": "Konser musik tradisional yang menampilkan gamelan, tembang Jawa, dan tarian tradisional khas Banyumas. Acara budaya yang tidak boleh dilewatkan.",
+      "entrance_fee": "Gratis",
+      "contact": "",
+      "address": "",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-08-13T00:23:59.839Z",
+      "updated_at": "2025-08-13T02:13:58.175Z",
+      "event_date": "",
+      "event_time": "",
+      "organizer": ""
+    },
+    {
+      "id": "2",
+      "title": "Festival Kuliner Banyumas",
+      "location": "Banyumas, Indonesia",
+      "type": "event",
+      "category": "events",
+      "short_description": "Festival kuliner dengan berbagai makanan tradisional",
+      "description": "Festival kuliner yang menampilkan berbagai makanan tradisional khas Banyumas, workshop memasak, dan kompetisi chef lokal.",
+      "entrance_fee": "Gratis",
+      "contact": "",
+      "address": "",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-08-13T00:23:59.839Z",
+      "updated_at": "2025-08-13T02:13:58.175Z",
+      "event_date": "",
+      "event_time": "",
+      "organizer": ""
+    },
+    {
+      "id": "3",
+      "title": "Workshop Membatik Tradisional",
+      "location": "Banyumas, Indonesia",
+      "type": "event banyumas",
+      "category": "events",
+      "short_description": "Workshop membuat batik dengan teknik tradisional",
+      "description": "Workshop membatik yang mengajarkan teknik tradisional khas Banyumas. Peserta akan belajar dari awal hingga menghasilkan karya batik sendiri.",
+      "entrance_fee": "Gratis",
+      "contact": "",
+      "address": "",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T00:23:59.839Z",
+      "updated_at": "2025-08-13T02:13:58.175Z",
+      "event_date": "",
+      "event_time": "",
+      "organizer": ""
     }
   ]
 }

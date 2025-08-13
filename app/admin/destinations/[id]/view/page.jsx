@@ -170,7 +170,14 @@ export default function ViewDestinationPage() {
                         <div className="flex items-center">
                           <span className="text-gray-500 w-24">Tipe:</span>
                           <span className="font-medium">
-                            {destination.type === 'objek-wisata' ? 'Objek Wisata' : 'Wisata Alam'}
+                            {destination.type === 'wisata alam' ? 'Wisata Alam' : 
+                             destination.type === 'wisata sejarah' ? 'Wisata Sejarah' :
+                             destination.type === 'wisata taman' ? 'Wisata Taman' :
+                             destination.type === 'wisata budaya' ? 'Wisata Budaya' :
+                             destination.type === 'wisata religi' ? 'Wisata Religi' :
+                             destination.type === 'wisata buatan' ? 'Wisata Buatan' :
+                             destination.type === 'wisata minat khusus' ? 'Wisata Minat Khusus' :
+                             destination.type}
                           </span>
                         </div>
                         <div className="flex items-center">
@@ -178,41 +185,34 @@ export default function ViewDestinationPage() {
                           <span className="font-medium">{destination.location}</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-gray-500 w-24">Tanggal:</span>
-                          <span className="font-medium">
-                            {new Date(destination.date).toLocaleDateString('id-ID', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
-                          </span>
+                          <span className="text-gray-500 w-24">Kategori:</span>
+                          <span className="font-medium">{destination.category || 'Wisata'}</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="text-gray-500 w-24">Jam:</span>
-                          <span className="font-medium">{destination.hour}</span>
+                          <span className="text-gray-500 w-24">Biaya Masuk:</span>
+                          <span className="font-medium">{destination.entrance_fee || 'Gratis'}</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Informasi Tiket */}
+                  {/* Informasi Kontak */}
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Informasi Tiket</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Informasi Kontak</h3>
                       <div className="space-y-3">
-                        {destination.seats && destination.seats.length > 0 ? (
-                          destination.seats.map((seat, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                              <span className="font-medium">{seat.seat}</span>
-                              <span className="text-lg font-bold text-blue-600">
-                                Rp {seat.price?.toLocaleString('id-ID')}
-                              </span>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="text-gray-500 italic">Tidak ada informasi tiket</div>
-                        )}
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium">Kontak:</span>
+                          <span className="text-lg font-bold text-blue-600">
+                            {destination.contact || 'Tidak ada'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="font-medium">Alamat:</span>
+                          <span className="text-lg font-bold text-blue-600">
+                            {destination.address || 'Tidak ada'}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -253,24 +253,85 @@ export default function ViewDestinationPage() {
                   </div>
                 </div>
 
-                {/* Status */}
+                {/* Status dan Fitur */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Status</h3>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center">
-                      <span className="text-gray-500 mr-2">Direkomendasikan:</span>
-                      <span className={`px-2 py-1 rounded text-sm font-medium ${
-                        destination.recommended 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {destination.recommended ? 'Ya' : 'Tidak'}
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Status dan Fitur</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-md font-medium text-gray-900 mb-2">Status</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <span className="text-gray-500 mr-2">Direkomendasikan:</span>
+                          <span className={`px-2 py-1 rounded text-sm font-medium ${
+                            destination.recommended 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {destination.recommended ? 'Ya' : 'Tidak'}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-gray-500 mr-2">Tipe:</span>
+                          <span className="px-2 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800">
+                            {destination.type === 'wisata alam' ? 'Wisata Alam' : 
+                             destination.type === 'wisata sejarah' ? 'Wisata Sejarah' :
+                             destination.type === 'wisata taman' ? 'Wisata Taman' :
+                             destination.type === 'wisata budaya' ? 'Wisata Budaya' :
+                             destination.type === 'wisata religi' ? 'Wisata Religi' :
+                             destination.type === 'wisata buatan' ? 'Wisata Buatan' :
+                             destination.type === 'wisata minat khusus' ? 'Wisata Minat Khusus' :
+                             destination.type}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-md font-medium text-gray-900 mb-2">Fitur</h4>
+                      <div className="space-y-2">
+                        {destination.features && destination.features.length > 0 ? (
+                          destination.features.map((feature, index) => (
+                            <div key={index} className="flex items-center">
+                              <span className="text-green-500 mr-2">✓</span>
+                              <span className="text-sm text-gray-700">{feature}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-gray-500 italic text-sm">Tidak ada fitur yang tersedia</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Informasi Sistem */}
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Informasi Sistem</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div>
+                      <span className="font-medium">Dibuat pada:</span>
+                      <span className="ml-2">
+                        {destination.created_at ? new Date(destination.created_at).toLocaleDateString('id-ID', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }) : 'Tidak diketahui'}
                       </span>
                     </div>
-                    <div className="flex items-center">
-                      <span className="text-gray-500 mr-2">Tipe:</span>
-                      <span className="px-2 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800">
-                        {destination.type === 'objek-wisata' ? 'Objek Wisata' : 'Wisata Alam'}
+                    <div>
+                      <span className="font-medium">Terakhir diupdate:</span>
+                      <span className="ml-2">
+                        {destination.updated_at ? new Date(destination.updated_at).toLocaleDateString('id-ID', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }) : 'Tidak diketahui'}
                       </span>
                     </div>
                   </div>

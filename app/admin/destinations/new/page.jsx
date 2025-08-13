@@ -237,17 +237,44 @@ export default function NewDestinationPage() {
                     <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
                       Harga Tiket (Rp) *
                     </label>
-                    <input
-                      type="number"
-                      id="price"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      required
-                      min="0"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="25000"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                      <input
+                        type="text"
+                        id="price"
+                        name="price"
+                        value={formData.price}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9]/g, '');
+                          setFormData(prev => ({
+                            ...prev,
+                            price: value
+                          }));
+                        }}
+                        onFocus={(e) => {
+                          if (formData.price && formData.price.endsWith('000')) {
+                            const cleanValue = formData.price.replace(/000$/, '');
+                            setFormData(prev => ({
+                              ...prev,
+                              price: cleanValue
+                            }));
+                          }
+                        }}
+                        onBlur={(e) => {
+                          if (formData.price && !formData.price.endsWith('000')) {
+                            const formattedValue = `${formData.price}000`;
+                            setFormData(prev => ({
+                              ...prev,
+                              price: formattedValue
+                            }));
+                          }
+                        }}
+                        required
+                        maxLength="6"
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
+                        placeholder="25"
+                      />
+                    </div>
                   </div>
 
                   {/* Pengelola Wisata */}
@@ -269,8 +296,18 @@ export default function NewDestinationPage() {
                   {/* Gambar Kecil */}
                   <div>
                     <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Kecil
+                      Gambar Kecil (untuk Card/Thumbnail)
                     </label>
+                    <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                      <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
+                      <ul className="text-xs text-blue-700 space-y-1">
+                        <li>• Card destinasi di halaman utama</li>
+                        <li>• Thumbnail di list pencarian</li>
+                        <li>• Preview di kategori wisata</li>
+                        <li>• Tampilan mobile yang responsif</li>
+                      </ul>
+                      <p className="text-xs text-blue-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar dengan rasio 1:1 (persegi) untuk hasil terbaik</p>
+                    </div>
                     <input
                       type="file"
                       id="img_sm"
@@ -294,8 +331,18 @@ export default function NewDestinationPage() {
                   {/* Gambar Besar */}
                   <div>
                     <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Besar
+                      Gambar Besar (untuk Detail/Hero)
                     </label>
+                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                      <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
+                      <ul className="text-xs text-green-700 space-y-1">
+                        <li>• Halaman detail destinasi</li>
+                        <li>• Hero section yang menarik</li>
+                        <li>• Galeri foto berkualitas tinggi</li>
+                        <li>• Tampilan desktop yang optimal</li>
+                      </ul>
+                      <p className="text-xs text-green-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar landscape (16:9) atau portrait (4:3) dengan resolusi tinggi</p>
+                    </div>
                     <input
                       type="file"
                       id="img_lg"

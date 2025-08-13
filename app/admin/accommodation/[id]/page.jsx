@@ -44,21 +44,21 @@ export default function EditAccommodation() {
   useEffect(() => {
     const fetchAccommodation = async () => {
       try {
-        const response = await fetch(`/api/accommodation/${id}`);
+        const response = await fetch(`/api/penginapan/${id}`);
         const data = await response.json();
         
         if (data.success) {
           setFormData({
-            title: data.accommodation.title || '',
-            type: data.accommodation.type || 'penginapan',
-            location: data.accommodation.location || '',
-            date: data.accommodation.date || '',
-            description: data.accommodation.description || '',
-            price: data.accommodation.price || '',
-            img_sm: data.accommodation.img_sm || '',
-            img_lg: data.accommodation.img_lg || '',
-            amenities: data.accommodation.amenities || [],
-            recommended: data.accommodation.recommended || false
+            title: data.penginapan.title || '',
+            type: data.penginapan.type || 'penginapan',
+            location: data.penginapan.location || '',
+            date: data.penginapan.date || '',
+            description: data.penginapan.description || '',
+            price: data.penginapan.price || '',
+            img_sm: data.penginapan.img_sm || '',
+            img_lg: data.penginapan.img_lg || '',
+            amenities: data.penginapan.amenities || [],
+            recommended: data.penginapan.recommended || false
           });
         } else {
           setError(data.message);
@@ -98,7 +98,7 @@ export default function EditAccommodation() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/accommodation/${id}`, {
+      const response = await fetch(`/api/penginapan/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

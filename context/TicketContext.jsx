@@ -40,12 +40,17 @@ const TicketProvider = ({ children }) => {
 
   // calculate total price whenever the seat price or item amount changes
   useEffect(() => {
-    setTotalPrice(seat.price * itemAmount);
+    // Ensure seat.price is a valid number before calculation
+    const validPrice = seat.price && !isNaN(Number(seat.price)) ? Number(seat.price) : 0;
+    const validAmount = itemAmount && !isNaN(Number(itemAmount)) ? Number(itemAmount) : 1;
+    setTotalPrice(validPrice * validAmount);
   }, [seat.price, itemAmount]);
 
   // function to handle the seat selection 
   const handleSeat = (seat, price) => {
-    setSeat({ seat, price });
+    // Ensure price is a valid number
+    const validPrice = price && !isNaN(Number(price)) ? Number(price) : 0;
+    setSeat({ seat, price: validPrice });
     setShowMenu(false);
   };
 
@@ -57,7 +62,7 @@ const TicketProvider = ({ children }) => {
       ticketType: seat.seat,
       ticketPrice: seat.price,
       amount: itemAmount,
-      totalPrice,
+      totalPrice: totalPrice || 0, // Ensure totalPrice is never NaN
     };
 
     setCheckoutData(ticketData); // in case if we want to use the data for the checkout page

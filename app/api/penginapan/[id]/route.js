@@ -11,7 +11,7 @@ export async function GET(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find accommodation by ID
-    const accommodation = dbData.events.find(event => event.id === id && event.type === 'akomodasi');
+    const accommodation = dbData.penginapan.find(item => item.id === id);
     
     if (!accommodation) {
       return NextResponse.json({
@@ -22,7 +22,7 @@ export async function GET(request, { params }) {
     
     return NextResponse.json({
       success: true,
-      accommodation: accommodation
+      penginapan: accommodation
     });
   } catch (error) {
     console.error('Error reading accommodation:', error);
@@ -43,7 +43,7 @@ export async function PUT(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find accommodation by ID
-    const accommodationIndex = dbData.events.findIndex(event => event.id === id && event.type === 'akomodasi');
+    const accommodationIndex = dbData.penginapan.findIndex(item => item.id === id);
     
     if (accommodationIndex === -1) {
       return NextResponse.json({
@@ -53,10 +53,10 @@ export async function PUT(request, { params }) {
     }
     
     // Update accommodation
-    dbData.events[accommodationIndex] = {
-      ...dbData.events[accommodationIndex],
+    dbData.penginapan[accommodationIndex] = {
+      ...dbData.penginapan[accommodationIndex],
       ...body,
-      type: 'akomodasi' // Ensure type remains the same
+      updated_at: new Date().toISOString()
     };
     
     // Write back to db.json
@@ -64,7 +64,7 @@ export async function PUT(request, { params }) {
     
     return NextResponse.json({
       success: true,
-      accommodation: dbData.events[accommodationIndex]
+      penginapan: dbData.penginapan[accommodationIndex]
     });
   } catch (error) {
     console.error('Error updating accommodation:', error);
@@ -84,7 +84,7 @@ export async function DELETE(request, { params }) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find accommodation by ID
-    const accommodationIndex = dbData.events.findIndex(event => event.id === id && event.type === 'akomodasi');
+    const accommodationIndex = dbData.penginapan.findIndex(item => item.id === id);
     
     if (accommodationIndex === -1) {
       return NextResponse.json({
@@ -94,7 +94,7 @@ export async function DELETE(request, { params }) {
     }
     
     // Remove accommodation
-    dbData.events.splice(accommodationIndex, 1);
+    dbData.penginapan.splice(accommodationIndex, 1);
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));

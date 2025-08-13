@@ -17,8 +17,14 @@ export default function EditCulinaryItem() {
     title: '',
     location: '',
     description: '',
-    date: '',
-    hour: '',
+    short_description: '',
+    type: 'cafe',
+    price_range: '25.000 - 50.000',
+    cuisine: 'Indonesia',
+    opening_hours: '10:00 - 22:00',
+    contact: '',
+    address: '',
+    features: ['Masakan Indonesia', 'Suasana Nyaman'],
     img_sm: '',
     img_lg: '',
     recommended: false
@@ -35,14 +41,20 @@ export default function EditCulinaryItem() {
         
         if (data.success) {
           setFormData({
-            title: data.culinaryItem.title || '',
-            location: data.culinaryItem.location || '',
-            description: data.culinaryItem.description || '',
-            date: data.culinaryItem.date || '',
-            hour: data.culinaryItem.hour || '',
-            img_sm: data.culinaryItem.img_sm || '',
-            img_lg: data.culinaryItem.img_lg || '',
-            recommended: data.culinaryItem.recommended || false
+            title: data.kuliner.title || '',
+            location: data.kuliner.location || '',
+            description: data.kuliner.description || '',
+            short_description: data.kuliner.short_description || '',
+            type: data.kuliner.type || 'cafe',
+            price_range: data.kuliner.price_range || '25.000 - 50.000',
+            cuisine: data.kuliner.cuisine || 'Indonesia',
+            opening_hours: data.kuliner.opening_hours || '10:00 - 22:00',
+            contact: data.kuliner.contact || '',
+            address: data.kuliner.address || '',
+            features: data.kuliner.features || ['Masakan Indonesia', 'Suasana Nyaman'],
+            img_sm: data.kuliner.img_sm || '',
+            img_lg: data.kuliner.img_lg || '',
+            recommended: data.kuliner.recommended || false
           });
         } else {
           setError(data.message);
@@ -171,8 +183,24 @@ export default function EditCulinaryItem() {
                 </div>
 
                 <div>
+                  <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
+                    Deskripsi Singkat *
+                  </label>
+                  <input
+                    type="text"
+                    id="short_description"
+                    name="short_description"
+                    required
+                    value={formData.short_description}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Masukkan deskripsi singkat kuliner"
+                  />
+                </div>
+
+                <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi *
+                    Deskripsi Lengkap *
                   </label>
                   <textarea
                     id="description"
@@ -182,38 +210,133 @@ export default function EditCulinaryItem() {
                     value={formData.description}
                     onChange={handleInputChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan deskripsi kuliner"
+                    placeholder="Masukkan deskripsi lengkap kuliner"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-                      Tanggal
+                    <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+                      Tipe Kuliner *
                     </label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      value={formData.date}
+                    <select
+                      id="type"
+                      name="type"
+                      required
+                      value={formData.type}
                       onChange={handleInputChange}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="cafe">Cafe</option>
+                      <option value="resto">Restoran</option>
+                      <option value="rumah makan">Rumah Makan</option>
+                      <option value="kedai">Kedai</option>
+                      <option value="warung">Warung</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="price_range" className="block text-sm font-medium text-gray-700">
+                      Kisaran Harga *
+                    </label>
+                    <input
+                      type="text"
+                      id="price_range"
+                      name="price_range"
+                      required
+                      value={formData.price_range}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Contoh: 25.000 - 50.000"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="cuisine" className="block text-sm font-medium text-gray-700">
+                      Jenis Masakan *
+                    </label>
+                    <input
+                      type="text"
+                      id="cuisine"
+                      name="cuisine"
+                      required
+                      value={formData.cuisine}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Contoh: Indonesia, Jawa, Sunda"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="hour" className="block text-sm font-medium text-gray-700">
-                      Jam
+                    <label htmlFor="opening_hours" className="block text-sm font-medium text-gray-700">
+                      Jam Buka *
                     </label>
                     <input
-                      type="time"
-                      id="hour"
-                      name="hour"
-                      value={formData.hour}
+                      type="text"
+                      id="opening_hours"
+                      name="opening_hours"
+                      required
+                      value={formData.opening_hours}
                       onChange={handleInputChange}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Contoh: 10:00 - 22:00"
                     />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
+                      Kontak
+                    </label>
+                    <input
+                      type="text"
+                      id="contact"
+                      name="contact"
+                      value={formData.contact}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Nomor telepon atau email"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                      Alamat Lengkap
+                    </label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      rows={2}
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Alamat lengkap lokasi kuliner"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="features" className="block text-sm font-medium text-gray-700">
+                    Fitur-fitur
+                  </label>
+                  <textarea
+                    id="features"
+                    name="features"
+                    rows={3}
+                    value={formData.features.join(', ')}
+                    onChange={(e) => {
+                      const featuresArray = e.target.value.split(',').map(f => f.trim()).filter(f => f);
+                      setFormData(prev => ({ ...prev, features: featuresArray }));
+                    }}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Masukkan fitur-fitur, pisahkan dengan koma (contoh: WiFi Gratis, Suasana Nyaman, Parkir Luas)"
+                  />
+                  <p className="mt-1 text-sm text-gray-500">
+                    Pisahkan setiap fitur dengan koma
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

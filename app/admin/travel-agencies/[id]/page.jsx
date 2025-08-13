@@ -17,11 +17,11 @@ export default function TravelAgencyDetail() {
   useEffect(() => {
     const fetchTravelAgency = async () => {
       try {
-        const response = await fetch(`/api/travel-agencies/${params.id}`);
+        const response = await fetch(`/api/biro_perjalanan/${params.id}`);
         const data = await response.json();
 
         if (data.success) {
-          setTravelAgency(data.travelAgency);
+          setTravelAgency(data.biro_perjalanan);
         } else {
           setError(data.message || 'Biro perjalanan tidak ditemukan');
         }
@@ -44,7 +44,7 @@ export default function TravelAgencyDetail() {
     }
 
     try {
-      const response = await fetch(`/api/travel-agencies/${params.id}`, {
+      const response = await fetch(`/api/biro_perjalanan/${params.id}`, {
         method: 'DELETE',
       });
       

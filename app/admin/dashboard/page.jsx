@@ -109,6 +109,8 @@ export default function AdminDashboard() {
     eventTypes: [],
     monthlyEvents: []
   });
+  const [allRecentData, setAllRecentData] = useState([]);
+  const [filteredRecentData, setFilteredRecentData] = useState([]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -116,64 +118,180 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (searchTerm.trim() === '') {
-      setFilteredEvents(recentEvents);
+      setFilteredRecentData(allRecentData);
     } else {
-      const filtered = recentEvents.filter(event =>
-        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.type.toLowerCase().includes(searchTerm.toLowerCase())
+      const filtered = allRecentData.filter(item =>
+        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.type?.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredEvents(filtered);
+      setFilteredRecentData(filtered);
     }
-  }, [searchTerm, recentEvents]);
+  }, [searchTerm, allRecentData]);
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch('/api/events');
-      const data = await response.json();
+      setIsLoading(true);
+      setError(null);
       
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to fetch events');
-      }
-      
-      const events = data.events || [];
-      
-      // Calculate statistics
-      const eventTypes = {};
-      const monthlyData = {};
-      
-      events.forEach(event => {
-        // Count by type (normalize objek-wisata & wisata-*)
-        const normalized = (typeof event.type === 'string' && (event.type === 'objek-wisata' || event.type.startsWith('wisata-')))
-          ? 'objek-wisata'
-          : event.type;
-        eventTypes[normalized] = (eventTypes[normalized] || 0) + 1;
-        
-        // Count by month
-        const date = new Date(event.date);
-        const month = date.toLocaleString('id-ID', { month: 'long' });
-        monthlyData[month] = (monthlyData[month] || 0) + 1;
-      });
+      // Fetch data from all available APIs
+      const [
+        eventsResponse,
+        destinationsResponse,
+        culinaryResponse,
+        accommodationResponse,
+        souvenirsResponse,
+        villagesResponse,
+        travelAgenciesResponse
+      ] = await Promise.all([
+        fetch('/api/events'),
+        fetch('/api/wisata'),
+        fetch('/api/kuliner'),
+        fetch('/api/penginapan'),
+        fetch('/api/oleh_oleh'),
+        fetch('/api/desa_wisata'),
+        fetch('/api/biro_perjalanan')
+      ]);
 
+      // Parse all responses
+      const eventsData = await eventsResponse.json();
+      const destinationsData = await destinationsResponse.json();
+      const culinaryData = await culinaryResponse.json();
+      const accommodationData = await accommodationResponse.json();
+      const souvenirsData = await souvenirsResponse.json();
+      const villagesData = await villagesResponse.json();
+      const travelAgenciesData = await travelAgenciesResponse.json();
+
+      // Extract data arrays, handle potential errors gracefully
+      const events = eventsData.success ? (eventsData.events || []) : [];
+      const destinations = destinationsData.success ? (destinationsData.wisata || []) : [];
+      const culinary = culinaryData.success ? (culinaryData.kuliner || []) : [];
+      const accommodations = accommodationData.success ? (accommodationData.penginapan || []) : [];
+      const souvenirs = souvenirsData.success ? (souvenirsData.oleh_oleh || []) : [];
+      const villages = villagesData.success ? (villagesData.desa_wisata || []) : [];
+      const travelAgencies = travelAgenciesData.success ? (travelAgenciesData.biro_perjalanan || []) : [];
+
+      // Calculate statistics from actual API data
       setStats({
         totalEvents: events.length,
-         totalDestinations: events.filter(e => typeof e.type === 'string' && (e.type === 'objek-wisata' || e.type.startsWith('wisata-'))).length,
-        totalAccommodations: events.filter(e => e.type === 'penginapan').length,
-        totalCulinary: events.filter(e => e.type === 'kuliner').length,
-        totalSouvenirs: events.filter(e => e.type === 'oleh-oleh').length,
-        totalVillages: events.filter(e => e.type === 'desa-wisata').length,
-        totalTravelAgencies: events.filter(e => e.type === 'biro-perjalanan').length,
-         totalWisataAlam: events.filter(e => typeof e.type === 'string' && (e.type === 'objek-wisata' || e.type.startsWith('wisata-'))).length
+        totalDestinations: destinations.length,
+        totalAccommodations: accommodations.length,
+        totalCulinary: culinary.length,
+        totalSouvenirs: souvenirs.length,
+        totalVillages: villages.length,
+        totalTravelAgencies: travelAgencies.length,
+        totalWisataAlam: destinations.length // Destinations are the main tourist objects
       });
 
-      // Get recent events
+      // Get recent events for display
       const recent = events
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 5);
       setRecentEvents(recent);
       setFilteredEvents(recent);
 
-      // Prepare chart data
+      // Collect recent data from all categories
+      const allData = [];
+      
+      // Add events with category info
+      events.slice(0, 3).forEach(event => {
+        allData.push({
+          ...event,
+          category: 'Event',
+          categoryIcon: '🎉',
+          source: 'events'
+        });
+      });
+      
+      // Add destinations with category info
+      destinations.slice(0, 2).forEach(dest => {
+        allData.push({
+          ...dest,
+          category: 'Objek Wisata',
+          categoryIcon: '🏔️',
+          source: 'destinations'
+        });
+      });
+      
+      // Add culinary with category info
+      culinary.slice(0, 2).forEach(cul => {
+        allData.push({
+          ...cul,
+          category: 'Kuliner',
+          categoryIcon: '🍽️',
+          source: 'culinary'
+        });
+      });
+      
+      // Add accommodations with category info
+      accommodations.slice(0, 2).forEach(acc => {
+        allData.push({
+          ...acc,
+          category: 'Penginapan',
+          categoryIcon: '🏨',
+          source: 'accommodation'
+        });
+      });
+      
+      // Add souvenirs with category info
+      souvenirs.slice(0, 2).forEach(sou => {
+        allData.push({
+          ...sou,
+          category: 'Souvenir',
+          categoryIcon: '🛍️',
+          source: 'souvenirs'
+        });
+      });
+      
+      // Add villages with category info
+      villages.slice(0, 2).forEach(vill => {
+        allData.push({
+          ...vill,
+          category: 'Desa Wisata',
+          categoryIcon: '🏘️',
+          source: 'villages'
+        });
+      });
+      
+      // Add travel agencies with category info
+      travelAgencies.slice(0, 2).forEach(ta => {
+        allData.push({
+          ...ta,
+          category: 'Biro Perjalanan',
+          categoryIcon: '🚌',
+          source: 'travel-agencies'
+        });
+      });
+      
+      // Sort all data by creation date (if available) or use current date
+      const sortedAllData = allData.sort((a, b) => {
+        const dateA = getEventCreatedAt(a) ? new Date(getEventCreatedAt(a)) : new Date();
+        const dateB = getEventCreatedAt(b) ? new Date(getEventCreatedAt(b)) : new Date();
+        return dateB - dateA;
+      }).slice(0, 5); // Show top 5 most recent items
+      
+      setAllRecentData(sortedAllData);
+      setFilteredRecentData(sortedAllData);
+
+      // Prepare chart data from events
+      const eventTypes = {};
+      const monthlyData = {};
+      
+      events.forEach(event => {
+        // Count by type
+        const normalized = (typeof event.type === 'string' && (event.type === 'objek-wisata' || event.type.startsWith('wisata-')))
+          ? 'objek-wisata'
+          : event.type;
+        eventTypes[normalized] = (eventTypes[normalized] || 0) + 1;
+        
+        // Count by month
+        if (event.date) {
+          const date = new Date(event.date);
+          const month = date.toLocaleString('id-ID', { month: 'long' });
+          monthlyData[month] = (monthlyData[month] || 0) + 1;
+        }
+      });
+
       setChartData({
         eventTypes: Object.entries(eventTypes).map(([type, count]) => ({ type, count })),
         monthlyEvents: Object.entries(monthlyData).map(([month, count]) => ({ month, count }))
@@ -194,7 +312,7 @@ export default function AdminDashboard() {
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      setError(error.message);
+      setError('Terjadi kesalahan saat mengambil data dashboard. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -266,16 +384,25 @@ export default function AdminDashboard() {
   const statsCards = [
     {
       title: "Total Data Masuk",
-      count: stats.totalEvents,
+      count: stats.totalEvents + stats.totalDestinations + stats.totalAccommodations + stats.totalCulinary + stats.totalSouvenirs + stats.totalVillages + stats.totalTravelAgencies,
       subtitle: "Seluruh event & destinasi",
-      icon: "🎉",
+      icon: "👁",
       color: "bg-gradient-to-r from-blue-600 to-blue-700",
       change: "+12%",
       changeType: "positive"
     },
     {
+      title: "Event",
+      count: stats.totalEvents,
+      subtitle: "Event & kegiatan",
+      icon: "🎉",
+      color: "bg-gradient-to-r from-green-600 to-green-700",
+      change: "+12%",
+      changeType: "positive"
+    },
+    {
       title: "Objek Wisata",
-      count: stats.totalWisataAlam,
+      count: stats.totalDestinations,
       subtitle: "Objek wisata",
       icon: "🏔️",
       color: "bg-gradient-to-r from-blue-600 to-blue-700",
@@ -429,7 +556,7 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Ringkasan Data</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalEvents}</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.totalEvents + stats.totalDestinations + stats.totalAccommodations + stats.totalCulinary + stats.totalSouvenirs + stats.totalVillages + stats.totalTravelAgencies}</div>
               <div className="text-sm text-gray-600">Total Data Masuk</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -461,21 +588,49 @@ export default function AdminDashboard() {
 
         {/* Dashboard Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {statsCards.map((stat, index) => (
-            <div key={index} className={`${stat.color} text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-3xl opacity-80">{stat.icon}</div>
-                <div className={`text-xs px-2 py-1 rounded-full ${
-                  stat.changeType === 'positive' ? 'bg-blue-500 bg-opacity-20' : 'bg-red-500 bg-opacity-20'
-                }`}>
-                  {stat.change}
+          {statsCards.map((stat, index) => {
+            // Define navigation paths for each card
+            const getNavigationPath = (title) => {
+              switch (title) {
+                case "Total Data Masuk":
+                  return "/admin/data";
+                case "Event":
+                  return "/admin/events";
+                case "Objek Wisata":
+                  return "/admin/destinations";
+                case "Desa Wisata":
+                  return "/admin/villages";
+                case "Kuliner":
+                  return "/admin/culinary";
+                case "Penginapan":
+                  return "/admin/accommodation";
+                case "Biro Perjalanan":
+                  return "/admin/travel-agencies";
+                case "Souvenir":
+                  return "/admin/souvenirs";
+                default:
+                  return "/admin/events";
+              }
+            };
+
+            return (
+              <Link key={index} href={getNavigationPath(stat.title)} className="block">
+                <div className={`${stat.color} text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`text-3xl opacity-80 ${stat.title === "Total Data Masuk" ? "text-gray-700" : ""}`}>{stat.icon}</div>
+                    <div className={`text-xs px-2 py-1 rounded-full ${
+                      stat.changeType === 'positive' ? 'bg-blue-500 bg-opacity-20' : 'bg-red-500 bg-opacity-20'
+                    }`}>
+                      {stat.change}
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-1">{stat.title}</h3>
+                  <p className="text-3xl font-bold mb-2">{stat.count}</p>
+                  <p className="text-sm opacity-90">{stat.subtitle}</p>
                 </div>
-              </div>
-              <h3 className="text-lg font-semibold mb-1">{stat.title}</h3>
-              <p className="text-3xl font-bold mb-2">{stat.count}</p>
-              <p className="text-sm opacity-90">{stat.subtitle}</p>
-            </div>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Charts and Analytics */}
@@ -545,10 +700,10 @@ export default function AdminDashboard() {
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-900">Data Terbaru</h2>
-              <Link 
-                href="/admin/events" 
-                className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center space-x-1"
-              >
+                             <Link 
+                 href="/admin/data" 
+                 className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center space-x-1"
+               >
                 <span>Lihat Semua</span>
                 <span>→</span>
               </Link>
@@ -565,7 +720,7 @@ export default function AdminDashboard() {
                 <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
               </div>
               <span className="text-sm text-gray-500">
-                {filteredEvents.length} dari {recentEvents.length} data
+                {filteredRecentData.length} dari {allRecentData.length} data
               </span>
             </div>
           </div>
@@ -582,39 +737,39 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredEvents.length > 0 ? (
-                  filteredEvents.map((event) => (
-                    <tr key={event.id} className="hover:bg-gray-50">
+                {filteredRecentData.length > 0 ? (
+                  filteredRecentData.map((item) => (
+                    <tr key={`${item.source}-${item.id}`} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <img 
                             className="h-10 w-10 rounded-lg object-cover" 
-                            src={event.img_sm} 
-                            alt={event.title}
+                            src={item.img_sm || '/placeholder.jpg'} 
+                            alt={item.title}
                           />
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{event.title}</div>
-                            <div className="text-sm text-gray-500">{event.short_description?.substring(0, 50)}...</div>
+                            <div className="text-sm font-medium text-gray-900">{item.title}</div>
+                            <div className="text-sm text-gray-500">{item.short_description?.substring(0, 50)}...</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          <span className="text-xl">{getEventTypeIcon(event.type)}</span>
-                          <span className="text-sm text-gray-900">{getEventTypeLabel(event.type)}</span>
+                          <span className="text-xl">{item.categoryIcon}</span>
+                          <span className="text-sm text-gray-900">{item.category}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{event.location}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <ClientEventDateFormatter date={getEventCreatedAt(event)} />
+                        <ClientEventDateFormatter date={getEventCreatedAt(item)} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          event.recommended 
+                          item.recommended 
                             ? 'bg-blue-100 text-blue-800' 
                             : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {event.recommended ? 'Direkomendasikan' : 'Aktif'}
+                          {item.recommended ? 'Direkomendasikan' : 'Aktif'}
                         </span>
                       </td>
                     </tr>
@@ -629,13 +784,13 @@ export default function AdminDashboard() {
                       </div>
                     </td>
                   </tr>
-                ) : recentEvents.length === 0 ? (
+                ) : allRecentData.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                       <div className="flex flex-col items-center">
                         <div className="text-4xl mb-2">📊</div>
-                        <p className="text-lg font-medium">Belum ada event</p>
-                        <p className="text-sm">Event akan muncul di sini setelah Anda menambahkan data</p>
+                        <p className="text-lg font-medium">Belum ada data</p>
+                        <p className="text-sm">Data akan muncul di sini setelah Anda menambahkan item</p>
                       </div>
                     </td>
                   </tr>
@@ -644,7 +799,7 @@ export default function AdminDashboard() {
                     <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                       <div className="flex flex-col items-center">
                         <div className="text-4xl mb-2">🔍</div>
-                        <p className="text-lg font-medium">Tidak ada event yang cocok</p>
+                        <p className="text-lg font-medium">Tidak ada data yang cocok</p>
                         <p className="text-sm">Coba ubah kata kunci pencarian</p>
                       </div>
                     </td>

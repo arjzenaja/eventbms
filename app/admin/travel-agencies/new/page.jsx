@@ -432,8 +432,18 @@ export default function NewTravelAgency() {
                   {/* Gambar Kecil */}
                   <div>
                     <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Kecil
+                      Gambar Kecil (untuk Card/Thumbnail)
                     </label>
+                    <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                      <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
+                      <ul className="text-xs text-blue-700 space-y-1">
+                        <li>• Card biro perjalanan di halaman utama</li>
+                        <li>• Thumbnail di list pencarian</li>
+                        <li>• Preview di kategori travel</li>
+                        <li>• Tampilan mobile yang responsif</li>
+                      </ul>
+                      <p className="text-xs text-blue-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar dengan rasio 1:1 (persegi) untuk hasil terbaik</p>
+                    </div>
                     <input
                       type="file"
                       id="img_sm"
@@ -457,8 +467,18 @@ export default function NewTravelAgency() {
                   {/* Gambar Besar */}
                   <div>
                     <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Besar
+                      Gambar Besar (untuk Detail/Hero)
                     </label>
+                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                      <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
+                      <ul className="text-xs text-green-700 space-y-1">
+                        <li>• Halaman detail biro perjalanan</li>
+                        <li>• Hero section yang menarik</li>
+                        <li>• Galeri foto berkualitas tinggi</li>
+                        <li>• Tampilan desktop yang optimal</li>
+                      </ul>
+                      <p className="text-xs text-green-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar landscape (16:9) atau portrait (4:3) dengan resolusi tinggi</p>
+                    </div>
                     <input
                       type="file"
                       id="img_lg"

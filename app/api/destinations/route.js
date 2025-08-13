@@ -8,20 +8,54 @@ export async function GET() {
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
-    // Filter events to only show destinations
-    const destinations = dbData.events.filter(event => 
-      event.type === 'wisata-alam' || 
-      event.type === 'wisata-taman' || 
-      event.type === 'wisata-budaya' || 
-      event.type === 'wisata-sejarah' || 
-      event.type === 'wisata-buatan' || 
-      event.type === 'wisata-minat-khusus' || 
-      event.type === 'wisata-religi'
-    );
+    // Get all destination categories from the database
+    const wisata = dbData.wisata || [];
+    const kuliner = dbData.kuliner || [];
+    const penginapan = dbData.penginapan || [];
+    const olehOleh = dbData.oleh_oleh || [];
+    const desaWisata = dbData.desa_wisata || [];
+    const biroPerjalanan = dbData.biro_perjalanan || [];
+    const events = dbData.events || [];
     
     return NextResponse.json({
       success: true,
-      destinations: destinations
+      destinations: {
+        wisata: {
+          title: "Objek Wisata",
+          description: "Tempat-tempat wisata alam, sejarah, dan budaya yang menarik untuk dikunjungi",
+          data: wisata
+        },
+        kuliner: {
+          title: "Kuliner",
+          description: "Tempat makan dan minuman khas daerah dengan cita rasa lokal yang autentik",
+          data: kuliner
+        },
+        penginapan: {
+          title: "Penginapan",
+          description: "Hotel, homestay, villa, dan tempat menginap lainnya untuk kenyamanan wisatawan",
+          data: penginapan
+        },
+        oleh_oleh: {
+          title: "Oleh-Oleh",
+          description: "Souvenir, makanan khas, dan produk lokal yang cocok dibawa pulang sebagai kenang-kenangan",
+          data: olehOleh
+        },
+        desa_wisata: {
+          title: "Desa Wisata",
+          description: "Desa-desa yang dikembangkan sebagai destinasi wisata dengan budaya dan kehidupan masyarakat lokal",
+          data: desaWisata
+        },
+        biro_perjalanan: {
+          title: "Biro Perjalanan",
+          description: "Layanan tour dan travel untuk memudahkan perencanaan dan pelaksanaan perjalanan wisata",
+          data: biroPerjalanan
+        },
+        events: {
+          title: "Events & Acara",
+          description: "Berbagai acara, festival, dan kegiatan yang dapat diikuti selama berwisata",
+          data: events
+        }
+      }
     });
   } catch (error) {
     console.error('Error reading destinations:', error);
@@ -41,10 +75,12 @@ export async function POST(request) {
     const title = formData.get('title');
     const location = formData.get('location');
     const type = formData.get('type');
+    const category = formData.get('category');
     const short_description = formData.get('short_description');
     const description = formData.get('description');
-    const price = formData.get('price');
-    const manager = formData.get('manager'); // Pengelola Wisata
+    const entrance_fee = formData.get('entrance_fee');
+    const contact = formData.get('contact');
+    const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
     
     // Validate required fields
@@ -93,39 +129,41 @@ export async function POST(request) {
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
-    // Generate new ID
-    const newId = (Math.max(...dbData.events.map(e => parseInt(e.id))) + 1).toString();
+    // Generate new ID for destination
+    const validIds = (dbData.wisata || [])
+      .map(d => {
+        const parsed = parseInt(d.id);
+        return isNaN(parsed) || !isFinite(parsed) ? 0 : parsed;
+      })
+      .filter(id => id > 0);
     
-    // Create new destination
+    const newId = validIds.length > 0 ? (Math.max(...validIds) + 1).toString() : "1";
+    
+    // Create new destination with new structure
     const newDestination = {
       id: newId,
-      type: type,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
       title: title,
       location: location,
       short_description: short_description || '',
       description: description || '',
-      manager: manager || '', // Pengelola Wisata
-      seats: [
-        {
-          seat: "Tiket Masuk",
-          price: parseInt(price) || 25000
-        }
-      ],
-      organizers: [
-        {
-          img_avatar: "/organizers/organizer-avt-1.png",
-          name: "Admin",
-          job: "Event Manager"
-        }
-      ],
+      type: type,
+      category: category || 'Wisata',
+      entrance_fee: entrance_fee || 'Gratis',
+      contact: contact || '',
+      address: address || '',
+      features: ['Fasilitas Dasar'],
       recommended: recommended,
-      packages: []
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     
-    // Add to events array
-    dbData.events.push(newDestination);
+    // Add to wisata array
+    if (!dbData.wisata) {
+      dbData.wisata = [];
+    }
+    dbData.wisata.push(newDestination);
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));

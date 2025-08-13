@@ -6,6 +6,15 @@ body {
   @apply bg-primary text-white;
 }
 
+/* Ensure form inputs have black text for readability */
+input, textarea, select {
+  color: #000000 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #6b7280 !important;
+}
+
 .h1,
 .h2,
 .h3,

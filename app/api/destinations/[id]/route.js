@@ -2,16 +2,19 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+// GET destination by ID
 export async function GET(request, { params }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     
-    // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
+    // Get wisata from the dedicated wisata array
+    const wisata = dbData.wisata || [];
+    
     // Find destination by ID
-    const destination = dbData.events.find(event => event.id === id && (event.type === 'wisata-alam' || event.type === 'objek-wisata' || event.type === 'desa-wisata'));
+    const destination = wisata.find(dest => dest.id === id);
     
     if (!destination) {
       return NextResponse.json({
@@ -33,27 +36,17 @@ export async function GET(request, { params }) {
   }
 }
 
+// PUT update destination
 export async function PUT(request, { params }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     const formData = await request.formData();
     
-    // Extract form data
-    const title = formData.get('title');
-    const location = formData.get('location');
-    const type = formData.get('type');
-    const short_description = formData.get('short_description');
-    const description = formData.get('description');
-    const price = formData.get('price');
-    const manager = formData.get('manager'); // Pengelola Wisata
-    const recommended = formData.get('recommended') === 'true';
-    
-    // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find destination by ID
-    const destinationIndex = dbData.events.findIndex(event => event.id === id && (event.type === 'wisata-alam' || event.type === 'objek-wisata' || event.type === 'desa-wisata'));
+    const destinationIndex = dbData.wisata.findIndex(dest => dest.id === id);
     
     if (destinationIndex === -1) {
       return NextResponse.json({
@@ -62,15 +55,32 @@ export async function PUT(request, { params }) {
       }, { status: 404 });
     }
     
-    // Get current destination
-    const currentDestination = dbData.events[destinationIndex];
+    // Extract form data
+    const title = formData.get('title');
+    const location = formData.get('location');
+    const type = formData.get('type');
+    const category = formData.get('category');
+    const short_description = formData.get('short_description');
+    const description = formData.get('description');
+    const entrance_fee = formData.get('entrance_fee');
+    const contact = formData.get('contact');
+    const address = formData.get('address');
+    const recommended = formData.get('recommended') === 'true';
+    
+    // Validate required fields
+    if (!title || !location || !type) {
+      return NextResponse.json({
+        success: false,
+        message: 'Title, location, dan type harus diisi'
+      }, { status: 400 });
+    }
     
     // Handle image uploads
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
     
-    let img_sm_path = currentDestination.img_sm || '/placeholder.jpg';
-    let img_lg_path = currentDestination.img_lg || '/placeholder.jpg';
+    let img_sm_path = dbData.wisata[destinationIndex].img_sm;
+    let img_lg_path = dbData.wisata[destinationIndex].img_lg;
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -78,7 +88,7 @@ export async function PUT(request, { params }) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
     
-    // Save small image if new file is uploaded
+    // Save small image if new one is provided
     if (img_sm && img_sm instanceof File) {
       const img_sm_ext = path.extname(img_sm.name);
       const img_sm_filename = `dest_sm_${Date.now()}${img_sm_ext}`;
@@ -89,7 +99,7 @@ export async function PUT(request, { params }) {
       img_sm_path = `/uploads/${img_sm_filename}`;
     }
     
-    // Save large image if new file is uploaded
+    // Save large image if new one is provided
     if (img_lg && img_lg instanceof File) {
       const img_lg_ext = path.extname(img_lg.name);
       const img_lg_filename = `dest_lg_${Date.now()}${img_lg_ext}`;
@@ -102,33 +112,33 @@ export async function PUT(request, { params }) {
     
     // Update destination
     const updatedDestination = {
-      ...currentDestination,
-      title: title || currentDestination.title,
-      location: location || currentDestination.location,
-      type: type || currentDestination.type,
-      short_description: short_description || currentDestination.short_description,
-      description: description || currentDestination.description,
-      manager: manager || currentDestination.manager || '', // Pengelola Wisata
+      ...dbData.wisata[destinationIndex],
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      title: title,
+      location: location,
+      short_description: short_description || '',
+      description: description || '',
+      type: type,
+      category: category || 'Wisata',
+      entrance_fee: entrance_fee || 'Gratis',
+      contact: contact || '',
+      address: address || '',
       recommended: recommended,
-      seats: [
-        {
-          seat: "Tiket Masuk",
-          price: parseInt(price) || currentDestination.seats?.[0]?.price || 25000
-        }
-      ]
+      updated_at: new Date().toISOString()
     };
     
-    dbData.events[destinationIndex] = updatedDestination;
+    dbData.wisata[destinationIndex] = updatedDestination;
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
     return NextResponse.json({
       success: true,
-      destination: updatedDestination
+      destination: updatedDestination,
+      message: 'Destinasi berhasil diperbarui'
     });
+    
   } catch (error) {
     console.error('Error updating destination:', error);
     return NextResponse.json({
@@ -138,16 +148,16 @@ export async function PUT(request, { params }) {
   }
 }
 
+// DELETE destination
 export async function DELETE(request, { params }) {
   try {
-    const { id } = await params;
+    const { id } = params;
     
-    // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Find destination by ID
-    const destinationIndex = dbData.events.findIndex(event => event.id === id && (event.type === 'wisata-alam' || event.type === 'objek-wisata' || event.type === 'desa-wisata'));
+    const destinationIndex = dbData.wisata.findIndex(dest => dest.id === id);
     
     if (destinationIndex === -1) {
       return NextResponse.json({
@@ -157,7 +167,7 @@ export async function DELETE(request, { params }) {
     }
     
     // Remove destination
-    dbData.events.splice(destinationIndex, 1);
+    dbData.wisata.splice(destinationIndex, 1);
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
@@ -166,6 +176,7 @@ export async function DELETE(request, { params }) {
       success: true,
       message: 'Destinasi berhasil dihapus'
     });
+    
   } catch (error) {
     console.error('Error deleting destination:', error);
     return NextResponse.json({

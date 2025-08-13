@@ -2,55 +2,61 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+// Path to db.json
+const dbPath = path.join(process.cwd(), 'db.json');
+
 export async function GET() {
   try {
-    // Read db.json file
-    const dbPath = path.join(process.cwd(), 'db.json');
+    // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
-    // Filter events by type 'biro-perjalanan'
-    const travelAgencies = dbData.events.filter(event => event.type === 'biro-perjalanan');
+    // Get biro_perjalanan data from master data section
+    const biroPerjalananItems = dbData.biro_perjalanan || [];
     
     return NextResponse.json({
       success: true,
-      travelAgencies: travelAgencies
+      biro_perjalanan: biroPerjalananItems
     });
   } catch (error) {
-    console.error('Error reading travel agencies:', error);
-    return NextResponse.json({
-      success: false,
-      message: 'Terjadi kesalahan server'
-    }, { status: 500 });
+    console.error('Error fetching biro_perjalanan data:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Terjadi kesalahan saat mengambil data biro perjalanan'
+      },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request) {
   try {
+    // Handle FormData for file uploads
     const formData = await request.formData();
     
     // Extract form data
     const title = formData.get('title');
-    const short_description = formData.get('short_description');
-    const description = formData.get('description');
     const location = formData.get('location');
-    const type = formData.get('type');
-    const office_address = formData.get('office_address');
-    const pricing = formData.get('pricing');
-    const gallery_link = formData.get('gallery_link');
-    const additional_info = formData.get('additional_info');
+    const description = formData.get('description');
+    const short_description = formData.get('short_description');
+    const type = formData.get('type') || 'biro';
+    const category = formData.get('category') || 'Biro Perjalanan';
+    const contact = formData.get('contact') || '';
+    const address = formData.get('address') || location;
+    const services = formData.get('services') || ['Paket Wisata', 'Transportasi'];
     const recommended = formData.get('recommended') === 'true';
     
-    // Parse JSON fields
-    const services = JSON.parse(formData.get('services') || '[]');
-    const facilities = JSON.parse(formData.get('facilities') || '[]');
-    const contact = JSON.parse(formData.get('contact') || '{}');
+    // Validate required fields
+    if (!title || !location) {
+      return NextResponse.json({
+        success: false,
+        message: 'Title dan location harus diisi'
+      }, { status: 400 });
+    }
     
-    // Handle image uploads
+    // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
-    
-    let img_sm_path = '/placeholder.jpg';
-    let img_lg_path = '/placeholder.jpg';
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -58,10 +64,13 @@ export async function POST(request) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
     
+    let img_sm_path = '/placeholder.jpg';
+    let img_lg_path = '/placeholder.jpg';
+    
     // Save small image
     if (img_sm && img_sm instanceof File) {
       const img_sm_ext = path.extname(img_sm.name);
-      const img_sm_filename = `travel_sm_${Date.now()}${img_sm_ext}`;
+      const img_sm_filename = `agency_sm_${Date.now()}${img_sm_ext}`;
       const img_sm_path_full = path.join(uploadsDir, img_sm_filename);
       
       const img_sm_buffer = Buffer.from(await img_sm.arrayBuffer());
@@ -72,7 +81,7 @@ export async function POST(request) {
     // Save large image
     if (img_lg && img_lg instanceof File) {
       const img_lg_ext = path.extname(img_lg.name);
-      const img_lg_filename = `travel_lg_${Date.now()}${img_lg_ext}`;
+      const img_lg_filename = `agency_lg_${Date.now()}${img_lg_ext}`;
       const img_lg_path_full = path.join(uploadsDir, img_lg_filename);
       
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
@@ -80,47 +89,72 @@ export async function POST(request) {
       img_lg_path = `/uploads/${img_lg_filename}`;
     }
     
-    // Read db.json file
-    const dbPath = path.join(process.cwd(), 'db.json');
+    // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
-    // Create new travel agency
-    const newTravelAgency = {
-      id: (dbData.events.length + 1).toString(),
-      type: type || 'biro-perjalanan',
-      title,
-      short_description,
-      description,
-      location,
-      services,
-      office_address,
-      contact,
-      pricing,
-      facilities,
-      gallery_link,
-      additional_info,
+    // Initialize biro_perjalanan array if it doesn't exist
+    if (!dbData.biro_perjalanan) {
+      dbData.biro_perjalanan = [];
+    }
+    
+    // Generate new ID
+    const validIds = (dbData.biro_perjalanan || [])
+      .map(item => {
+        const parsed = parseInt(item.id);
+        return isNaN(parsed) || !isFinite(parsed) ? 0 : parsed;
+      })
+      .filter(id => id > 0);
+    
+    const newId = validIds.length > 0 ? (Math.max(...validIds) + 1).toString() : "1";
+    
+    // Parse services if it's a JSON string
+    let parsedServices = services;
+    if (typeof services === 'string') {
+      try {
+        parsedServices = JSON.parse(services);
+      } catch (e) {
+        parsedServices = [services];
+      }
+    }
+    
+    // Create new biro_perjalanan item
+    const newBiroPerjalananItem = {
+      id: newId,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
-      recommended,
-      date: new Date().toISOString().split('T')[0],
-      hour: '09:00'
+      title: title,
+      location: location,
+      short_description: short_description || description?.substring(0, 100) || description,
+      description: description,
+      type: type,
+      category: category,
+      contact: contact,
+      address: address,
+      services: Array.isArray(parsedServices) ? parsedServices : [parsedServices],
+      recommended: recommended,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     
-    // Add to events array
-    dbData.events.push(newTravelAgency);
+    // Add to biro_perjalanan array
+    dbData.biro_perjalanan.push(newBiroPerjalananItem);
     
-    // Write back to db.json
+    // Write back to database
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
     return NextResponse.json({
       success: true,
-      travelAgency: newTravelAgency
+      message: 'Item biro perjalanan berhasil ditambahkan',
+      biroPerjalananItem: newBiroPerjalananItem
     });
   } catch (error) {
-    console.error('Error creating travel agency:', error);
-    return NextResponse.json({
-      success: false,
-      message: 'Terjadi kesalahan server'
-    }, { status: 500 });
+    console.error('Error creating biro_perjalanan item:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Terjadi kesalahan saat membuat item biro perjalanan: ' + error.message
+      },
+      { status: 500 }
+    );
   }
 }

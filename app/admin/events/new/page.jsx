@@ -179,6 +179,17 @@ export default function NewEvent() {
     }
   };
 
+  const handleRemoveImage = (name) => {
+    setImageFiles(prev => ({
+      ...prev,
+      [name]: null
+    }));
+    setImagePreviews(prev => ({
+      ...prev,
+      [name]: null
+    }));
+  };
+
   const removePerformer = (index) => {
     setFormData(prev => ({
       ...prev,
@@ -214,7 +225,7 @@ export default function NewEvent() {
         formDataToSend.append('img_lg', imageFiles.img_lg);
       }
 
-      const response = await fetch('/api/events/create', {
+      const response = await fetch('/api/events', {
         method: 'POST',
         body: formDataToSend, // Don't set Content-Type header, let browser set it with boundary
       });
@@ -319,37 +330,51 @@ export default function NewEvent() {
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
                     Tipe Event *
                   </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    required
-                  >
-                    <option value="">Pilih tipe event</option>
-                    <option value="event-rakyat">Event Rakyat</option>
-                    <option value="event-banyumas">Event Banyumas</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer hover:border-gray-400"
+                      required
+                    >
+                      <option value="">Pilih tipe event</option>
+                      <option value="event-rakyat">Event Rakyat</option>
+                      <option value="event-banyumas">Event Banyumas</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
                   <label htmlFor="event_type" className="block text-sm font-medium text-gray-700 mb-2">
                     Jenis Event *
                   </label>
-                  <select
-                    id="event_type"
-                    name="event_type"
-                    value={formData.event_type}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    required
-                  >
-                    <option value="">Pilih jenis event</option>
-                    {eventTypeOptions.map((type) => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      id="event_type"
+                      name="event_type"
+                      value={formData.event_type}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer hover:border-gray-400"
+                      required
+                    >
+                      <option value="">Pilih jenis event</option>
+                      {eventTypeOptions.map((type) => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="md:col-span-2">
@@ -595,49 +620,121 @@ export default function NewEvent() {
                       <label htmlFor="presale" className="block text-sm font-medium text-gray-700 mb-2">
                         Harga Presale (Rp)
                       </label>
-                      <input
-                        type="number"
-                        id="presale"
-                        name="presale"
-                        value={formData.pricing.presale}
-                        onChange={handlePricingChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="25000"
-                        min="0"
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                        <input
+                          type="text"
+                          id="presale"
+                          name="presale"
+                          value={formData.pricing.presale}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, '');
+                            setFormData(prev => ({
+                              ...prev,
+                              pricing: {
+                                ...prev.pricing,
+                                presale: value
+                              }
+                            }));
+                          }}
+                          onBlur={(e) => {
+                            if (formData.pricing.presale) {
+                              const formattedValue = `${formData.pricing.presale}000`;
+                              setFormData(prev => ({
+                                ...prev,
+                                pricing: {
+                                  ...prev.pricing,
+                                  presale: formattedValue
+                                }
+                              }));
+                            }
+                          }}
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="25000"
+                          maxLength="6"
+                        />
+                      </div>
                     </div>
 
                     <div>
                       <label htmlFor="normal" className="block text-sm font-medium text-gray-700 mb-2">
                         Harga Normal (Rp) *
                       </label>
-                      <input
-                        type="number"
-                        id="normal"
-                        name="normal"
-                        value={formData.pricing.normal}
-                        onChange={handlePricingChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="40000"
-                        min="0"
-                        required={!formData.pricing.free}
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                        <input
+                          type="text"
+                          id="normal"
+                          name="normal"
+                          value={formData.pricing.normal}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, '');
+                            setFormData(prev => ({
+                              ...prev,
+                              pricing: {
+                                ...prev.pricing,
+                                normal: value
+                              }
+                            }));
+                          }}
+                          onBlur={(e) => {
+                            if (formData.pricing.normal) {
+                              const formattedValue = `${formData.pricing.normal}000`;
+                              setFormData(prev => ({
+                                ...prev,
+                                pricing: {
+                                  ...prev.pricing,
+                                  normal: formattedValue
+                                }
+                              }));
+                            }
+                          }}
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="40000"
+                          maxLength="6"
+                          required={!formData.pricing.free}
+                        />
+                      </div>
                     </div>
 
                     <div>
                       <label htmlFor="vip" className="block text-sm font-medium text-gray-700 mb-2">
                         Harga VIP (Rp)
                       </label>
-                      <input
-                        type="number"
-                        id="vip"
-                        name="vip"
-                        value={formData.pricing.vip}
-                        onChange={handlePricingChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="75000"
-                        min="0"
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                        <input
+                          type="text"
+                          id="vip"
+                          name="vip"
+                          value={formData.pricing.vip}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, '');
+                            setFormData(prev => ({
+                              ...prev,
+                              pricing: {
+                                ...prev.pricing,
+                                vip: value
+                              }
+                            }));
+                          }}
+                          onBlur={(e) => {
+                            if (formData.pricing.vip) {
+                              const formattedValue = `${formData.pricing.vip}000`;
+                              setFormData(prev => ({
+                                ...prev,
+                                pricing: {
+                                  ...prev.pricing,
+                                  vip: formattedValue
+                                }
+                              }));
+                            }
+                          }}
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="75000"
+                          maxLength="6"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -736,49 +833,89 @@ export default function NewEvent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
-                    Gambar Kecil
+                    Gambar Depan (untuk Card)
                   </label>
-                  <input
-                    type="file"
-                    id="img_sm"
-                    name="img_sm"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  />
-                  {imagePreviews.img_sm && (
-                    <div className="mt-2">
-                      <img 
-                        src={imagePreviews.img_sm} 
-                        alt="Preview" 
-                        className="w-32 h-32 object-cover rounded-md border"
-                      />
-                    </div>
-                  )}
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                    <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
+                    <ul className="text-xs text-blue-700 space-y-1">
+                      <li>• Card event di halaman utama</li>
+                      <li>• Thumbnail di list pencarian</li>
+                      <li>• Preview di kategori event</li>
+                      <li>• Tampilan mobile yang responsif</li>
+                    </ul>
+                    <p className="text-xs text-blue-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar dengan rasio 1:1 (persegi) untuk hasil terbaik</p>
+                  </div>
+                  <div className="space-y-3">
+                    <input
+                      type="file"
+                      id="img_sm"
+                      name="img_sm"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                    {imagePreviews.img_sm && (
+                      <div className="relative">
+                        <img 
+                          src={imagePreviews.img_sm} 
+                          alt="Preview Gambar Depan" 
+                          className="w-32 h-32 object-cover rounded-md border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('img_sm')}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                          title="Hapus gambar"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                 </div>
 
                 <div>
                   <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                    Gambar Besar
+                    Gambar Galeri (untuk Detail)
                   </label>
-                  <input
-                    type="file"
-                    id="img_lg"
-                    name="img_lg"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  />
-                  {imagePreviews.img_lg && (
-                    <div className="mt-2">
-                      <img 
-                        src={imagePreviews.img_lg} 
-                        alt="Preview" 
-                        className="w-32 h-32 object-cover rounded-md border"
-                      />
-                    </div>
-                  )}
+                  <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                    <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
+                    <ul className="text-xs text-green-700 space-y-1">
+                      <li>• Halaman detail event</li>
+                      <li>• Hero section yang menarik</li>
+                      <li>• Galeri foto berkualitas tinggi</li>
+                      <li>• Tampilan desktop yang optimal</li>
+                    </ul>
+                    <p className="text-xs text-green-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar landscape (16:9) atau portrait (4:3) dengan resolusi tinggi</p>
+                  </div>
+                  <div className="space-y-3">
+                    <input
+                      type="file"
+                      id="img_lg"
+                      name="img_lg"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                    {imagePreviews.img_lg && (
+                      <div className="relative">
+                        <img 
+                          src={imagePreviews.img_lg} 
+                          alt="Preview Gambar Galeri" 
+                          className="w-32 h-32 object-cover rounded-md border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('img_lg')}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                          title="Hapus gambar"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                 </div>
               </div>

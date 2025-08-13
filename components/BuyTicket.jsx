@@ -49,7 +49,7 @@ const BuyTicket = ({event}) => {
           ): (
             <div className="flex items-center gap-4">
               <HiTicket className="text-2xl"/>
-              <div>{`${itemAmount} x ticket - Rp ${totalPrice}`}</div>
+              <div>{`${itemAmount} x ticket - Rp ${totalPrice && !isNaN(totalPrice) ? totalPrice.toLocaleString('id-ID') : '0'}`}</div>
             </div>
           )}
         </div>

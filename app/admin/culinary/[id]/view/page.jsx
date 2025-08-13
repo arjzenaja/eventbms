@@ -22,7 +22,7 @@ export default function ViewCulinaryItem() {
         const data = await response.json();
         
         if (data.success) {
-          setCulinaryItem(data.culinaryItem);
+          setCulinaryItem(data.kuliner);
         } else {
           setError(data.message);
         }
@@ -136,20 +136,32 @@ export default function ViewCulinaryItem() {
                         <dt className="text-sm font-medium text-gray-500">Lokasi</dt>
                         <dd className="text-sm text-gray-900">{culinaryItem.location}</dd>
                       </div>
-                      {culinaryItem.date && (
-                        <div>
-                          <dt className="text-sm font-medium text-gray-500">Tanggal</dt>
-                          <dd className="text-sm text-gray-900">{culinaryItem.date}</dd>
-                        </div>
-                      )}
-                      {culinaryItem.hour && (
-                        <div>
-                          <dt className="text-sm font-medium text-gray-500">Jam</dt>
-                          <dd className="text-sm text-gray-900">{culinaryItem.hour}</dd>
-                        </div>
-                      )}
-                                              <div>
-                          <dt className="text-sm font-medium text-gray-500">Status Rekomendasi</dt>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Tipe</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.type}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Kisaran Harga</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.price_range}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Masakan</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.cuisine}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Jam Buka</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.opening_hours}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Kontak</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.contact}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Alamat</dt>
+                        <dd className="text-sm text-gray-900">{culinaryItem.address}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Status Rekomendasi</dt>
                         <dd className="text-sm text-gray-900">
                           {culinaryItem.recommended ? (
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -170,6 +182,45 @@ export default function ViewCulinaryItem() {
                     <p className="text-sm text-gray-700 leading-relaxed">
                       {culinaryItem.description || 'Tidak ada deskripsi yang tersedia.'}
                     </p>
+                    
+                    {culinaryItem.features && culinaryItem.features.length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="text-md font-semibold text-gray-900 mb-2">Fitur</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {culinaryItem.features.map((feature, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                            >
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Timestamps */}
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Informasi Sistem</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {culinaryItem.created_at && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Dibuat Pada</dt>
+                        <dd className="text-sm text-gray-900">
+                          {new Date(culinaryItem.created_at).toLocaleString('id-ID')}
+                        </dd>
+                      </div>
+                    )}
+                    {culinaryItem.updated_at && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Terakhir Diperbarui</dt>
+                        <dd className="text-sm text-gray-900">
+                          {new Date(culinaryItem.updated_at).toLocaleString('id-ID')}
+                        </dd>
+                      </div>
+                    )}
                   </div>
                 </div>
 

@@ -69,7 +69,16 @@ export async function POST(request) {
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Generate new ID
-    const newId = Math.max(...dbData.events.map(e => parseInt(e.id))) + 1;
+    let newId = 1;
+    if (dbData.events && dbData.events.length > 0) {
+      const validIds = dbData.events
+        .map(e => parseInt(e.id))
+        .filter(id => !isNaN(id) && isFinite(id));
+      
+      if (validIds.length > 0) {
+        newId = Math.max(...validIds) + 1;
+      }
+    }
     
     // Create new event
     const newEvent = {
