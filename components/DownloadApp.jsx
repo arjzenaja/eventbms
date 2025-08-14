@@ -15,10 +15,10 @@ const DownloadApp = () => {
         {/* button */}
         <div className="flex-1 flex flex-col md:flex-row items-center justify-end gap-4">
           <Link href="/" className="relative flex w-[192px] h-[64px]">
-            <Image src="/download/app-store.svg" fill className="object-contain" alt="" />
+            <Image src="/download/app-store.svg" fill className="object-contain" alt="Download on App Store" />
           </Link>
           <Link href="/" className="relative flex w-[192px] h-[64px]">
-            <Image src="/download/google-play.svg" fill className="object-contain" alt="" />
+            <Image src="/download/google-play.svg" fill className="object-contain" alt="Get it on Google Play" />
           </Link>
         </div>
       </div> 

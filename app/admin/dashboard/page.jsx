@@ -88,16 +88,17 @@ function ClientLastUpdatedFormatter({ date }) {
 
 export default function AdminDashboard() {
   const { adminUser } = useAdmin();
-  const [stats, setStats] = useState({
-    totalEvents: 0,
-    totalDestinations: 0,
-    totalAccommodations: 0,
-    totalCulinary: 0,
-    totalSouvenirs: 0,
-    totalVillages: 0,
-    totalTravelAgencies: 0,
-    totalWisataAlam: 0
-  });
+        const [stats, setStats] = useState({
+        totalEvents: 0,
+        totalDestinations: 0,
+        totalAccommodations: 0,
+        totalCulinary: 0,
+        totalSouvenirs: 0,
+        totalVillages: 0,
+        totalTravelAgencies: 0,
+        totalWisataAlam: 0,
+        totalUsers: 0
+      });
   const [recentEvents, setRecentEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -142,7 +143,8 @@ export default function AdminDashboard() {
         accommodationResponse,
         souvenirsResponse,
         villagesResponse,
-        travelAgenciesResponse
+        travelAgenciesResponse,
+        usersResponse
       ] = await Promise.all([
         fetch('/api/events'),
         fetch('/api/wisata'),
@@ -150,7 +152,8 @@ export default function AdminDashboard() {
         fetch('/api/penginapan'),
         fetch('/api/oleh_oleh'),
         fetch('/api/desa_wisata'),
-        fetch('/api/biro_perjalanan')
+        fetch('/api/biro_perjalanan'),
+        fetch('/api/users')
       ]);
 
       // Parse all responses
@@ -161,6 +164,7 @@ export default function AdminDashboard() {
       const souvenirsData = await souvenirsResponse.json();
       const villagesData = await villagesResponse.json();
       const travelAgenciesData = await travelAgenciesResponse.json();
+      const usersData = await usersResponse.json();
 
       // Extract data arrays, handle potential errors gracefully
       const events = eventsData.success ? (eventsData.events || []) : [];
@@ -170,6 +174,7 @@ export default function AdminDashboard() {
       const souvenirs = souvenirsData.success ? (souvenirsData.oleh_oleh || []) : [];
       const villages = villagesData.success ? (villagesData.desa_wisata || []) : [];
       const travelAgencies = travelAgenciesData.success ? (travelAgenciesData.biro_perjalanan || []) : [];
+      const users = usersData.success ? (usersData.users || []) : [];
 
       // Calculate statistics from actual API data
       setStats({
@@ -180,7 +185,8 @@ export default function AdminDashboard() {
         totalSouvenirs: souvenirs.length,
         totalVillages: villages.length,
         totalTravelAgencies: travelAgencies.length,
-        totalWisataAlam: destinations.length // Destinations are the main tourist objects
+        totalWisataAlam: destinations.length, // Destinations are the main tourist objects
+        totalUsers: users.length
       });
 
       // Get recent events for display
@@ -389,6 +395,15 @@ export default function AdminDashboard() {
       icon: "👁",
       color: "bg-gradient-to-r from-blue-600 to-blue-700",
       change: "+12%",
+      changeType: "positive"
+    },
+    {
+      title: "Users",
+      count: stats.totalUsers || 0,
+      subtitle: "Pengguna terdaftar",
+      icon: "👥",
+      color: "bg-gradient-to-r from-purple-600 to-purple-700",
+      change: "+8%",
       changeType: "positive"
     },
     {
@@ -608,6 +623,8 @@ export default function AdminDashboard() {
                   return "/admin/travel-agencies";
                 case "Souvenir":
                   return "/admin/souvenirs";
+                case "Users":
+                  return "/admin/users";
                 default:
                   return "/admin/events";
               }

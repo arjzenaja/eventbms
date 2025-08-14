@@ -4,6 +4,7 @@ import "./globals.css";
 // contexts
 import EventProvider from "@/context/EventContext";
 import TicketProvider from "@/context/TicketContext";
+import { UserProvider } from "@/context/UserContext";
 
 import ConditionalLayout from "@/components/ConditionalLayout";
 
@@ -26,18 +27,20 @@ const caveat = Caveat({
 
 export default function RootLayout({ children }) {
   return (
-    <EventProvider>
-      <TicketProvider>
-        <html lang="en">
-          <body
-            className={`${poppins.variable} ${caveat.variable} antialiased`}
-          >
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
-          </body>
-        </html>
-      </TicketProvider>
-    </EventProvider>
+    <UserProvider>
+      <EventProvider>
+        <TicketProvider>
+          <html lang="en">
+            <body
+              className={`${poppins.variable} ${caveat.variable} antialiased`}
+            >
+              <ConditionalLayout>
+                {children}
+              </ConditionalLayout>
+            </body>
+          </html>
+        </TicketProvider>
+      </EventProvider>
+    </UserProvider>
   );
 }

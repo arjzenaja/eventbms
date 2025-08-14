@@ -9,10 +9,10 @@ const Organizers = ({ event }) => {
         <h3 className="h3 mb-4">Pengelola</h3>
         <div className="w-[74px] h-[3px] bg-[#3B82F6] rounded-3xl"></div>
       </div>
-      {event.organizers.map((organizer, index) => {
+      {(event.organizers ?? []).map((organizer, index) => {
         return (
           <div key={index} className="flex items-center gap-8 border-b last-of-type:border-none border-white/10 pb-8">
-            <Image src={organizer.img_avatar} width={72} height={72} alt=""/>
+            <Image src={organizer.img_avatar || "/placeholder.jpg"} width={72} height={72} alt={organizer.name || "Organizer avatar"}/>
             {/* organizer info */}
             <div>
               <div className="flex flex-col gap-2">
@@ -22,12 +22,12 @@ const Organizers = ({ event }) => {
                 <div className="flex gap-4">
                   {(organizer.social ?? []).map((social, index) => {
                     return (
-                      <Link href={social.path} key={index}>
+                      <Link href={social.path || "#"} key={index}>
                         <Image 
-                          src={social.icon}
+                          src={social.icon || "/placeholder.jpg"}
                           width={20}
                           height={20}
-                          alt=""
+                          alt={`${social.name || 'Social media'} icon`}
                         />
                       </Link>
                     )

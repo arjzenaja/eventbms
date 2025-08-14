@@ -188,6 +188,26 @@
       "recommended": true,
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "9",
+      "img_sm": "/uploads/dest_sm_1755089926261.jpg",
+      "img_lg": "/uploads/dest_lg_1755089926262.jpg",
+      "title": "Axwadwwa",
+      "location": "dawdawdw,dawdawda",
+      "short_description": "wdawdawdaw",
+      "description": "dawdawdawad",
+      "type": "wisata-alam",
+      "category": "Wisata",
+      "entrance_fee": "Gratis",
+      "contact": "",
+      "address": "",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T12:58:46.263Z",
+      "updated_at": "2025-08-13T12:58:46.263Z"
     }
   ],
   "kuliner": [
@@ -282,6 +302,30 @@
       "updated_at": "2025-08-13T02:13:58.174Z",
       "menu_highlight": "",
       "price_range": "8.000 - 25.000"
+    },
+    {
+      "id": "5",
+      "img_sm": "/uploads/culinary_sm_1755090081863.jpg",
+      "img_lg": "/uploads/culinary_lg_1755090081865.jpg",
+      "title": "eq2q2e",
+      "location": "q2eqeq",
+      "short_description": "eq2eq2e",
+      "description": "2q2eq2eq",
+      "type": "kedai",
+      "price_range": "25.000 - 50.000",
+      "cuisine": "Indonesia",
+      "opening_hours": "10:00 - 22:00",
+      "contact": "dawda",
+      "address": "e2q2eq2",
+      "features": [
+        "Masakan Indonesia",
+        "Suasana Nyaman",
+        "Masakan Tradisional",
+        "Parkir Luas"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T13:01:21.866Z",
+      "updated_at": "2025-08-13T13:01:21.866Z"
     }
   ],
   "penginapan": [
@@ -353,24 +397,26 @@
     },
     {
       "id": "4",
-      "img_sm": "/placeholder.jpg",
-      "img_lg": "/placeholder.jpg",
-      "title": "3e3e3",
-      "location": "dawdaw",
-      "short_description": "dawda",
-      "description": "dwadaa",
+      "img_sm": "/uploads/accommodation_sm_1755090540326.jpg",
+      "img_lg": "/uploads/accommodation_lg_1755090540330.jpg",
+      "title": "wdawdada",
+      "location": "wdawdawd1w",
+      "short_description": "tess",
+      "description": "tes penginapan ",
       "type": "hotel",
       "price_range": "500.000 - 1.000.000",
       "rating": "3",
-      "contact": "dwada",
+      "contact": "ardi ",
       "address": "dwawda",
       "amenities": [
-        "AC",
-        "Pool"
+        "Restaurant",
+        "WiFi",
+        "Spa",
+        "Beach Access"
       ],
       "recommended": false,
-      "created_at": "2025-08-13T04:27:13.958Z",
-      "updated_at": "2025-08-13T04:27:13.958Z"
+      "created_at": "2025-08-13T13:09:00.335Z",
+      "updated_at": "2025-08-13T13:09:00.335Z"
     }
   ],
   "oleh_oleh": [
@@ -488,6 +534,26 @@
       "img_lg": "/upcoming/img/art/5-lg.png",
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T04:58:49.107Z"
+    },
+    {
+      "id": "6",
+      "img_sm": "/uploads/souvenir_sm_1755091350659.jpg",
+      "img_lg": "/uploads/souvenir_lg_1755091350663.jpg",
+      "title": "wdawdadw",
+      "location": "wdawdawda",
+      "short_description": "wwadad",
+      "description": "awdaa",
+      "type": "makanan",
+      "category": "Makanan",
+      "price_range": "25.000 - 100.000",
+      "contact": "dawdawda",
+      "address": "dawdadaw",
+      "features": [
+        "Produk Lokal,Kualitas Terjamindwaad"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T13:22:30.669Z",
+      "updated_at": "2025-08-13T13:22:30.669Z"
     }
   ],
   "desa_wisata": [
@@ -532,6 +598,25 @@
       "recommended": false,
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T02:13:58.175Z"
+    },
+    {
+      "id": "3",
+      "img_sm": "/uploads/village_sm_1755094780117.jpg",
+      "img_lg": "/uploads/village_lg_1755094780120.jpg",
+      "title": "edadakdowd",
+      "location": "wdakwdokowa, damwdokaowkda, damwdoakwoda",
+      "short_description": "damwdamowdawda",
+      "description": "damwdmaa",
+      "type": "desa",
+      "category": "alam",
+      "contact": "damwokdoawkdoak",
+      "address": "dmawodoawdkoakwdkawkdoakd",
+      "features": [
+        "Budaya Lokal,Akomodasi Homestay"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T14:19:40.121Z",
+      "updated_at": "2025-08-13T14:19:40.121Z"
     }
   ],
   "biro_perjalanan": [
@@ -570,6 +655,26 @@
       "recommended": false,
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T02:13:58.175Z"
+    },
+    {
+      "id": "3",
+      "img_sm": "/placeholder.jpg",
+      "img_lg": "/placeholder.jpg",
+      "title": "dawdwd",
+      "location": "Cilongok, Banyumas",
+      "short_description": "awawdaw",
+      "description": "adawadada",
+      "type": "biro",
+      "category": "Biro Perjalanan",
+      "contact": "{\"whatsapp\":\"0812-3456-7890\",\"email\":\"admin@gmail.com\",\"instagram\":\"@awdaowkodakwoad.fhr\",\"website\":\"https://www.instagram.com/\"}",
+      "address": "dwadawawd",
+      "services": [
+        "Layanan sewa mobil",
+        "Open trip / private trip"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-13T14:31:46.050Z",
+      "updated_at": "2025-08-13T14:31:46.051Z"
     }
   ],
   "events": [
@@ -590,8 +695,8 @@
       "recommended": true,
       "created_at": "2025-08-13T00:23:59.839Z",
       "updated_at": "2025-08-13T02:13:58.175Z",
-      "event_date": "",
-      "event_time": "",
+      "date": "2025-12-25",
+      "time": "19:00",
       "organizer": ""
     },
     {
@@ -611,8 +716,8 @@
       "recommended": true,
       "created_at": "2025-08-13T00:23:59.839Z",
       "updated_at": "2025-08-13T02:13:58.175Z",
-      "event_date": "",
-      "event_time": "",
+      "date": "2025-11-15",
+      "time": "10:00",
       "organizer": ""
     },
     {
@@ -632,9 +737,35 @@
       "recommended": false,
       "created_at": "2025-08-13T00:23:59.839Z",
       "updated_at": "2025-08-13T02:13:58.175Z",
-      "event_date": "",
-      "event_time": "",
+      "date": "2025-10-20",
+      "time": "14:00",
       "organizer": ""
+    },
+    {
+      "id": "4",
+      "img_sm": "/placeholder.jpg",
+      "img_lg": "/placeholder.jpg",
+      "title": "Jazz Night Live",
+      "location": "Purwokerto, Banyumas",
+      "short_description": "Malam jazz dengan musisi lokal dan internasional",
+      "description": "Acara jazz malam yang menampilkan musisi jazz lokal dan internasional. Nikmati musik jazz berkualitas tinggi dengan suasana yang nyaman dan makanan ringan.",
+      "type": "festival",
+      "category": "event-musik",
+      "date": "2025-11-05",
+      "time": "19:00",
+      "entrance_fee": "150.000",
+      "contact": "0812-3456-7890",
+      "address": "Gedung Kesenian Purwokerto",
+      "features": [
+        "Live Music",
+        "Food & Beverage",
+        "Networking",
+        "VIP Seating"
+      ],
+      "recommended": true,
+      "created_at": "2025-08-13T14:24:28.932Z",
+      "updated_at": "2025-08-13T14:24:28.932Z",
+      "organizer": "Banyumas Jazz Community"
     }
   ]
 }

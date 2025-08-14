@@ -2,8 +2,14 @@
 import React, { useEffect, useState, useMemo } from 'react'
 
 const Timer = ({ event }) => {
-  // calculate the target event date and time using useMemo to prevent recreation
-  const eventDate = useMemo(() => new Date(`${event.date}T${event.hour}`), [event.date, event.hour]);
+  // Safely resolve date/time from different shapes
+  const rawDate = event?.date || event?.event_date;
+  const rawTime = event?.time || event?.hour || event?.event_time || "00:00";
+  const eventDate = useMemo(() => {
+    if (!rawDate) return null;
+    const d = new Date(`${rawDate}T${rawTime}`);
+    return isNaN(d.getTime()) ? null : d;
+  }, [rawDate, rawTime]);
 
   // state to track the remaining time in miliseconds
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -15,21 +21,26 @@ const Timer = ({ event }) => {
     setIsClient(true);
     
     // Initialize time remaining
+    if (!eventDate) {
+      setTimeRemaining(0);
+      return;
+    }
     const now = new Date();
     const initialTimeLeft = eventDate - now;
     setTimeRemaining(initialTimeLeft > 0 ? initialTimeLeft : 0);
 
     // set up an interval that updates every seconds
     const interval = setInterval(() => {
-      const now = new Date(); // get current time 
-      const timeLeft = eventDate - now; // calculate the remaining time 
+      if (!eventDate) return; 
+      const now = new Date();
+      const timeLeft = eventDate - now;
 
       // if the time is up, clear the interval and stop the countdown
       if (timeLeft <= 0) {
         clearInterval(interval);
         setTimeRemaining(0);
       } else {
-        setTimeRemaining(timeLeft) // update the remaining time state
+        setTimeRemaining(timeLeft);
       }
     }, 1000); // runs every 1000 miliseconds (1 seconds)
 

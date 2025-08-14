@@ -15,15 +15,27 @@ import { BiMap } from 'react-icons/bi';
 
 const EventLocation = () => {
   const { events, selectedLocation, setSelectedLocation } = useContext(EventContext);
-  console.log("events:", events);
-  console.log("event locations:", events.map(e => e.location));
-
+  
+  // Ensure events is an array and filter out invalid locations
+  const validLocations = Array.isArray(events) 
+    ? events
+        .filter(event => event && event.location)
+        .map(event => event.location)
+        .filter(location => location && typeof location === 'string' && location.trim() !== '')
+    : [];
+  
+  // Filter out any empty or invalid locations from the Set
+  const filteredLocations = Array.from(new Set(validLocations))
+    .filter(location => location && typeof location === 'string' && location.trim() !== '');
+  
   const uniqueLocations = [
     "All locations",
-    ...new Set(events.map(event => event.location)),
+    ...filteredLocations
   ];
 
-  console.log(uniqueLocations);
+  console.log("Events array:", events);
+  console.log("Valid locations:", validLocations);
+  console.log("Unique locations:", uniqueLocations);
 
   return (
     <div className='flex items-center gap-[10px] w-full xl:w-[190px] select-none'>
@@ -36,16 +48,30 @@ const EventLocation = () => {
         onValueChange={(value) => setSelectedLocation(value)}
       >
         <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 ">
-          <SelectValue placeholder="Object Wisata" />
+          <SelectValue placeholder="Lokasi" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Location</SelectLabel>
-            {uniqueLocations.map((location, index) => (
-              <SelectItem key={index} value={location === "All locations" ? null : location}>
-                {location}
-              </SelectItem>
-            ))}
+            {uniqueLocations
+              .filter(location => location && typeof location === 'string' && location.trim() !== '')
+              .map((location, index) => {
+                const value = location === "All locations" ? "all-locations" : location;
+                
+                // Final validation to ensure value is never empty
+                if (!value || value.trim() === '') {
+                  console.warn('Skipping location with empty value:', location);
+                  return null;
+                }
+                
+                return (
+                  <SelectItem key={`location-${value}-${index}`} value={value}>
+                    {location}
+                  </SelectItem>
+                );
+              })
+              .filter(Boolean) // Remove any null items
+            }
           </SelectGroup>
         </SelectContent>
       </Select>

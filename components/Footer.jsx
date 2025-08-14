@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const socials = [
   {
@@ -25,6 +26,19 @@ const socials = [
 ];
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle email subscription logic here
+    console.log('Email submitted:', email);
+    setEmail(''); // Clear the input after submission
+  };
+
   return (
           <footer className='bg-blue-600 bg-pattern bg-cover bg-blend-multiply pt-16'>
       <div className='container mx-auto border-b border-white/40'>
@@ -36,13 +50,15 @@ const Footer = () => {
             <p>Join our list for exclusive event updates and insider tips.</p>
           </div>
           {/* form */}
-          <form className='relative flex items-center mb-16'>
+          <form className='relative flex items-center mb-16' onSubmit={handleSubmit}>
             <input 
-              type="text"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
               placeholder='Your Email Address'
               className='pl-8 w-full h-[60px] rounded-full outline-none placeholder:text-primary/80 text-primary text-sm'
             />
-            <button className='bg-secondary hover:bg-secondary-hover transition-all w-[114px] h-[52px] rounded-full text-sm uppercase absolute right-1'>
+            <button type="submit" className='bg-secondary hover:bg-secondary-hover transition-all w-[114px] h-[52px] rounded-full text-sm uppercase absolute right-1'>
               Join
             </button>
           </form>
@@ -55,7 +71,7 @@ const Footer = () => {
                   key={index}
                   className='relative w-[20px] h-[20px]'
                 >
-                  <Image src={icon.src} fill alt=""/>
+                  <Image src={icon.src} fill alt={`${icon.src.split('/').pop().replace('.svg', '')} social icon`}/>
                 </Link>
               )
             })}

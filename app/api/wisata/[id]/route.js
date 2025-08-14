@@ -26,7 +26,7 @@ export async function GET(request, { params }) {
     
     return NextResponse.json({
       success: true,
-      wisata: destination
+      destination: destination
     });
   } catch (error) {
     console.error('Error reading destination:', error);

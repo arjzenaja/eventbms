@@ -12,14 +12,14 @@ export const EventProvider = ({ children }) => {
  
   // current filter inputs 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("all-locations");
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedType, setSelectedType] = useState("");``
+  const [selectedType, setSelectedType] = useState("");
 
   // applied filters (after sumbt)
   const [appliedFilters, setAppliedFilters] = useState({
     searchTerm: "",
-    selectedLocation: "",
+    selectedLocation: "all-locations",
   });
 
   // filtered events based on applied filters
@@ -41,7 +41,7 @@ export const EventProvider = ({ children }) => {
         : true;
 
       // check location 
-      const matchesLocation = appliedFilters.selectedLocation
+      const matchesLocation = appliedFilters.selectedLocation && appliedFilters.selectedLocation !== "all-locations"
         ? event.location.toLowerCase() === 
           appliedFilters.selectedLocation.toLowerCase()
         : true;
@@ -62,26 +62,59 @@ export const EventProvider = ({ children }) => {
     });
   }, [events, appliedFilters]);
 
-  // fetch events 
-  useEffect(()=> {
-    const fetchEvents = async () =>{
-      // start loader 
+  // fetch aggregated destinations for user page
+  useEffect(() => {
+    const fetchAllDestinations = async () => {
       setIsLoading(true);
-      try{
-        const res  = await fetch("/api/events");
-        if (!res.ok) throw new Error("Failed to fetch events");
+      try {
+        const res = await fetch("/api/destinations");
+        if (!res.ok) throw new Error("Failed to fetch destinations");
         const data = await res.json();
-        setEvents(data.events || data); // Handle both API response format and direct data
-        // stop loader
+
+        const normalizeType = (value) => {
+          if (!value || typeof value !== "string") return value;
+          return value.toLowerCase().trim().replace(/\s+/g, "-");
+        };
+
+        const destinations = data?.destinations ?? {};
+        const keys = [
+          "wisata",
+          "kuliner",
+          "penginapan",
+          "oleh_oleh",
+          "desa_wisata",
+          "biro_perjalanan",
+          "events",
+        ];
+
+        const keyToSlug = (k) => (
+          k === "oleh_oleh" ? "oleh-oleh" :
+          k === "desa_wisata" ? "desa-wisata" :
+          k === "biro_perjalanan" ? "biro-perjalanan" : k
+        );
+
+        const combined = keys.flatMap((key) => {
+          const items = destinations?.[key]?.data ?? [];
+          const categorySlug = keyToSlug(key);
+          return items.map((item) => ({
+            ...item,
+            img_sm: item.img_sm || "/placeholder.jpg",
+            img_lg: item.img_lg || "/placeholder.jpg",
+            type: normalizeType(item.type),
+            category: categorySlug, // force normalized category slug for routing
+            __categoryKey: key,
+          }));
+        });
+
+        setEvents(combined);
         setIsLoading(false);
-      } catch(err) {
-        setError(err);
-        //  stop loader
+      } catch (err) {
+        setError(err?.message || "Failed to load data");
         setIsLoading(false);
-      };
+      }
     };
 
-    fetchEvents();
+    fetchAllDestinations();
   }, []);
 
   const handleSumbit = () => {
@@ -100,8 +133,8 @@ export const EventProvider = ({ children }) => {
   const handleClearSearch = () => {
     setSearchTerm("");
     setShowEventlist(false);
-    setSelectedLocation("");
-    setSelectedDate(null);
+    setSelectedLocation("all-locations");
+    setSelectedDate("");
     setSelectedType("");
   };
 

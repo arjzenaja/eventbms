@@ -11,7 +11,7 @@ const EventList = () => {
   if (filteredEvents.length === 0 && !isLoading) {
     return (
       <div className='h-[80vh]'>
-        <p className='text-white/80 text-center'>No event available</p>
+        <p className='text-white/80 text-center'>Tidak ada data ditemukan</p>
       </div>
     )
   }
@@ -19,14 +19,25 @@ const EventList = () => {
   if (isLoading) {
     return <SkeletonGrid itemCount={12}/>;
   } else {
+    const resolveHref = (item) => {
+      const category = (item.category || '').toLowerCase();
+      if (category === 'events' || category === 'event') return `/event/${item.id}`;
+      // map normalized slugs to route directories
+      const mapped =
+        category === 'oleh-oleh' ? 'oleh_oleh' :
+        category === 'desa-wisata' ? 'desa_wisata' :
+        category === 'biro-perjalanan' ? 'biro_perjalanan' : category;
+      return `/destination/${mapped}/${item.id}`;
+    };
+
     return ( 
       <div>
         <h1 className='h4 mb-6'>{filteredEvents.length} result found</h1>
         <div className='grid grid-cols-1 xl:grid-cols-4 gap-[30px] mb-32'>
           {filteredEvents.map((event, index) => {
             return (
-              <div key={index}>
-                <Link href={`/event/${event.id}`}></Link>
+              <div key={index} className='relative'>
+                <Link className='absolute inset-0 z-10' href={resolveHref(event)} aria-label={`Lihat ${event.title}`}></Link>
                 <Event event={event}/>
               </div>
             );

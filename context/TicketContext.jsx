@@ -6,7 +6,7 @@ export const TicketContext = createContext();
 const TicketProvider = ({ children }) => {
   const [event, setEvent] = useState(null); // state to store the event data
   const [seat, setSeat] = useState({ seat: null, price: null }); // state to store the selected sett
-  const [showMenu, setShowMenu] = useState(true); // state to manage menu visibility
+  const [showMenu, setShowMenu] = useState(false); // state to manage menu visibility
   const [itemAmount, setItemAmount] = useState(1); // state to track item amount (quanity of items)
   const [totalPrice, setTotalPrice] = useState(0); // state to store the total price
   const [checkoutData, setCheckoutData] = useState(null); //state to store the checkout data 
@@ -15,12 +15,14 @@ const TicketProvider = ({ children }) => {
     setEvent(fetchEvent);
     // reset item amount when a new event is initialized 
     setItemAmount(1);
-    // initialize the "frontseat" if it exists in the fetched event data
-    const frontseat = fetchEvent?.seats.find(
-     (seat) => seat.seat === "frontseat" 
-    );
-    if (frontseat) {
-      setSeat({ seat: frontseat.seat, price: frontseat.price });
+    // safely read seats array
+    const seats = Array.isArray(fetchEvent?.seats) ? fetchEvent.seats : [];
+    const preferredSeat = seats.find((s) => s.seat === "frontseat") || seats[0];
+    if (preferredSeat) {
+      const validPrice = preferredSeat.price && !isNaN(Number(preferredSeat.price)) ? Number(preferredSeat.price) : 0;
+      setSeat({ seat: preferredSeat.seat, price: validPrice });
+    } else {
+      setSeat({ seat: null, price: 0 });
     }
   };
 

@@ -11,6 +11,11 @@ export default function NewVillage() {
     category: "Desa Wisata",
     contact: "",
     address: "",
+    manager: "",
+    facilities: "",
+    packages: "",
+    price: "",
+    info: "",
     features: ["Budaya Lokal", "Akomodasi Homestay"],
     recommended: false,
   });
@@ -114,6 +119,11 @@ export default function NewVillage() {
           category: "Desa Wisata",
           contact: "",
           address: "",
+          manager: "",
+          facilities: "",
+          packages: "",
+          price: "",
+          info: "",
           features: ["Budaya Lokal", "Akomodasi Homestay"],
           recommended: false,
         });
@@ -155,6 +165,30 @@ export default function NewVillage() {
           />
         </div>
         <div>
+          <label className="block font-medium text-black">Lokasi</label>
+          <input
+            type="text"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            required
+            className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Kecamatan, Kabupaten"
+          />
+        </div>
+        <div>
+          <label className="block font-medium text-black">Deskripsi Singkat</label>
+          <textarea
+            name="short_description"
+            value={form.short_description}
+            onChange={handleChange}
+            required
+            rows={2}
+            className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Deskripsi singkat dalam 1-2 kalimat"
+          />
+        </div>
+        <div>
           <label className="block font-medium text-black">Kategori Desa Wisata</label>
           <select
             name="category"
@@ -189,6 +223,17 @@ export default function NewVillage() {
             required
             className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Desa, Kecamatan, Kabupaten"
+          />
+        </div>
+        <div>
+          <label className="block font-medium text-black">Kontak</label>
+          <input
+            type="text"
+            name="contact"
+            value={form.contact}
+            onChange={handleChange}
+            className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Nomor telepon atau WhatsApp"
           />
         </div>
         <div>

@@ -14,6 +14,11 @@ const CustomSelect = ({ event }) => {
   useEffect(() => {
     initalizeEvent(event);
   }, []);
+
+  const hasSeats = Array.isArray(event?.seats) && event.seats.length > 0;
+  if (!hasSeats) {
+    return null;
+  }
   return (
     <div 
       onClick={(e) => {
@@ -37,7 +42,7 @@ const CustomSelect = ({ event }) => {
       {/* menu */}
       {showMenu && (
         <ul className='bg-secondary absolute top-[70px] left-0 overflow-hidden w-full rounded-3xl h-[200px]'>
-          {event.seats.map((seat, index) => (
+          {event.seats?.map((seat, index) => (
             <li
               key={index}
               className='cursor-pointer hover:bg-white/5 px-8 py-5'

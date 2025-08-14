@@ -12,7 +12,7 @@ export default function NewTravelAgency() {
     short_description: '',
     description: '',
     location: '',
-    type: 'biro-perjalanan',
+    type: 'biro',
     services: [],
     office_address: '',
     contact: {
@@ -143,6 +143,26 @@ export default function NewTravelAgency() {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else if (Array.isArray(formData[key])) {
           formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else if (key === 'office_address') {
+          // Map office_address to location for API compatibility
+          formDataToSend.append('location', formData[key]);
+          formDataToSend.append('address', formData[key]);
+        } else if (key === 'type') {
+          // Map type to biro and add category
+          formDataToSend.append('type', 'biro');
+          formDataToSend.append('category', 'Biro Perjalanan');
+        } else if (key === 'contact') {
+          // Convert contact object to string for API compatibility
+          const contactString = formData[key].whatsapp || formData[key].email || formData[key].instagram || formData[key].website || '';
+          formDataToSend.append('contact', contactString);
+        } else if (key === 'services') {
+          // Map services to features for API compatibility
+          formDataToSend.append('features', JSON.stringify(formData[key]));
+        } else if (key === 'facilities') {
+          // Map facilities to features for API compatibility (append to existing features)
+          const existingFeatures = formData.services || [];
+          const allFeatures = [...existingFeatures, ...formData[key]];
+          formDataToSend.append('features', JSON.stringify(allFeatures));
         } else {
           formDataToSend.append(key, formData[key]);
         }
@@ -278,6 +298,23 @@ export default function NewTravelAgency() {
                     </div>
                   </div>
 
+                  {/* Lokasi */}
+                  <div className="md:col-span-2">
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      Lokasi *
+                    </label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Contoh: Purwokerto, Banyumas, Indonesia"
+                    />
+                  </div>
+
                   {/* Alamat Kantor */}
                   <div className="md:col-span-2">
                     <label htmlFor="office_address" className="block text-sm font-medium text-gray-700 mb-2">
@@ -373,6 +410,8 @@ export default function NewTravelAgency() {
                       placeholder="Contoh:&#10;• Tour Baturaden (half day): Rp175.000/orang&#10;• Trip Dieng 2 hari: Rp520.000/pax (min. 10 orang)"
                     />
                   </div>
+
+
 
                   {/* Fasilitas & Layanan Unggulan */}
                   <div className="md:col-span-2">

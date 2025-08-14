@@ -16,7 +16,7 @@ const EventDetails = async ({ params }) => {
 
   // fetch event based on the id 
   const fetchEvent = async (id) => {
-    const headersList = headers();
+    const headersList = await headers();
     const host = headersList.get('host');
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     const baseUrl = `${protocol}://${host}`;
@@ -38,11 +38,11 @@ const EventDetails = async ({ params }) => {
             {/* image */}
             <div className="relative w-full h-[320px] xl:max-w-[670px] xl:h-[500px] rounded-2xl overflow-hidden mb-12 xl:mb-0">
               <Image 
-                src={event.img_lg}
+                src={event.img_lg || "/placeholder.jpg"}
                 fill
                 className="object-cover mix-blend-lighten"
                 quality={100}
-                alt=""
+                alt={event.title || "Event image"}
               />
             </div>
             {/* info */}
@@ -58,9 +58,13 @@ const EventDetails = async ({ params }) => {
                   </div>
                 )}
               </div>
-              {event.type !== "objek-wisata" && event.type !== "wisata-alam" && <Timer event={event}/>}
-              <CustomSelect event={event}/>
-              <BuyTicket event={event}/>
+               {event.type !== "objek-wisata" && event.type !== "wisata-alam" && (event.date || event.event_date) && <Timer event={event}/>}
+              {Array.isArray(event?.seats) && event.seats.length > 0 && (
+                <>
+                  <CustomSelect event={event}/>
+                  <BuyTicket event={event}/>
+                </>
+              )}
             </div>
           </div>
 
@@ -80,7 +84,7 @@ const EventDetails = async ({ params }) => {
                     return (
                       <div key={idx} className="bg-[#23262e] rounded-xl flex flex-col md:flex-row items-center justify-between p-4 shadow border border-[#2a2d36]">
                         <div className="flex items-center gap-4 flex-1">
-                          <img src={pkg.image} alt={pkg.name} className="w-28 h-16 object-cover rounded-md border border-[#444]" />
+                          <img src={pkg.image || "/placeholder.jpg"} alt={pkg.name || "Package"} className="w-28 h-16 object-cover rounded-md border border-[#444]" />
                           <div>
                             <div className="text-lg font-bold text-white">{pkg.desc || pkg.name || 'Package'}</div>
                             {/* Harga di bawah judul */}
