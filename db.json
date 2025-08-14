@@ -188,26 +188,6 @@
       "recommended": true,
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T02:13:58.174Z"
-    },
-    {
-      "id": "9",
-      "img_sm": "/uploads/dest_sm_1755089926261.jpg",
-      "img_lg": "/uploads/dest_lg_1755089926262.jpg",
-      "title": "Axwadwwa",
-      "location": "dawdawdw,dawdawda",
-      "short_description": "wdawdawdaw",
-      "description": "dawdawdawad",
-      "type": "wisata-alam",
-      "category": "Wisata",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-13T12:58:46.263Z",
-      "updated_at": "2025-08-13T12:58:46.263Z"
     }
   ],
   "kuliner": [
