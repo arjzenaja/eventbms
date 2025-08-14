@@ -5,24 +5,24 @@ import { useState } from 'react';
 const socials = [
   {
     src: "/footer/facebook.svg",
-    path: "",
+    path: "https://facebook.com",
+    name: "Facebook"
   },
   {
     src: "/footer/instagram.svg",
-    path: "",
+    path: "https://instagram.com",
+    name: "Instagram"
   },
   {
     src: "/footer/x.svg",
-    path: "",
+    path: "https://x.com",
+    name: "X (Twitter)"
   },
   {
     src: "/footer/youtube.svg",
-    path: "",
+    path: "https://youtube.com",
+    name: "YouTube"
   },
-  // {
-  //   src: "/footer/linkedin.svg",
-  //   path: "",
-  // },
 ];
 
 const Footer = () => {
@@ -40,28 +40,38 @@ const Footer = () => {
   };
 
   return (
-          <footer className='bg-blue-600 bg-pattern bg-cover bg-blend-multiply pt-16'>
-      <div className='container mx-auto border-b border-white/40'>
+    <footer className='bg-gradient-to-br from-blue-600 to-blue-800 relative overflow-hidden pt-16'>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-pattern bg-cover bg-center opacity-10"></div>
+      
+      <div className='relative z-10 container mx-auto border-b border-white/20'>
         {/* text & form socials */}
         <div className='flex flex-col max-w-[550px] mx-auto text-center'>
           {/* text */}
           <div className='mb-9'>
-            <h2 className='h2 mb-3'>Your Event Connection</h2>
-            <p>Join our list for exclusive event updates and insider tips.</p>
+            <h2 className='text-3xl xl:text-[44px] leading-[120%] font-semibold text-white mb-3'>
+              DOLAN Banyumas
+            </h2>
+            <p className='text-blue-100 text-lg'>Platform wisata terdepan untuk menjelajahi keindahan Banyumas</p>
           </div>
+          
           {/* form */}
           <form className='relative flex items-center mb-16' onSubmit={handleSubmit}>
             <input 
               type="email"
               value={email}
               onChange={handleEmailChange}
-              placeholder='Your Email Address'
-              className='pl-8 w-full h-[60px] rounded-full outline-none placeholder:text-primary/80 text-primary text-sm'
+              placeholder='Masukkan email Anda untuk update wisata'
+              className='pl-8 w-full h-[60px] rounded-full outline-none placeholder:text-blue-300 text-gray-900 text-sm border-0 shadow-lg'
             />
-            <button type="submit" className='bg-secondary hover:bg-secondary-hover transition-all w-[114px] h-[52px] rounded-full text-sm uppercase absolute right-1'>
+            <button 
+              type="submit" 
+              className='bg-white hover:bg-blue-50 transition-all w-[114px] h-[52px] rounded-full text-sm font-semibold text-blue-600 absolute right-1 shadow-lg'
+            >
               Join
             </button>
           </form>
+          
           {/* socials */}
           <div className='mb-[72px] flex gap-8 mx-auto'>
             {socials.map((icon, index) => {
@@ -69,29 +79,51 @@ const Footer = () => {
                 <Link
                   href={icon.path}
                   key={index}
-                  className='relative w-[20px] h-[20px]'
+                  className='relative w-[24px] h-[24px] hover:scale-110 transition-transform duration-200'
+                  title={icon.name}
                 >
-                  <Image src={icon.src} fill alt={`${icon.src.split('/').pop().replace('.svg', '')} social icon`}/>
+                  <Image 
+                    src={icon.src} 
+                    fill 
+                    alt={`${icon.name} social icon`}
+                    className="filter brightness-0 invert"
+                  />
                 </Link>
               )
             })}
           </div>
         </div>
       </div>
+      
       {/* copyright */}
-      <div className='py-8'>
+      <div className='py-8 relative z-10'>
         <div className='container mx-auto'>
-          <div className='flex flex-col md:flex-row gap-6 items-center justify-between'>
-           {/* logo */}
-            <Link href="/" className='relative flex w-[78px] h-[30px]'>
-              {/* <Image src="/logo.svg" alt=""/> */}
-              logo
+          <div className='flex flex-col md:flex-row gap-6 items-center justify-end'>
+            {/* logo */}
+            <Link href="/" className='flex items-center gap-2'>
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <span className="text-blue-600 font-bold text-sm">DB</span>
+              </div>
+                              <span className="text-white font-semibold text-lg">Dolan Banyumas</span>
             </Link>
-            <p className='text-sm'>Copyright &copy; 2025. All rights reserved.</p>
+            
+            <p className='text-sm text-blue-100 text-center flex-1'>
+              Copyright &copy; 2025 Dolan Banyumas. All rights reserved.
+            </p>
+            
             {/* socials */}
-            <div>
+            <div className="flex gap-4">
               {socials.map((social, index) => {
-                return <Link href={social.path} key={index}></Link>
+                return (
+                  <Link 
+                    href={social.path} 
+                    key={index}
+                    className="text-blue-200 hover:text-white transition-colors"
+                    title={social.name}
+                  >
+                    {social.name}
+                  </Link>
+                )
               })}
             </div>
           </div>

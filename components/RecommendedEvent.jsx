@@ -30,7 +30,7 @@ const RecommendedEvent = () => {
     <section className='mb-32'>
       <div className='mb-12 text-center'>
         <h3 className='pretitle'>Rekomendasi Untuk Anda</h3>
-        <h2 className='h2'>Destinasi Favorit</h2>
+        <h2 className='h2'>Jelajahi Favorit</h2>
       </div>
       {filteredRecommendedEvents.length > 0 ? (
         <Swiper 
@@ -50,7 +50,7 @@ const RecommendedEvent = () => {
           >
             {filteredRecommendedEvents.map((event, index) => (
               <SwiperSlide key={index} className='select-none'>
-                <Link href={`/event/${event.id}`}>
+                <Link href={`/dolan-banyumas/event/${event.id}`}>
                   <Event event={event} />
                 </Link>
               </SwiperSlide>

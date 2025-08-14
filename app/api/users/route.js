@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
+import { sendVerificationEmail } from '@/lib/email';
 
 // GET all users (for admin purposes)
 export async function GET() {
@@ -86,6 +88,9 @@ export async function POST(request) {
     
     const newId = validIds.length > 0 ? (Math.max(...validIds) + 1).toString() : "1";
     
+    // Create verification token
+    const verifyToken = crypto.randomBytes(24).toString('hex');
+
     // Create new user
     const newUser = {
       id: newId,
@@ -96,6 +101,9 @@ export async function POST(request) {
       address: address || '',
       role: 'user',
       is_active: true,
+      is_verified: false,
+      verify_token: verifyToken,
+      verify_sent_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -106,13 +114,25 @@ export async function POST(request) {
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
+    // Build verify link and attempt sending email
+    const origin = new URL(request.url).origin;
+    const verifyLink = `${origin}/verify-email?token=${verifyToken}`;
+    let emailSent = false;
+    try {
+      const res = await sendVerificationEmail(email, name, verifyLink);
+      emailSent = !!res?.sent || !!res?.dev;
+    } catch (e) {
+      console.error('Failed to send verification email:', e);
+    }
+
     // Remove password from response
     const { password: _, ...userWithoutPassword } = newUser;
     
     return NextResponse.json({
       success: true,
-      message: 'Registrasi berhasil',
-      user: userWithoutPassword
+      message: 'Registrasi berhasil. Silakan verifikasi email Anda.',
+      user: userWithoutPassword,
+      meta: { verify_token: verifyToken, verify_url: verifyLink, email_sent: emailSent }
     }, { status: 201 });
     
   } catch (error) {

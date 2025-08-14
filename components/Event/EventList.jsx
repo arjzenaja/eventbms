@@ -21,13 +21,13 @@ const EventList = () => {
   } else {
     const resolveHref = (item) => {
       const category = (item.category || '').toLowerCase();
-      if (category === 'events' || category === 'event') return `/event/${item.id}`;
+      if (category === 'events' || category === 'event') return `/dolan-banyumas/event/${item.id}`;
       // map normalized slugs to route directories
       const mapped =
         category === 'oleh-oleh' ? 'oleh_oleh' :
         category === 'desa-wisata' ? 'desa_wisata' :
         category === 'biro-perjalanan' ? 'biro_perjalanan' : category;
-      return `/destination/${mapped}/${item.id}`;
+      return `/dolan-banyumas/${mapped}/${item.id}`;
     };
 
     return ( 

@@ -30,7 +30,7 @@ const EventDetails = async ({ params }) => {
   const event = await fetchEvent(id);
 
   return (
-    <section className='min-h-screen flex items-center py-8 sm:py-48'>
+    <section className='flex items-center py-8 sm:py-48'>
       <div className="container mx-auto">
         <div className="w-full max-w-[600px] xl:max-w-none mx-auto">
           {/* event details 1 */}

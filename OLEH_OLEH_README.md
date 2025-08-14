@@ -1,7 +1,7 @@
 # Halaman Oleh-Oleh - Admin Panel
 
 ## Overview
-Halaman manajemen oleh-oleh untuk admin panel EventBMS. Fitur ini memungkinkan admin untuk mengelola data oleh-oleh, souvenir, dan produk lokal.
+Halaman manajemen oleh-oleh untuk admin panel Dolan Banyumas. Fitur ini memungkinkan admin untuk mengelola data oleh-oleh, souvenir, dan produk lokal.
 
 ## Fitur Utama
 

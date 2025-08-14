@@ -31,6 +31,37 @@ export default function AdminUsers() {
     }
   };
 
+  const handleViewUser = (userId) => {
+    // Implementasi untuk melihat detail user
+    alert(`Lihat detail user dengan ID: ${userId}`);
+  };
+
+  const handleEditUser = (userId) => {
+    // Implementasi untuk edit user
+    alert(`Edit user dengan ID: ${userId}`);
+  };
+
+  const handleDeleteUser = async (userId) => {
+    if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+      try {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('User berhasil dihapus!');
+          fetchUsers(); // Refresh data
+        } else {
+          alert('Gagal menghapus user: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        alert('Terjadi kesalahan saat menghapus user');
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <ProtectedRoute>
@@ -228,13 +259,13 @@ export default function AdminUsers() {
                           })}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="text-blue-600 hover:text-blue-900 mr-3">
+                          <button onClick={() => handleViewUser(user.id)} className="text-blue-600 hover:text-blue-900 mr-3">
                             Lihat
                           </button>
-                          <button className="text-green-600 hover:text-green-900 mr-3">
+                          <button onClick={() => handleEditUser(user.id)} className="text-green-600 hover:text-green-900 mr-3">
                             Edit
                           </button>
-                          <button className="text-red-600 hover:text-red-900">
+                          <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900">
                             Hapus
                           </button>
                         </td>

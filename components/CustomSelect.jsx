@@ -40,25 +40,33 @@ const CustomSelect = ({ event }) => {
         </div>
       </div>
       {/* menu */}
-      {showMenu && (
-        <ul className='bg-secondary absolute top-[70px] left-0 overflow-hidden w-full rounded-3xl h-[200px]'>
-          {event.seats?.map((seat, index) => (
-            <li
-              key={index}
-              className='cursor-pointer hover:bg-white/5 px-8 py-5'
-              onClick={(e) => {
-                handleSeat(seat.seat, seat.price);
-                e.stopPropagation();
-              }}
-            >
-              <div className='flex justify-between'>
-                <div className='capitalize'>{seat.seat}</div>
-                <div>Rp{seat.price}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul 
+        className={`bg-secondary absolute top-[70px] left-0 overflow-hidden w-full rounded-3xl transition-all duration-200 ease-out ${
+          showMenu 
+            ? 'max-h-[200px] opacity-100 translate-y-0' 
+            : 'max-h-0 opacity-0 -translate-y-1 pointer-events-none'
+        }`}
+        style={{
+          transformOrigin: 'top left',
+          transition: 'opacity 200ms ease-out, transform 200ms ease-out, max-height 200ms ease-out'
+        }}
+      >
+        {event.seats?.map((seat, index) => (
+          <li
+            key={index}
+            className='cursor-pointer hover:bg-white/5 px-8 py-5'
+            onClick={(e) => {
+              handleSeat(seat.seat, seat.price);
+              e.stopPropagation();
+            }}
+          >
+            <div className='flex justify-between'>
+              <div className='capitalize'>{seat.seat}</div>
+              <div>Rp{seat.price}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

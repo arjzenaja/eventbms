@@ -1,7 +1,7 @@
-# Destinations Management - Event BMS
+# Destinations Management - Dolan Banyumas
 
 ## Overview
-Sistem manajemen destinasi wisata untuk Event BMS dengan fitur CRUD lengkap dan tampilan yang user-friendly.
+Sistem manajemen destinasi wisata untuk Dolan Banyumas dengan fitur CRUD lengkap dan tampilan yang user-friendly.
 
 ## Status Fitur
 

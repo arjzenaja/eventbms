@@ -87,9 +87,19 @@ export default function UserRegister() {
       const data = await response.json();
       
       if (data.success) {
-        // Auto login after successful registration
-        login(data.user);
-        router.push('/');
+        // Do not log in yet; require email verification first
+        try {
+          localStorage.setItem('pendingVerifyEmail', JSON.stringify({
+            email: formData.email,
+            token: data?.meta?.verify_token || null
+          }));
+          localStorage.setItem('flashToast', JSON.stringify({
+            type: 'info',
+            title: 'Verifikasi Diperlukan',
+            message: 'Kami telah mengirim tautan verifikasi ke email Anda. Silakan verifikasi untuk melanjutkan.'
+          }));
+        } catch (_) {}
+        router.push('/verify-email');
       } else {
         setError(data.message);
       }
@@ -122,7 +132,7 @@ export default function UserRegister() {
           Daftar
         </h2>
         <p className="text-center text-lg text-gray-600 mb-8">
-          Bergabung dengan DOLAN BMS
+          Bergabung dengan Dolan Banyumas
         </p>
       </div>
 
@@ -317,7 +327,7 @@ export default function UserRegister() {
       {/* Footer */}
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
-          © 2024 DOLAN BMS. All rights reserved.
+                      © 2025 Dolan Banyumas. All rights reserved.
         </p>
       </div>
     </div>

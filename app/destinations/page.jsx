@@ -46,6 +46,112 @@ const DestinationsPage = () => {
   const [sortBy, setSortBy] = useState("name"); // name, rating, location
   const [error, setError] = useState(null);
 
+  // Type-specific filter states
+  const [selectedObjekWisataType, setSelectedObjekWisataType] = useState("semua");
+  const [selectedKulinerType, setSelectedKulinerType] = useState("semua");
+  const [selectedPenginapanType, setSelectedPenginapanType] = useState("semua");
+  const [selectedOlehOlehType, setSelectedOlehOlehType] = useState("semua");
+  const [selectedDesaWisataType, setSelectedDesaWisataType] = useState("semua");
+  const [selectedBiroPerjalananType, setSelectedBiroPerjalananType] = useState("semua");
+  const [selectedEventType, setSelectedEventType] = useState("semua");
+  
+  // Type-specific dropdown states
+  const [isObjekWisataDropdownOpen, setIsObjekWisataDropdownOpen] = useState(false);
+  const [isKulinerDropdownOpen, setIsKulinerDropdownOpen] = useState(false);
+  const [isPenginapanDropdownOpen, setIsPenginapanDropdownOpen] = useState(false);
+  const [isOlehOlehDropdownOpen, setIsOlehOlehDropdownOpen] = useState(false);
+  const [isDesaWisataDropdownOpen, setIsDesaWisataDropdownOpen] = useState(false);
+  const [isBiroPerjalananDropdownOpen, setIsBiroPerjalananDropdownOpen] = useState(false);
+  const [isEventDropdownOpen, setIsEventDropdownOpen] = useState(false);
+
+  // Type definitions for each category
+  const objekWisataTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🏔️' },
+    { value: 'wisata-alam', label: 'Wisata Alam', icon: '🌲' },
+    { value: 'wisata-taman', label: 'Wisata Taman', icon: '🌺' },
+    { value: 'wisata-budaya', label: 'Wisata Budaya', icon: '🏛️' },
+    { value: 'wisata-sejarah', label: 'Wisata Sejarah', icon: '📜' },
+    { value: 'wisata-buatan', label: 'Wisata Buatan', icon: '🎡' },
+    { value: 'wisata-minat-khusus', label: 'Wisata Minat Khusus', icon: '🎯' },
+    { value: 'wisata-religi', label: 'Wisata Religi', icon: '⛪' }
+  ];
+
+  const kulinerTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🍽️' },
+    { value: 'cafe', label: 'Cafe', icon: '☕' },
+    { value: 'resto', label: 'Resto', icon: '🍴' },
+    { value: 'kedai', label: 'Kedai', icon: '🍜' },
+    { value: 'rumah-makan', label: 'Rumah Makan', icon: '🍚' }
+  ];
+
+  const penginapanTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🏨' },
+    { value: 'hotel', label: 'Hotel', icon: '🏨' },
+    { value: 'vila', label: 'Vila', icon: '🏡' },
+    { value: 'homestay', label: 'Homestay', icon: '🏘️' }
+  ];
+
+  const olehOlehTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🛍️' },
+    { value: 'pakaian', label: 'Pakaian', icon: '👕' },
+    { value: 'makanan', label: 'Makanan', icon: '🍪' }
+  ];
+
+  const desaWisataTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🏘️' },
+    { value: 'desa-wisata', label: 'Desa Wisata', icon: '🏘️' }
+  ];
+
+  const biroPerjalananTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🚌' },
+    { value: 'biro-perjalanan', label: 'Biro Perjalanan', icon: '🚌' }
+  ];
+
+  const eventTypes = [
+    { value: 'semua', label: 'Semua Jenis', icon: '🎉' },
+    { value: 'event-banyumas', label: 'Event Banyumas', icon: '🎊' },
+    { value: 'event', label: 'Event', icon: '🎉' }
+  ];
+
+  // Reset type filters when category changes
+  const resetTypeFilters = () => {
+    setSelectedObjekWisataType('semua');
+    setSelectedKulinerType('semua');
+    setSelectedPenginapanType('semua');
+    setSelectedOlehOlehType('semua');
+    setSelectedDesaWisataType('semua');
+    setSelectedBiroPerjalananType('semua');
+    setSelectedEventType('semua');
+  };
+
+  // Handle category change
+  const handleCategoryChange = (categoryTitle) => {
+    setSelectedCategory(categoryTitle);
+    resetTypeFilters();
+  };
+
+  // Get current selected type label
+  const getCurrentTypeLabel = () => {
+    switch (selectedCategory) {
+      case 'Objek Wisata':
+        return objekWisataTypes.find(t => t.value === selectedObjekWisataType)?.label || 'Semua Jenis';
+      case 'Kuliner':
+        return kulinerTypes.find(t => t.value === selectedKulinerType)?.label || 'Semua Jenis';
+      case 'Penginapan':
+        return penginapanTypes.find(t => t.value === selectedPenginapanType)?.label || 'Semua Jenis';
+      case 'Oleh-Oleh':
+        return olehOlehTypes.find(t => t.value === selectedOlehOlehType)?.label || 'Semua Jenis';
+      case 'Desa Wisata':
+        return desaWisataTypes.find(t => t.value === selectedDesaWisataType)?.label || 'Semua Jenis';
+      case 'Biro Perjalanan':
+        return biroPerjalananTypes.find(t => t.value === selectedBiroPerjalananType)?.label || 'Semua Jenis';
+      case 'Events & Acara':
+        return eventTypes.find(t => t.value === selectedEventType)?.label || 'Semua Jenis';
+      default:
+        return 'Semua Jenis';
+    }
+  };
+
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
@@ -102,12 +208,36 @@ const DestinationsPage = () => {
       }
     }
 
+    // Filter berdasarkan tipe spesifik kategori
+    if (selectedCategory === 'Objek Wisata' && selectedObjekWisataType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedObjekWisataType);
+    }
+    if (selectedCategory === 'Kuliner' && selectedKulinerType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedKulinerType);
+    }
+    if (selectedCategory === 'Penginapan' && selectedPenginapanType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedPenginapanType);
+    }
+    if (selectedCategory === 'Oleh-Oleh' && selectedOlehOlehType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedOlehOlehType);
+    }
+    if (selectedCategory === 'Desa Wisata' && selectedDesaWisataType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedDesaWisataType);
+    }
+    if (selectedCategory === 'Biro Perjalanan' && selectedBiroPerjalananType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedBiroPerjalananType);
+    }
+    if (selectedCategory === 'Events & Acara' && selectedEventType !== 'semua') {
+      filtered = filtered.filter(item => item.type === selectedEventType);
+    }
+
     // Filter by search term
-    if (searchTerm) {
+    if (searchTerm.trim()) {
       filtered = filtered.filter(item =>
-        item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.location?.toLowerCase().includes(searchTerm.toLowerCase())
+        (item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.location && item.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.short_description && item.short_description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -115,18 +245,18 @@ const DestinationsPage = () => {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "name":
-          return a.title?.localeCompare(b.title);
+          return (a.title || '').localeCompare(b.title || '');
         case "rating":
           return (b.rating || 0) - (a.rating || 0);
         case "location":
-          return a.location?.localeCompare(b.location);
+          return (a.location || '').localeCompare(b.location || '');
         default:
           return 0;
       }
     });
 
     setFilteredData(filtered);
-  }, [destinations, selectedCategory, searchTerm, sortBy]);
+  }, [destinations, selectedCategory, selectedObjekWisataType, selectedKulinerType, selectedPenginapanType, selectedOlehOlehType, selectedDesaWisataType, selectedBiroPerjalananType, selectedEventType, searchTerm, sortBy]);
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -176,7 +306,7 @@ const DestinationsPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
@@ -198,7 +328,7 @@ const DestinationsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
         <div className="container mx-auto px-4">
           {/* Hero Section Skeleton */}
           <div className="text-center mb-16">
@@ -229,7 +359,7 @@ const DestinationsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
+    <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center mb-20">
@@ -240,7 +370,7 @@ const DestinationsPage = () => {
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
             <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Destinasi
+              Kabupaten
             </span>
             <br />
             <span className="text-white">Banyumas</span>
@@ -256,13 +386,13 @@ const DestinationsPage = () => {
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-10">
             <div className="relative">
-              <BiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+              <BiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-xl z-10" />
               <input
                 type="text"
                 placeholder="Cari destinasi, lokasi, atau deskripsi..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                className="w-full pl-12 pr-4 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               />
             </div>
           </div>
@@ -270,7 +400,7 @@ const DestinationsPage = () => {
           {/* Category Filters */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <button
-              onClick={() => setSelectedCategory("Semua")}
+              onClick={() => handleCategoryChange("Semua")}
               className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                 selectedCategory === "Semua"
                   ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25"
@@ -282,7 +412,7 @@ const DestinationsPage = () => {
             {Object.values(destinations).map((category) => (
               <button
                 key={category.title}
-                onClick={() => setSelectedCategory(category.title)}
+                onClick={() => handleCategoryChange(category.title)}
                 className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedCategory === category.title
                     ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25"
@@ -294,6 +424,354 @@ const DestinationsPage = () => {
               </button>
             ))}
           </div>
+
+          {/* Type-Specific Filter Dropdowns */}
+          {selectedCategory !== "Semua" && (
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <BiFilter className="text-xl" />
+                  Filter Tipe {selectedCategory}
+                </h3>
+                <button
+                  onClick={resetTypeFilters}
+                  className="px-4 py-2 text-sm text-gray-300 hover:text-white border border-white/20 rounded-lg hover:bg-white/10 transition-all duration-200 flex items-center gap-2"
+                >
+                  <span>✕</span>
+                  Clear Filters
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                
+                {/* Objek Wisata Type Filter */}
+                {selectedCategory === 'Objek Wisata' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsObjekWisataDropdownOpen(!isObjekWisataDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🏔️</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isObjekWisataDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isObjekWisataDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {objekWisataTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedObjekWisataType(type.value);
+                              setIsObjekWisataDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedObjekWisataType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedObjekWisataType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Kuliner Type Filter */}
+                {selectedCategory === 'Kuliner' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsKulinerDropdownOpen(!isKulinerDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🍽️</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isKulinerDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isKulinerDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {kulinerTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedKulinerType(type.value);
+                              setIsKulinerDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedKulinerType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedKulinerType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Penginapan Type Filter */}
+                {selectedCategory === 'Penginapan' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsPenginapanDropdownOpen(!isPenginapanDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🏨</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isPenginapanDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isPenginapanDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {penginapanTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedPenginapanType(type.value);
+                              setIsPenginapanDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedPenginapanType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedPenginapanType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Oleh-Oleh Type Filter */}
+                {selectedCategory === 'Oleh-Oleh' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsOlehOlehDropdownOpen(!isOlehOlehDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🛍️</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isOlehOlehDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isOlehOlehDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {olehOlehTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedOlehOlehType(type.value);
+                              setIsOlehOlehDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedOlehOlehType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedOlehOlehType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Desa Wisata Type Filter */}
+                {selectedCategory === 'Desa Wisata' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsDesaWisataDropdownOpen(!isDesaWisataDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🏘️</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isDesaWisataDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isDesaWisataDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {desaWisataTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedDesaWisataType(type.value);
+                              setIsDesaWisataDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedDesaWisataType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedDesaWisataType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Biro Perjalanan Type Filter */}
+                {selectedCategory === 'Biro Perjalanan' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsBiroPerjalananDropdownOpen(!isBiroPerjalananDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🚌</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isBiroPerjalananDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isBiroPerjalananDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {biroPerjalananTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedBiroPerjalananType(type.value);
+                              setIsBiroPerjalananDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedBiroPerjalananType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedBiroPerjalananType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Event Type Filter */}
+                {selectedCategory === 'Events & Acara' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
+                      className="flex items-center justify-between w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 hover:bg-white/20 hover:border-white/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">🎉</span>
+                        <span className="font-medium text-sm">{getCurrentTypeLabel()}</span>
+                      </div>
+                      <svg className={`w-5 h-5 text-gray-300 transition-transform duration-300 ${isEventDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <div className={`absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-white/20 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-200 ease-out ${
+                      isEventDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                    }`}>
+                      <div className="py-2 max-h-60 overflow-y-auto">
+                        {eventTypes.map((type) => (
+                          <button
+                            key={type.value}
+                            onClick={() => {
+                              setSelectedEventType(type.value);
+                              setIsEventDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 flex items-center gap-3 ${
+                              selectedEventType === type.value ? 'bg-blue-500/20 text-blue-300 border-r-4 border-blue-400' : 'text-gray-300 hover:text-white'
+                            }`}
+                          >
+                            <span className="text-lg">{type.icon}</span>
+                            <span className="font-medium text-sm flex-1">{type.label}</span>
+                            {selectedEventType === type.value && (
+                              <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+              
+              {/* Backdrop for all type-specific dropdowns */}
+              {(isObjekWisataDropdownOpen || isKulinerDropdownOpen || isPenginapanDropdownOpen || 
+                isOlehOlehDropdownOpen || isDesaWisataDropdownOpen || isBiroPerjalananDropdownOpen || 
+                isEventDropdownOpen) && (
+                <div 
+                  className="fixed inset-0 z-40 transition-opacity duration-300 opacity-100 pointer-events-auto"
+                  onClick={() => {
+                    setIsObjekWisataDropdownOpen(false);
+                    setIsKulinerDropdownOpen(false);
+                    setIsPenginapanDropdownOpen(false);
+                    setIsOlehOlehDropdownOpen(false);
+                    setIsDesaWisataDropdownOpen(false);
+                    setIsBiroPerjalananDropdownOpen(false);
+                    setIsEventDropdownOpen(false);
+                  }}
+                />
+              )}
+            </div>
+          )}
 
           {/* View Controls and Sort */}
           <div className="flex flex-wrap items-center justify-center gap-6">
@@ -323,15 +801,15 @@ const DestinationsPage = () => {
 
             {/* Sort Options */}
             <div className="flex items-center gap-2">
-              <BiFilter className="text-gray-400" />
+              <BiFilter className="text-white" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="name">Urutkan: Nama</option>
-                <option value="rating">Urutkan: Rating</option>
-                <option value="location">Urutkan: Lokasi</option>
+                <option value="name" className="bg-gray-800 text-white">Urutkan: Nama</option>
+                <option value="rating" className="bg-gray-800 text-white">Urutkan: Rating</option>
+                <option value="location" className="bg-gray-800 text-white">Urutkan: Lokasi</option>
               </select>
             </div>
           </div>
@@ -393,6 +871,28 @@ const DestinationsPage = () => {
                       <p className="text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
                         {item.short_description || item.description || "Deskripsi tidak tersedia"}
                       </p>
+                      
+                      {/* Features & Facilities */}
+                      {item.features && item.features.length > 0 && (
+                        <div className="mb-3">
+                          <div className="flex flex-wrap gap-1">
+                            {item.features.slice(0, 3).map((feature, index) => (
+                              <span
+                                key={index}
+                                className="bg-blue-600/20 text-blue-300 px-2 py-1 rounded-full text-xs"
+                              >
+                                {feature}
+                              </span>
+                            ))}
+                            {item.features.length > 3 && (
+                              <span className="bg-gray-600/20 text-gray-300 px-2 py-1 rounded-full text-xs">
+                                +{item.features.length - 3} lagi
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <BiMap className="text-blue-400 text-lg" />
                         <span className="truncate">{item.location}</span>
@@ -431,6 +931,28 @@ const DestinationsPage = () => {
                         <p className="text-gray-300 text-sm mb-3 line-clamp-2 leading-relaxed">
                           {item.short_description || item.description || "Deskripsi tidak tersedia"}
                         </p>
+                        
+                        {/* Features & Facilities */}
+                        {item.features && item.features.length > 0 && (
+                          <div className="mb-3">
+                            <div className="flex flex-wrap gap-1">
+                              {item.features.slice(0, 4).map((feature, index) => (
+                                <span
+                                  key={index}
+                                  className="bg-blue-600/20 text-blue-300 px-2 py-1 rounded-full text-xs"
+                                >
+                                  {feature}
+                                </span>
+                              ))}
+                              {item.features.length > 4 && (
+                                <span className="bg-gray-600/20 text-gray-300 px-2 py-1 rounded-full text-xs">
+                                  +{item.features.length - 4} lagi
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
                         <div className="flex items-center gap-4 text-gray-400 text-sm">
                           <div className="flex items-center gap-1">
                             <BiMap className="text-blue-400" />

@@ -1,4 +1,4 @@
-# Akun Test Admin EventBMS
+# Akun Test Admin Dolan Banyumas
 
 Berikut adalah akun test yang dapat digunakan untuk mengakses panel admin:
 
@@ -10,9 +10,9 @@ Berikut adalah akun test yang dapat digunakan untuk mengakses panel admin:
 - **Akses:** Semua fitur admin
 
 ## Akun 2 (Admin)
-- **Email:** admin@eventbms.com
+- **Email:** admin@dolan-banyumas.com
 - **Password:** password123
-- **Nama:** Event BMS Admin
+- **Nama:** Dolan Banyumas Admin
 - **Role:** admin
 - **Akses:** Fitur admin standar
 

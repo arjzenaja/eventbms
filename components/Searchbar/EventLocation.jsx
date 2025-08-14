@@ -47,12 +47,12 @@ const EventLocation = () => {
         value={selectedLocation}
         onValueChange={(value) => setSelectedLocation(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 ">
+        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-white">
           <SelectValue placeholder="Lokasi" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-gray-800 border-gray-700 z-30">
           <SelectGroup>
-            <SelectLabel>Location</SelectLabel>
+            <SelectLabel className="text-gray-300 font-semibold">Location</SelectLabel>
             {uniqueLocations
               .filter(location => location && typeof location === 'string' && location.trim() !== '')
               .map((location, index) => {
@@ -65,7 +65,7 @@ const EventLocation = () => {
                 }
                 
                 return (
-                  <SelectItem key={`location-${value}-${index}`} value={value}>
+                  <SelectItem key={`location-${value}-${index}`} value={value} className="text-white hover:bg-gray-700 focus:bg-gray-700">
                     {location}
                   </SelectItem>
                 );

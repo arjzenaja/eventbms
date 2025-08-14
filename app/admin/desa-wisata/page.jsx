@@ -142,6 +142,36 @@ Kontak: ${item.contact || 'Tidak ada'}
     }
   };
 
+  const handleExportData = () => {
+    const exportData = filteredDesaWisataItems.map(item => ({
+      ID: item.id,
+      Nama: item.title,
+      Lokasi: item.location,
+      Tipe: item.type,
+      Kategori: item.category || 'Desa Wisata',
+      Deskripsi: item.short_description || '',
+      Biaya_Masuk: item.entrance_fee || 'Gratis',
+      Kontak: item.contact || '',
+      Alamat: item.address || '',
+      Direkomendasikan: item.recommended ? 'Ya' : 'Tidak'
+    }));
+
+    const csvContent = [
+      Object.keys(exportData[0]).join(','),
+      ...exportData.map(row => Object.values(row).map(value => `"${value}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `desa_wisata_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const refreshData = async () => {
     setIsLoading(true);
     try {
@@ -279,29 +309,10 @@ Kontak: ${item.contact || 'Tidak ada'}
                 </button>
                 
                 <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/destinations/export?format=csv&category=desa_wisata');
-                      if (response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `desa_wisata_${new Date().toISOString().split('T')[0]}.csv`;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                        alert('Data desa wisata berhasil diexport ke CSV!');
-                      } else {
-                        alert('Gagal export data: ' + response.statusText);
-                      }
-                    } catch (error) {
-                      alert('Error export data: ' + error.message);
-                    }
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-                  title="Export Data Desa Wisata"
+                  onClick={handleExportData}
+                  disabled={filteredDesaWisataItems.length === 0}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400 flex items-center gap-2"
+                  title="Export Data Desa Wisata ke CSV"
                 >
                   <span>📊</span>
                   Export

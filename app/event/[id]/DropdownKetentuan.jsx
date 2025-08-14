@@ -24,7 +24,11 @@ const DropdownKetentuan = ({ ketentuan }) => {
           </div>
           <span className={`transition-transform duration-300 text-white text-xl ml-6 ${open ? "rotate-180" : ""}`}>{open ? "▲" : "▼"}</span>
         </button>
-        {open && (
+        <div 
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
           <ul className="px-7 pb-5 pt-2 flex flex-col gap-2">
             {ketentuan.map((item, idx) => (
               <li
@@ -37,7 +41,7 @@ const DropdownKetentuan = ({ ketentuan }) => {
               </li>
             ))}
           </ul>
-        )}
+        </div>
       </div>
     </div>
   );

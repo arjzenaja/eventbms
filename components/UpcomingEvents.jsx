@@ -53,7 +53,7 @@ const UpcomingEvents = () => {
         >
           {filteredEvents.map((event, index) => (
             <SwiperSlide key={index} className='select-none'>
-              <Link href={`/event/${event.id}`}>
+                              <Link href={`/dolan-banyumas/event/${event.id}`}>
                 <Event event={event}/>
               </Link>
             </SwiperSlide>

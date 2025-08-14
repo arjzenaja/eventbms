@@ -221,10 +221,7 @@ Kontak: ${item.contact || 'Tidak ada'}
                   <option value="makanan">Makanan</option>
                 </select>
                 
-                <button className="px-4 py-2 bg-white !bg-white text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">
-                  <span>⚙️</span>
-                  Filter
-                </button>
+
                 
                 <button 
                   onClick={refreshData}
@@ -233,6 +230,35 @@ Kontak: ${item.contact || 'Tidak ada'}
                 >
                   <span>🔄</span>
                   Refresh
+                </button>
+                
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/destinations/export?format=csv&category=oleh_oleh');
+                      if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `oleh_oleh_${new Date().toISOString().split('T')[0]}.csv`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                        alert('Data oleh-oleh berhasil diexport ke CSV!');
+                      } else {
+                        alert('Gagal export data: ' + response.statusText);
+                      }
+                    } catch (error) {
+                      alert('Error export data: ' + error.message);
+                    }
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+                  title="Export Data Oleh-Oleh"
+                >
+                  <span>📊</span>
+                  Export
                 </button>
                 
                 <button 
@@ -270,35 +296,6 @@ Kontak: ${item.contact || 'Tidak ada'}
                 >
                   <span>🔧</span>
                   Fix IDs
-                </button>
-                
-                <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/destinations/export?format=csv&category=oleh_oleh');
-                      if (response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `oleh_oleh_${new Date().toISOString().split('T')[0]}.csv`;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                        alert('Data oleh-oleh berhasil diexport ke CSV!');
-                      } else {
-                        alert('Gagal export data: ' + response.statusText);
-                      }
-                    } catch (error) {
-                      alert('Error export data: ' + error.message);
-                    }
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-                  title="Export Data Oleh-Oleh"
-                >
-                  <span>📊</span>
-                  Export
                 </button>
                 
                 <button 

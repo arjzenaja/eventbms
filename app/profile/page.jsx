@@ -73,6 +73,17 @@ export default function UserProfile() {
 
   const handleLogout = () => {
     logout();
+    
+    // Show logout success notification
+    try {
+      localStorage.setItem('flashToast', JSON.stringify({
+        type: 'success',
+        title: 'Berhasil Keluar',
+        message: 'Anda telah berhasil keluar dari akun. Terima kasih telah menggunakan Dolan Banyumas!'
+      }));
+    } catch (_) {}
+    
+    // Redirect to home page
     router.push('/');
   };
 
@@ -88,7 +99,7 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           {/* Header */}

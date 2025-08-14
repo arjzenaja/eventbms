@@ -232,39 +232,8 @@ export default function EditOlehOleh() {
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Alamat Lengkap
-                  </label>
-                  <textarea
-                    id="address"
-                    name="address"
-                    rows={3}
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan alamat lengkap"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi Singkat *
-                  </label>
-                  <textarea
-                    id="short_description"
-                    name="short_description"
-                    required
-                    rows={3}
-                    value={formData.short_description}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan deskripsi singkat"
-                  />
-                </div>
-
-                <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi Lengkap
+                    Deskripsi *
                   </label>
                   <textarea
                     id="description"
@@ -280,16 +249,17 @@ export default function EditOlehOleh() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="price_range" className="block text-sm font-medium text-gray-700">
-                      Kisaran Harga
+                      Kisaran Harga *
                     </label>
                     <input
                       type="text"
                       id="price_range"
                       name="price_range"
-                      value={formData.price_range}
+                      required
+                      value={formData.price_range || '0 - 0'}
                       onChange={handleInputChange}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: Rp 10.000 - 50.000"
+                      placeholder="0 - 0"
                     />
                   </div>
 

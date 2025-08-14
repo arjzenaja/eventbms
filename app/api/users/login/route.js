@@ -27,6 +27,14 @@ export async function POST(request) {
       // Remove password from response for security
       const { password: _, ...userData } = user;
       
+      if (userData.is_verified === false) {
+        return NextResponse.json({
+          success: false,
+          requires_verification: true,
+          message: 'Akun Anda belum terverifikasi. Silakan cek email untuk verifikasi.'
+        }, { status: 403 });
+      }
+
       return NextResponse.json({
         success: true,
         message: 'Login berhasil',

@@ -90,17 +90,17 @@ const EventType = () => {
         value={selectedType || "all-types"}
         onValueChange={(value) => setSelectedType(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 capitalize">
+        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 capitalize text-white">
           <SelectValue placeholder="Semua Tipe" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-gray-800 border-gray-700 z-30">
           <SelectGroup>
-            <SelectLabel>Semua Tipe</SelectLabel>
+            <SelectLabel className="text-gray-300 font-semibold">Semua Tipe</SelectLabel>
             {allTypes.map((type, index) => (
               <SelectItem 
                 key={index} 
                 value={type === "Semua Tipe" ? "all-types" : type} 
-                className="capitalize"
+                className="capitalize text-white hover:bg-gray-700 focus:bg-gray-700"
               >
                 {type === "Semua Tipe" ? "Semua Tipe" : 
                  type === "wisata-alam" ? "Wisata Alam" :

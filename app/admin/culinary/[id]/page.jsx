@@ -200,7 +200,7 @@ export default function EditCulinaryItem() {
 
                 <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi Lengkap *
+                    Deskripsi *
                   </label>
                   <textarea
                     id="description"
@@ -244,10 +244,10 @@ export default function EditCulinaryItem() {
                       id="price_range"
                       name="price_range"
                       required
-                      value={formData.price_range}
+                      value={formData.price_range || '0 - 0'}
                       onChange={handleInputChange}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Contoh: 25.000 - 50.000"
+                      placeholder="0 - 0"
                     />
                   </div>
                 </div>

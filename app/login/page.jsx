@@ -32,9 +32,33 @@ export default function UserLogin() {
       
       if (data.success) {
         login(data.user);
-        router.push('/');
+        
+        // Show success notification first
+        try {
+          localStorage.setItem('flashToast', JSON.stringify({
+            type: 'success',
+            title: 'Login Berhasil!',
+            message: `Selamat datang kembali, ${data.user.name}!`
+          }));
+        } catch (_) {}
+        
+        // Redirect to home page after showing notification
+        setTimeout(() => {
+          router.push('/');
+        }, 1500); // Wait 1.5 seconds for user to see the notification
       } else {
-        setError(data.message);
+        if (data.requires_verification) {
+          try {
+            localStorage.setItem('flashToast', JSON.stringify({
+              type: 'warning',
+              title: 'Verifikasi Diperlukan',
+              message: 'Akun Anda belum terverifikasi. Silakan cek email untuk verifikasi.'
+            }));
+          } catch (_) {}
+          router.push('/verify-email');
+        } else {
+          setError(data.message);
+        }
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -65,7 +89,7 @@ export default function UserLogin() {
           Masuk
         </h2>
         <p className="text-center text-lg text-gray-600 mb-8">
-          Selamat datang kembali di DOLAN BMS
+          Selamat datang kembali di Dolan Banyumas
         </p>
       </div>
 
@@ -192,7 +216,7 @@ export default function UserLogin() {
       {/* Footer */}
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
-          © 2024 DOLAN BMS. All rights reserved.
+                      © 2025 Dolan Banyumas. All rights reserved.
         </p>
       </div>
     </div>

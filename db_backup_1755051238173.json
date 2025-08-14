@@ -9,9 +9,9 @@
     },
     {
       "id": "2",
-      "email": "admin@eventbms.com",
+      "email": "admin@dolan-banyumas.com",
       "password": "password123",
-      "name": "Event BMS Admin",
+      "name": "Dolan Banyumas Admin",
       "role": "admin"
     }
   ],

@@ -35,7 +35,7 @@ const WisataDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
@@ -43,7 +43,7 @@ const WisataDetail = () => {
 
   if (error || !destination) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white mb-4">Destinasi Tidak Ditemukan</h1>
           <p className="text-gray-400 mb-6">Destinasi yang Anda cari tidak ditemukan.</p>
@@ -59,7 +59,7 @@ const WisataDetail = () => {
   }
 
   return (
-    <section className="min-h-screen flex items-center py-8 sm:py-48">
+    <section className="flex items-center py-8 sm:py-48">
       <div className="container mx-auto">
         <div className="w-full max-w-[1200px] mx-auto">
           {/* Header */}

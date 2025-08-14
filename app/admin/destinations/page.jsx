@@ -387,10 +387,7 @@ Kontak: ${destination.contact || 'Tidak ada'}
                    <option value="wisata religi">Wisata Religi</option>
                  </select>
                 
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2">
-                  <span>⚙️</span>
-                  Filter
-                </button>
+
                 <button 
                   onClick={refreshData}
                   disabled={isLoading}
@@ -471,78 +468,31 @@ Kontak: ${destination.contact || 'Tidak ada'}
                 
                 <button 
                   onClick={async () => {
-                    if (confirm('Migrate old type values to new format? This will update existing destinations.')) {
+                    if (confirm('Migrate types untuk standardisasi data destinasi? Ini akan membuat backup otomatis.')) {
                       try {
-                                                 // Update types in local state first
-                         const updatedDestinations = destinations.map(dest => {
-                           let newType = dest.type;
-                           
-                           // Map old types to new types (with spaces to match current data)
-                           if (dest.type === 'alam') newType = 'wisata alam';
-                           else if (dest.type === 'sejarah') newType = 'wisata sejarah';
-                           else if (dest.type === 'taman') newType = 'wisata taman';
-                           else if (dest.type === 'budaya') newType = 'wisata budaya';
-                           else if (dest.type === 'religi') newType = 'wisata religi';
-                           else if (dest.type === 'buatan') newType = 'wisata buatan';
-                           else if (dest.type === 'minat-khusus') newType = 'wisata minat khusus';
-                           
-                           return { ...dest, type: newType };
-                         });
-                        
-                        setDestinations(updatedDestinations);
-                        
-                        // Update each destination via API
-                        for (const dest of updatedDestinations) {
-                          if (dest.type !== dest.originalType) {
-                            const formData = new FormData();
-                            formData.append('title', dest.title);
-                            formData.append('description', dest.description || '');
-                            formData.append('short_description', dest.short_description || '');
-                            formData.append('location', dest.location || '');
-                            formData.append('type', dest.type);
-                            formData.append('category', dest.category || 'Wisata');
-                            formData.append('entrance_fee', dest.entrance_fee || 'Gratis');
-                            formData.append('contact', dest.contact || '');
-                            formData.append('address', dest.address || '');
-                            formData.append('recommended', dest.recommended || false);
-                            
-                            const updateResponse = await fetch(`/api/wisata/${dest.id}`, {
-                              method: 'PUT',
-                              body: formData
-                            });
-                            
-                            // Check if response is ok
-                            if (!updateResponse.ok) {
-                              console.error('Update response not ok:', updateResponse.status, updateResponse.statusText);
-                              const errorText = await updateResponse.text();
-                              console.error('Error response body:', errorText);
-                              throw new Error(`HTTP ${updateResponse.status}: ${updateResponse.statusText}`);
-                            }
-                            
-                            // Check content type
-                            const contentType = updateResponse.headers.get('content-type');
-                            if (!contentType || !contentType.includes('application/json')) {
-                              const errorText = await updateResponse.text();
-                              console.error('Non-JSON response:', contentType, errorText);
-                              throw new Error('Server returned non-JSON response');
-                            }
-                          }
+                        const response = await fetch('/api/destinations/migrate-types?action=migrate', { 
+                          method: 'POST' 
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                          alert(`Migrasi berhasil! ${data.migrated_items} item telah distandarisasi.\nBackup tersimpan di: ${data.backup_file}`);
+                          await refreshData();
+                        } else {
+                          alert('Gagal migrate types: ' + data.message);
                         }
-                        
-                        alert('Types migrated successfully! Refreshing data...');
-                        await refreshData();
                       } catch (error) {
-                        console.error('Error migrating types:', error);
-                        alert('Error migrating types: ' + error.message);
+                        alert('Error migrate types: ' + error.message);
                       }
                     }
                   }}
                   className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 flex items-center gap-2"
-                  title="Migrate Types"
+                  title="Migrate Types Data Destinasi"
                 >
                   <span>🔄</span>
                   Migrate Types
                 </button>
+                
+
               </div>
             </div>
 

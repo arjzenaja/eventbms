@@ -14,9 +14,9 @@ const EventSearch = () => {
       <Input
         value={searchTerm}
         type="text"
-        placeholder="Cari Destinasi atau Event"
+        placeholder="Cari Jelajahi atau Event"
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder-gray-300 !text-white"
       />
     </div> 
   )

@@ -1,4 +1,4 @@
-# Komponen Alert Modern untuk EventBMS
+# Komponen Alert Modern untuk Dolan Banyumas
 
 Komponen alert modern yang dapat menggantikan alert bawaan browser dengan desain yang lebih menarik, responsif, dan user-friendly.
 
@@ -358,4 +358,4 @@ Jika Anda ingin berkontribusi untuk meningkatkan komponen ini:
 
 ## 📄 License
 
-Komponen ini dibuat untuk EventBMS dan dapat digunakan secara bebas dalam proyek ini.
+Komponen ini dibuat untuk Dolan Banyumas dan dapat digunakan secara bebas dalam proyek ini.

@@ -21,6 +21,7 @@ export default function AdminDataPage() {
   const [exportLoading, setExportLoading] = useState(false);
   const [exportType, setExportType] = useState('filtered'); // 'filtered' or 'all'
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+  const [error, setError] = useState(null);
   const [stats, setStats] = useState({
     total: 0,
     byCategory: {},
@@ -46,6 +47,7 @@ export default function AdminDataPage() {
   const fetchData = async () => {
     try {
       setLoading(true);
+      setError(null);
       
       // Fetch data from all available APIs
       const [
@@ -66,14 +68,36 @@ export default function AdminDataPage() {
         fetch('/api/biro_perjalanan')
       ]);
 
-      // Parse all responses
-      const eventsData = await eventsResponse.json();
-      const destinationsData = await destinationsResponse.json();
-      const culinaryData = await culinaryResponse.json();
-      const accommodationData = await accommodationResponse.json();
-      const souvenirsData = await souvenirsResponse.json();
-      const villagesData = await villagesResponse.json();
-      const travelAgenciesData = await travelAgenciesResponse.json();
+      // Check if all responses are ok
+      const responses = [eventsResponse, destinationsResponse, culinaryResponse, accommodationResponse, souvenirsResponse, villagesResponse, travelAgenciesResponse];
+      const failedResponses = responses.filter(response => !response.ok);
+      
+      if (failedResponses.length > 0) {
+        console.warn('Some API responses failed:', failedResponses.map(r => ({ status: r.status, statusText: r.statusText })));
+      }
+
+      // Parse all responses with error handling
+      const parseResponse = async (response, apiName) => {
+        try {
+          if (!response.ok) {
+            console.warn(`${apiName} API failed with status:`, response.status);
+            return { success: false, data: [] };
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(`Error parsing ${apiName} response:`, error);
+          return { success: false, data: [] };
+        }
+      };
+
+      const eventsData = await parseResponse(eventsResponse, 'Events');
+      const destinationsData = await parseResponse(destinationsResponse, 'Destinations');
+      const culinaryData = await parseResponse(culinaryResponse, 'Culinary');
+      const accommodationData = await parseResponse(accommodationResponse, 'Accommodation');
+      const souvenirsData = await parseResponse(souvenirsResponse, 'Souvenirs');
+      const villagesData = await parseResponse(villagesResponse, 'Villages');
+      const travelAgenciesData = await parseResponse(travelAgenciesResponse, 'Travel Agencies');
 
       // Extract data arrays, handle potential errors gracefully
       const events = eventsData.success ? (eventsData.events || []) : [];
@@ -295,6 +319,7 @@ export default function AdminDataPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError('Gagal memuat data: ' + error.message);
       setNotification({ 
         show: true, 
         message: 'Gagal memuat data: ' + error.message, 
@@ -775,6 +800,25 @@ export default function AdminDataPage() {
             </div>
           </div>
         )}
+
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <span className="text-red-500 text-lg">❌</span>
+              <div className="flex-1">
+                <h3 className="text-red-800 font-medium">Error</h3>
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
@@ -961,42 +1005,48 @@ export default function AdminDataPage() {
               </button>
 
               {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden min-w-[280px]">
-                  <div className="py-2 max-h-80 overflow-y-auto">
-                    {categories.map((category) => (
-                      <button
-                        key={category.value}
-                        onClick={() => {
-                          setSelectedCategory(category.value);
-                          setIsDropdownOpen(false);
-                        }}
-                        className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
-                          selectedCategory === category.value 
-                            ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' 
-                            : 'text-gray-700 hover:text-gray-900'
-                        }`}
-                      >
-                        <span className="text-xl">{category.icon}</span>
-                        <span className="font-medium text-sm flex-1">{category.label}</span>
-                        {selectedCategory === category.value && (
-                          <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+              <div 
+                className={`absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden min-w-[280px] transition-all duration-200 ease-out ${
+                  isDropdownOpen 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}
+              >
+                <div className="py-2 max-h-80 overflow-y-auto">
+                  {categories.map((category) => (
+                    <button
+                      key={category.value}
+                      onClick={() => {
+                        setSelectedCategory(category.value);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
+                        selectedCategory === category.value 
+                          ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      <span className="text-xl">{category.icon}</span>
+                      <span className="font-medium text-sm flex-1">{category.label}</span>
+                      {selectedCategory === category.value && (
+                        <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
 
               {/* Backdrop */}
-              {isDropdownOpen && (
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setIsDropdownOpen(false)}
-                />
-              )}
+              <div 
+                className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+                  isDropdownOpen 
+                    ? 'opacity-100 pointer-events-auto' 
+                    : 'opacity-0 pointer-events-none'
+                }`}
+                onClick={() => setIsDropdownOpen(false)}
+              />
             </div>
 
                          {/* Export Options */}

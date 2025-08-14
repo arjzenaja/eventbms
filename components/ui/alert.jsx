@@ -60,6 +60,32 @@ export function Alert({
     }
   }, [autoClose, show, autoCloseDelay]);
 
+  // Add custom animations to globals.css
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shrink {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+        
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Cleanup function to remove the style when component unmounts
+      return () => {
+        if (style.parentNode) {
+          style.parentNode.removeChild(style);
+        }
+      };
+    }
+  }, []);
+
   const handleClose = () => {
     setIsAnimating(true);
     setTimeout(() => {
@@ -73,7 +99,7 @@ export function Alert({
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm',
+        'fixed inset-0 z-30 flex items-center justify-center bg-black/50 backdrop-blur-sm',
         isAnimating && 'animate-fadeOut',
         className
       )}
@@ -197,7 +223,7 @@ export function Toast({
   return (
     <div
       className={cn(
-        'fixed z-50 transition-all duration-300',
+        'fixed z-30 transition-all duration-300',
         positionClasses[position],
         isAnimating ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100',
         className
@@ -246,18 +272,3 @@ export function Toast({
     </div>
   );
 }
-
-// Add custom animations to globals.css
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes shrink {
-    from { width: 100%; }
-    to { width: 0%; }
-  }
-  
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-`;
-document.head.appendChild(style);

@@ -1,6 +1,6 @@
-# Sistem User DOLAN BMS
+# Sistem User Dolan Banyumas
 
-Dokumentasi lengkap untuk sistem user yang telah diimplementasikan di aplikasi DOLAN BMS.
+Dokumentasi lengkap untuk sistem user yang telah diimplementasikan di aplikasi Dolan Banyumas.
 
 ## Fitur yang Tersedia
 

@@ -67,7 +67,7 @@ export default function AdminLogin() {
           Admin Login
         </h2>
         <p className="text-center text-lg text-gray-600 mb-8">
-          Masuk ke panel admin DOLAN BMS
+          Masuk ke panel admin Dolan Banyumas
         </p>
       </div>
 
@@ -174,7 +174,7 @@ export default function AdminLogin() {
               </div>
               <div className="bg-white/50 p-3 rounded-lg">
                 <p className="font-medium text-blue-800 mb-1">Akun 2:</p>
-                <p><strong>Email:</strong> admin@eventbms.com</p>
+                <p><strong>Email:</strong> admin@dolan-banyumas.com</p>
                 <p><strong>Password:</strong> password123</p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function AdminLogin() {
       {/* Footer */}
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
-          © 2024 DOLAN BMS. All rights reserved.
+                      © 2025 Dolan Banyumas. All rights reserved.
         </p>
       </div>
     </div>

@@ -41,10 +41,30 @@ function AdminSidebar() {
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
+      
+      // Show logout success notification
+      try {
+        localStorage.setItem('flashToast', JSON.stringify({
+          type: 'success',
+          title: 'Admin Logout Berhasil',
+          message: 'Anda telah berhasil keluar dari panel admin. Terima kasih!'
+        }));
+      } catch (_) {}
+      
       logout();
       router.push('/admin/login');
     } catch (error) {
       console.error('Logout error:', error);
+      
+      // Show logout success notification even if API call fails
+      try {
+        localStorage.setItem('flashToast', JSON.stringify({
+          type: 'success',
+          title: 'Admin Logout Berhasil',
+          message: 'Anda telah berhasil keluar dari panel admin. Terima kasih!'
+        }));
+      } catch (_) {}
+      
       logout();
       router.push('/admin/login');
     }
@@ -93,7 +113,7 @@ function AdminSidebar() {
           </div>
           {!isCollapsed && (
             <div>
-              <span className="text-xl font-bold text-gray-900">DOLAN BMS</span>
+              <span className="text-xl font-bold text-gray-900">Dolan Banyumas</span>
               <p className="text-xs text-gray-500">Admin Panel</p>
             </div>
           )}
@@ -230,26 +250,34 @@ function AdminHeader() {
             <span className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-5 h-5 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center border-2 border-white shadow">3</span>
           </button>
           
-          {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-              <div className="p-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">Notifikasi</h3>
-              </div>
-              <div className="max-h-64 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <div key={notification.id} className="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                    <p className="text-sm text-gray-900">{notification.message}</p>
-                    <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="p-3 border-t border-gray-200">
-                <button className="w-full text-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
-                  Lihat Semua Notifikasi
-                </button>
-              </div>
+          <div 
+            className={`absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 transition-all duration-200 ease-out ${
+              showNotifications 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 -translate-y-1 pointer-events-none'
+            }`}
+            style={{
+              transformOrigin: 'top left',
+              transition: 'opacity 200ms ease-out, transform 200ms ease-out'
+            }}
+          >
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Notifikasi</h3>
             </div>
-          )}
+            <div className="max-h-64 overflow-y-auto">
+              {notifications.map((notification) => (
+                <div key={notification.id} className="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <p className="text-sm text-gray-900">{notification.message}</p>
+                  <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-3 border-t border-gray-200">
+              <button className="w-full text-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                Lihat Semua Notifikasi
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Profile Dropdown */}
@@ -268,39 +296,47 @@ function AdminHeader() {
             <span className="hidden md:block text-gray-400">▾</span>
           </button>
           
-          {showProfile && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-              <div className="py-2">
-                <Link href="/admin/profile" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  <span className="text-lg">👤</span>
-                  <span>Profil Saya</span>
-                </Link>
-                <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  <span className="text-lg">⚙️</span>
-                  <span>Pengaturan</span>
-                </Link>
-                <hr className="my-2 border-gray-200" />
-                <button 
-                  onClick={async () => {
-                    setShowProfile(false);
-                    try {
-                      await fetch('/api/admin/logout', { method: 'POST' });
-                      logout();
-                      router.push('/admin/login');
-                    } catch (error) {
-                      console.error('Logout error:', error);
-                      logout();
-                      router.push('/admin/login');
-                    }
-                  }}
-                  className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <span className="text-lg">🚪</span>
-                  <span>Keluar</span>
-                </button>
-              </div>
+          <div 
+            className={`absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 transition-all duration-200 ease-out ${
+              showProfile 
+                ? 'opacity-100 translate-y-0' 
+                : 'opacity-0 -translate-y-1 pointer-events-none'
+            }`}
+            style={{
+              transformOrigin: 'top left',
+              transition: 'opacity 200ms ease-out, transform 200ms ease-out'
+            }}
+          >
+            <div className="py-2">
+              <Link href="/admin/profile" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <span className="text-lg">👤</span>
+                <span>Profil Saya</span>
+              </Link>
+              <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <span className="text-lg">⚙️</span>
+                <span>Pengaturan</span>
+              </Link>
+              <hr className="my-2 border-gray-200" />
+              <button 
+                onClick={async () => {
+                  setShowProfile(false);
+                  try {
+                    await fetch('/api/admin/logout', { method: 'POST' });
+                    logout();
+                    router.push('/admin/login');
+                  } catch (error) {
+                    console.error('Logout error:', error);
+                    logout();
+                    router.push('/admin/login');
+                  }
+                }}
+                className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <span className="text-lg">🚪</span>
+                <span>Keluar</span>
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

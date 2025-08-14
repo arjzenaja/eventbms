@@ -31,7 +31,7 @@ const Home = () => {
             
             {/* Main Header */}
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
                 <span className="text-blue-400 italic text-2xl md:text-3xl">Selamat Datang di</span><br />
                 Dolan Banyumas
               </h2>
@@ -268,17 +268,12 @@ const Home = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <Link
-                        href="/destinations"
+                        href="/dolan-banyumas"
                         className="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-all duration-200 text-base shadow-lg"
                       >
-                        Jelajahi Semua Destinasi
+                        Jelajahi Semua Wisata Di Banyumas
                       </Link>
-                      <Link
-                        href="/events"
-                        className="border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 hover:scale-105 transition-all duration-200 text-base shadow-lg"
-                      >
-                        Lihat Event Terdekat
-                      </Link>
+                      
                     </div>
                   </div>
                 </div>
@@ -295,6 +290,9 @@ const Home = () => {
           </div>
         </div>
       )}
+      
+      {/* Spacer for Footer */}
+      <div className="mb-16"></div>
     </div>
   );
 };

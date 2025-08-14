@@ -216,20 +216,6 @@ export default function EditAccommodation() {
                 </div>
 
                 <div>
-                  <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-                    Tanggal
-                  </label>
-                  <input
-                    type="date"
-                    id="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
                   <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                     Deskripsi *
                   </label>
@@ -247,16 +233,18 @@ export default function EditAccommodation() {
 
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Harga
+                    Harga per Malam (Rp) *
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="price"
                     name="price"
-                    value={formData.price}
+                    required
+                    min="0"
+                    value={formData.price || 0}
                     onChange={handleInputChange}
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Contoh: Rp 500.000"
+                    placeholder="0"
                   />
                 </div>
 

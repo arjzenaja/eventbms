@@ -328,12 +328,12 @@ export default function EditDestinationPage() {
                       type="number"
                       id="price"
                       name="price"
-                      value={formData.price}
+                      value={formData.price || 0}
                       onChange={handleInputChange}
                       required
                       min="0"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="25000"
+                      placeholder="0"
                     />
                   </div>
 
@@ -350,21 +350,6 @@ export default function EditDestinationPage() {
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
                       placeholder="Nama pengelola atau kontak"
-                    />
-                  </div>
-
-                  {/* Tanggal */}
-                  <div>
-                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                      Tanggal
-                    </label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      value={formData.date || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     />
                   </div>
 

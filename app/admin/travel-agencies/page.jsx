@@ -66,6 +66,36 @@ export default function AdminTravelAgencies() {
     }
   };
 
+  const handleExportData = () => {
+    const exportData = filteredTravelAgencies.map(item => ({
+      ID: item.id,
+      Nama: item.title,
+      Lokasi: item.location,
+      Tipe: item.type,
+      Kategori: item.category || 'Biro Perjalanan',
+      Deskripsi: item.short_description || '',
+      Biaya: item.price_range || 'Tidak ada info',
+      Kontak: item.contact || '',
+      Alamat: item.address || '',
+      Direkomendasikan: item.recommended ? 'Ya' : 'Tidak'
+    }));
+
+    const csvContent = [
+      Object.keys(exportData[0]).join(','),
+      ...exportData.map(row => Object.values(row).map(value => `"${value}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `biro_perjalanan_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const refreshData = async () => {
     setIsLoading(true);
     try {
@@ -153,10 +183,7 @@ export default function AdminTravelAgencies() {
                   <option value="biro-perjalanan">Biro Perjalanan</option>
                 </select>
                 
-                <button className="px-4 py-2 bg-white !bg-white text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2">
-                  <span>⚙️</span>
-                  Filter
-                </button>
+
                 
                 <button 
                   onClick={refreshData}
@@ -165,6 +192,16 @@ export default function AdminTravelAgencies() {
                 >
                   <span>🔄</span>
                   Refresh
+                </button>
+                
+                <button 
+                  onClick={handleExportData}
+                  disabled={filteredTravelAgencies.length === 0}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-400 flex items-center gap-2"
+                  title="Export Data Biro Perjalanan ke CSV"
+                >
+                  <span>📊</span>
+                  Export
                 </button>
                 
                 <button 
@@ -202,35 +239,6 @@ export default function AdminTravelAgencies() {
                 >
                   <span>🔧</span>
                   Fix IDs
-                </button>
-                
-                <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/destinations/export?format=csv&category=biro_perjalanan');
-                      if (response.ok) {
-                        const blob = await response.blob();
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `biro_perjalanan_${new Date().toISOString().split('T')[0]}.csv`;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                        alert('Data biro perjalanan berhasil diexport ke CSV!');
-                      } else {
-                        alert('Gagal export data: ' + response.statusText);
-                      }
-                    } catch (error) {
-                      alert('Error export data: ' + error.message);
-                    }
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-                  title="Export Data Biro Perjalanan"
-                >
-                  <span>📊</span>
-                  Export
                 </button>
                 
                 <button 

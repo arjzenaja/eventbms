@@ -9,9 +9,9 @@
     },
     {
       "id": "2",
-      "email": "admin@eventbms.com",
+      "email": "admin@dolan-banyumas.com",
       "password": "password123",
-      "name": "Event BMS Admin",
+      "name": "Dolan Banyumas Admin",
       "role": "admin"
     }
   ],
@@ -188,6 +188,26 @@
       "recommended": true,
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-08-13T02:13:58.174Z"
+    },
+    {
+      "id": "9",
+      "img_sm": "/uploads/dest_sm_1755153360625.jpg",
+      "img_lg": "/uploads/dest_lg_1755153360627.jpg",
+      "title": "Wisata Cilongok Langgongsari",
+      "location": "sumbang, Banyumas, Jawa Tengah, Indonesia.",
+      "short_description": "buken adalah tempat wisata yang cocok untuk di bikmati bersama alam yang luas",
+      "description": "Menikmati keindahan alam di buken sangat lah seru ",
+      "type": "wisata-buatan",
+      "category": "Wisata",
+      "entrance_fee": "Gratis",
+      "contact": "",
+      "address": "",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "recommended": true,
+      "created_at": "2025-08-14T06:36:00.636Z",
+      "updated_at": "2025-08-14T06:43:36.508Z"
     }
   ],
   "kuliner": [
@@ -534,6 +554,26 @@
       "recommended": false,
       "created_at": "2025-08-13T13:22:30.669Z",
       "updated_at": "2025-08-13T13:22:30.669Z"
+    },
+    {
+      "id": "7",
+      "img_sm": "/uploads/souvenir_sm_1755184165145.jpg",
+      "img_lg": "/uploads/souvenir_lg_1755184165146.jpg",
+      "title": "dawdaw",
+      "location": "dawdawdad",
+      "short_description": "awdawdawda",
+      "description": "wawdawdawda",
+      "type": "makanan",
+      "category": "Makanan",
+      "price_range": "25.000 - 100.000",
+      "contact": "adawdwad",
+      "address": "awdawdwadawa",
+      "features": [
+        "Produk Lokal,Kualitas Terjamin"
+      ],
+      "recommended": false,
+      "created_at": "2025-08-14T15:09:25.148Z",
+      "updated_at": "2025-08-14T15:09:25.148Z"
     }
   ],
   "desa_wisata": [
@@ -746,6 +786,60 @@
       "created_at": "2025-08-13T14:24:28.932Z",
       "updated_at": "2025-08-13T14:24:28.932Z",
       "organizer": "Banyumas Jazz Community"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "Diaz Nawfal Mu'afa",
+      "email": "iiwmdaimd@gmail.com",
+      "password": "diaznm2008",
+      "phone": "025688666887",
+      "address": "banyumas",
+      "role": "user",
+      "is_active": true,
+      "created_at": "2025-08-14T00:56:28.169Z",
+      "updated_at": "2025-08-14T00:56:28.169Z"
+    },
+    {
+      "id": "2",
+      "name": "Rasyasayangfadhil",
+      "email": "rasyaluvfadhil@gmail.com",
+      "password": "rasya1234",
+      "phone": "04851265446",
+      "address": "Cilongok Langgongsari Banyumas Jawa Tengah",
+      "role": "user",
+      "is_active": true,
+      "created_at": "2025-08-14T06:26:19.039Z",
+      "updated_at": "2025-08-14T06:49:02.016Z"
+    },
+    {
+      "id": "3",
+      "name": "Arjzen Junika Imato",
+      "email": "ganteng@gmail.com",
+      "password": "junika666",
+      "phone": "08123-4567-8910",
+      "address": "",
+      "role": "user",
+      "is_active": true,
+      "created_at": "2025-08-14T09:54:04.466Z",
+      "updated_at": "2025-08-14T09:54:04.466Z"
+    },
+    {
+      "id": "4",
+      "name": "Junika arjzen",
+      "email": "juniarjzen@gmail.com",
+      "password": "Junika666",
+      "phone": "0812-3456-7890",
+      "address": "",
+      "role": "user",
+      "is_active": true,
+      "is_verified": true,
+      "verify_token": null,
+      "verify_sent_at": "2025-08-14T10:19:38.695Z",
+      "created_at": "2025-08-14T10:19:38.695Z",
+      "updated_at": "2025-08-14T10:19:41.283Z",
+      "verified_at": "2025-08-14T10:19:41.283Z"
     }
   ]
 }

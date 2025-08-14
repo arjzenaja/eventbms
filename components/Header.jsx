@@ -3,12 +3,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useUser } from '@/context/UserContext'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
   const { user, logout, isAuthenticated } = useUser();
+  const router = useRouter();
 
   const handleLogout = () => {
+    // Show logout success notification
+    try {
+      localStorage.setItem('flashToast', JSON.stringify({
+        type: 'success',
+        title: 'Berhasil Keluar',
+        message: 'Anda telah berhasil keluar dari akun. Terima kasih telah menggunakan Dolan Banyumas!'
+      }));
+    } catch (_) {}
+    
     logout();
+    
+    // Redirect to home page to show the notification
+    router.push('/');
   };
 
   return (
@@ -23,8 +37,8 @@ const Header = () => {
             <Link href="/" className="font-bold text-lg text-blue-600 hover:text-white active:text-white px-3 py-1 rounded transition">
               Dolan Banyumas
             </Link>
-            <Link href="/destinations" className="text-white hover:text-blue-400 transition-colors">
-              Destinasi
+            <Link href="/dolan-banyumas" className="text-white hover:text-blue-400 transition-colors">
+              Jelajahi
             </Link>
           </div>
           <div className='flex gap-4 items-center'>
