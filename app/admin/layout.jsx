@@ -5,6 +5,9 @@ import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Toast } from '@/components/ui/alert';
+import { SimpleToast } from '@/components/ui/SimpleToast';
+import { cleanupLocalStorage, getValidFlashToast } from '@/lib/utils';
 
 // Client-side only time display component
 function ClientTimeDisplay() {
@@ -343,6 +346,40 @@ function AdminHeader() {
   );
 }
 
+// AdminToast component to display flash notifications
+function AdminToast() {
+  const [flash, setFlash] = useState(null);
+
+  useEffect(() => {
+    cleanupLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    // Read flash toast immediately
+    const validFlash = getValidFlashToast();
+    if (validFlash) {
+      setFlash(validFlash);
+    }
+  }, []);
+  
+  return (
+    <>
+      {flash && (
+        <SimpleToast
+          type={flash.type || 'success'}
+          title={flash.title}
+          message={flash.message}
+          show={true}
+          onClose={() => setFlash(null)}
+          autoClose={true}
+          autoCloseDelay={2000}
+          position="top-right"
+        />
+      )}
+    </>
+  );
+}
+
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const isAuthRoute = pathname === '/admin/login' || pathname === '/admin/forgot-password';
@@ -360,6 +397,7 @@ export default function AdminLayout({ children }) {
           </div>
         </div>
       )}
+      <AdminToast />
     </AdminProvider>
   );
 }

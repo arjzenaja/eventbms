@@ -270,7 +270,7 @@ export default function NewVillage() {
           />
         </div>
         <div>
-          <label className="block font-medium text-black">Harga Masuk (Rp) *</label>
+          <label className="block font-medium text-black">Biaya Masuk (Rp) *</label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
             <input

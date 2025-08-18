@@ -13,7 +13,7 @@ export default function NewDestinationPage() {
     description: '',
     location: '',
     type: 'wisata-alam',
-    price: '',
+    entrance_fee: '',
     manager: '', // Pengelola Wisata
     recommended: false
   });
@@ -232,49 +232,22 @@ export default function NewDestinationPage() {
                     </select>
                   </div>
 
-                  {/* Harga Tiket */}
+
+
+                  {/* Biaya Masuk */}
                   <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                      Harga Tiket (Rp) *
+                    <label htmlFor="entrance_fee" className="block text-sm font-medium text-gray-700 mb-2">
+                      Biaya Masuk
                     </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
-                      <input
-                        type="text"
-                        id="price"
-                        name="price"
-                        value={formData.price}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/[^0-9]/g, '');
-                          setFormData(prev => ({
-                            ...prev,
-                            price: value
-                          }));
-                        }}
-                        onFocus={(e) => {
-                          if (formData.price && formData.price.endsWith('000')) {
-                            const cleanValue = formData.price.replace(/000$/, '');
-                            setFormData(prev => ({
-                              ...prev,
-                              price: cleanValue
-                            }));
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (formData.price && !formData.price.endsWith('000')) {
-                            const formattedValue = `${formData.price}000`;
-                            setFormData(prev => ({
-                              ...prev,
-                              price: formattedValue
-                            }));
-                          }
-                        }}
-                        required
-                        maxLength="6"
-                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
-                        placeholder="25"
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      id="entrance_fee"
+                      name="entrance_fee"
+                      value={formData.entrance_fee}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Contoh: Rp 10.000 atau Gratis"
+                    />
                   </div>
 
                   {/* Pengelola Wisata */}

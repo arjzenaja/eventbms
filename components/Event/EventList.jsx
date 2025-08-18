@@ -33,7 +33,7 @@ const EventList = () => {
     return ( 
       <div>
         <h1 className='h4 mb-6'>{filteredEvents.length} result found</h1>
-        <div className='grid grid-cols-1 xl:grid-cols-4 gap-[30px] mb-32'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 xl:gap-10 mb-32'>
           {filteredEvents.map((event, index) => {
             return (
               <div key={index} className='relative'>

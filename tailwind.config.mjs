@@ -37,6 +37,14 @@ export default {
 					hover: "#24252c",
 				},
 				grey: "#737373",
+				// Dark mode colors
+				dark: {
+					primary: "#111827",
+					secondary: "#1f2937",
+					tertiary: "#374151",
+					accent: "#3b82f6",
+					accentHover: "#2563eb",
+				},
 			},
 			backgroundImage: {
 			hero_bg1: "url('/hero/menara teratai.jpg')",

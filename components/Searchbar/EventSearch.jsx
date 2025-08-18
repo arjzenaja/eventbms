@@ -14,9 +14,10 @@ const EventSearch = () => {
       <Input
         value={searchTerm}
         type="text"
-        placeholder="Cari Jelajahi atau Event"
+        placeholder="Cari Jelajahi Banyumas"
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder-gray-300 !text-white"
+        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder-gray-700 dark:placeholder-gray-300 !text-gray-900 dark:!text-white shadow-none"
+        style={{ backgroundColor: 'transparent' }}
       />
     </div> 
   )

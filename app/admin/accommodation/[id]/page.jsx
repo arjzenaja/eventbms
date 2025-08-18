@@ -233,7 +233,7 @@ export default function EditAccommodation() {
 
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Harga per Malam (Rp) *
+                    Biaya Masuk (Rp) *
                   </label>
                   <input
                     type="number"

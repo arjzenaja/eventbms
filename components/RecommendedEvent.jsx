@@ -1,20 +1,21 @@
 "use client";
+
 import React, { useContext } from 'react';
+import Link from 'next/link';
 
-//  import swiper react components
+// Swiper components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 
-// import swiper styles
+// Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-// import required modules
-import { Pagination } from 'swiper/modules';
-
-// components
-import Link from 'next/link';
+// Components
 import Event from './Event/Event';
 import SkeletonGrid from './SkeletonGrid';
+
+// Context
 import { EventContext } from '@/context/EventContext';
 
 const RecommendedEvent = () => {
@@ -24,37 +25,46 @@ const RecommendedEvent = () => {
     (event) => event.recommended === true
   );
 
-  console.log(filteredRecommendedEvents);
+  const swiperBreakpoints = {
+    640: { slidesPerView: 2 },
+    1024: { slidesPerView: 3 },
+    1310: { slidesPerView: 4 },
+  };
+
+  const swiperPagination = {
+    dynamicBullets: true,
+    clickable: true,
+  };
 
   return (
-    <section className='mb-32'>
-      <div className='mb-12 text-center'>
-        <h3 className='pretitle'>Rekomendasi Untuk Anda</h3>
-        <h2 className='h2'>Jelajahi Favorit</h2>
+    <section className="mb-32">
+      {/* Header Section */}
+      <div className="mb-12 text-center">
+        <h3 className="pretitle text-blue-600 dark:text-blue-400">
+          Rekomendasi Untuk Anda
+        </h3>
+        <h2 className="h2 text-gray-900 dark:text-white">
+          Jelajahi Favorit
+        </h2>
       </div>
+
+      {/* Content Section */}
       {filteredRecommendedEvents.length > 0 ? (
-        <Swiper 
+        <Swiper
           slidesPerView={1}
           spaceBetween={30}
-          pagination={{
-            dynamicBullets: true,
-            clickable: true,
-          }}
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1310: { slidesPerView: 4 },
-          }}
+          pagination={swiperPagination}
+          breakpoints={swiperBreakpoints}
           modules={[Pagination]}
-          className='w-full h-[500px]'
-          >
-            {filteredRecommendedEvents.map((event, index) => (
-              <SwiperSlide key={index} className='select-none'>
-                <Link href={`/dolan-banyumas/event/${event.id}`}>
-                  <Event event={event} />
-                </Link>
-              </SwiperSlide>
-            ))}
+          className="w-full h-[500px]"
+        >
+          {filteredRecommendedEvents.map((event, index) => (
+            <SwiperSlide key={event.id || index} className="select-none">
+              <Link href={`/dolan-banyumas/event/${event.id}`}>
+                <Event event={event} />
+              </Link>
+            </SwiperSlide>
+          ))}
         </Swiper>
       ) : (
         <SkeletonGrid itemCount={4} />

@@ -41,7 +41,7 @@ export function Alert({
   onClose,
   show = true,
   autoClose = false,
-  autoCloseDelay = 5000,
+  autoCloseDelay = 2000,
   className,
   ...props
 }) {
@@ -181,7 +181,7 @@ export function Toast({
   onClose,
   show = true,
   autoClose = true,
-  autoCloseDelay = 4000,
+  autoCloseDelay = 2000,
   position = 'top-right',
   className,
   ...props
@@ -189,8 +189,21 @@ export function Toast({
   const [isVisible, setIsVisible] = useState(show);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const IconComponent = alertIcons[type];
-  const styles = alertStyles[type];
+  // Log component props for debugging
+  useEffect(() => {
+    if (show) {
+      console.log('Toast rendered with props:', { type, title, message, position });
+    }
+  }, [show, type, title, message, position]);
+
+  // Validate and sanitize props
+  const validType = ['success', 'error', 'warning', 'info'].includes(type) ? type : 'info';
+  const validTitle = typeof title === 'string' && title.trim() ? title.trim() : 'Notifikasi';
+  const validMessage = typeof message === 'string' && message.trim() ? message.trim() : '';
+  const validPosition = ['top-right', 'top-left', 'bottom-right', 'bottom-left', 'top-center', 'bottom-center'].includes(position) ? position : 'top-right';
+
+  const IconComponent = alertIcons[validType];
+  const styles = alertStyles[validType];
 
   useEffect(() => {
     if (autoClose && show) {
@@ -220,55 +233,85 @@ export function Toast({
 
   if (!isVisible) return null;
 
-  return (
-    <div
-      className={cn(
-        'fixed z-30 transition-all duration-300',
-        positionClasses[position],
-        isAnimating ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100',
-        className
-      )}
-      {...props}
-    >
+  // Error boundary - if anything goes wrong, show a simple fallback
+  try {
+    return (
       <div
         className={cn(
-          'w-80 bg-white rounded-xl shadow-lg border overflow-hidden',
-          styles.container
+          'fixed z-30 transition-all duration-300',
+          positionClasses[validPosition],
+          isAnimating ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100',
+          className
         )}
+        {...props}
       >
-        <div className="flex items-start gap-3 p-4">
-          <IconComponent className={cn('w-5 h-5 mt-0.5 flex-shrink-0', styles.icon)} />
+        <div
+          className={cn(
+            'w-80 bg-white rounded-xl shadow-lg border overflow-hidden',
+            'border-gray-200 shadow-xl', // Fallback styling
+            styles.container
+          )}
+        >
+          <div className="flex items-start gap-3 p-4">
+            <IconComponent className={cn('w-5 h-5 mt-0.5 flex-shrink-0', styles.icon)} />
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium text-sm text-gray-900">{validTitle}</h4>
+              {validMessage && <p className="text-xs mt-1 opacity-90 text-gray-700">{validMessage}</p>}
+            </div>
+            <button
+              onClick={handleClose}
+              className={cn(
+                'p-1 rounded-full transition-colors duration-200 flex-shrink-0',
+                styles.button
+              )}
+              aria-label="Tutup notifikasi"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+          
+          {/* Progress bar */}
+          {autoClose && (
+            <div className="h-1 bg-gray-200">
+              <div
+                className={cn(
+                  'h-full transition-all duration-300 ease-linear',
+                  styles.icon.replace('text-', 'bg-')
+                )}
+                style={{
+                  width: '100%',
+                  animation: `shrink ${autoCloseDelay}ms linear forwards`,
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error('Error rendering Toast component:', error);
+    
+    // Fallback simple notification
+    return (
+      <div className="fixed top-4 right-4 z-30 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm">
+        <div className="flex items-start gap-3">
+          <div className="w-5 h-5 mt-0.5 flex-shrink-0 text-blue-500">ℹ️</div>
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-sm">{title}</h4>
-            {message && <p className="text-xs mt-1 opacity-90">{message}</p>}
+            <h4 className="font-medium text-sm text-gray-900">
+              {typeof title === 'string' ? title : 'Notifikasi'}
+            </h4>
+            {message && typeof message === 'string' && (
+              <p className="text-xs mt-1 text-gray-700">{message}</p>
+            )}
           </div>
           <button
-            onClick={handleClose}
-            className={cn(
-              'p-1 rounded-full transition-colors duration-200 flex-shrink-0',
-              styles.button
-            )}
+            onClick={onClose}
+            className="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X className="w-3 h-3" />
+            ✕
           </button>
         </div>
-        
-        {/* Progress bar */}
-        {autoClose && (
-          <div className="h-1 bg-gray-200">
-            <div
-              className={cn(
-                'h-full transition-all duration-300 ease-linear',
-                styles.icon.replace('text-', 'bg-')
-              )}
-              style={{
-                width: '100%',
-                animation: `shrink ${autoCloseDelay}ms linear forwards`,
-              }}
-            />
-          </div>
-        )}
       </div>
-    </div>
-  );
+    );
+  }
 }

@@ -184,7 +184,7 @@ export default function ViewEvent() {
                   {/* Kapasitas */}
                   {event.seats && event.seats.length > 0 && (
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Kapasitas & Harga Tiket</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Kapasitas & Biaya Masuk</h3>
                       <div className="space-y-2">
                         {event.seats.map((seat, index) => (
                           <div key={index} className="bg-gray-50 p-3 rounded-lg">

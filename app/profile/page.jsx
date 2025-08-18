@@ -89,42 +89,42 @@ export default function UserProfile() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center"> 
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 pt-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Profile Saya</h1>
-            <p className="text-lg text-gray-600">Kelola informasi akun Anda</p>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Profil Saya</h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400">Kelola informasi akun Anda</p>
           </div>
 
           {/* Profile Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
             {/* Avatar Section */}
             <div className="text-center mb-8">
               <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4">
                 {user.name?.charAt(0)?.toUpperCase()}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
-              <p className="text-gray-600">{user.email}</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{user.name}</h2>
+              <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
             </div>
 
             {/* Message */}
             {message && (
               <div className={`mb-6 p-4 rounded-xl text-sm ${
                 message.includes('berhasil') 
-                  ? 'bg-green-50 border border-green-200 text-green-700' 
-                  : 'bg-red-50 border border-red-200 text-red-700'
+                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400' 
+                  : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400'
               }`}>
                 {message}
               </div>
@@ -134,7 +134,7 @@ export default function UserProfile() {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Nama Lengkap
                   </label>
                   <input
@@ -143,12 +143,12 @@ export default function UserProfile() {
                     value={formData.name}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Email
                   </label>
                   <input
@@ -157,12 +157,12 @@ export default function UserProfile() {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Nomor Telepon
                   </label>
                   <input
@@ -171,13 +171,13 @@ export default function UserProfile() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400"
                     placeholder="0812-3456-7890"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Tanggal Bergabung
                   </label>
                   <input
@@ -188,13 +188,13 @@ export default function UserProfile() {
                       day: 'numeric'
                     })}
                     disabled
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-500 bg-gray-100"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Alamat
                 </label>
                 <textarea
@@ -203,7 +203,7 @@ export default function UserProfile() {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows="3"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 resize-none"
                   placeholder="Masukkan alamat lengkap"
                 />
               </div>
@@ -230,7 +230,7 @@ export default function UserProfile() {
                         address: user.address || ''
                       });
                     }}
-                    className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-300 transition-all duration-300"
+                    className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300"
                   >
                     Batal
                   </button>
@@ -247,32 +247,32 @@ export default function UserProfile() {
           </div>
 
           {/* Account Actions */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Aksi Akun</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Aksi Akun</h3>
             
             <div className="space-y-4">
               <Link href="/change-password">
-                <button className="w-full text-left p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                <button className="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold text-gray-900">Ubah Password</h4>
-                      <p className="text-sm text-gray-600">Perbarui password akun Anda</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">Ubah Password</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Perbarui password akun Anda</p>
                     </div>
-                    <span className="text-gray-400">→</span>
+                    <span className="text-gray-400 dark:text-gray-500">→</span>
                   </div>
                 </button>
               </Link>
 
               <button
                 onClick={handleLogout}
-                className="w-full text-left p-4 border border-red-200 rounded-xl hover:bg-red-50 transition-colors"
+                className="w-full text-left p-4 border border-red-200 dark:border-red-800 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-semibold text-red-700">Keluar</h4>
-                    <p className="text-sm text-red-600">Keluar dari akun Anda</p>
+                    <h4 className="font-semibold text-red-700 dark:text-red-400">Keluar</h4>
+                    <p className="text-sm text-red-600 dark:text-red-500">Keluar dari akun Anda</p>
                   </div>
-                  <span className="text-red-400">→</span>
+                  <span className="text-red-400 dark:text-red-500">→</span>
                 </div>
               </button>
             </div>
@@ -281,7 +281,7 @@ export default function UserProfile() {
           {/* Back to Home */}
           <div className="text-center mt-8">
             <Link href="/">
-              <button className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+              <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors">
                 ← Kembali ke Beranda
               </button>
             </Link>

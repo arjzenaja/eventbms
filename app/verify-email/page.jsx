@@ -34,7 +34,8 @@ export default function VerifyEmailPage() {
           }));
         } catch (_) {}
         setState({ status: 'success', message: 'Email berhasil diverifikasi. Mengarahkan ke beranda...' });
-        setTimeout(() => router.push('/'), 1200);
+        // Redirect immediately
+        router.push('/');
       } else {
         setState({ status: 'error', message: data.message || 'Token verifikasi tidak valid.' });
       }

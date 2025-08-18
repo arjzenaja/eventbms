@@ -11,7 +11,7 @@ import {
   SelectValue,
  } from "@/components/ui/select";
 
-import { BiMap } from 'react-icons/bi';
+import { BiMap, BiChevronDown } from 'react-icons/bi';
 
 const EventLocation = () => {
   const { events, selectedLocation, setSelectedLocation } = useContext(EventContext);
@@ -29,7 +29,7 @@ const EventLocation = () => {
     .filter(location => location && typeof location === 'string' && location.trim() !== '');
   
   const uniqueLocations = [
-    "All locations",
+    "Cari lokasi",
     ...filteredLocations
   ];
 
@@ -40,23 +40,24 @@ const EventLocation = () => {
   return (
     <div className='flex items-center gap-[10px] w-full xl:w-[190px] select-none'>
       {/* icon */}
-              <div className='text-lg text-[#3B82F6]'>
+      <div className='text-lg text-[#3B82F6]'>
         <BiMap />
       </div>
       <Select
         value={selectedLocation}
         onValueChange={(value) => setSelectedLocation(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-white">
-          <SelectValue placeholder="Lokasi" />
+        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-gray-900 dark:text-white shadow-none font-medium flex items-center justify-between">
+          <SelectValue placeholder="Cari lokasi" />
+          <BiChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300 ml-2" />
         </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700 z-30">
+        <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
           <SelectGroup>
-            <SelectLabel className="text-gray-300 font-semibold">Location</SelectLabel>
+            <SelectLabel className="font-semibold text-gray-900 dark:text-white px-3 py-2">Location</SelectLabel>
             {uniqueLocations
               .filter(location => location && typeof location === 'string' && location.trim() !== '')
               .map((location, index) => {
-                const value = location === "All locations" ? "all-locations" : location;
+                const value = location === "Cari lokasi" ? "all-locations" : location;
                 
                 // Final validation to ensure value is never empty
                 if (!value || value.trim() === '') {
@@ -65,7 +66,7 @@ const EventLocation = () => {
                 }
                 
                 return (
-                  <SelectItem key={`location-${value}-${index}`} value={value} className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                  <SelectItem key={`location-${value}-${index}`} value={value} className="text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer px-3 py-2">
                     {location}
                   </SelectItem>
                 );

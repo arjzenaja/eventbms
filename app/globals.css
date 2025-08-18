@@ -3,16 +3,24 @@
 @tailwind utilities;
 
 body {
-  @apply bg-primary text-white;
+  @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
 }
 
-/* Ensure form inputs have black text for readability */
+/* Ensure form inputs have proper text colors for readability */
 input, textarea, select {
   color: #000000 !important;
 }
 
+.dark input, .dark textarea, .dark select {
+  color: #ffffff !important;
+}
+
 input::placeholder, textarea::placeholder {
   color: #6b7280 !important;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #9ca3af !important;
 }
 
 .h1,
@@ -46,22 +54,36 @@ input::placeholder, textarea::placeholder {
 }
 
 .btn {
-  @apply min-w-[112px] h-[48px] rounded-full flex items-center justify-center text-sm font-medium transition-all;
+  @apply min-w-[112px] h-[48px] rounded-xl flex items-center justify-center text-sm font-medium transition-all duration-300 hover:scale-105 shadow-lg;
 }
 
 .btn-accent {
-  background-color: #2563EB;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  color: white;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
 }
 .btn-accent:hover {
-  background-color: #1D4ED8;
+  background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+  box-shadow: 0 20px 35px -10px rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-secondary {
-  @apply bg-secondary;
+  @apply bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white;
+  box-shadow: 0 10px 25px -5px rgba(75, 85, 99, 0.3);
+}
+.btn-secondary:hover {
+  box-shadow: 0 20px 35px -10px rgba(75, 85, 99, 0.4);
+  transform: translateY(-2px);
 }
 
 .btn-tertiary {
-  @apply bg-tertiary hover:bg-tertiary-hover;
+  @apply bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-700 dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-600 dark:hover:to-gray-700 dark:text-white;
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.btn-tertiary:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 /* Untuk dark mode calendar */
@@ -87,6 +109,28 @@ input::placeholder, textarea::placeholder {
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
   background-color: #2563EB !important;
+}
+
+/* Light mode pagination bullets */
+.swiper-pagination-bullet {
+  background-color: #d1d5db !important;
+  opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #2563EB !important;
+  opacity: 1 !important;
+}
+
+/* Dark mode pagination bullets */
+.dark .swiper-pagination-bullet {
+  background-color: #6b7280 !important;
+  opacity: 0.5 !important;
+}
+
+.dark .swiper-pagination-bullet-active {
+  background-color: #3b82f6 !important;
+  opacity: 1 !important;
 }
 
 /* Admin Panel Animations */
@@ -396,4 +440,79 @@ input::placeholder, textarea::placeholder {
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* Dark mode styles */
+.dark body {
+  @apply bg-gray-900 text-white;
+}
+
+.dark .btn-tertiary {
+  @apply bg-gray-700 hover:bg-gray-600 text-white;
+}
+
+.dark .btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-600 text-white;
+}
+
+.dark .btn-accent {
+  @apply bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+/* Dark mode for cards and containers */
+.dark .admin-card {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+
+.dark .admin-stat-card {
+  @apply bg-gradient-to-r from-gray-800 to-gray-700 text-white;
+}
+
+/* Dark mode for form inputs */
+.dark input, .dark textarea, .dark select {
+  @apply bg-gray-800 border-gray-600 text-white;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  @apply text-gray-400;
+}
+
+/* Dark mode for dropdowns */
+.dark .profile-dropdown {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+
+/* Dark mode for search input */
+.dark .search-input {
+  @apply bg-gray-800 border-gray-600 text-white;
+}
+
+/* Dark mode for sidebar */
+.dark .sidebar-nav-item:not(.active) {
+  @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
+
+/* Dark mode for scrollbars */
+.dark .admin-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.dark .admin-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+.dark .admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Dark mode for custom scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
 }

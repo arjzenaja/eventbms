@@ -4,7 +4,7 @@ import path from 'path';
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;  
     const formData = await request.formData();
     
     // Extract form data
@@ -148,7 +148,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     console.log('DELETE request for ID:', id);
     console.log('ID type:', typeof id);

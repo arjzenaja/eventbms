@@ -16,7 +16,7 @@ export default function EditDestinationPage() {
     description: '',
     location: '',
     type: 'objek-wisata',
-    price: '',
+    entrance_fee: '',
     manager: '', // Pengelola Wisata
     recommended: false,
     date: '',
@@ -51,7 +51,7 @@ export default function EditDestinationPage() {
             description: destination.description || '',
             location: destination.location || '',
             type: destination.type || 'objek-wisata',
-            price: destination.seats?.[0]?.price || '',
+            entrance_fee: destination.entrance_fee || '',
             manager: destination.manager || '', // Pengelola Wisata
             recommended: destination.recommended || false,
             short_description: destination.short_description || '',
@@ -319,21 +319,21 @@ export default function EditDestinationPage() {
                     </select>
                   </div>
 
-                  {/* Harga Tiket */}
+
+
+                  {/* Biaya Masuk */}
                   <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                      Harga Tiket (Rp) *
+                    <label htmlFor="entrance_fee" className="block text-sm font-medium text-gray-700 mb-2">
+                      Biaya Masuk
                     </label>
                     <input
-                      type="number"
-                      id="price"
-                      name="price"
-                      value={formData.price || 0}
+                      type="text"
+                      id="entrance_fee"
+                      name="entrance_fee"
+                      value={formData.entrance_fee}
                       onChange={handleInputChange}
-                      required
-                      min="0"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="0"
+                      placeholder="Contoh: Rp 10.000 atau Gratis"
                     />
                   </div>
 

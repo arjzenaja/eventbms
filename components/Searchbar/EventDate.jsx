@@ -16,12 +16,12 @@ const EventDate = () => {
   };
   return (
     <div className="flex w-full items-center gap-[10px] xl:w-[190px]">
-              <div className="text-lg text-[#3B82F6]">
+      <div className="text-lg text-[#3B82F6]">
         <BiCalendar />
       </div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className="w-full justify-start p-0 bg-transparent hover:bg-transparent">
+          <Button className="w-full justify-start p-0 bg-transparent hover:bg-transparent text-white shadow-none">
             {selectedDate ? (
               format(selectedDate, "PPP")
             ) : (
@@ -29,16 +29,16 @@ const EventDate = () => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-secondary border-0 text-white">
+        <PopoverContent className="w-auto p-0 bg-transparent border-0 shadow-none">
           <Calendar
             mode="single"
             selected={selectedDate}
-            className="bg-neutral-900 text-white rounded-xl p-4 shadow-lg"
+            className="bg-transparent text-white rounded-xl p-4 shadow-none"
             onSelect={handleDateChange}
             initialFocus
           />
         </PopoverContent>
-        <div className="text-[26px]">
+        <div className="text-[26px] text-white">
           <BiChevronDown/>
         </div>
       </Popover>

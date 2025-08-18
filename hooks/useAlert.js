@@ -7,10 +7,10 @@ export const useAlert = () => {
     title: '',
     message: '',
     autoClose: false,
-    autoCloseDelay: 5000,
+    autoCloseDelay: 2000,
   });
 
-  const showAlert = useCallback(({ type = 'info', title, message, autoClose = false, autoCloseDelay = 5000 }) => {
+  const showAlert = useCallback(({ type = 'info', title, message, autoClose = false, autoCloseDelay = 2000 }) => {
     setAlert({
       show: true,
       type,

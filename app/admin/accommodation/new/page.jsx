@@ -257,7 +257,7 @@ export default function NewAccommodation() {
 
                 <div>
                   <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Harga (Rp) *
+                    Biaya Masuk (Rp) *
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>

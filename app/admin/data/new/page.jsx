@@ -229,7 +229,7 @@ export default function AdminAddDataPage() {
             show={showAlert}
             onClose={() => setShowAlert(false)}
             autoClose={true}
-            autoCloseDelay={4000}
+            autoCloseDelay={2000}
           />
         )}
 
@@ -242,7 +242,7 @@ export default function AdminAddDataPage() {
             show={showToast}
             onClose={() => setShowToast(false)}
             autoClose={true}
-            autoCloseDelay={4000}
+            autoCloseDelay={2000}
             position="top-right"
           />
         )}

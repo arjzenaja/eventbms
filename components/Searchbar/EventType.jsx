@@ -1,4 +1,4 @@
-import { BiLayer } from "react-icons/bi";
+import { BiLayer, BiChevronDown } from "react-icons/bi";
 
 import {
   Select,
@@ -90,47 +90,27 @@ const EventType = () => {
         value={selectedType || "all-types"}
         onValueChange={(value) => setSelectedType(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 capitalize text-white">
+        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 capitalize text-gray-900 dark:text-white shadow-none font-medium flex items-center justify-between">
           <SelectValue placeholder="Semua Tipe" />
+          <BiChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300 ml-2" />
         </SelectTrigger>
-        <SelectContent className="bg-gray-800 border-gray-700 z-30">
+        <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
           <SelectGroup>
-            <SelectLabel className="text-gray-300 font-semibold">Semua Tipe</SelectLabel>
+            <SelectLabel className="font-semibold text-gray-900 dark:text-white px-3 py-2">Semua Tipe</SelectLabel>
             {allTypes.map((type, index) => (
               <SelectItem 
-                key={index} 
-                value={type === "Semua Tipe" ? "all-types" : type} 
-                className="capitalize text-white hover:bg-gray-700 focus:bg-gray-700"
+                key={`type-${type}-${index}`} 
+                value={type === "Semua Tipe" ? "all-types" : type}
+                className="text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer px-3 py-2"
               >
-                {type === "Semua Tipe" ? "Semua Tipe" : 
-                 type === "wisata-alam" ? "Wisata Alam" :
-                 type === "wisata-taman" ? "Wisata Taman" :
-                 type === "wisata-budaya" ? "Wisata Budaya" :
-                 type === "wisata-sejarah" ? "Wisata Sejarah" :
-                 type === "wisata-buatan" ? "Wisata Buatan" :
-                 type === "wisata-minat-khusus" ? "Wisata Minat Khusus" :
-                 type === "wisata-religi" ? "Wisata Religi" :
-                 type === "cafe" ? "Cafe" :
-                 type === "resto" ? "Resto" :
-                 type === "kedai" ? "Kedai" :
-                 type === "rumah-makan" ? "Rumah Makan" :
-                 type === "hotel" ? "Hotel" :
-                 type === "vila" ? "Vila" :
-                 type === "homestay" ? "Homestay" :
-                 type === "pakaian" ? "Pakaian" :
-                 type === "makanan" ? "Makanan" :
-                 type === "desa-wisata" ? "Desa Wisata" :
-                 type === "biro-perjalanan" ? "Biro Perjalanan" :
-                 type === "event-banyumas" ? "Event Banyumas" :
-                 type === "event" ? "Event" : type
-                }
+                {type === "Semua Tipe" ? "Semua Tipe" : type.replace(/-/g, ' ')}
               </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </Select>
     </div>
-  )
-}
+  );
+};
 
-export default EventType
+export default EventType;

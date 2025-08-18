@@ -596,7 +596,7 @@ export default function NewEvent() {
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
                 <DollarSign className="w-5 h-5 mr-2 text-blue-600" />
-                Biaya Masuk / Harga Tiket
+                Biaya Masuk
               </h2>
               
               <div className="space-y-4">

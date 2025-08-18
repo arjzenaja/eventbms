@@ -5,7 +5,7 @@ import path from 'path';
 // GET destination by ID
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 // PUT update destination
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const formData = await request.formData();
     
     const dbPath = path.join(process.cwd(), 'db.json');
@@ -151,7 +151,7 @@ export async function PUT(request, { params }) {
 // DELETE destination
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));

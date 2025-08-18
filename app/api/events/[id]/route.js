@@ -5,15 +5,36 @@ import path from 'path';
 export async function GET(request, { params }) {
   try {
     const { id } = await params;
+    console.log('Fetching event with ID:', id);
     
     // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
+    
+    if (!fs.existsSync(dbPath)) {
+      console.error('db.json file not found');
+      return NextResponse.json({
+        success: false,
+        message: 'Database file not found'
+      }, { status: 500 });
+    }
+    
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    console.log('Available events:', dbData.events?.length || 0);
+    
+    if (!dbData.events || !Array.isArray(dbData.events)) {
+      console.error('Events array not found in database');
+      return NextResponse.json({
+        success: false,
+        message: 'Events data not available'
+      }, { status: 500 });
+    }
     
     // Find event by ID (convert to string for comparison)
     const event = dbData.events.find(event => event.id === String(id));
+    console.log('Found event:', event ? 'Yes' : 'No');
     
     if (!event) {
+      console.log('Event not found for ID:', id);
       return NextResponse.json({
         success: false,
         message: 'Event tidak ditemukan'
@@ -28,7 +49,7 @@ export async function GET(request, { params }) {
     console.error('Error reading event:', error);
     return NextResponse.json({
       success: false,
-      message: 'Terjadi kesalahan server'
+      message: 'Terjadi kesalahan server: ' + error.message
     }, { status: 500 });
   }
 }
