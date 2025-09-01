@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import GalleryUploader from "@/components/GalleryUploader";
 
 export default function NewVillage() {
   const [form, setForm] = useState({
@@ -16,6 +17,7 @@ export default function NewVillage() {
     packages: "",
     price: "",
     info: "",
+    coordinates: { lat: "", lng: "" },
     features: ["Budaya Lokal", "Akomodasi Homestay"],
     recommended: false,
   });
@@ -27,12 +29,25 @@ export default function NewVillage() {
     img_sm: null,
     img_lg: null
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [packagesList, setPackagesList] = useState([]);
+  const [pkgDraft, setPkgDraft] = useState({ name: '', price: '', include: '', left: '', right: '', recommended: false });
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCoordinateChange = (field, value) => {
+    setForm(prev => ({
+      ...prev,
+      coordinates: {
+        ...prev.coordinates,
+        [field]: value
+      }
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -90,8 +105,20 @@ export default function NewVillage() {
       
       // Add form data
       Object.keys(form).forEach(key => {
-        formDataToSend.append(key, form[key]);
+        if (key === 'packages') return; // append custom below
+        if (key === 'coordinates') {
+          formDataToSend.append('latitude', form.coordinates.lat);
+          formDataToSend.append('longitude', form.coordinates.lng);
+        } else {
+          formDataToSend.append(key, form[key]);
+        }
       });
+      // Append packages from builder if any, else from textarea
+      if (packagesList.length > 0) {
+        formDataToSend.append('packages', JSON.stringify(packagesList));
+      } else {
+        formDataToSend.append('packages', form.packages || '');
+      }
       
       // Add image files
       if (imageFiles.img_sm) {
@@ -99,6 +126,10 @@ export default function NewVillage() {
       }
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
+      }
+      // Add gallery files
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
       }
 
       const response = await fetch('/api/villages', {
@@ -135,6 +166,8 @@ export default function NewVillage() {
           img_sm: null,
           img_lg: null
         });
+        setGalleryFiles([]);
+        setPackagesList([]);
       } else {
         alert(data.message || 'Gagal menyimpan data desa wisata');
       }
@@ -225,6 +258,50 @@ export default function NewVillage() {
             placeholder="Desa, Kecamatan, Kabupaten"
           />
         </div>
+
+        {/* Koordinat Lokasi */}
+        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">📍 Koordinat Lokasi</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Latitude (Latitude)
+              </label>
+              <input
+                type="text"
+                value={form.coordinates.lat}
+                onChange={(e) => handleCoordinateChange('lat', e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: -7.123456"
+              />
+              <p className="text-xs text-gray-500 mt-1">Format: -7.123456 (negatif untuk belahan bumi selatan)</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Longitude (Longitude)
+              </label>
+              <input
+                type="text"
+                value={form.coordinates.lng}
+                onChange={(e) => handleCoordinateChange('lng', e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: 109.123456"
+              />
+              <p className="text-xs text-gray-500 mt-1">Format: 109.123456 (positif untuk belahan bumi timur)</p>
+            </div>
+          </div>
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800">
+              <strong>💡 Cara mendapatkan koordinat:</strong>
+            </p>
+            <ul className="text-xs text-blue-700 mt-1 space-y-1">
+              <li>• Buka Google Maps dan cari lokasi desa wisata</li>
+              <li>• Klik kanan pada lokasi dan pilih "What's here?"</li>
+              <li>• Koordinat akan muncul di bagian bawah</li>
+              <li>• Atau gunakan aplikasi GPS di smartphone</li>
+            </ul>
+          </div>
+        </div>
         <div>
           <label className="block font-medium text-black">Kontak</label>
           <input
@@ -268,6 +345,63 @@ export default function NewVillage() {
             className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Contoh: Paket edukasi pertanian (Rp25.000/orang)&#10;Paket susur sungai (Rp75.000/orang)"
           />
+        </div>
+
+        {/* Paket Wisata (Builder Dinamis) */}
+        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Paket Wisata (Builder)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nama Paket</label>
+              <input type="text" value={pkgDraft.name} onChange={(e)=>setPkgDraft(prev=>({...prev,name:e.target.value}))} className="w-full bg-white border border-gray-300 rounded px-3 py-2" placeholder="Paket Standar"/>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Harga (Rp, isi 0 jika Gratis)</label>
+              <input type="number" min="0" value={pkgDraft.price} onChange={(e)=>setPkgDraft(prev=>({...prev,price:e.target.value}))} className="w-full bg-white border border-gray-300 rounded px-3 py-2" placeholder="25000"/>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fitur yang termasuk (pisahkan dengan koma)</label>
+              <input type="text" value={pkgDraft.include} onChange={(e)=>setPkgDraft(prev=>({...prev,include:e.target.value}))} className="w-full bg-white border border-gray-300 rounded px-3 py-2" placeholder="Tiket Masuk, Panduan Wisata"/>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Syarat (pisahkan dengan ;)</label>
+              <input type="text" value={pkgDraft.left} onChange={(e)=>setPkgDraft(prev=>({...prev,left:e.target.value}))} className="w-full bg-white border border-gray-300 rounded px-3 py-2" placeholder="Min. 1 orang; Bayar H-7"/>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Pembatalan (pisahkan dengan ;)</label>
+              <input type="text" value={pkgDraft.right} onChange={(e)=>setPkgDraft(prev=>({...prev,right:e.target.value}))} className="w-full bg-white border border-gray-300 rounded px-3 py-2" placeholder="H-7 100%; H-3 50%"/>
+            </div>
+            <div className="flex items-center gap-2">
+              <input id="pkg_recommended" type="checkbox" checked={pkgDraft.recommended} onChange={(e)=>setPkgDraft(prev=>({...prev,recommended:e.target.checked}))} className="h-4 w-4 text-blue-600 border-gray-300 rounded"/>
+              <label htmlFor="pkg_recommended" className="text-sm text-gray-700">Recommended</label>
+            </div>
+            <div className="md:col-span-2 flex gap-2">
+              <button type="button" onClick={()=>{
+                const item={
+                  name: pkgDraft.name || 'Paket Wisata',
+                  price: Number(pkgDraft.price||0),
+                  isFree: Number(pkgDraft.price||0)===0,
+                  includes: (pkgDraft.include||'').split(',').map(s=>s.trim()).filter(Boolean),
+                  leftTerms: (pkgDraft.left||'').split(';').map(s=>s.trim()).filter(Boolean),
+                  rightTerms: (pkgDraft.right||'').split(';').map(s=>s.trim()).filter(Boolean),
+                  recommended: pkgDraft.recommended
+                };
+                setPackagesList(prev=>[...prev,item]);
+                setPkgDraft({ name:'', price:'', include:'', left:'', right:'', recommended:false });
+              }} className="px-4 py-2 rounded bg-blue-600 text-white">Tambah Paket</button>
+            </div>
+          </div>
+
+          {packagesList.length>0 && (
+            <div className="mt-4 space-y-2">
+              {packagesList.map((p,idx)=>(
+                <div key={idx} className="flex items-center justify-between bg-white border border-gray-200 rounded px-3 py-2">
+                  <div className="text-sm text-gray-800 font-medium">{p.name} {p.isFree? '(Gratis)':`- Rp ${Number(p.price).toLocaleString('id-ID')}`}</div>
+                  <button type="button" onClick={()=>setPackagesList(prev=>prev.filter((_,i)=>i!==idx))} className="text-red-600 text-sm">Hapus</button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           <label className="block font-medium text-black">Biaya Masuk (Rp) *</label>
@@ -397,6 +531,9 @@ export default function NewVillage() {
               )}
               <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
             </div>
+          </div>
+          <div className="mt-4">
+            <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
           </div>
         </div>
 

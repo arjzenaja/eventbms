@@ -34,7 +34,56 @@ export async function POST(request) {
     // Read existing data
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
-    // Create new biro perjalanan object
+    // Parse coordinates
+    let coordinates = { lat: '', lng: '' };
+    try {
+      const lat = formData.get('coordinates_lat');
+      const lng = formData.get('coordinates_lng');
+      if (lat && lng) {
+        coordinates = { lat: parseFloat(lat), lng: parseFloat(lng) };
+      }
+    } catch (e) {
+      console.log('Error parsing coordinates:', e);
+    }
+
+    // Parse manager data
+    let manager = {
+      name: '',
+      phone: '',
+      email: '',
+      whatsapp: '',
+      instagram: '',
+      website: '',
+      position: '',
+      experience: '',
+      rating: '',
+      availability: ''
+    };
+    
+    try {
+      manager = {
+        name: formData.get('manager_name') || '',
+        phone: formData.get('manager_phone') || '',
+        email: formData.get('manager_email') || '',
+        whatsapp: formData.get('manager_whatsapp') || '',
+        instagram: formData.get('manager_instagram') || '',
+        website: formData.get('manager_website') || '',
+        position: formData.get('manager_position') || '',
+        experience: formData.get('manager_experience') || '',
+        rating: formData.get('manager_rating') || '',
+        availability: formData.get('manager_availability') || ''
+      };
+    } catch (e) {
+      console.log('Error parsing manager data:', e);
+    }
+
+    // Parse arrays
+    const parseArrayField = (fieldName) => {
+      const value = formData.get(fieldName);
+      return value ? value.split(',').map(item => item.trim()) : [];
+    };
+
+    // Create new biro perjalanan object with all fields
     const newBiroPerjalanan = {
       id: Date.now().toString(),
       img_sm: formData.get('img_sm') || '/organizers/organizer-avt-1.png',
@@ -43,11 +92,20 @@ export async function POST(request) {
       location: formData.get('location') || '',
       short_description: formData.get('short_description') || '',
       description: formData.get('description') || '',
-      type: formData.get('type') || 'biro perjalanan',
-      category: formData.get('category') || '',
+      type: formData.get('type') || 'biro-perjalanan',
+      category: formData.get('category') || 'Biro Perjalanan',
       contact: formData.get('contact') || '',
       address: formData.get('address') || '',
-      services: formData.get('services') ? formData.get('services').split(',') : [],
+      services: parseArrayField('services'),
+      facilities: parseArrayField('facilities'),
+      features: parseArrayField('features'),
+      price_range: formData.get('price_range') || '',
+      opening_hours: formData.get('opening_hours') || '',
+      rating: formData.get('rating') || '',
+      coordinates: coordinates,
+      gallery: parseArrayField('gallery'),
+      manager: manager,
+      prices: [], // Will be populated later if needed
       recommended: formData.get('recommended') === 'true',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

@@ -341,13 +341,22 @@ Kontak: ${destination.contact || 'Tidak ada'}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <h1 className="text-3xl font-bold text-gray-900">Data Wisata</h1>
-              <Link 
-                href="/admin/destinations/new" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <span>+</span>
-                Add New
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href="/admin/destinations/packages"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>📦</span>
+                  Kelola Paket
+                </Link>
+                <Link 
+                  href="/admin/destinations/new" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Add New
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -372,22 +381,21 @@ Kontak: ${destination.contact || 'Tidak ada'}
               </div>
               
               <div className="flex gap-2">
-                                 <select
-                   value={filterType}
-                   onChange={(e) => setFilterType(e.target.value)}
-                   className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                 >
-                   <option value="all">Semua Tipe</option>
-                   <option value="wisata alam">Wisata Alam</option>
-                   <option value="wisata taman">Wisata Taman</option>
-                   <option value="wisata budaya">Wisata Budaya</option>
-                   <option value="wisata sejarah">Wisata Sejarah</option>
-                   <option value="wisata buatan">Wisata Buatan</option>
-                   <option value="wisata minat khusus">Wisata Minat Khusus</option>
-                   <option value="wisata religi">Wisata Religi</option>
-                 </select>
+                <select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="all">Semua Tipe</option>
+                  <option value="wisata alam">Wisata Alam</option>
+                  <option value="wisata taman">Wisata Taman</option>
+                  <option value="wisata budaya">Wisata Budaya</option>
+                  <option value="wisata sejarah">Wisata Sejarah</option>
+                  <option value="wisata buatan">Wisata Buatan</option>
+                  <option value="wisata minat khusus">Wisata Minat Khusus</option>
+                  <option value="wisata religi">Wisata Religi</option>
+                </select>
                 
-
                 <button 
                   onClick={refreshData}
                   disabled={isLoading}
@@ -491,8 +499,6 @@ Kontak: ${destination.contact || 'Tidak ada'}
                   <span>🔄</span>
                   Migrate Types
                 </button>
-                
-
               </div>
             </div>
 
@@ -595,121 +601,121 @@ Kontak: ${destination.contact || 'Tidak ada'}
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KATEGORI</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TIPE</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BIAYA MASUK</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredDestinations.length === 0 ? (
+                  <thead className="bg-gray-50">
                     <tr>
-                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
-                        Tidak ada data yang ditemukan
-                      </td>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KATEGORI</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TIPE</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BIAYA MASUK</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
                     </tr>
-                  ) : (
-                    filteredDestinations.map((destination, index) => (
-                      <tr key={destination.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{destination.id}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10">
-                              <img 
-                                className="h-10 w-10 rounded-full object-cover" 
-                                src={destination.img_sm || '/placeholder.jpg'} 
-                                alt={destination.title}
-                              />
-                            </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{destination.title}</div>
-                              <div className="text-sm text-gray-500">{destination.short_description?.substring(0, 50)}...</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <div className="flex items-center">
-                            <span className="text-red-500 mr-2">📍</span>
-                            {destination.location}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            <span className="mr-1">🏔️</span>
-                            {destination.category || 'Wisata'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            destination.type === 'alam' ? 'bg-green-100 text-green-800' :
-                            destination.type === 'sejarah' ? 'bg-yellow-100 text-yellow-800' :
-                            destination.type === 'penginapan' ? 'bg-blue-100 text-blue-800' :
-                            destination.type === 'taman' ? 'bg-purple-100 text-purple-800' :
-                            destination.type === 'budaya' ? 'bg-indigo-100 text-indigo-800' :
-                            destination.type === 'religi' ? 'bg-red-100 text-red-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
-                            {destination.type === 'alam' ? 'Wisata Alam' :
-                             destination.type === 'sejarah' ? 'Wisata Sejarah' :
-                             destination.type === 'penginapan' ? 'Penginapan' :
-                             destination.type === 'taman' ? 'Taman Rekreasi' :
-                             destination.type === 'budaya' ? 'Wisata Budaya' :
-                             destination.type === 'religi' ? 'Wisata Religi' :
-                             destination.type}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {destination.entrance_fee || 'Gratis'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => handleQuickView(destination)}
-                              className="text-purple-600 hover:text-purple-900 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200"
-                              title="Quick View"
-                            >
-                              👀
-                            </button>
-                            <Link
-                              href={`/admin/destinations/${destination.id}/view`}
-                              className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
-                              title="Lihat Detail"
-                            >
-                              👁️
-                            </Link>
-                            <Link
-                              href={`/admin/destinations/${destination.id}`}
-                              className="text-green-600 hover:text-green-900 p-2 rounded-full hover:bg-green-50 transition-colors duration-200"
-                              title="Edit"
-                            >
-                              ✏️
-                            </Link>
-                            <button 
-                              onClick={() => handleDeleteDestination(destination.id)}
-                              disabled={isDeleting}
-                              className={`p-2 rounded-full transition-colors duration-200 ${
-                                isDeleting 
-                                  ? 'text-gray-400 cursor-not-allowed bg-gray-100' 
-                                  : 'text-red-600 hover:text-red-900 hover:bg-red-50'
-                              }`}
-                              title="Hapus"
-                            >
-                              🗑️
-                            </button>
-                          </div>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredDestinations.length === 0 ? (
+                      <tr>
+                        <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                          Tidak ada data yang ditemukan
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      filteredDestinations.map((destination, index) => (
+                        <tr key={destination.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{destination.id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10">
+                                <img 
+                                  className="h-10 w-10 rounded-full object-cover" 
+                                  src={destination.img_sm || '/placeholder.jpg'} 
+                                  alt={destination.title}
+                                />
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{destination.title}</div>
+                                <div className="text-sm text-gray-500">{destination.short_description?.substring(0, 50)}...</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <div className="flex items-center">
+                              <span className="text-red-500 mr-2">📍</span>
+                              {destination.location}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              <span className="mr-1">🏔️</span>
+                              {destination.category || 'Wisata'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              destination.type === 'alam' ? 'bg-green-100 text-green-800' :
+                              destination.type === 'sejarah' ? 'bg-yellow-100 text-yellow-800' :
+                              destination.type === 'penginapan' ? 'bg-blue-100 text-blue-800' :
+                              destination.type === 'taman' ? 'bg-purple-100 text-purple-800' :
+                              destination.type === 'budaya' ? 'bg-indigo-100 text-indigo-800' :
+                              destination.type === 'religi' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {destination.type === 'alam' ? 'Wisata Alam' :
+                               destination.type === 'sejarah' ? 'Wisata Sejarah' :
+                               destination.type === 'penginapan' ? 'Penginapan' :
+                               destination.type === 'taman' ? 'Taman Rekreasi' :
+                               destination.type === 'budaya' ? 'Wisata Budaya' :
+                               destination.type === 'religi' ? 'Wisata Religi' :
+                               destination.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {destination.entrance_fee || 'Gratis'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => handleQuickView(destination)}
+                                className="text-purple-600 hover:text-purple-900 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200"
+                                title="Quick View"
+                              >
+                                👀
+                              </button>
+                              <Link
+                                href={`/admin/destinations/${destination.id}/view`}
+                                className="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
+                                title="Lihat Detail"
+                              >
+                                👁️
+                              </Link>
+                              <Link
+                                href={`/admin/destinations/${destination.id}`}
+                                className="text-green-600 hover:text-green-900 p-2 rounded-full hover:bg-green-50 transition-colors duration-200"
+                                title="Edit"
+                              >
+                                ✏️
+                              </Link>
+                              <button 
+                                onClick={() => handleDeleteDestination(destination.id)}
+                                disabled={isDeleting}
+                                className={`p-2 rounded-full transition-colors duration-200 ${
+                                  isDeleting 
+                                    ? 'text-gray-400 cursor-not-allowed bg-gray-100' 
+                                    : 'text-red-600 hover:text-red-900 hover:bg-red-50'
+                                }`}
+                                title="Hapus"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
               
               {/* Pagination */}

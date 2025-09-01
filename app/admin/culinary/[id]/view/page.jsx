@@ -18,7 +18,7 @@ export default function ViewCulinaryItem() {
   useEffect(() => {
     const fetchCulinaryItem = async () => {
       try {
-        const response = await fetch(`/api/culinary/${id}`);
+        const response = await fetch(`/api/kuliner/${id}`);
         const data = await response.json();
         
         if (data.success) {
@@ -156,24 +156,50 @@ export default function ViewCulinaryItem() {
                         <dt className="text-sm font-medium text-gray-500">Kontak</dt>
                         <dd className="text-sm text-gray-900">{culinaryItem.contact}</dd>
                       </div>
-                      <div>
-                        <dt className="text-sm font-medium text-gray-500">Alamat</dt>
-                        <dd className="text-sm text-gray-900">{culinaryItem.address}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-sm font-medium text-gray-500">Status Rekomendasi</dt>
-                        <dd className="text-sm text-gray-900">
-                          {culinaryItem.recommended ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              Direkomendasikan
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                              Tidak Direkomendasikan
-                            </span>
-                          )}
-                        </dd>
-                      </div>
+                                             <div>
+                         <dt className="text-sm font-medium text-gray-500">Alamat</dt>
+                         <dd className="text-sm text-gray-900">{culinaryItem.address}</dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">Nama Pengelola</dt>
+                         <dd className="text-sm text-gray-900">{culinaryItem.manager || '-'}</dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">Nomor Telepon</dt>
+                         <dd className="text-sm text-gray-900">{culinaryItem.phone || '-'}</dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">WhatsApp</dt>
+                         <dd className="text-sm text-gray-900">{culinaryItem.whatsapp || '-'}</dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">Email</dt>
+                         <dd className="text-sm text-gray-900">{culinaryItem.email || '-'}</dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">Website</dt>
+                         <dd className="text-sm text-gray-900">
+                           {culinaryItem.website ? (
+                             <a href={culinaryItem.website} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                               {culinaryItem.website}
+                             </a>
+                           ) : '-'}
+                         </dd>
+                       </div>
+                       <div>
+                         <dt className="text-sm font-medium text-gray-500">Status Rekomendasi</dt>
+                         <dd className="text-sm text-gray-900">
+                           {culinaryItem.recommended ? (
+                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                               Direkomendasikan
+                             </span>
+                           ) : (
+                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                               Tidak Direkomendasikan
+                             </span>
+                           )}
+                         </dd>
+                       </div>
                     </dl>
                   </div>
 
@@ -183,21 +209,35 @@ export default function ViewCulinaryItem() {
                       {culinaryItem.description || 'Tidak ada deskripsi yang tersedia.'}
                     </p>
                     
-                    {culinaryItem.features && culinaryItem.features.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="text-md font-semibold text-gray-900 mb-2">Fitur</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {culinaryItem.features.map((feature, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                            >
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                                         {culinaryItem.features && culinaryItem.features.length > 0 && (
+                       <div className="mt-4">
+                         <h4 className="text-md font-semibold text-gray-900 mb-2">Fitur</h4>
+                         <div className="flex flex-wrap gap-2">
+                           {culinaryItem.features.map((feature, index) => (
+                             <span
+                               key={index}
+                               className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                             >
+                               {feature}
+                             </span>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+
+                     {culinaryItem.menu && culinaryItem.menu.length > 0 && (
+                       <div className="mt-4">
+                         <h4 className="text-md font-semibold text-gray-900 mb-2">Menu Makanan</h4>
+                         <div className="space-y-2">
+                           {culinaryItem.menu.map((menuItem, index) => (
+                             <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
+                               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                               <span>{menuItem}</span>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     )}
                   </div>
                 </div>
 
@@ -264,7 +304,7 @@ export default function ViewCulinaryItem() {
                       onClick={async () => {
                         if (confirm('Apakah Anda yakin ingin menghapus item kuliner ini?')) {
                           try {
-                            const response = await fetch(`/api/culinary/${id}`, {
+                            const response = await fetch(`/api/kuliner/${id}`, {
                               method: 'DELETE',
                             });
                             const data = await response.json();

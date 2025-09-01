@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <html lang="en">
               <body
-                className={`${poppins.variable} ${caveat.variable} antialiased`}
+                className={`${poppins.variable} ${caveat.variable} antialiased bg-white text-slate-900 dark:bg-gray-900 dark:text-white`}
               >
                 <ConditionalLayout>
                   {children}

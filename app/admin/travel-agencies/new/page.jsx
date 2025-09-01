@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Link from 'next/link';
+import GalleryUploader from '@/components/GalleryUploader';
 
 export default function NewTravelAgency() {
   const router = useRouter();
@@ -25,6 +26,9 @@ export default function NewTravelAgency() {
     facilities: [],
     gallery_link: '',
     additional_info: '',
+    opening_hours: '',
+    latitude: '',
+    longitude: '',
     recommended: false
   });
 
@@ -36,6 +40,7 @@ export default function NewTravelAgency() {
     img_sm: null,
     img_lg: null
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -99,24 +104,18 @@ export default function NewTravelAgency() {
     const file = files[0];
     
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         alert('File harus berupa gambar');
         return;
       }
-      
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Ukuran file maksimal 5MB');
         return;
       }
-      
       setImageFiles(prev => ({
         ...prev,
         [name]: file
       }));
-      
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreviews(prev => ({
@@ -134,32 +133,24 @@ export default function NewTravelAgency() {
     setError('');
 
     try {
-      // Create FormData for file upload
       const formDataToSend = new FormData();
-      
-      // Add form data
       Object.keys(formData).forEach(key => {
         if (key === 'contact') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else if (Array.isArray(formData[key])) {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else if (key === 'office_address') {
-          // Map office_address to location for API compatibility
           formDataToSend.append('location', formData[key]);
           formDataToSend.append('address', formData[key]);
         } else if (key === 'type') {
-          // Map type to biro and add category
           formDataToSend.append('type', 'biro');
           formDataToSend.append('category', 'Biro Perjalanan');
         } else if (key === 'contact') {
-          // Convert contact object to string for API compatibility
           const contactString = formData[key].whatsapp || formData[key].email || formData[key].instagram || formData[key].website || '';
           formDataToSend.append('contact', contactString);
         } else if (key === 'services') {
-          // Map services to features for API compatibility
           formDataToSend.append('features', JSON.stringify(formData[key]));
         } else if (key === 'facilities') {
-          // Map facilities to features for API compatibility (append to existing features)
           const existingFeatures = formData.services || [];
           const allFeatures = [...existingFeatures, ...formData[key]];
           formDataToSend.append('features', JSON.stringify(allFeatures));
@@ -167,18 +158,16 @@ export default function NewTravelAgency() {
           formDataToSend.append(key, formData[key]);
         }
       });
-      
-      // Add image files
-      if (imageFiles.img_sm) {
-        formDataToSend.append('img_sm', imageFiles.img_sm);
-      }
-      if (imageFiles.img_lg) {
-        formDataToSend.append('img_lg', imageFiles.img_lg);
+
+      if (imageFiles.img_sm) formDataToSend.append('img_sm', imageFiles.img_sm);
+      if (imageFiles.img_lg) formDataToSend.append('img_lg', imageFiles.img_lg);
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
       }
 
       const response = await fetch('/api/travel-agencies', {
         method: 'POST',
-        body: formDataToSend, // Don't set Content-Type header, let browser set it with boundary
+        body: formDataToSend,
       });
 
       const data = await response.json();
@@ -468,109 +457,118 @@ export default function NewTravelAgency() {
                     />
                   </div>
 
-                  {/* Gambar Kecil */}
-                  <div>
-                    <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Kecil (untuk Card/Thumbnail)
-                    </label>
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
-                      <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
-                      <ul className="text-xs text-blue-700 space-y-1">
-                        <li>• Card biro perjalanan di halaman utama</li>
-                        <li>• Thumbnail di list pencarian</li>
-                        <li>• Preview di kategori travel</li>
-                        <li>• Tampilan mobile yang responsif</li>
-                      </ul>
-                      <p className="text-xs text-blue-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar dengan rasio 1:1 (persegi) untuk hasil terbaik</p>
-                    </div>
-                    <input
-                      type="file"
-                      id="img_sm"
-                      name="img_sm"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
-                    />
-                    {imagePreviews.img_sm && (
-                      <div className="mt-2">
-                        <img 
-                          src={imagePreviews.img_sm} 
-                          alt="Preview" 
-                          className="w-32 h-32 object-cover rounded-md border"
-                        />
-                      </div>
-                    )}
-                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
-                  </div>
-
-                  {/* Gambar Besar */}
-                  <div>
-                    <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Besar (untuk Detail/Hero)
-                    </label>
-                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
-                      <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
-                      <ul className="text-xs text-green-700 space-y-1">
-                        <li>• Halaman detail biro perjalanan</li>
-                        <li>• Hero section yang menarik</li>
-                        <li>• Galeri foto berkualitas tinggi</li>
-                        <li>• Tampilan desktop yang optimal</li>
-                      </ul>
-                      <p className="text-xs text-green-600 mt-2">💡 <strong>Rekomendasi:</strong> Gunakan gambar landscape (16:9) atau portrait (4:3) dengan resolusi tinggi</p>
-                    </div>
-                    <input
-                      type="file"
-                      id="img_lg"
-                      name="img_lg"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
-                    />
-                    {imagePreviews.img_lg && (
-                      <div className="mt-2">
-                        <img 
-                          src={imagePreviews.img_lg} 
-                          alt="Preview" 
-                          className="w-32 h-32 object-cover rounded-md border"
-                        />
-                      </div>
-                    )}
-                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
-                  </div>
-
-                  {/* Recommended */}
-                  <div className="md:col-span-2">
-                    <div className="flex items-center">
+                  {/* Koordinat & Jam Operasional */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
                       <input
-                        type="checkbox"
-                        id="recommended"
-                        name="recommended"
-                        checked={formData.recommended}
+                        type="text"
+                        name="latitude"
+                        value={formData.latitude}
                         onChange={handleInputChange}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="-7.4268"
                       />
-                      <label htmlFor="recommended" className="ml-2 block text-sm text-gray-700">
-                        Tandai sebagai biro perjalanan yang direkomendasikan
-                      </label>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
+                      <input
+                        type="text"
+                        name="longitude"
+                        value={formData.longitude}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="109.2333"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Jam Operasional</label>
+                      <input
+                        type="text"
+                        name="opening_hours"
+                        value={formData.opening_hours}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="09:00 - 17:00"
+                      />
                     </div>
                   </div>
-                </div>
 
-                {/* Submit Button */}
-                <div className="flex justify-end space-x-3 pt-6 border-t">
-                  <Link
-                    href="/admin/travel-agencies"
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Batal
-                  </Link>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Menyimpan...' : 'Simpan Biro Perjalanan'}
-                  </button>
+                  {/* Gambar & Galeri */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Gambar Kecil */}
+                    <div>
+                      <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
+                        Gambar Kecil (untuk Card/Thumbnail)
+                      </label>
+                      <input
+                        type="file"
+                        id="img_sm"
+                        name="img_sm"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                      {imagePreviews.img_sm && (
+                        <div className="mt-2">
+                          <img src={imagePreviews.img_sm} alt="Preview" className="w-32 h-32 object-cover rounded-md border" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Gambar Besar */}
+                    <div>
+                      <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
+                        Gambar Besar (untuk Detail/Hero)
+                      </label>
+                      <input
+                        type="file"
+                        id="img_lg"
+                        name="img_lg"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      />
+                      {imagePreviews.img_lg && (
+                        <div className="mt-2">
+                          <img src={imagePreviews.img_lg} alt="Preview" className="w-32 h-32 object-cover rounded-md border" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
+
+                  {/* Recommended & Submit */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="recommended"
+                      name="recommended"
+                      checked={formData.recommended}
+                      onChange={handleInputChange}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="recommended" className="ml-2 block text-sm text-gray-700">
+                      Tandai sebagai biro perjalanan yang direkomendasikan
+                    </label>
+                  </div>
+
+                  <div className="flex justify-end space-x-3 pt-6 border-t">
+                    <Link
+                      href="/admin/travel-agencies"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Batal
+                    </Link>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? 'Menyimpan...' : 'Simpan Biro Perjalanan'}
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

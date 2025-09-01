@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import GalleryUploader from '@/components/GalleryUploader';
 
 export default function NewAccommodation() {
   const router = useRouter();
@@ -14,11 +15,25 @@ export default function NewAccommodation() {
     description: '',
     short_description: '',
     price: '',
+    price_range: '',
+    rating: '',
     contact: '',
     address: '',
     star_rating: 3,
     amenities: [],
-    recommended: false
+    recommended: false,
+    // Management team fields
+    manager: '',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    website: '',
+    // Location coordinates
+    coordinates: { lat: '', lng: '' },
+
+    opening_hours: '',
+    slug: '',
+    category: 'Penginapan'
   });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
@@ -29,6 +44,9 @@ export default function NewAccommodation() {
     img_lg: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [galleryFiles, setGalleryFiles] = useState([]);
+
+
 
   const accommodationTypes = [
     { value: 'hotel', label: 'Hotel' },
@@ -40,11 +58,23 @@ export default function NewAccommodation() {
     'WiFi', 'AC', 'Parking', 'Restaurant', 'Pool', 'Gym', 'Spa', 'Kitchen', 'Garden', 'Beach Access'
   ];
 
+
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleCoordinateChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      coordinates: {
+        ...prev.coordinates,
+        [field]: value
+      }
     }));
   };
 
@@ -56,6 +86,8 @@ export default function NewAccommodation() {
         : [...prev.amenities, amenity]
     }));
   };
+
+
 
   const handleImageChange = (e) => {
     const { name, files } = e.target;
@@ -114,6 +146,9 @@ export default function NewAccommodation() {
       Object.keys(formData).forEach(key => {
         if (key === 'amenities') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else if (key === 'coordinates') {
+          formDataToSend.append('lat', formData[key].lat);
+          formDataToSend.append('lng', formData[key].lng);
         } else if (key === 'star_rating') {
           formDataToSend.append(key, formData[key].toString());
         } else {
@@ -127,6 +162,10 @@ export default function NewAccommodation() {
       }
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
+      }
+      // Add gallery files
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
       }
 
       const response = await fetch('/api/accommodation', {
@@ -167,135 +206,304 @@ export default function NewAccommodation() {
           </div>
         </div>
         
-        <div className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="bg-white shadow sm:rounded-lg">
               <form onSubmit={handleSubmit} className="space-y-6 p-6">
-                <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                    Nama Penginapan *
-                  </label>
-                  <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    required
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan nama penginapan"
-                  />
-                </div>
+                {/* Basic Information */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                        Nama Penginapan *
+                      </label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        required
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Masukkan nama penginapan"
+                      />
+                    </div>
 
-                <div>
-                  <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-                    Tipe Penginapan *
-                  </label>
-                  <select
-                    id="type"
-                    name="type"
-                    required
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {accommodationTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                    <div>
+                      <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+                        Tipe Penginapan *
+                      </label>
+                      <select
+                        id="type"
+                        name="type"
+                        required
+                        value={formData.type}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {accommodationTypes.map(type => (
+                          <option key={type.value} value={type.value}>
+                            {type.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
 
-                <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-                    Lokasi *
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    required
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan lokasi"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi *
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    required
-                    rows={4}
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan deskripsi penginapan"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
-                    Deskripsi Singkat
-                  </label>
-                  <textarea
-                    id="short_description"
-                    name="short_description"
-                    rows={2}
-                    value={formData.short_description}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan deskripsi singkat (opsional)"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Deskripsi singkat akan digunakan untuk preview di card dan list</p>
-                </div>
-
-                <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                    Biaya Masuk (Rp) *
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                  <div className="mt-6">
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                      Lokasi *
+                    </label>
                     <input
                       type="text"
-                      id="price"
-                      name="price"
-                      value={formData.price}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/[^0-9]/g, '');
-                        setFormData(prev => ({
-                          ...prev,
-                          price: value
-                        }));
-                      }}
-                      onFocus={(e) => {
-                        if (formData.price && formData.price.endsWith('000')) {
-                          const cleanValue = formData.price.replace(/000$/, '');
-                          setFormData(prev => ({
-                            ...prev,
-                            price: cleanValue
-                          }));
-                        }
-                      }}
-                      onBlur={(e) => {
-                        if (formData.price && !formData.price.endsWith('000')) {
-                          const formattedValue = `${formData.price}000`;
-                          setFormData(prev => ({
-                            ...prev,
-                            price: formattedValue
-                          }));
-                        }
-                      }}
+                      id="location"
+                      name="location"
                       required
-                      maxLength="6"
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
-                      placeholder="500"
+                      value={formData.location}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Masukkan lokasi"
                     />
+                  </div>
+
+                  <div className="mt-6">
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                      Deskripsi *
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      required
+                      rows={4}
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Masukkan deskripsi penginapan"
+                    />
+                  </div>
+
+                  <div className="mt-6">
+                    <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
+                      Deskripsi Singkat
+                    </label>
+                    <textarea
+                      id="short_description"
+                      name="short_description"
+                      rows={2}
+                      value={formData.short_description}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Masukkan deskripsi singkat (opsional)"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Deskripsi singkat akan digunakan untuk preview di card dan list</p>
+                  </div>
+                </div>
+
+                {/* Management Team */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Tim Pengelola</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="manager" className="block text-sm font-medium text-gray-700">
+                        Nama Manager
+                      </label>
+                      <input
+                        type="text"
+                        id="manager"
+                        name="manager"
+                        value={formData.manager}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Nama manager penginapan"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                        Nomor Telepon
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="08123456789"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
+                        WhatsApp
+                      </label>
+                      <input
+                        type="tel"
+                        id="whatsapp"
+                        name="whatsapp"
+                        value={formData.whatsapp}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="08123456789"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="manager@penginapan.com"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+                        Website
+                      </label>
+                      <input
+                        type="url"
+                        id="website"
+                        name="website"
+                        value={formData.website}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="https://www.penginapan.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Location Coordinates */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Koordinat Lokasi</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="lat" className="block text-sm font-medium text-gray-700">
+                        Latitude
+                      </label>
+                      <input
+                        type="text"
+                        id="lat"
+                        name="lat"
+                        value={formData.coordinates.lat}
+                        onChange={(e) => handleCoordinateChange('lat', e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="-7.123456"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Contoh: -7.123456</p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="lng" className="block text-sm font-medium text-gray-700">
+                        Longitude
+                      </label>
+                      <input
+                        type="text"
+                        id="lng"
+                        name="lng"
+                        value={formData.coordinates.lng}
+                        onChange={(e) => handleCoordinateChange('lng', e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="109.123456"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Contoh: 109.123456</p>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                {/* Pricing and Contact */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Kontak</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                        Biaya Masuk (Rp) *
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">Rp</span>
+                        <input
+                          type="text"
+                          id="price"
+                          name="price"
+                          value={formData.price}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, '');
+                            setFormData(prev => ({
+                              ...prev,
+                              price: value
+                            }));
+                          }}
+                          onFocus={(e) => {
+                            if (formData.price && formData.price.endsWith('000')) {
+                              const cleanValue = formData.price.replace(/000$/, '');
+                              setFormData(prev => ({
+                                ...prev,
+                                price: cleanValue
+                              }));
+                            }
+                          }}
+                          onBlur={(e) => {
+                            if (formData.price && !formData.price.endsWith('000')) {
+                              const formattedValue = `${formData.price}000`;
+                              setFormData(prev => ({
+                                ...prev,
+                                price: formattedValue
+                              }));
+                            }
+                          }}
+                          required
+                          maxLength="6"
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
+                          placeholder="500"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
+                        Kontak *
+                      </label>
+                      <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        required
+                        value={formData.contact}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Masukkan kontak penginapan"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                        Alamat *
+                      </label>
+                      <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        required
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Masukkan alamat penginapan"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -387,38 +595,9 @@ export default function NewAccommodation() {
                       <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                     </div>
                   </div>
-                </div>
-
-                <div>
-                  <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
-                    Kontak *
-                  </label>
-                  <input
-                    type="text"
-                    id="contact"
-                    name="contact"
-                    required
-                    value={formData.contact}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan kontak penginapan"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Alamat *
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    required
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Masukkan alamat penginapan"
-                  />
+                  <div className="mt-4">
+                    <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
+                  </div>
                 </div>
 
                 <div>

@@ -7,7 +7,7 @@ const dbPath = path.join(process.cwd(), 'db.json');
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -46,7 +46,7 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Handle FormData for file uploads
     const formData = await request.formData();
@@ -60,6 +60,8 @@ export async function PUT(request, { params }) {
     const category = formData.get('category') || 'Desa Wisata';
     const contact = formData.get('contact') || '';
     const address = formData.get('address') || location;
+    const latitude = formData.get('latitude') || '';
+    const longitude = formData.get('longitude') || '';
     const features = formData.get('features') || ['Budaya Lokal', 'Akomodasi Homestay'];
     const recommended = formData.get('recommended') === 'true';
     
@@ -150,6 +152,10 @@ export async function PUT(request, { params }) {
       category: category,
       contact: contact,
       address: address,
+      coordinates: {
+        latitude: latitude,
+        longitude: longitude
+      },
       features: Array.isArray(parsedFeatures) ? parsedFeatures : [parsedFeatures],
       recommended: recommended,
       updated_at: new Date().toISOString()
@@ -181,7 +187,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));

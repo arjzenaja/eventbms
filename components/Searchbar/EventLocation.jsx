@@ -11,7 +11,7 @@ import {
   SelectValue,
  } from "@/components/ui/select";
 
-import { BiMap, BiChevronDown } from 'react-icons/bi';
+import { BiMap } from 'react-icons/bi';
 
 const EventLocation = () => {
   const { events, selectedLocation, setSelectedLocation } = useContext(EventContext);
@@ -47,9 +47,8 @@ const EventLocation = () => {
         value={selectedLocation}
         onValueChange={(value) => setSelectedLocation(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-gray-900 dark:text-white shadow-none font-medium flex items-center justify-between">
+        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-white shadow-none font-medium flex items-center justify-between">
           <SelectValue placeholder="Cari lokasi" />
-          <BiChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300 ml-2" />
         </SelectTrigger>
         <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
           <SelectGroup>

@@ -83,6 +83,49 @@ export async function POST(request) {
     const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
     
+    // Extract features if available
+    let features = ['Fasilitas Dasar']; // Default features
+    try {
+      const featuresData = formData.get('features');
+      if (featuresData) {
+        features = JSON.parse(featuresData);
+      }
+    } catch (error) {
+      console.warn('Failed to parse features:', error);
+    }
+    
+    // Extract coordinates if available
+    let coordinates = null;
+    try {
+      const coordsData = formData.get('coordinates');
+      if (coordsData) {
+        coordinates = JSON.parse(coordsData);
+      }
+    } catch (error) {
+      console.warn('Failed to parse coordinates:', error);
+    }
+    // Pricing (JSON string)
+    let pricing = undefined;
+    try {
+      const raw = formData.get('pricing');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // sanitize
+        pricing = {
+          type: parsed?.type || 'free',
+          unit: parsed?.unit || 'per_tiket',
+          value: typeof parsed?.value === 'number' ? parsed.value : (parsed?.value ? Number(parsed.value) : null),
+          packages: Array.isArray(parsed?.packages) ? parsed.packages.map((p) => ({
+            name: p?.name || '',
+            price: p?.price ? Number(p.price) : null,
+            unit: p?.unit || 'per_paket',
+            includes: Array.isArray(p?.includes) ? p.includes : (p?.includes ? String(p.includes).split(',').map(s=>s.trim()).filter(Boolean) : []),
+            terms: Array.isArray(p?.terms) ? p.terms : (p?.terms ? String(p.terms).split('\n').map(s=>s.trim()).filter(Boolean) : [])
+          })) : []
+        };
+      }
+    } catch {}
+    
     // Validate required fields
     if (!title || !location || !type) {
       return NextResponse.json({
@@ -126,6 +169,23 @@ export async function POST(request) {
       img_lg_path = `/uploads/${img_lg_filename}`;
     }
     
+    // Save package images if provided
+    try {
+      const pkgCount = Array.isArray(pricing?.packages) ? pricing.packages.length : 0;
+      for (let i = 0; i < pkgCount; i++) {
+        const pkgFile = formData.get(`package_image_${i}`);
+        if (pkgFile && pkgFile instanceof File) {
+          const pkg_ext = path.extname(pkgFile.name);
+          const pkg_filename = `package_${Date.now()}_${i}${pkg_ext}`;
+          const pkg_path_full = path.join(uploadsDir, pkg_filename);
+          const pkg_buffer = Buffer.from(await pkgFile.arrayBuffer());
+          fs.writeFileSync(pkg_path_full, pkg_buffer);
+          if (!pricing.packages[i]) pricing.packages[i] = {};
+          pricing.packages[i].image = `/uploads/${pkg_filename}`;
+        }
+      }
+    } catch {}
+
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
@@ -153,7 +213,9 @@ export async function POST(request) {
       entrance_fee: entrance_fee || 'Gratis',
       contact: contact || '',
       address: address || '',
-      features: ['Fasilitas Dasar'],
+      coordinates: coordinates,
+      pricing: pricing,
+      features: features,
       recommended: recommended,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

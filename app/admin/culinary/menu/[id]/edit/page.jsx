@@ -1,0 +1,658 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import ErrorHandler from '@/components/ErrorHandler';
+
+export default function EditMenuItem() {
+  const router = useRouter();
+  const params = useParams();
+  const { id } = params;
+  
+  const [culinaryDestinations, setCulinaryDestinations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    cookingTime: '',
+    category: 'Makanan Utama',
+    destinationId: '',
+    destinationSlug: '',
+    destinationTitle: '',
+    rating: '',
+    isPopular: false,
+    isSpicy: false,
+    halal: true,
+    available: true,
+    additionalInfo: []
+  });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [currentImage, setCurrentImage] = useState('');
+  const [newAdditionalInfo, setNewAdditionalInfo] = useState('');
+
+  // Predefined categories
+  const categories = [
+    'Makanan Utama',
+    'Makanan Ringan',
+    'Minuman',
+    'Dessert',
+    'Sate',
+    'Soto',
+    'Nasi',
+    'Mie',
+    'Seafood',
+    'Ayam',
+    'Daging',
+    'Sayuran',
+    'Sup',
+    'Gorengan',
+    'Bakso',
+    'Es',
+    'Kopi',
+    'Teh',
+    'Jus',
+    'Lainnya'
+  ];
+
+  // Predefined additional info options
+  const additionalInfoOptions = [
+    'Halal',
+    'Fresh',
+    'Traditional',
+    'Signature',
+    'Local',
+    'Comfort',
+    'Refresh',
+    'Spicy',
+    'Sweet',
+    'Sour',
+    'Crispy',
+    'Soft',
+    'Hot',
+    'Cold',
+    'Vegetarian',
+    'Vegan',
+    'Gluten Free',
+    'Dairy Free',
+    'Nut Free',
+    'Budget',
+    'Premium',
+    'Quick',
+    'Healthy',
+    'Organic'
+  ];
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+
+      // Fetch culinary destinations
+      const destinationsResponse = await fetch('/api/kuliner');
+      const destinationsData = await destinationsResponse.json();
+
+      if (destinationsData.success) {
+        setCulinaryDestinations(destinationsData.kuliner || []);
+      }
+
+      // Fetch menu item data
+      const menuResponse = await fetch(`/api/culinary/menu?id=${id}`);
+      const menuData = await menuResponse.json();
+
+      if (menuData.success && menuData.menu_items && menuData.menu_items.length > 0) {
+        const menuItem = menuData.menu_items[0];
+        setFormData({
+          name: menuItem.name || '',
+          description: menuItem.description || '',
+          price: menuItem.price || '',
+          cookingTime: menuItem.cookingTime || '',
+          category: menuItem.category || 'Makanan Utama',
+          destinationId: menuItem.destinationId || '',
+          destinationSlug: menuItem.destinationSlug || '',
+          destinationTitle: menuItem.destinationTitle || '',
+          rating: menuItem.rating || '',
+          isPopular: menuItem.isPopular || false,
+          isSpicy: menuItem.isSpicy || false,
+          halal: menuItem.halal !== undefined ? menuItem.halal : true,
+          available: menuItem.available !== undefined ? menuItem.available : true,
+          additionalInfo: menuItem.additionalInfo || []
+        });
+        setCurrentImage(menuItem.image || '');
+        setImagePreview(menuItem.image || null);
+      } else {
+        setError('Menu tidak ditemukan');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Terjadi kesalahan saat mengambil data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+
+    // Auto-fill destination info when destination is selected
+    if (name === 'destinationId') {
+      const selectedDestination = culinaryDestinations.find(dest => dest.id === value);
+      if (selectedDestination) {
+        setFormData(prev => ({
+          ...prev,
+          destinationId: value,
+          destinationSlug: selectedDestination.slug || '',
+          destinationTitle: selectedDestination.title || ''
+        }));
+      }
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('File harus berupa gambar');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Ukuran file maksimal 5MB');
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(currentImage);
+  };
+
+  const handleAddAdditionalInfo = () => {
+    if (newAdditionalInfo.trim() && !formData.additionalInfo.includes(newAdditionalInfo.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        additionalInfo: [...prev.additionalInfo, newAdditionalInfo.trim()]
+      }));
+      setNewAdditionalInfo('');
+    }
+  };
+
+  const handleRemoveAdditionalInfo = (info) => {
+    setFormData(prev => ({
+      ...prev,
+      additionalInfo: prev.additionalInfo.filter(item => item !== info)
+    }));
+  };
+
+  const handleAddPredefinedInfo = (info) => {
+    if (!formData.additionalInfo.includes(info)) {
+      setFormData(prev => ({
+        ...prev,
+        additionalInfo: [...prev.additionalInfo, info]
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Validate required fields
+      if (!formData.name || !formData.description || !formData.price || 
+          !formData.cookingTime || !formData.category || !formData.destinationId) {
+        alert('Semua field wajib diisi (nama, deskripsi, harga, waktu memasak, kategori, destinasi)');
+        return;
+      }
+
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add form data
+      formDataToSend.append('id', id);
+      Object.keys(formData).forEach(key => {
+        if (key === 'additionalInfo') {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+      
+      // Add image file if new one is selected
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+
+      const response = await fetch('/api/culinary/menu', {
+        method: 'PUT',
+        body: formDataToSend,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Menu berhasil diperbarui!');
+        router.push('/admin/culinary/menu');
+      } else {
+        alert('Gagal memperbarui menu: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error updating menu item:', error);
+      alert('Terjadi kesalahan saat memperbarui menu');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <ProtectedRoute>
+        <LoadingSpinner message="Memuat data menu..." />
+      </ProtectedRoute>
+    );
+  }
+
+  if (error) {
+    return (
+      <ProtectedRoute>
+        <ErrorHandler 
+          error={error} 
+          onRetry={fetchData}
+          message="Gagal memuat data menu"
+        />
+      </ProtectedRoute>
+    );
+  }
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-6">
+              <h1 className="text-3xl font-bold text-gray-900">Edit Menu</h1>
+              <Link 
+                href="/admin/culinary/menu" 
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+              >
+                Kembali
+              </Link>
+            </div>
+          </div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <div className="bg-white shadow sm:rounded-lg">
+              <form onSubmit={handleSubmit} className="space-y-6 p-6">
+                {/* Basic Information */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                        Nama Menu *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: Nasi Goreng Spesial"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                        Kategori *
+                      </label>
+                      <select
+                        id="category"
+                        name="category"
+                        required
+                        value={formData.category}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        {categories.map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                      Deskripsi Menu *
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      required
+                      rows={3}
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Deskripsi singkat tentang menu, bahan-bahan, atau cara penyajian"
+                    />
+                  </div>
+                </div>
+
+                {/* Pricing and Time */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Waktu</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                        Harga (Rp) *
+                      </label>
+                      <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        required
+                        min="0"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="25000"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="cookingTime" className="block text-sm font-medium text-gray-700">
+                        Estimasi Waktu *
+                      </label>
+                      <input
+                        type="text"
+                        id="cookingTime"
+                        name="cookingTime"
+                        required
+                        value={formData.cookingTime}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: 10-15 menit"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Destination */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Kuliner</h3>
+                  
+                  <div>
+                    <label htmlFor="destinationId" className="block text-sm font-medium text-gray-700">
+                      Pilih Kuliner *
+                    </label>
+                    <select
+                      id="destinationId"
+                      name="destinationId"
+                      required
+                      value={formData.destinationId}
+                      onChange={handleInputChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    >
+                                              <option value="">Pilih kuliner</option>
+                      {culinaryDestinations.map((dest) => (
+                        <option key={dest.id} value={dest.id}>
+                          {dest.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Rating and Status */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Rating dan Status</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+                        Rating (1-5)
+                      </label>
+                      <input
+                        type="number"
+                        id="rating"
+                        name="rating"
+                        min="1"
+                        max="5"
+                        step="0.1"
+                        value={formData.rating}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="4.5"
+                      />
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="isPopular"
+                          name="isPopular"
+                          checked={formData.isPopular}
+                          onChange={handleInputChange}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="isPopular" className="ml-2 block text-sm text-gray-900">
+                          Menu Populer
+                        </label>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="isSpicy"
+                          name="isSpicy"
+                          checked={formData.isSpicy}
+                          onChange={handleInputChange}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="isSpicy" className="ml-2 block text-sm text-gray-900">
+                          Menu Pedas
+                        </label>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="halal"
+                          name="halal"
+                          checked={formData.halal}
+                          onChange={handleInputChange}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="halal" className="ml-2 block text-sm text-gray-900">
+                          Halal
+                        </label>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="available"
+                          name="available"
+                          checked={formData.available}
+                          onChange={handleInputChange}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="available" className="ml-2 block text-sm text-gray-900">
+                          Tersedia
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Information */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tambah Informasi Kustom
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newAdditionalInfo}
+                          onChange={(e) => setNewAdditionalInfo(e.target.value)}
+                          placeholder="Contoh: Fresh, Traditional, dll"
+                          className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddAdditionalInfo}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                        >
+                          Tambah
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Pilih dari Opsi yang Tersedia
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {additionalInfoOptions.map((info) => (
+                          <button
+                            key={info}
+                            type="button"
+                            onClick={() => handleAddPredefinedInfo(info)}
+                            className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full"
+                          >
+                            {info}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {formData.additionalInfo.length > 0 && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Informasi yang Dipilih
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {formData.additionalInfo.map((info, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                            >
+                              {info}
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveAdditionalInfo(info)}
+                                className="ml-2 text-blue-600 hover:text-blue-800"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Image Upload */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Gambar Menu</h3>
+                  
+                  <div>
+                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                      Upload Gambar Menu Baru (Opsional)
+                    </label>
+                    <input
+                      type="file"
+                      id="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
+                  </div>
+
+                  {imagePreview && (
+                    <div className="mt-4">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-32 w-32 object-cover rounded-lg"
+                      />
+                      {imageFile && (
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="mt-2 text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Hapus Gambar Baru
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Submit Buttons */}
+                <div className="flex justify-end space-x-3">
+                  <Link
+                    href="/admin/culinary/menu"
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                  >
+                    Batal
+                  </Link>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md"
+                  >
+                    {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}

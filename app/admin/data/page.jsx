@@ -17,11 +17,15 @@ export default function AdminDataPage() {
   const [itemsPerPage] = useState(10);
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
+
   const [deleteLoading, setDeleteLoading] = useState(null);
   const [exportLoading, setExportLoading] = useState(false);
   const [exportType, setExportType] = useState('filtered'); // 'filtered' or 'all'
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const [error, setError] = useState(null);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [stats, setStats] = useState({
     total: 0,
     byCategory: {},
@@ -763,6 +767,41 @@ export default function AdminDataPage() {
     return subCategories[type] || subCategories.default;
   };
 
+  // Handle Analytics View
+  const handleShowAnalytics = () => {
+    setShowAnalytics(true);
+    setNotification({ 
+      show: true, 
+      message: 'Membuka halaman analisis data...', 
+      type: 'success' 
+    });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 2000);
+    
+    // Scroll to charts section
+    const chartsSection = document.querySelector('[data-section="charts"]');
+    if (chartsSection) {
+      chartsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  // Handle Settings View
+  const handleShowSettings = () => {
+    setShowSettings(true);
+    setNotification({ 
+      show: true, 
+      message: 'Membuka pengaturan sistem...', 
+      type: 'success' 
+    });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 2000);
+    
+    // Navigate to settings page or show settings modal
+    router.push('/admin/settings');
+  };
+
   if (loading) {
     return (
       <ProtectedRoute>
@@ -778,22 +817,22 @@ export default function AdminDataPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 space-y-8">
         {/* Notification */}
         {notification.show && (
-          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+          <div className={`fixed top-6 right-6 z-50 p-4 rounded-xl shadow-2xl transition-all duration-300 transform ${
             notification.type === 'success' 
-              ? 'bg-green-500 text-white' 
-              : 'bg-red-500 text-white'
+              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+              : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
           }`}>
-            <div className="flex items-center gap-2">
-              <span className="text-lg">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">
                 {notification.type === 'success' ? '✅' : '❌'}
               </span>
-              <span>{notification.message}</span>
+              <span className="font-medium">{notification.message}</span>
               <button
                 onClick={() => setNotification({ show: false, message: '', type: 'success' })}
-                className="ml-2 hover:opacity-75"
+                className="ml-4 text-white hover:text-gray-200 transition-colors"
               >
                 ✕
               </button>
@@ -803,35 +842,37 @@ export default function AdminDataPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="flex items-center gap-2">
-              <span className="text-red-500 text-lg">❌</span>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+            <div className="flex items-center gap-3">
+              <span className="text-red-500 text-xl">❌</span>
               <div className="flex-1">
-                <h3 className="text-red-800 font-medium">Error</h3>
-                <p className="text-red-700 text-sm">{error}</p>
+                <h3 className="text-red-800 font-semibold text-lg">Error</h3>
+                <p className="text-red-700">{error}</p>
               </div>
               <button
                 onClick={() => setError(null)}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-500 hover:text-red-700 transition-colors"
               >
                 ✕
               </button>
             </div>
           </div>
         )}
+
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Data Management</h1>
-            <p className="text-gray-600 mt-1">Kelola semua data wisata dan event</p>
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold text-gray-900">Data Management</h1>
+              <p className="text-xl text-gray-600">Kelola semua data wisata dan event</p>
           </div>
-          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
             <button
               onClick={() => setViewMode(viewMode === 'table' ? 'grid' : 'table')}
-              className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-3 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
               title={viewMode === 'table' ? 'Switch to Grid View' : 'Switch to Table View'}
             >
-              <span className="text-xl text-gray-700">👁</span>
+                <span className="text-2xl text-gray-700">{viewMode === 'table' ? '📊' : '👁'}</span>
             </button>
             <button
               onClick={() => {
@@ -840,95 +881,96 @@ export default function AdminDataPage() {
                 fetchData();
               }}
               disabled={loading}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {loading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               ) : (
-                <span>🔄</span>
+                  <span className="text-xl">🔄</span>
               )}
               {loading ? 'Memuat...' : 'Refresh Data'}
             </button>
             <button
               onClick={() => router.push('/admin/data/new')}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2"
+                className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-3 font-medium"
             >
-              <Plus size={20} />
+                <Plus size={22} />
               + Tambah Data
             </button>
+            </div>
           </div>
         </div>
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-6 shadow-lg">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm">Total Data</p>
-                <p className="text-3xl font-bold">{stats.total}</p>
+              <div className="space-y-2">
+                <p className="text-blue-100 text-sm font-medium">Total Data</p>
+                <p className="text-4xl font-bold">{stats.total.toLocaleString()}</p>
                 <p className="text-blue-100 text-xs">Semua kategori</p>
               </div>
-              <div className="text-3xl">📊</div>
+              <div className="text-4xl">📊</div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-6 shadow-lg">
+          <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm">Event Baru</p>
-                <p className="text-3xl font-bold">{stats.recent}</p>
-                <p className="text-blue-100 text-xs">Event 30 hari terakhir</p>
+              <div className="space-y-2">
+                <p className="text-purple-100 text-sm font-medium">Event Baru</p>
+                <p className="text-4xl font-bold">{stats.recent}</p>
+                <p className="text-purple-100 text-xs">Event 30 hari terakhir</p>
               </div>
-              <div className="text-3xl">🎉</div>
+              <div className="text-4xl">🎉</div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl p-6 shadow-lg">
+          <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-100 text-sm">Kategori</p>
-                <p className="text-3xl font-bold">{Object.keys(stats.byCategory).length}</p>
-                <p className="text-purple-100 text-xs">Jenis berbeda</p>
+              <div className="space-y-2">
+                <p className="text-indigo-100 text-sm font-medium">Kategori</p>
+                <p className="text-4xl font-bold">{Object.keys(stats.byCategory).length}</p>
+                <p className="text-indigo-100 text-xs">Jenis berbeda</p>
               </div>
-              <div className="text-3xl">🏷️</div>
+              <div className="text-4xl">🏷️</div>
             </div>
           </div>
           
-          <div className="bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl p-6 shadow-lg">
+          <div className="bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-100 text-sm">Filtered</p>
-                <p className="text-3xl font-bold">{filteredData.length}</p>
+              <div className="space-y-2">
+                <p className="text-orange-100 text-sm font-medium">Filtered</p>
+                <p className="text-4xl font-bold">{filteredData.length.toLocaleString()}</p>
                 <p className="text-orange-100 text-xs">Hasil pencarian</p>
               </div>
-              <div className="text-3xl">🔍</div>
+              <div className="text-4xl">🔍</div>
             </div>
           </div>
         </div>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" data-section="charts">
           {/* Category Distribution */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <PieChart size={20} />
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <PieChart size={24} className="text-blue-600" />
               Distribusi Kategori
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {Object.entries(stats.byCategory).map(([category, count]) => (
-                <div key={`category-${category}`} className="flex items-center justify-between">
+                <div key={`category-${category}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{getCategoryIcon(category) || '📍'}</span>
-                    <span className="text-gray-700">{category}</span>
+                    <span className="text-gray-700 font-medium">{category}</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-32 bg-gray-200 rounded-full h-3">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full" 
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500" 
                         style={{ width: `${(count / stats.total) * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-medium text-gray-900 w-8 text-right">{count}</span>
+                    <span className="text-sm font-bold text-gray-900 w-12 text-right">{count}</span>
                   </div>
                 </div>
               ))}
@@ -936,29 +978,30 @@ export default function AdminDataPage() {
           </div>
 
           {/* Monthly Trend */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <TrendingUp size={20} />
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <TrendingUp size={24} className="text-green-600" />
               Trend Event Bulanan
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {Object.keys(stats.byMonth).length > 0 ? (
                 Object.entries(stats.byMonth).map(([month, count]) => (
-                  <div key={`month-${month}`} className="flex items-center justify-between">
-                    <span className="text-gray-700 capitalize">{month}</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div key={`month-${month}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <span className="text-gray-700 font-medium capitalize">{month}</span>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-32 bg-gray-200 rounded-full h-3">
                         <div 
-                          className="bg-blue-600 h-2 rounded-full" 
+                          className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500" 
                           style={{ width: `${(count / Math.max(...Object.values(stats.byMonth))) * 100}%` }}
                         ></div>
                       </div>
-                      <span className="text-sm font-medium text-gray-900 w-8 text-right">{count}</span>
+                      <span className="text-sm font-bold text-gray-900 w-12 text-right">{count}</span>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-4 text-gray-500">
+                <div className="text-center py-8 text-gray-500">
+                  <div className="text-4xl mb-3">📅</div>
                   <p className="text-sm">Hanya event yang memiliki tanggal yang ditampilkan</p>
                 </div>
               )}
@@ -966,18 +1009,77 @@ export default function AdminDataPage() {
           </div>
         </div>
 
+        {/* Comprehensive Data Summary */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <span className="text-3xl">📊</span>
+            Ringkasan Data Lengkap
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="text-center p-6 bg-blue-50 rounded-xl border border-blue-200">
+              <div className="text-3xl font-bold text-blue-600 mb-2">{stats.total}</div>
+              <div className="text-sm text-blue-700 font-medium">Total Data Masuk</div>
+              <div className="text-xs text-blue-600 mt-1">Seluruh kategori</div>
+            </div>
+            <div className="text-center p-6 bg-green-50 rounded-xl border border-green-200">
+              <div className="text-3xl font-bold text-green-600 mb-2">{stats.recent}</div>
+              <div className="text-sm text-green-700 font-medium">Event Baru</div>
+              <div className="text-xs text-green-600 mt-1">30 hari terakhir</div>
+            </div>
+            <div className="text-center p-6 bg-purple-50 rounded-xl border border-purple-200">
+              <div className="text-3xl font-bold text-purple-600 mb-2">{Object.keys(stats.byCategory).length}</div>
+              <div className="text-sm text-purple-700 font-medium">Kategori Aktif</div>
+              <div className="text-xs text-purple-600 mt-1">Jenis berbeda</div>
+            </div>
+            <div className="text-center p-6 bg-orange-50 rounded-xl border border-orange-200">
+              <div className="text-3xl font-bold text-orange-600 mb-2">{filteredData.length}</div>
+              <div className="text-sm text-orange-700 font-medium">Data Tampil</div>
+              <div className="text-xs text-orange-600 mt-1">Hasil filter</div>
+            </div>
+            <div className="text-center p-6 bg-teal-50 rounded-xl border border-teal-200">
+              <div className="text-3xl font-bold text-teal-600 mb-2">{Math.round((filteredData.length / stats.total) * 100)}%</div>
+              <div className="text-sm text-teal-700 font-medium">Cakupan Data</div>
+              <div className="text-xs text-teal-600 mt-1">Persentase tampil</div>
+            </div>
+            <div className="text-center p-6 bg-rose-50 rounded-xl border border-rose-200">
+              <div className="text-3xl font-bold text-rose-600 mb-2">{Math.max(...Object.values(stats.byCategory) || [0])}</div>
+              <div className="text-sm text-rose-700 font-medium">Terbanyak</div>
+              <div className="text-xs text-rose-600 mt-1">Kategori terbesar</div>
+            </div>
+          </div>
+          
+          {/* Detailed Category Breakdown */}
+          <div className="mt-8">
+            <h4 className="text-lg font-semibold text-gray-900 mb-4">Detail per Kategori</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {Object.entries(stats.byCategory).map(([category, count]) => (
+                <div key={`detail-${category}`} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{getCategoryIcon(category) || '📍'}</span>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{category}</div>
+                      <div className="text-xs text-gray-500">{Math.round((count / stats.total) * 100)}% dari total</div>
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-gray-900">{count}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Search and Filter Section */}
-        <div className="bg-white rounded-xl shadow-lg border p-6">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Search Input */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={22} />
               <input
                 type="text"
                 placeholder="Cari semua data..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-300 text-lg"
               />
             </div>
 
@@ -985,17 +1087,17 @@ export default function AdminDataPage() {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-between w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-white text-gray-800 min-w-[220px] cursor-pointer transition-all duration-300 ease-in-out hover:border-blue-300 hover:shadow-lg transform hover:scale-[1.02] font-medium focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400"
+                className="flex items-center justify-between w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl bg-white text-gray-800 min-w-[250px] cursor-pointer transition-all duration-300 ease-in-out hover:border-blue-300 hover:shadow-lg transform hover:scale-[1.02] font-medium focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400"
               >
                 <div className="flex items-center gap-3">
-                  <Filter className="text-gray-400" size={20} />
+                  <Filter className="text-gray-400" size={22} />
                   <span className="flex items-center gap-2">
-                    <span className="text-lg">{getCategoryIcon(selectedCategory)}</span>
+                    <span className="text-xl">{getCategoryIcon(selectedCategory)}</span>
                     <span>{getCategoryLabel(selectedCategory)}</span>
                   </span>
                 </div>
                 <svg 
-                  className={`w-5 h-5 text-gray-400 transition-transform duration-300 ml-4 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  className={`w-6 h-6 text-gray-400 transition-transform duration-300 ml-4 ${isDropdownOpen ? 'rotate-180' : ''}`}
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -1006,7 +1108,7 @@ export default function AdminDataPage() {
 
               {/* Dropdown Menu */}
               <div 
-                className={`absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden min-w-[280px] transition-all duration-200 ease-out ${
+                className={`absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden min-w-[300px] transition-all duration-300 ease-out ${
                   isDropdownOpen 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 -translate-y-2 pointer-events-none'
@@ -1020,16 +1122,16 @@ export default function AdminDataPage() {
                         setSelectedCategory(category.value);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
+                      className={`w-full px-4 py-4 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
                         selectedCategory === category.value 
                           ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' 
                           : 'text-gray-700 hover:text-gray-900'
                       }`}
                     >
-                      <span className="text-xl">{category.icon}</span>
-                      <span className="font-medium text-sm flex-1">{category.label}</span>
+                      <span className="text-2xl">{category.icon}</span>
+                      <span className="font-medium flex-1">{category.label}</span>
                       {selectedCategory === category.value && (
-                        <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-6 h-6 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -1050,45 +1152,119 @@ export default function AdminDataPage() {
             </div>
 
                          {/* Export Options */}
-             <div className="flex items-center gap-2">
-               <select
-                 value={exportType}
-                 onChange={(e) => setExportType(e.target.value)}
-                 className="px-3 py-3 border border-gray-300 rounded-xl bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                 disabled={exportLoading}
-               >
-                 <option value="filtered">Export Filtered ({filteredData.length})</option>
-                 <option value="all">Export All ({data.length})</option>
-               </select>
-               
-               {/* Export Button */}
-               <button
-                 onClick={handleExport}
-                 disabled={exportLoading}
-                 className={`px-6 py-3 rounded-xl transition-all duration-300 transform shadow-lg flex items-center gap-2 ${
-                   exportLoading
-                     ? 'bg-gray-400 cursor-not-allowed'
-                     : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:scale-105 text-white'
-                 }`}
-               >
-                 {exportLoading ? (
-                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                 ) : (
-                   <Download size={20} />
-                 )}
-                 {exportLoading ? 'Mengexport...' : 'Export'}
-               </button>
-             </div>
+            <div className="flex items-center gap-3">
+              {/* Export Type Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
+                  className="flex items-center justify-between w-full pl-4 pr-4 py-4 border-2 border-gray-200 rounded-xl bg-white text-gray-800 min-w-[200px] cursor-pointer transition-all duration-300 ease-in-out hover:border-blue-300 hover:shadow-lg transform hover:scale-[1.02] font-medium focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400"
+                  disabled={exportLoading}
+                >
+                  <div className="flex items-center gap-3">
+                    <Download className="text-gray-400" size={20} />
+                    <span className="flex items-center gap-2">
+                      {exportType === 'filtered' ? 'Export Filtered' : 'Export All'} ({exportType === 'filtered' ? filteredData.length : data.length})
+                    </span>
+                  </div>
+                  <svg 
+                    className={`w-5 h-5 text-gray-400 transition-transform duration-300 ml-2 ${isExportDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Export Dropdown Menu */}
+                <div 
+                  className={`absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden min-w-[250px] transition-all duration-300 ease-out ${
+                    isExportDropdownOpen 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 -translate-y-2 pointer-events-none'
+                  }`}
+                >
+                  <div className="py-2">
+                    <button
+                      onClick={() => {
+                        setExportType('filtered');
+                        setIsExportDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-4 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
+                        exportType === 'filtered' 
+                          ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      <Download className="text-gray-500" size={18} />
+                      <span className="font-medium flex-1">Export Filtered ({filteredData.length})</span>
+                      {exportType === 'filtered' && (
+                        <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setExportType('all');
+                        setIsExportDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-4 text-left hover:bg-blue-50 transition-colors duration-200 flex items-center gap-3 ${
+                        exportType === 'all' 
+                          ? 'bg-blue-100 text-blue-700 border-r-4 border-blue-500' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      <Download className="text-gray-500" size={18} />
+                      <span className="font-medium flex-1">Export All ({data.length})</span>
+                      {exportType === 'all' && (
+                        <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Export Dropdown Backdrop */}
+                <div 
+                  className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+                    isExportDropdownOpen 
+                      ? 'opacity-100 pointer-events-auto' 
+                      : 'opacity-0 pointer-events-none'
+                  }`}
+                  onClick={() => setIsExportDropdownOpen(false)}
+                />
+              </div>
+              
+              {/* Export Button */}
+              <button
+                onClick={handleExport}
+                disabled={exportLoading}
+                className={`px-6 py-4 rounded-xl transition-all duration-300 transform shadow-lg flex items-center gap-3 font-medium ${
+                  exportLoading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:scale-105 text-white'
+                }`}
+              >
+                {exportLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                ) : (
+                  <Download size={22} />
+                )}
+                {exportLoading ? 'Mengexport...' : 'Export'}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Data Display */}
         {viewMode === 'table' ? (
           /* Table View */
-          <div className="bg-white rounded-xl shadow-lg border">
-            <div className="p-6 border-b">
-              <h2 className="text-lg font-semibold text-gray-900">Data Wisata</h2>
-              <p className="text-sm text-gray-500 mt-1">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="p-8 border-b border-gray-200 bg-gray-50">
+              <h2 className="text-2xl font-bold text-gray-900">Data Wisata</h2>
+              <p className="text-gray-600 mt-2">
                 Menampilkan {filteredData.length} dari {data.length} data
               </p>
             </div>
@@ -1097,31 +1273,31 @@ export default function AdminDataPage() {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KATEGORI</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TIPE</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">NO</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">#ID</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">NAMA</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">LOKASI</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">KATEGORI</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">TIPE</th>
                     {(selectedCategory === 'semua' || selectedCategory === 'event') && (
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TANGGAL</th>
+                      <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">TANGGAL</th>
                     )}
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">AKSI</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentItems.map((item, index) => (
-                    <tr key={`${item.source}-${item.id}`} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={`${item.source}-${item.id}`} className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-900 font-medium">
                         {indexOfFirstItem + index + 1}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-900 font-mono">
                         #{item.id || 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-8 py-6 whitespace-nowrap">
                         <div className="flex items-center">
                           <img
-                            className="h-12 w-12 rounded-lg object-cover mr-3 shadow-sm"
+                            className="h-14 w-14 rounded-xl object-cover mr-4 shadow-md"
                             src={item.img_sm || item.img_lg || '/pattern_bg.png'}
                             alt={item.title || 'Image'}
                             onError={(e) => {
@@ -1129,31 +1305,31 @@ export default function AdminDataPage() {
                             }}
                           />
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{item.title || item.name || 'Tidak ada judul'}</div>
-                            <div className="text-sm text-gray-500">{item.short_description?.substring(0, 50) || item.description?.substring(0, 50) || 'Tidak ada deskripsi'}...</div>
+                            <div className="text-sm font-semibold text-gray-900">{item.title || item.name || 'Tidak ada judul'}</div>
+                            <div className="text-sm text-gray-500">{item.short_description?.substring(0, 60) || item.description?.substring(0, 60) || 'Tidak ada deskripsi'}...</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-900">
                         <div className="flex items-center gap-2">
-                          <span>📍</span>
+                          <span className="text-lg">📍</span>
                           <span>{item.location || 'Lokasi tidak tersedia'}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          <span className="mr-1">{item.categoryIcon || getCategoryIcon(item.type)}</span>
+                      <td className="px-8 py-6 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                          <span className="mr-2">{item.categoryIcon || getCategoryIcon(item.type)}</span>
                           {item.category || getCategoryLabel(item.type)}
                         </span>
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-gray-500 mt-2">
                           Sumber: {item.source || 'unknown'}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-900">
                         {getTypeLabel(item.type)}
                       </td>
                       {(selectedCategory === 'semua' || selectedCategory === 'event') && (
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-8 py-6 whitespace-nowrap text-sm text-gray-900">
                           {item.category === 'Event' ? (
                             (() => {
                               const date = getEventCreatedAt(item);
@@ -1164,26 +1340,26 @@ export default function AdminDataPage() {
                           )}
                         </td>
                       )}
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex items-center gap-2">
+                      <td className="px-8 py-6 whitespace-nowrap text-sm font-medium">
+                        <div className="flex items-center gap-3">
                           <button
                             onClick={() => handleView(item.id)}
-                            className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                            className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                             title="Lihat Detail"
                           >
-                            <Eye size={16} />
+                            <Eye size={18} />
                           </button>
                           <button
                             onClick={() => handleEdit(item.id)}
-                            className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                            className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                             title="Edit"
                           >
-                            <Edit size={16} />
+                            <Edit size={18} />
                           </button>
                           <button
                             onClick={() => handleDelete(item.id)}
                             disabled={deleteLoading === item.id}
-                            className={`p-2 rounded-lg transition-colors ${
+                            className={`p-2 rounded-lg transition-colors duration-200 ${
                               deleteLoading === item.id
                                 ? 'text-gray-400 cursor-not-allowed'
                                 : 'text-red-600 hover:text-red-900 hover:bg-red-50'
@@ -1191,9 +1367,9 @@ export default function AdminDataPage() {
                             title="Hapus"
                           >
                             {deleteLoading === item.id ? (
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600"></div>
                             ) : (
-                              <Trash2 size={16} />
+                              <Trash2 size={18} />
                             )}
                           </button>
                         </div>
@@ -1206,16 +1382,16 @@ export default function AdminDataPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="px-6 py-4 border-t bg-gray-50">
+              <div className="px-8 py-6 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between">
-                                     <div className="text-sm text-black">
+                  <div className="text-sm text-gray-700 font-medium">
                      Menampilkan {indexOfFirstItem + 1} sampai {Math.min(indexOfLastItem, filteredData.length)} dari {filteredData.length} hasil
                    </div>
-                   <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                      <button
                        onClick={() => setCurrentPage(currentPage - 1)}
                        disabled={currentPage === 1}
-                       className="px-3 py-2 text-sm border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors text-black"
+                      className="px-4 py-2 text-sm border-2 border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
                      >
                        ← Sebelumnya
                      </button>
@@ -1224,10 +1400,10 @@ export default function AdminDataPage() {
                        <button
                          key={`page-${page}`}
                          onClick={() => setCurrentPage(page)}
-                         className={`px-3 py-2 text-sm border rounded-lg transition-colors ${
+                        className={`px-4 py-2 text-sm border-2 rounded-lg transition-all duration-200 font-medium ${
                            currentPage === page
                              ? 'bg-blue-600 text-white border-blue-600'
-                             : 'hover:bg-gray-100 text-black'
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-100 text-gray-700'
                          }`}
                        >
                          {page}
@@ -1237,7 +1413,7 @@ export default function AdminDataPage() {
                      <button
                        onClick={() => setCurrentPage(currentPage + 1)}
                        disabled={currentPage === totalPages}
-                       className="px-3 py-2 text-sm border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors text-black"
+                      className="px-4 py-2 text-sm border-2 border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
                      >
                        Selanjutnya →
                      </button>
@@ -1248,11 +1424,11 @@ export default function AdminDataPage() {
           </div>
         ) : (
           /* Grid View */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {currentItems.map((item) => (
-              <div key={`${item.source}-${item.id}`} className="bg-white rounded-xl shadow-lg border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div key={`${item.source}-${item.id}`} className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                 <img
-                  className="w-full h-48 object-cover rounded-t-xl"
+                  className="w-full h-56 object-cover rounded-t-2xl"
                   src={item.img_sm || item.img_lg || '/pattern_bg.png'}
                   alt={item.title || 'Image'}
                   onError={(e) => {
@@ -1260,23 +1436,23 @@ export default function AdminDataPage() {
                   }}
                 />
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      <span className="mr-1">{item.categoryIcon || getCategoryIcon(item.type)}</span>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="inline-flex items-center px-3 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                      <span className="mr-2">{item.categoryIcon || getCategoryIcon(item.type)}</span>
                       {item.category || getCategoryLabel(item.type)}
                     </span>
-                    <span className="text-xs text-gray-500">#{item.id || 'N/A'}</span>
+                    <span className="text-xs text-gray-500 font-mono">#{item.id || 'N/A'}</span>
                   </div>
                   
-                  <div className="text-xs text-gray-500 mb-2">
+                  <div className="text-xs text-gray-500 mb-3">
                     Sumber: {item.source || 'unknown'}
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title || item.name || 'Tidak ada judul'}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{item.short_description?.substring(0, 80) || item.description?.substring(0, 80) || 'Tidak ada deskripsi'}...</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">{item.title || item.name || 'Tidak ada judul'}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{item.short_description?.substring(0, 100) || item.description?.substring(0, 100) || 'Tidak ada deskripsi'}...</p>
                   
-                  <div className="flex items-center text-sm text-gray-500 mb-4">
-                    <span className="mr-2">📍</span>
+                  <div className="flex items-center text-sm text-gray-500 mb-5">
+                    <span className="mr-2 text-lg">📍</span>
                     <span>{item.location || 'Lokasi tidak tersedia'}</span>
                   </div>
                   
@@ -1296,22 +1472,22 @@ export default function AdminDataPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleView(item.id)}
-                        className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                        className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                         title="Lihat Detail"
                       >
-                        <Eye size={16} />
+                        <Eye size={18} />
                       </button>
                       <button
                         onClick={() => handleEdit(item.id)}
-                        className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                        className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
                         title="Edit"
                       >
-                        <Edit size={16} />
+                        <Edit size={18} />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
                         disabled={deleteLoading === item.id}
-                        className={`p-2 rounded-lg transition-colors ${
+                        className={`p-2 rounded-lg transition-colors duration-200 ${
                           deleteLoading === item.id
                             ? 'text-gray-400 cursor-not-allowed'
                             : 'text-red-600 hover:text-red-900 hover:bg-red-50'
@@ -1319,9 +1495,9 @@ export default function AdminDataPage() {
                         title="Hapus"
                       >
                         {deleteLoading === item.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600"></div>
                         ) : (
-                          <Trash2 size={16} />
+                          <Trash2 size={18} />
                         )}
                       </button>
                     </div>
@@ -1334,10 +1510,10 @@ export default function AdminDataPage() {
 
         {/* Empty State */}
         {filteredData.length === 0 && (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Tidak ada data ditemukan</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white rounded-2xl shadow-lg p-16 text-center">
+            <div className="text-7xl mb-6">🔍</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Tidak ada data ditemukan</h3>
+            <p className="text-gray-600 mb-8 text-lg">
               Coba ubah filter atau kata kunci pencarian Anda
             </p>
             <button
@@ -1345,12 +1521,139 @@ export default function AdminDataPage() {
                 setSearchTerm('');
                 setSelectedCategory('semua');
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium"
             >
               Reset Filter
             </button>
           </div>
         )}
+
+        {/* Quick Actions Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <span className="text-3xl">⚡</span>
+            Aksi Cepat
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link
+              href="/admin/events/new"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-blue-500"
+              aria-label="Tambah Event"
+            >
+              <div className="text-3xl mb-3">🎉</div>
+              <div className="text-lg">Tambah Event</div>
+            </Link>
+
+            <Link
+              href="/admin/destinations/new"
+              className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-indigo-500"
+              aria-label="Tambah Objek Wisata"
+            >
+              <div className="text-3xl mb-3">🏔️</div>
+              <div className="text-lg">Tambah Objek Wisata</div>
+            </Link>
+
+            <Link
+              href="/admin/culinary/new"
+              className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-orange-500"
+              aria-label="Tambah Kuliner"
+            >
+              <div className="text-3xl mb-3">🍽️</div>
+              <div className="text-lg">Tambah Kuliner</div>
+            </Link>
+
+            <Link
+              href="/admin/accommodation/new"
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-purple-500"
+              aria-label="Tambah Penginapan"
+            >
+              <div className="text-3xl mb-3">🏨</div>
+              <div className="text-lg">Tambah Penginapan</div>
+            </Link>
+
+            <Link
+              href="/admin/souvenirs/new"
+              className="bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-rose-500"
+              aria-label="Tambah Souvenir"
+            >
+              <div className="text-3xl mb-3">🛍️</div>
+              <div className="text-lg">Tambah Souvenir</div>
+            </Link>
+
+            <Link
+              href="/admin/travel-agencies/new"
+              className="bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-cyan-500"
+              aria-label="Tambah Biro Perjalanan"
+            >
+              <div className="text-3xl mb-3">🚌</div>
+              <div className="text-lg">Tambah Biro Perjalanan</div>
+            </Link>
+
+            <Link
+              href="/admin/villages/new"
+              className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-teal-500"
+              aria-label="Tambah Desa Wisata"
+            >
+              <div className="text-3xl mb-3">🏘️</div>
+              <div className="text-lg">Tambah Desa Wisata</div>
+            </Link>
+
+            <Link
+              href="/admin/data/new"
+              className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-6 rounded-2xl text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-gray-500"
+              aria-label="Pilih Jenis Data"
+            >
+              <div className="text-3xl mb-3">📝</div>
+              <div className="text-lg">Pilih Jenis Data</div>
+            </Link>
+          </div>
+
+          {/* Additional Quick Actions */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">📊</span>
+                <h4 className="text-lg font-semibold text-blue-900">Analisis Data</h4>
+              </div>
+              <p className="text-blue-700 text-sm mb-4">Lihat statistik dan tren data wisata</p>
+              <button 
+                onClick={handleShowAnalytics}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:scale-105 transform duration-200"
+              >
+                Lihat Analisis
+              </button>
+            </div>
+
+            <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">📤</span>
+                <h4 className="text-lg font-semibold text-green-900">Export Data</h4>
+              </div>
+              <p className="text-green-700 text-sm mb-4">Export data dalam format CSV/Excel</p>
+              <button 
+                onClick={handleExport}
+                disabled={exportLoading}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 hover:scale-105 transform duration-200"
+              >
+                {exportLoading ? 'Mengexport...' : 'Export Data'}
+              </button>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-2xl border border-purple-200">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">⚙️</span>
+                <h4 className="text-lg font-semibold text-purple-900">Pengaturan</h4>
+              </div>
+              <p className="text-purple-700 text-sm mb-4">Kelola pengaturan sistem admin</p>
+              <button 
+                onClick={handleShowSettings}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:scale-105 transform duration-200"
+              >
+                Buka Pengaturan
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Add-data selection is now a dedicated page at `/admin/data/new` */}
       </div>

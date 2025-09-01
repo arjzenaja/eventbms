@@ -44,6 +44,7 @@ export async function POST(request) {
     const contact = formData.get('contact') || '';
     const address = formData.get('address') || location;
     const features = formData.get('features') || ['Budaya Lokal', 'Akomodasi Homestay'];
+    const packages = formData.get('packages') || '';
     const recommended = formData.get('recommended') === 'true';
     
     // Validate required fields
@@ -57,6 +58,7 @@ export async function POST(request) {
     // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const galleryFiles = formData.getAll('gallery[]');
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -66,6 +68,7 @@ export async function POST(request) {
     
     let img_sm_path = '/placeholder.jpg';
     let img_lg_path = '/placeholder.jpg';
+    const galleryPaths = [];
     
     // Save small image
     if (img_sm && img_sm instanceof File) {
@@ -87,6 +90,17 @@ export async function POST(request) {
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
       fs.writeFileSync(img_lg_path_full, img_lg_buffer);
       img_lg_path = `/uploads/${img_lg_filename}`;
+    }
+    // Save gallery images
+    for (const file of galleryFiles) {
+      if (file && file instanceof File) {
+        const ext = path.extname(file.name) || '.jpg';
+        const filename = `village_gallery_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`;
+        const full = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        fs.writeFileSync(full, buffer);
+        galleryPaths.push(`/uploads/${filename}`);
+      }
     }
     
     // Read the database file
@@ -116,12 +130,33 @@ export async function POST(request) {
         parsedFeatures = [features];
       }
     }
+
+    // Normalize packages: accept JSON array of objects or multiline string
+    let parsedPackages = [];
+    if (Array.isArray(packages)) {
+      parsedPackages = packages.filter(Boolean);
+    } else if (typeof packages === 'string') {
+      const trimmed = packages.trim();
+      if (trimmed.startsWith('[')) {
+        try {
+          const json = JSON.parse(trimmed);
+          if (Array.isArray(json)) parsedPackages = json;
+        } catch {}
+      }
+      if (parsedPackages.length === 0) {
+        parsedPackages = trimmed
+          .split(/\r?\n/)
+          .map(s => s.trim())
+          .filter(Boolean);
+      }
+    }
     
     // Create new desa_wisata item
     const newDesaWisataItem = {
       id: newId,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      gallery: galleryPaths,
       title: title,
       location: location,
       short_description: short_description || description?.substring(0, 100) || description,
@@ -131,6 +166,7 @@ export async function POST(request) {
       contact: contact,
       address: address,
       features: Array.isArray(parsedFeatures) ? parsedFeatures : [parsedFeatures],
+      packages: parsedPackages,
       recommended: recommended,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

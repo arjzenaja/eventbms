@@ -74,6 +74,7 @@ export async function PUT(request, { params }) {
     const contact = formData.get('contact') || '';
     const address = formData.get('address') || location;
     const features = formData.get('features') || ['Hiburan', 'Makanan'];
+    const seatsRaw = formData.get('seats');
     const recommended = formData.get('recommended') === 'true';
     
     // Validate required fields
@@ -147,6 +148,21 @@ export async function PUT(request, { params }) {
         parsedFeatures = [features];
       }
     }
+    // Parse seats
+    let seats = existingEvent.seats || [];
+    if (typeof seatsRaw === 'string' && seatsRaw.length) {
+      try {
+        const parsed = JSON.parse(seatsRaw);
+        if (Array.isArray(parsed)) seats = parsed.map(s => ({
+          seat: s.seat || s.name || '',
+          price: Number(s.price || 0),
+          desc: s.desc || '',
+          includes: Array.isArray(s.includes) ? s.includes : [],
+          terms_requirements: Array.isArray(s.terms_requirements) ? s.terms_requirements : [],
+          terms_cancellation: Array.isArray(s.terms_cancellation) ? s.terms_cancellation : []
+        }));
+      } catch {}
+    }
     
     // Update the event item
     const updatedEvent = {
@@ -165,6 +181,7 @@ export async function PUT(request, { params }) {
       contact: contact,
       address: address,
       features: Array.isArray(parsedFeatures) ? parsedFeatures : [parsedFeatures],
+      seats: seats,
       recommended: recommended,
       updated_at: new Date().toISOString()
     };

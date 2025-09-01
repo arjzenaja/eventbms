@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import GalleryUploader from '@/components/GalleryUploader';
 
 export default function NewCulinaryItem() {
   const router = useRouter();
@@ -19,7 +20,24 @@ export default function NewCulinaryItem() {
     contact: '',
     address: '',
     features: ['Masakan Indonesia', 'Suasana Nyaman'],
-    recommended: false
+    recommended: false,
+    // Field tambahan yang ada di halaman detail
+    manager: '',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    website: '',
+    gallery: [],
+    menu: [],
+    category: 'Kuliner',
+    // Field baru yang perlu ditambahkan
+    rating: '',
+    instagram: '',
+    slug: '',
+    coordinates: { lat: '', lng: '' },
+    halal_status: false,
+    delivery_available: false,
+    reservation_available: false
   });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
@@ -30,6 +48,7 @@ export default function NewCulinaryItem() {
     img_lg: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [galleryFiles, setGalleryFiles] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -109,8 +128,12 @@ export default function NewCulinaryItem() {
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
       }
+      // Add gallery files
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
+      }
 
-      const response = await fetch('/api/culinary', {
+      const response = await fetch('/api/kuliner', {
         method: 'POST',
         body: formDataToSend,
       });
@@ -269,6 +292,150 @@ export default function NewCulinaryItem() {
                   />
                 </div>
 
+                {/* Rating */}
+                <div>
+                  <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+                    Rating (1-5)
+                  </label>
+                  <input
+                    type="number"
+                    id="rating"
+                    name="rating"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                    value={formData.rating}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: 4.5"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Rating kuliner dari 1-5 (opsional)</p>
+                </div>
+
+                {/* Instagram */}
+                <div>
+                  <label htmlFor="instagram" className="block text-sm font-medium text-gray-700">
+                    Instagram
+                  </label>
+                  <input
+                    type="text"
+                    id="instagram"
+                    name="instagram"
+                    value={formData.instagram}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: @kulinerbanyumas atau username tanpa @"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Username Instagram kuliner (opsional)</p>
+                </div>
+
+                {/* Slug */}
+                <div>
+                  <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
+                    URL Slug
+                  </label>
+                  <input
+                    type="text"
+                    id="slug"
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Contoh: warung-mendoan-banyumas"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">URL slug untuk routing (akan dibuat otomatis jika kosong)</p>
+                </div>
+
+                {/* Koordinat Lokasi */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Koordinat Lokasi</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="lat" className="block text-sm font-medium text-gray-700">
+                        Latitude
+                      </label>
+                      <input
+                        type="number"
+                        id="lat"
+                        name="lat"
+                        step="any"
+                        value={formData.coordinates?.lat || ''}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          coordinates: { ...prev.coordinates, lat: e.target.value }
+                        }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: -7.3056"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lng" className="block text-sm font-medium text-gray-700">
+                        Longitude
+                      </label>
+                      <input
+                        type="number"
+                        id="lng"
+                        name="lng"
+                        step="any"
+                        value={formData.coordinates?.lng || ''}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          coordinates: { ...prev.coordinates, lng: e.target.value }
+                        }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Contoh: 109.2194"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">Koordinat untuk menampilkan lokasi di peta (opsional)</p>
+                </div>
+
+                {/* Status Kuliner */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Kuliner</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="halal_status"
+                        name="halal_status"
+                        checked={formData.halal_status}
+                        onChange={handleInputChange}
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="halal_status" className="ml-2 block text-sm text-gray-900">
+                        Makanan Halal
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="delivery_available"
+                        name="delivery_available"
+                        checked={formData.delivery_available}
+                        onChange={handleInputChange}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="delivery_available" className="ml-2 block text-sm text-gray-900">
+                        Tersedia Delivery
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="reservation_available"
+                        name="reservation_available"
+                        checked={formData.reservation_available}
+                        onChange={handleInputChange}
+                        className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="reservation_available" className="ml-2 block text-sm text-gray-900">
+                        Tersedia Reservasi
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label htmlFor="opening_hours" className="block text-sm font-medium text-gray-700">
                     Jam Operasional *
@@ -300,20 +467,126 @@ export default function NewCulinaryItem() {
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Alamat Lengkap
-                  </label>
-                  <textarea
-                    id="address"
-                    name="address"
-                    rows={2}
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Alamat lengkap (opsional, akan menggunakan lokasi jika kosong)"
-                  />
-                </div>
+                                 <div>
+                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                     Alamat Lengkap
+                   </label>
+                   <textarea
+                     id="address"
+                     name="address"
+                     rows={2}
+                     value={formData.address}
+                     onChange={handleInputChange}
+                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                     placeholder="Alamat lengkap (opsional, akan menggunakan lokasi jika kosong)"
+                   />
+                 </div>
+
+                 {/* Informasi Pengelola */}
+                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Informasi Pengelola</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                       <label htmlFor="manager" className="block text-sm font-medium text-gray-700">
+                         Nama Pengelola
+                       </label>
+                       <input
+                         type="text"
+                         id="manager"
+                         name="manager"
+                         value={formData.manager}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nama pemilik atau pengelola"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                         Nomor Telepon
+                       </label>
+                       <input
+                         type="text"
+                         id="phone"
+                         name="phone"
+                         value={formData.phone}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nomor telepon utama"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
+                         WhatsApp
+                       </label>
+                       <input
+                         type="text"
+                         id="whatsapp"
+                         name="whatsapp"
+                         value={formData.whatsapp}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nomor WhatsApp"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                         Email
+                       </label>
+                       <input
+                         type="email"
+                         id="email"
+                         name="email"
+                         value={formData.email}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Email pengelola"
+                       />
+                     </div>
+
+                     <div className="md:col-span-2">
+                       <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+                         Website
+                       </label>
+                       <input
+                         type="url"
+                         id="website"
+                         name="website"
+                         value={formData.website}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="https://website.com"
+                       />
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Menu Section */}
+                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Menu Makanan</h3>
+                   <div className="space-y-4">
+                     <div>
+                       <label htmlFor="menu" className="block text-sm font-medium text-gray-700 mb-2">
+                         Daftar Menu (Opsional)
+                       </label>
+                       <textarea
+                         id="menu"
+                         name="menu"
+                         rows={4}
+                         value={formData.menu.join('\n')}
+                         onChange={(e) => {
+                           const menuArray = e.target.value.split('\n').map(item => item.trim()).filter(item => item);
+                           setFormData(prev => ({ ...prev, menu: menuArray }));
+                         }}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Masukkan menu satu per baris&#10;Contoh:&#10;Mendoan Tempe - Rp 8.000&#10;Soto Sokaraja - Rp 18.000&#10;Getuk Goreng - Rp 10.000"
+                       />
+                       <p className="text-xs text-gray-500 mt-1">Masukkan menu satu per baris. Format: Nama Menu - Harga</p>
+                     </div>
+                   </div>
+                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -428,6 +701,9 @@ export default function NewCulinaryItem() {
                       )}
                       <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                     </div>
+                  </div>
+                  <div className="mt-4">
+                    <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
                   </div>
                 </div>
 

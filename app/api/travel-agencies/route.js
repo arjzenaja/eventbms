@@ -57,6 +57,10 @@ export async function POST(request) {
     // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const galleryFiles = formData.getAll('gallery[]');
+    const latitude = formData.get('latitude') || '';
+    const longitude = formData.get('longitude') || '';
+    const opening_hours = formData.get('opening_hours') || '';
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -66,6 +70,7 @@ export async function POST(request) {
     
     let img_sm_path = '/placeholder.jpg';
     let img_lg_path = '/placeholder.jpg';
+    const galleryPaths = [];
     
     // Save small image
     if (img_sm && img_sm instanceof File) {
@@ -87,6 +92,17 @@ export async function POST(request) {
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
       fs.writeFileSync(img_lg_path_full, img_lg_buffer);
       img_lg_path = `/uploads/${img_lg_filename}`;
+    }
+    // Save gallery images
+    for (const file of galleryFiles) {
+      if (file && file instanceof File) {
+        const ext = path.extname(file.name) || '.jpg';
+        const filename = `agency_gallery_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`;
+        const full = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        fs.writeFileSync(full, buffer);
+        galleryPaths.push(`/uploads/${filename}`);
+      }
     }
     
     // Read the database file
@@ -128,9 +144,13 @@ export async function POST(request) {
       description: description,
       type: type,
       category: category,
+      latitude: latitude,
+      longitude: longitude,
+      opening_hours: opening_hours,
       contact: contact,
       address: address,
       services: Array.isArray(parsedServices) ? parsedServices : [parsedServices],
+      gallery: galleryPaths,
       recommended: recommended,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

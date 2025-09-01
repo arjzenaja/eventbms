@@ -251,6 +251,18 @@ export default function UserProfile() {
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Aksi Akun</h3>
             
             <div className="space-y-4">
+              <Link href="/settings">
+                <button className="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">Pengaturan Akun</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Kelola preferensi dan pengaturan akun</p>
+                    </div>
+                    <span className="text-gray-400 dark:text-gray-500">→</span>
+                  </div>
+                </button>
+              </Link>
+
               <Link href="/change-password">
                 <button className="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   <div className="flex items-center justify-between">
@@ -258,7 +270,7 @@ export default function UserProfile() {
                       <h4 className="font-semibold text-gray-900 dark:text-white">Ubah Password</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Perbarui password akun Anda</p>
                     </div>
-                    <span className="text-gray-400 dark:text-gray-500">→</span>
+                    <span className="text-red-400 dark:text-red-500">→</span>
                   </div>
                 </button>
               </Link>

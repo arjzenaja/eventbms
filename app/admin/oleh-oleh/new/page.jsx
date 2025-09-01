@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import GalleryUploader from '@/components/GalleryUploader';
 
 export default function NewOlehOleh() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     type: 'makanan',
@@ -56,10 +58,26 @@ export default function NewOlehOleh() {
       Object.keys(formData).forEach(key => {
         if (key === 'features') {
           formDataToSend.append(key, formData[key]);
+        } else if (key === 'coordinates') {
+          formDataToSend.append('lat', formData.coordinates.lat);
+          formDataToSend.append('lng', formData.coordinates.lng);
         } else {
           formDataToSend.append(key, formData[key].toString());
         }
       });
+      
+      // Append image files
+      if (imageFiles.img_sm) {
+        formDataToSend.append('img_sm', imageFiles.img_sm);
+      }
+      if (imageFiles.img_lg) {
+        formDataToSend.append('img_lg', imageFiles.img_lg);
+      }
+      
+      // Append gallery files
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
+      }
 
       const response = await fetch('/api/oleh_oleh', {
         method: 'POST',
@@ -261,6 +279,9 @@ export default function NewOlehOleh() {
                   placeholder="Contoh: Halal, Fresh, Local"
                 />
               </div>
+
+              {/* Gallery */}
+              <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
 
               {/* Recommended */}
               <div className="flex items-center">

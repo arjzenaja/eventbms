@@ -52,19 +52,43 @@ export async function PUT(request, { params }) {
       }, { status: 404 });
     }
     
-    // Update travel agency
-    dbData.biro_perjalanan[travelAgencyIndex] = {
+    // Prepare the updated data with all possible fields
+    const updatedData = {
       ...dbData.biro_perjalanan[travelAgencyIndex],
       ...body,
+      // Ensure all new fields are included
+      gallery: body.gallery || dbData.biro_perjalanan[travelAgencyIndex].gallery || [],
+      coordinates: body.coordinates || dbData.biro_perjalanan[travelAgencyIndex].coordinates || { lat: '', lng: '' },
+      price_range: body.price_range || dbData.biro_perjalanan[travelAgencyIndex].price_range || '',
+      features: body.features || dbData.biro_perjalanan[travelAgencyIndex].features || [],
+      facilities: body.facilities || dbData.biro_perjalanan[travelAgencyIndex].facilities || [],
+      manager: body.manager || dbData.biro_perjalanan[travelAgencyIndex].manager || {
+        name: '',
+        phone: '',
+        email: '',
+        whatsapp: '',
+        instagram: '',
+        website: '',
+        position: '',
+        experience: '',
+        rating: '',
+        availability: ''
+      },
+      prices: body.prices || dbData.biro_perjalanan[travelAgencyIndex].prices || [],
+      opening_hours: body.opening_hours || dbData.biro_perjalanan[travelAgencyIndex].opening_hours || '',
+      rating: body.rating || dbData.biro_perjalanan[travelAgencyIndex].rating || '',
       updated_at: new Date().toISOString()
     };
+    
+    // Update travel agency
+    dbData.biro_perjalanan[travelAgencyIndex] = updatedData;
     
     // Write back to db.json
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
     return NextResponse.json({
       success: true,
-      biro_perjalanan: dbData.biro_perjalanan[travelAgencyIndex]
+      biro_perjalanan: updatedData
     });
   } catch (error) {
     console.error('Error updating travel agency:', error);

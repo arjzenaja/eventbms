@@ -15,7 +15,7 @@ export default function EditSouvenir() {
   
   const [formData, setFormData] = useState({
     title: '',
-    type: 'kerajinan',
+    type: '',
     location: '',
     category: 'souvenir',
     short_description: '',
@@ -23,18 +23,27 @@ export default function EditSouvenir() {
     price_range: '',
     contact: '',
     address: '',
-    recommended: false
+    coordinates: { lat: '', lng: '' },
+    recommended: false,
+    packages: []
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
+
+  // Package form state
+  const [packageForm, setPackageForm] = useState({
+    name: '',
+    description: '',
+    price: '',
+    items: []
+  });
 
   const souvenirTypes = [
-    { value: 'kerajinan', label: 'Kerajinan' },
-    { value: 'aksesoris', label: 'Aksesoris' },
-    { value: 'pakaian', label: 'Pakaian' },
     { value: 'makanan', label: 'Makanan' },
-    { value: 'souvenir', label: 'Souvenir' }
+    { value: 'pakaian', label: 'Pakaian' }
   ];
 
   const categories = [
@@ -53,7 +62,7 @@ export default function EditSouvenir() {
         if (data.success) {
           setFormData({
             title: data.oleh_oleh.title || '',
-            type: data.oleh_oleh.type || 'kerajinan',
+            type: data.oleh_oleh.type || '',
             location: data.oleh_oleh.location || '',
             category: data.oleh_oleh.category || 'oleh-oleh',
             short_description: data.oleh_oleh.short_description || '',
@@ -61,7 +70,9 @@ export default function EditSouvenir() {
             price_range: data.oleh_oleh.price_range || '',
             contact: data.oleh_oleh.contact || '',
             address: data.oleh_oleh.address || '',
-            recommended: data.oleh_oleh.recommended || false
+            coordinates: data.oleh_oleh.coordinates || { lat: '', lng: '' },
+            recommended: data.oleh_oleh.recommended || false,
+            packages: data.oleh_oleh.packages || []
           });
         } else {
           setError(data.message);
@@ -87,17 +98,116 @@ export default function EditSouvenir() {
     }));
   };
 
+  const handleCoordinateChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      coordinates: {
+        ...prev.coordinates,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    
+    // Validate files
+    const validFiles = files.filter(file => {
+      if (!file.type.startsWith('image/')) {
+        alert(`File ${file.name} bukan gambar`);
+        return false;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`File ${file.name} terlalu besar (maksimal 5MB)`);
+        return false;
+      }
+      return true;
+    });
+
+    setGalleryFiles(prev => [...prev, ...validFiles]);
+
+    // Create previews
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setGalleryPreviews(prev => [...prev, e.target.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeGalleryImage = (index) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Package handlers
+  const handlePackageInputChange = (e) => {
+    const { name, value } = e.target;
+    setPackageForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const addPackage = () => {
+    if (!packageForm.name || !packageForm.price) {
+      alert('Nama paket dan harga harus diisi');
+      return;
+    }
+
+    const newPackage = {
+      id: Date.now().toString(),
+      ...packageForm,
+      price: parseInt(packageForm.price)
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      packages: [...prev.packages, newPackage]
+    }));
+
+    // Reset package form
+    setPackageForm({
+      name: '',
+      description: '',
+      price: '',
+      items: []
+    });
+  };
+
+  const removePackage = (packageId) => {
+    setFormData(prev => ({
+      ...prev,
+      packages: prev.packages.filter(pkg => pkg.id !== packageId)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add form data
+      Object.keys(formData).forEach(key => {
+        if (key === 'coordinates' || key === 'packages') {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      // Add gallery files
+      galleryFiles.forEach((file, index) => {
+        formDataToSend.append(`gallery_${index}`, file);
+      });
+
       const response = await fetch(`/api/oleh_oleh/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       const data = await response.json();

@@ -48,8 +48,26 @@ export async function POST(request) {
       entrance_fee: formData.get('entrance_fee') || '',
       contact: formData.get('contact') || '',
       address: formData.get('address') || '',
-      features: formData.get('features') ? formData.get('features').split(',') : [],
+      price_range: formData.get('price_range') || 'Rp 0 - Rp 50.000',
+      coordinates: {
+        latitude: formData.get('latitude') || '',
+        longitude: formData.get('longitude') || ''
+      },
+      operating_hours: {
+        open: formData.get('operating_hours_open') || '08:00',
+        close: formData.get('operating_hours_close') || '17:00',
+        days: formData.get('operating_hours_days') || 'Senin - Minggu'
+      },
+      facilities: formData.get('facilities') ? formData.get('facilities').split(',') : [],
+      gallery: formData.get('gallery') ? formData.get('gallery').split(',') : [],
+      packages: formData.get('packages') ? formData.get('packages').split(',') : [],
+      activities: formData.get('activities') ? formData.get('activities').split(',') : [],
+      transportation: formData.get('transportation') || '',
+      accommodation: formData.get('accommodation') || '',
+      weather_info: formData.get('weather_info') === 'true',
       recommended: formData.get('recommended') === 'true',
+      rating: 0,
+      reviews: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };

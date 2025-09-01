@@ -510,20 +510,20 @@ export default function AdminDashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 space-y-8">
         {/* Notification */}
         {notification && (
-          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+          <div className={`fixed top-6 right-6 z-50 p-4 rounded-xl shadow-2xl transition-all duration-300 transform ${
             notification.type === 'success' 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-red-500 text-white'
+              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+              : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
           }`}>
-            <div className="flex items-center space-x-2">
-              <span>{notification.type === 'success' ? '✅' : '❌'}</span>
-              <span>{notification.message}</span>
+            <div className="flex items-center space-x-3">
+              <span className="text-xl">{notification.type === 'success' ? '✅' : '❌'}</span>
+              <span className="font-medium">{notification.message}</span>
               <button 
                 onClick={() => setNotification(null)}
-                className="ml-2 text-white hover:text-gray-200"
+                className="ml-4 text-white hover:text-gray-200 transition-colors"
               >
                 ×
               </button>
@@ -532,18 +532,18 @@ export default function AdminDashboard() {
         )}
 
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold mb-2">Selamat Datang, {adminUser?.name || 'Admin'}! 👋</h1>
-              <p className="text-blue-100">Kelola semua data wisata dan event dari dashboard ini</p>
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+            <div className="space-y-3">
+              <h1 className="text-4xl font-bold">Selamat Datang, {adminUser?.name || 'Admin'}! 👋</h1>
+              <p className="text-xl text-blue-100">Kelola semua data wisata dan event dari dashboard ini</p>
               {lastUpdated && (
-                <p className="text-xs text-blue-200 mt-2">
+                <p className="text-sm text-blue-200 bg-white bg-opacity-10 px-3 py-2 rounded-lg inline-block">
                   <ClientLastUpdatedFormatter date={lastUpdated} />
                 </p>
               )}
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
               <button
                 onClick={() => {
                   setIsLoading(true);
@@ -551,14 +551,14 @@ export default function AdminDashboard() {
                   fetchDashboardData();
                 }}
                 disabled={isLoading}
-                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-white border-opacity-30"
               >
-                <span>{isLoading ? '⏳' : '🔄'}</span>
+                <span className="text-xl">{isLoading ? '⏳' : '🔄'}</span>
                 <span>{isLoading ? 'Memuat...' : 'Refresh Data'}</span>
               </button>
-              <div className="text-right">
+              <div className="text-center sm:text-right bg-white bg-opacity-10 px-4 py-3 rounded-xl backdrop-blur-sm">
                 <p className="text-sm text-blue-200">Hari ini</p>
-                <p className="text-xl font-semibold">
+                <p className="text-2xl font-semibold">
                   <ClientDateDisplay />
                 </p>
               </div>

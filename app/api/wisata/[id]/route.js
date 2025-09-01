@@ -27,6 +27,12 @@ export async function GET(request, { params }) {
     return NextResponse.json({
       success: true,
       destination: destination
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=300, s-maxage=600', // 5 minutes client cache, 10 minutes CDN cache
+        'ETag': `"${destination.id}-${destination.updated_at}"`,
+        'Last-Modified': destination.updated_at
+      }
     });
   } catch (error) {
     console.error('Error reading destination:', error);
@@ -54,6 +60,17 @@ export async function PUT(request, { params }) {
     const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
     
+    // Handle coordinates
+    let coordinates = null;
+    try {
+      const coordsData = formData.get('coordinates');
+      if (coordsData) {
+        coordinates = JSON.parse(coordsData);
+      }
+    } catch (e) {
+      console.log('Coordinates parsing failed');
+    }
+    
     // Read db.json file
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -78,9 +95,11 @@ export async function PUT(request, { params }) {
     // Handle image uploads
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const gallery_images = formData.getAll('gallery_images');
     
     let img_sm_path = currentDestination.img_sm || '/placeholder.jpg';
     let img_lg_path = currentDestination.img_lg || '/placeholder.jpg';
+    let gallery_paths = currentDestination.gallery || [];
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -110,6 +129,25 @@ export async function PUT(request, { params }) {
       img_lg_path = `/uploads/${img_lg_filename}`;
     }
     
+    // Handle gallery images
+    if (gallery_images && gallery_images.length > 0) {
+      const newGalleryPaths = [];
+      for (const galleryImage of gallery_images) {
+        if (galleryImage instanceof File) {
+          const gallery_ext = path.extname(galleryImage.name);
+          const gallery_filename = `dest_gallery_${Date.now()}_${Math.random().toString(36).substr(2, 9)}${gallery_ext}`;
+          const gallery_path_full = path.join(uploadsDir, gallery_filename);
+          
+          const gallery_buffer = Buffer.from(await galleryImage.arrayBuffer());
+          fs.writeFileSync(gallery_path_full, gallery_buffer);
+          newGalleryPaths.push(`/uploads/${gallery_filename}`);
+        }
+      }
+      if (newGalleryPaths.length > 0) {
+        gallery_paths = [...gallery_paths, ...newGalleryPaths];
+      }
+    }
+    
     // Update destination with new structure
     const updatedDestination = {
       ...currentDestination,
@@ -122,8 +160,10 @@ export async function PUT(request, { params }) {
       entrance_fee: entrance_fee || currentDestination.entrance_fee || 'Gratis',
       contact: contact || currentDestination.contact || '',
       address: address || currentDestination.address || '',
+      coordinates: coordinates || currentDestination.coordinates,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      gallery: gallery_paths,
       recommended: recommended,
       updated_at: new Date().toISOString()
     };

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminMapSelector from '@/components/AdminMapSelector';
 import Link from 'next/link';
 
 export default function NewDestinationPage() {
@@ -13,17 +14,32 @@ export default function NewDestinationPage() {
     description: '',
     location: '',
     type: 'wisata-alam',
+    category: 'Wisata',
     entrance_fee: '',
     manager: '', // Pengelola Wisata
+    contact: '', // Kontak (phone/whatsapp)
+    address: '', // Alamat lengkap
+    opening_hours: '', // Jam buka
+    rating: '', // Rating destinasi
+    features: [], // Fitur & fasilitas
     recommended: false
   });
+  const [coordinates, setCoordinates] = useState({ lat: '', lng: '' });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
     img_lg: null
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState({
     img_sm: null,
     img_lg: null
+  });
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
+  const [pricing, setPricing] = useState({
+    type: 'free', // 'free' | 'single' | 'packages'
+    unit: 'per_tiket',
+    value: '',
+    packages: [] // { name, price, unit, imageFile, imagePreview, includes, terms }
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -33,6 +49,19 @@ export default function NewDestinationPage() {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  // Handle coordinates change
+  const handleCoordinatesChange = (newCoordinates) => {
+    setCoordinates(newCoordinates);
+  };
+
+  // Handle location change
+  const handleLocationChange = (newLocation) => {
+    setFormData(prev => ({
+      ...prev,
+      location: newLocation
     }));
   };
 
@@ -81,8 +110,18 @@ export default function NewDestinationPage() {
       
       // Add form data
       Object.keys(formData).forEach(key => {
-        formDataToSend.append(key, formData[key]);
+        if (key === 'features') {
+          // Send features as JSON string
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
       });
+      
+      // Add coordinates if available
+      if (coordinates.lat && coordinates.lng) {
+        formDataToSend.append('coordinates', JSON.stringify(coordinates));
+      }
       
       // Add image files
       if (imageFiles.img_sm) {
@@ -91,6 +130,26 @@ export default function NewDestinationPage() {
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
       }
+
+      // Attach pricing JSON (backend can ignore if not implemented yet)
+      formDataToSend.append('pricing', JSON.stringify({
+        ...pricing,
+        // reduce packages before sending
+        packages: pricing.packages.map(p => ({
+          name: p.name || '',
+          price: p.price ? Number(p.price) : null,
+          unit: p.unit || 'per_paket',
+          includes: p.includes ? p.includes.split(',').map(s => s.trim()).filter(Boolean) : [],
+          terms: p.terms ? p.terms.split('\n').map(s => s.trim()).filter(Boolean) : []
+        }))
+      }));
+
+      // Attach package images separately if any
+      pricing.packages.forEach((p, idx) => {
+        if (p.imageFile) {
+          formDataToSend.append(`package_image_${idx}`, p.imageFile);
+        }
+      });
 
       const response = await fetch('/api/destinations', {
         method: 'POST',
@@ -192,24 +251,16 @@ export default function NewDestinationPage() {
                     />
                   </div>
 
-                  {/* Lokasi */}
-                  <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                      Lokasi *
-                    </label>
-                    <input
-                      type="text"
-                      id="location"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="Contoh: Banyumas, Indonesia"
+                  {/* Lokasi dengan Map Selector */}
+                  <div className="md:col-span-2">
+                    <AdminMapSelector
+                      location={formData.location}
+                      onLocationChange={handleLocationChange}
+                      onCoordinatesChange={handleCoordinatesChange}
                     />
                   </div>
 
-                  {/* Tipe */}
+                                    {/* Tipe */}
                   <div>
                     <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
                       Tipe Destinasi *
@@ -232,7 +283,28 @@ export default function NewDestinationPage() {
                     </select>
                   </div>
 
-
+                  {/* Kategori */}
+                  <div>
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                      Kategori Destinasi *
+                    </label>
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                    >
+                      <option value="Wisata">Wisata</option>
+                      <option value="Kuliner">Kuliner</option>
+                      <option value="Penginapan">Penginapan</option>
+                      <option value="Transportasi">Transportasi</option>
+                      <option value="Edukasi">Edukasi</option>
+                      <option value="Olahraga">Olahraga</option>
+                      <option value="Lainnya">Lainnya</option>
+                    </select>
+                  </div>
 
                   {/* Biaya Masuk */}
                   <div>
@@ -250,6 +322,41 @@ export default function NewDestinationPage() {
                     />
                   </div>
 
+                  {/* Jam Buka */}
+                  <div>
+                    <label htmlFor="opening_hours" className="block text-sm font-medium text-gray-700 mb-2">
+                      Jam Buka
+                    </label>
+                    <input
+                      type="text"
+                      id="opening_hours"
+                      name="opening_hours"
+                      value={formData.opening_hours}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Contoh: 08.00 - 17.00"
+                    />
+                  </div>
+
+                  {/* Rating */}
+                  <div>
+                    <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-2">
+                      Rating (1-5)
+                    </label>
+                    <input
+                      type="number"
+                      id="rating"
+                      name="rating"
+                      value={formData.rating}
+                      onChange={handleInputChange}
+                      min="1"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Contoh: 4.5"
+                    />
+                  </div>
+
                   {/* Pengelola Wisata */}
                   <div>
                     <label htmlFor="manager" className="block text-sm font-medium text-gray-700 mb-2">
@@ -264,6 +371,326 @@ export default function NewDestinationPage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
                       placeholder="Nama pengelola atau kontak"
                     />
+                  </div>
+
+                  {/* Kontak */}
+                  <div>
+                    <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-2">
+                      Kontak (Phone/WhatsApp)
+                    </label>
+                    <input
+                      type="text"
+                      id="contact"
+                      name="contact"
+                      value={formData.contact}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Contoh: 08123456789 atau +628123456789"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Masukkan nomor telepon atau WhatsApp</p>
+                  </div>
+
+                  {/* Alamat Lengkap */}
+                  <div className="md:col-span-2">
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                      Alamat Lengkap
+                    </label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      placeholder="Alamat lengkap destinasi wisata..."
+                    />
+                  </div>
+
+                  {/* Fitur & Fasilitas */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Fitur & Fasilitas
+                    </label>
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {[
+                          'Parkir Luas',
+                          'Toilet Umum',
+                          'Musholla',
+                          'Warung Makan',
+                          'Tempat Istirahat',
+                          'Pemandu Wisata',
+                          'WiFi',
+                          'Area Camping',
+                          'Trekking Path',
+                          'Photo Spot',
+                          'Souvenir Shop',
+                          'First Aid'
+                        ].map((feature) => (
+                          <label key={feature} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={formData.features.includes(feature)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    features: [...prev.features, feature]
+                                  }));
+                                } else {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    features: prev.features.filter(f => f !== feature)
+                                  }));
+                                }
+                              }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">{feature}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <div className="mt-3">
+                        <input
+                          type="text"
+                          placeholder="Tambah fitur lain..."
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const newFeature = e.target.value.trim();
+                              if (newFeature && !formData.features.includes(newFeature)) {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  features: [...prev.features, newFeature]
+                                }));
+                                e.target.value = '';
+                              }
+                            }
+                          }}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 text-sm"
+                        />
+                      </div>
+                      {formData.features.length > 0 && (
+                        <div className="mt-3">
+                          <p className="text-xs text-gray-600 mb-2">Fitur yang dipilih:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.features.map((feature, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                              >
+                                {feature}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      features: prev.features.filter((_, i) => i !== index)
+                                    }));
+                                  }}
+                                  className="ml-1 text-blue-600 hover:text-blue-800"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Pricing (Baru) */}
+                  <div className="md:col-span-2">
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-base font-semibold text-gray-900 mb-3">Pricing</h3>
+                      <div className="flex flex-wrap items-center gap-4 mb-3">
+                        <label className="inline-flex items-center gap-2 text-gray-700 font-medium">
+                          <input
+                            type="radio"
+                            name="pricing_type"
+                            value="free"
+                            checked={pricing.type === 'free'}
+                            onChange={() => setPricing(prev => ({ ...prev, type: 'free' }))}
+                          />
+                          <span className="select-none">Gratis</span>
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-gray-700 font-medium">
+                          <input
+                            type="radio"
+                            name="pricing_type"
+                            value="single"
+                            checked={pricing.type === 'single'}
+                            onChange={() => setPricing(prev => ({ ...prev, type: 'single' }))}
+                          />
+                          <span className="select-none">Satu Harga</span>
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-gray-700 font-medium">
+                          <input
+                            type="radio"
+                            name="pricing_type"
+                            value="packages"
+                            checked={pricing.type === 'packages'}
+                            onChange={() => setPricing(prev => ({ ...prev, type: 'packages' }))}
+                          />
+                          <span className="select-none">Paket</span>
+                        </label>
+                        <select
+                          value={pricing.unit}
+                          onChange={(e) => setPricing(prev => ({ ...prev, unit: e.target.value }))}
+                          className="ml-auto px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          title="Unit standar"
+                        >
+                          <option value="per_tiket">/ tiket</option>
+                          <option value="per_orang">/ orang</option>
+                          <option value="per_paket">/ paket</option>
+                        </select>
+                      </div>
+
+                      {pricing.type === 'single' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Harga (IDR)</label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={pricing.value}
+                              onChange={(e) => setPricing(prev => ({ ...prev, value: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="cth: 75000"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <div className="text-sm text-gray-600 bg-white border rounded-md px-3 py-2">Ditampilkan sebagai: Rp X {pricing.unit.replace('_', ' ')}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {pricing.type === 'packages' && (
+                        <div className="space-y-4">
+                          {pricing.packages.map((pkg, idx) => (
+                            <div key={idx} className="border rounded-md p-3 bg-white">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Nama Paket</label>
+                                  <input
+                                    type="text"
+                                    value={pkg.name || ''}
+                                    onChange={(e) => setPricing(prev => ({
+                                      ...prev,
+                                      packages: prev.packages.map((p, i) => i === idx ? { ...p, name: e.target.value } : p)
+                                    }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    placeholder="cth: Paket Family"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Harga (IDR)</label>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    value={pkg.price || ''}
+                                    onChange={(e) => setPricing(prev => ({
+                                      ...prev,
+                                      packages: prev.packages.map((p, i) => i === idx ? { ...p, price: e.target.value } : p)
+                                    }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    placeholder="cth: 250000"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                                  <select
+                                    value={pkg.unit || 'per_paket'}
+                                    onChange={(e) => setPricing(prev => ({
+                                      ...prev,
+                                      packages: prev.packages.map((p, i) => i === idx ? { ...p, unit: e.target.value } : p)
+                                    }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                  >
+                                    <option value="per_paket">/ paket</option>
+                                    <option value="per_orang">/ orang</option>
+                                    <option value="per_tiket">/ tiket</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Foto Paket (opsional)</label>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (!file) return;
+                                      const reader = new FileReader();
+                                      reader.onload = (ev) => {
+                                        setPricing(prev => ({
+                                          ...prev,
+                                          packages: prev.packages.map((p, i) => i === idx ? { ...p, imageFile: file, imagePreview: ev.target?.result } : p)
+                                        }));
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                  />
+                                  {pkg.imagePreview && (
+                                    <img src={pkg.imagePreview} alt="preview" className="mt-2 w-24 h-16 object-cover rounded" />
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Termasuk (pisahkan dengan koma)</label>
+                                  <input
+                                    type="text"
+                                    value={pkg.includes || ''}
+                                    onChange={(e) => setPricing(prev => ({
+                                      ...prev,
+                                      packages: prev.packages.map((p, i) => i === idx ? { ...p, includes: e.target.value } : p)
+                                    }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    placeholder="Guide, Snack, Transport"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Syarat & Ketentuan (1 per baris)</label>
+                                  <textarea
+                                    rows={3}
+                                    value={pkg.terms || ''}
+                                    onChange={(e) => setPricing(prev => ({
+                                      ...prev,
+                                      packages: prev.packages.map((p, i) => i === idx ? { ...p, terms: e.target.value } : p)
+                                    }))}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    placeholder="Minimal 4 orang\nDP 50%"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex justify-between mt-3">
+                                <button
+                                  type="button"
+                                  onClick={() => setPricing(prev => ({ ...prev, packages: prev.packages.filter((_, i) => i !== idx) }))}
+                                  className="text-red-600 hover:text-red-700 text-sm"
+                                >
+                                  Hapus Paket
+                                </button>
+                                <div className="text-xs text-gray-500 self-center">Preview: {pkg.name || 'Paket'} • Rp {pkg.price || '—'} {pkg.unit || '/paket'}</div>
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => setPricing(prev => ({ ...prev, packages: [...prev.packages, { name: '', price: '', unit: 'per_paket', imageFile: null, imagePreview: null, includes: '', terms: '' }] }))}
+                            className="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+                          >
+                            + Tambah Paket
+                          </button>
+                        </div>
+                      )}
+
+                      {pricing.type === 'free' && (
+                        <p className="text-sm text-gray-600">Harga akan ditampilkan sebagai <strong>Gratis</strong>.</p>
+                      )}
+                    </div>
                   </div>
 
                   {/* Gambar Kecil */}
@@ -334,6 +761,54 @@ export default function NewDestinationPage() {
                       </div>
                     )}
                     <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
+                  </div>
+
+                  {/* Gallery */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Galeri Foto (opsional)
+                    </label>
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-700 mb-2">Tambahkan beberapa foto untuk galeri destinasi.</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {galleryPreviews.map((preview, index) => (
+                          <div key={index} className="relative w-full aspect-square rounded-md overflow-hidden">
+                            <img src={preview} alt={`Gallery preview ${index + 1}`} className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => setGalleryPreviews(prev => prev.filter((_, i) => i !== index))}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                              title="Hapus foto"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                        <div className="relative w-full aspect-square rounded-md overflow-hidden border-dashed border-2 border-gray-300 flex items-center justify-center text-gray-400">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={(e) => {
+                              const files = Array.from(e.target.files || []);
+                              const newPreviews = [...galleryPreviews];
+                              files.forEach(file => {
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onload = (ev) => {
+                                    newPreviews.push(ev.target?.result);
+                                    setGalleryPreviews(newPreviews);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              });
+                            }}
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                          />
+                          <span className="text-sm">Tambahkan foto</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Recommended */}

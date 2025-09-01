@@ -17,8 +17,10 @@ export default function NewSouvenirPage() {
     price_range: '25.000 - 100.000',
     contact: '',
     address: '',
+    coordinates: { lat: '', lng: '' },
     features: ['Produk Lokal', 'Kualitas Terjamin'],
     recommended: false,
+    packages: []
   });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
@@ -28,8 +30,18 @@ export default function NewSouvenirPage() {
     img_sm: null,
     img_lg: null
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  
+  // Package form state
+  const [packageForm, setPackageForm] = useState({
+    name: '',
+    description: '',
+    price: '',
+    items: []
+  });
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -84,6 +96,91 @@ export default function NewSouvenirPage() {
     }));
   };
 
+  const handleCoordinateChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      coordinates: {
+        ...prev.coordinates,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    
+    // Validate files
+    const validFiles = files.filter(file => {
+      if (!file.type.startsWith('image/')) {
+        alert(`File ${file.name} bukan gambar`);
+        return false;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`File ${file.name} terlalu besar (maksimal 5MB)`);
+        return false;
+      }
+      return true;
+    });
+
+    setGalleryFiles(prev => [...prev, ...validFiles]);
+
+    // Create previews
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setGalleryPreviews(prev => [...prev, e.target.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeGalleryImage = (index) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Package handlers
+  const handlePackageInputChange = (e) => {
+    const { name, value } = e.target;
+    setPackageForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const addPackage = () => {
+    if (!packageForm.name || !packageForm.price) {
+      alert('Nama paket dan harga harus diisi');
+      return;
+    }
+
+    const newPackage = {
+      id: Date.now().toString(),
+      ...packageForm,
+      price: parseInt(packageForm.price)
+    };
+
+    setFormData(prev => ({
+      ...prev,
+      packages: [...prev.packages, newPackage]
+    }));
+
+    // Reset package form
+    setPackageForm({
+      name: '',
+      description: '',
+      price: '',
+      items: []
+    });
+  };
+
+  const removePackage = (packageId) => {
+    setFormData(prev => ({
+      ...prev,
+      packages: prev.packages.filter(pkg => pkg.id !== packageId)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -105,6 +202,17 @@ export default function NewSouvenirPage() {
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
       }
+
+      // Add gallery files
+      galleryFiles.forEach((file, index) => {
+        formDataToSend.append(`gallery_${index}`, file);
+      });
+
+      // Add coordinates as JSON string
+      formDataToSend.append('coordinates', JSON.stringify(formData.coordinates));
+      
+      // Add packages as JSON string
+      formDataToSend.append('packages', JSON.stringify(formData.packages));
 
       const response = await fetch('/api/souvenirs', {
         method: 'POST',
@@ -165,10 +273,9 @@ export default function NewSouvenirPage() {
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     >
+                      <option value="">Pilih jenis</option>
                       <option value="makanan">Makanan</option>
                       <option value="pakaian">Pakaian</option>
-                      <option value="kerajinan">Kerajinan</option>
-                      <option value="aksesoris">Aksesoris</option>
                     </select>
                   </div>
 
@@ -251,6 +358,34 @@ export default function NewSouvenirPage() {
                       placeholder="HP/WA/Instagram/Marketplace"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Koordinat Lokasi
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Latitude</label>
+                        <input
+                          type="text"
+                          value={formData.coordinates.lat}
+                          onChange={(e) => handleCoordinateChange('lat', e.target.value)}
+                          placeholder="Contoh: -6.2088"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Longitude</label>
+                        <input
+                          type="text"
+                          value={formData.coordinates.lng}
+                          onChange={(e) => handleCoordinateChange('lng', e.target.value)}
+                          placeholder="Contoh: 106.8456"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
@@ -387,6 +522,148 @@ export default function NewSouvenirPage() {
                       <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                     </div>
                   </div>
+                </div>
+
+                {/* Gallery Upload Section */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Galeri Foto</h3>
+                  <div className="bg-purple-50 border border-purple-200 rounded-md p-3 mb-4">
+                    <p className="text-sm text-purple-800 font-medium mb-1">📸 Galeri Foto:</p>
+                    <ul className="text-xs text-purple-700 space-y-1">
+                      <li>• Tambahkan foto-foto produk dari berbagai sudut</li>
+                      <li>• Foto proses pembuatan/produksi</li>
+                      <li>• Foto suasana toko/sentra</li>
+                      <li>• Maksimal 10 foto per oleh-oleh</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleGalleryChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB per foto. Pilih multiple file untuk upload sekaligus.</p>
+                  </div>
+
+                  {galleryPreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {galleryPreviews.map((preview, index) => (
+                        <div key={index} className="relative">
+                          <img 
+                            src={preview} 
+                            alt={`Gallery ${index + 1}`} 
+                            className="w-full h-24 object-cover rounded-md border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(index)}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                            title="Hapus foto"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Package Management Section */}
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Paket Oleh-oleh / Daftar Harga</h3>
+                  <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-4">
+                    <p className="text-sm text-orange-800 font-medium mb-1">📦 Paket Oleh-oleh:</p>
+                    <ul className="text-xs text-orange-700 space-y-1">
+                      <li>• Buat paket dengan berbagai kombinasi produk</li>
+                      <li>• Setiap paket bisa berisi multiple item</li>
+                      <li>• Harga paket biasanya lebih hemat dari beli satuan</li>
+                      <li>• Contoh: Paket Batik 3 Pcs, Paket Makanan Khas</li>
+                    </ul>
+                  </div>
+
+                  {/* Package Form */}
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                    <h4 className="text-md font-medium text-gray-900 mb-3">Tambah Paket Baru</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Nama Paket</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={packageForm.name}
+                          onChange={handlePackageInputChange}
+                          placeholder="Contoh: Paket Batik 3 Pcs"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Harga (Rp)</label>
+                        <input
+                          type="number"
+                          name="price"
+                          value={packageForm.price}
+                          onChange={handlePackageInputChange}
+                          placeholder="150000"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        />
+                      </div>
+                      <div className="flex items-end">
+                        <button
+                          type="button"
+                          onClick={addPackage}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                          + Tambah Paket
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-600 mb-1">Deskripsi Paket</label>
+                      <textarea
+                        name="description"
+                        value={packageForm.description}
+                        onChange={handlePackageInputChange}
+                        placeholder="Contoh: Paket berisi 3 pcs batik dengan motif berbeda, cocok untuk oleh-oleh keluarga"
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Package List */}
+                  {formData.packages.length > 0 && (
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="text-md font-medium text-gray-900 mb-3">Paket yang Ditambahkan</h4>
+                      <div className="space-y-3">
+                        {formData.packages.map((pkg, index) => (
+                          <div key={pkg.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <div className="flex-1">
+                              <h5 className="font-medium text-gray-900">{pkg.name}</h5>
+                              {pkg.description && (
+                                <p className="text-sm text-gray-600 mt-1">{pkg.description}</p>
+                              )}
+                              <p className="text-sm font-medium text-green-600 mt-1">
+                                Rp {pkg.price.toLocaleString()}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => removePackage(pkg.id)}
+                              className="ml-3 text-red-600 hover:text-red-800 transition-colors"
+                              title="Hapus paket"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">

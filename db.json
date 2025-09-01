@@ -17,1375 +17,475 @@
   ],
   "wisata": [
     {
-      "id": "1",
-      "title": "Lokawisata Baturaden ",
-      "location": "Dusun I Karangmangu, Kecamatan Baturraden, Kabupaten Banyumas, Jawa Tengah",
+      "id": "35",
+      "img_sm": "/uploads/dest_sm_1756132387547.png",
+      "img_lg": "/uploads/dest_lg_1756132387551.png",
+      "gallery": [
+        "/uploads/dest_sm_1756132387547.png",
+        "/uploads/dest_lg_1756132387551.png",
+        "/hero/caub.jpg",
+        "/hero/menara teratai.jpg"
+      ],
+      "title": "dwawdawd",
+      "location": " Baturaden, Banyumas, Indonesia",
+      "short_description": "awdasdw",
+      "description": "adwasdwdadw",
       "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Icon wisata keluarga di lereng Gunung Slamet, menawarkan panorama pegunungan, udara sejuk, kolam renang alami, kebun binatang mini, outbound, dan berbagai wahana edukasi serta permainan",
-      "description": "Icon wisata keluarga di lereng Gunung Slamet, menawarkan panorama pegunungan, udara sejuk, kolam renang alami, kebun binatang mini, outbound, dan berbagai wahana edukasi serta permainan\r\n\r\n 07.00–15.00 (weekdays), hingga 17.00 saat akhir pekan/libur\r\n",
+      "category": "Wisata",
       "entrance_fee": "Gratis",
       "contact": "",
-      "address": "",
+      "address": "Jl. Raya Baturaden No. 456, Baturaden, Banyumas, Jawa Tengah",
+      "coordinates": {
+        "lat": -7.3056,
+        "lng": 109.2194
+      },
+      "pricing": {
+        "type": "paid",
+        "unit": "per_paket",
+        "value": null,
+        "packages": [
+          {
+            "id": "1",
+            "name": "Paket Keluarga fadhil anin",
+            "description": "Paket wisata standar dengan fasilitas lengkap dan pemandu lokal\r\nfadhil dan anin",
+            "category": "Paket Keluarga",
+            "price": 150000,
+            "facilities": "Tiket masuk, Pemandu lokal, Makan siang, Transportasi, Akomodasi, nikahaan fadhil dan anin",
+            "duration": "1 hari",
+            "capacity": "2-4 orang",
+            "available": true,
+            "popular": false,
+            "created_at": "2025-01-27T10:00:00.000Z",
+            "updated_at": "2025-09-01T03:54:45.363Z"
+          },
+          {
+            "id": "2",
+            "name": "Paket Deluxe",
+            "description": "Paket wisata premium dengan akomodasi dan fasilitas lengkap",
+            "category": "Paket Deluxe",
+            "price": 450000,
+            "facilities": "Tiket masuk, Pemandu profesional, Akomodasi, Makan 3x, Transportasi, +1 fasilitas lainnya",
+            "duration": "2 hari 1 malam",
+            "capacity": "2-6 orang",
+            "available": true,
+            "popular": true,
+            "created_at": "2025-01-27T10:00:00.000Z",
+            "updated_at": "2025-01-27T10:00:00.000Z"
+          },
+          {
+            "id": "3",
+            "name": "Paket Keluarga",
+            "description": "Paket wisata keluarga dengan aktivitas khusus anak-anak",
+            "category": "Paket Keluarga",
+            "price": 750000,
+            "facilities": "Tiket masuk, Pemandu keluarga, Akomodasi, Makan 3x, Aktivitas anak, Transportasi, +1 fasilitas lainnya",
+            "duration": "3 hari 2 malam",
+            "capacity": "4-8 orang",
+            "available": true,
+            "popular": false,
+            "created_at": "2025-01-27T10:00:00.000Z",
+            "updated_at": "2025-01-27T10:00:00.000Z"
+          }
+        ]
+      },
       "features": [
         "Fasilitas Dasar"
       ],
       "recommended": false,
-      "created_at": "2025-08-14T22:29:33.393Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "2",
-      "title": "Pancuran Telu",
-      "location": "Sekitar 500 m di dalam kawasan Lokawisata Baturraden, Dusun I Karangmangu",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Sumber mata air panas belerang yang terbagi dalam tiga pancuran. Konon dipercaya memiliki khasiat kesehatan kulit, berada di dalam kawasan Baturraden\r\n",
-      "description": "Sumber mata air panas belerang yang terbagi dalam tiga pancuran. Konon dipercaya memiliki khasiat kesehatan kulit, berada di dalam kawasan Baturraden\r\n\r\nRp 5.000–Rp 20.000\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T22:31:03.302Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "3",
-      "title": "Telaga Sunyi",
-      "location": "Desa Limpakuwus, Kecamatan Sumbang, Kabupaten Banyumas.",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Kolam air jernih nan sejuk di tengah hutan Limpakuwus, cocok untuk berenang dan snorkeling santai. Namanya mencerminkan ketenangan dan kesunyian alam sekitar\r\n",
-      "description": "Kolam air jernih nan sejuk di tengah hutan Limpakuwus, cocok untuk berenang dan snorkeling santai. Namanya mencerminkan ketenangan dan kesunyian alam sekitar\r\n\r\n Rp 10.000–Rp 15.000 per orang\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T22:43:21.826Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "4",
-      "title": "Curug Cipendok",
-      "location": "Desa Karangtengah, Kecamatan Cilongok, sekitar 25 km dari Purwokerto",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Air terjun tertinggi di Banyumas, tinggi sekitar 92 m. Terletak di tengah hutan tropis, dengan area camping dan danau kecil. Suhu air dingin (di bawah 20 °C), trekking ringan 500 m dari area parkir",
-      "description": "Air terjun tertinggi di Banyumas, tinggi sekitar 92 m. Terletak di tengah hutan tropis, dengan area camping dan danau kecil. Suhu air dingin (di bawah 20 °C), trekking ringan 500 m dari area parkir\r\n\r\nUmumnya pagi hingga sore (jam fleksibel)\r\n",
-      "entrance_fee": "Rp. 10.000 Per Orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T22:48:20.501Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "5",
-      "title": "Curug Jenggala ",
-      "location": "Dusun III Kalipagu, Desa Ketenger, Kecamatan Baturraden",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Air terjun setinggi sekitar 30 m dengan tiga aliran berbeda, menawarkan suasana alami dan segar di kawasan hutan Baturraden",
-      "description": "Air terjun setinggi sekitar 30 m dengan tiga aliran berbeda, menawarkan suasana alami dan segar di kawasan hutan Baturraden\r\n\r\nJam Buka: 07.00–17.00 WIB\r\n",
-      "entrance_fee": "Rp 8.000 per orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:03:44.488Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "6",
-      "title": "Curug Ceheng ",
-      "location": "Desa Gandatapa, Kecamatan Sumbang",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Air terjun dengan tinggi sekitar 13 m di tengah hutan, cocok untuk trekking ringan dan foto. Jalur berupa anak tangga alam yang menantang\r\n",
-      "description": "Air terjun dengan tinggi sekitar 13 m di tengah hutan, cocok untuk trekking ringan dan foto. Jalur berupa anak tangga alam yang menantang\r\n",
-      "entrance_fee": "Rp 6.000 per orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:15:54.488Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "7",
-      "title": "Curug Bayan",
-      "location": "Dusun II Ketenger, Desa Ketenger, Baturraden",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Air terjun kecil setinggi sekitar 7 m, cocok untuk keluarga dan anak kecil. Kolam bawahnya cukup dangkal (2–5 m) & asri\r\n",
-      "description": "Air terjun kecil setinggi sekitar 7 m, cocok untuk keluarga dan anak kecil. Kolam bawahnya cukup dangkal (2–5 m) & asri\r\n",
-      "entrance_fee": "Rp 3.000 per orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:17:37.984Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "8",
-      "title": "Hutan Pinus Limpakuwus",
-      "location": "Desa Limpakuwus, Kecamatan Sumbang",
-      "type": "wisata-taman",
-      "category": "wisata",
-      "short_description": "Hutan pinus dengan pepohonan tinggi, spot foto instagramable, mountain slide, area camping. Cocok untuk keluarga & healing\r\n",
-      "description": "Hutan pinus dengan pepohonan tinggi, spot foto instagramable, mountain slide, area camping. Cocok untuk keluarga & healing\r\n",
-      "entrance_fee": "Rp 5.000–Rp 15.000",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:19:06.210Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "9",
-      "title": "Curug Nangga",
-      "location": "Desa Petahunan, Kecamatan Pekuncen, Kabupaten Banyumas, Jawa Tengah",
-      "type": "wisata-alam",
-      "category": "wisata",
-      "short_description": "Air terjun bertingkat tujuh dengan panorama alam yang asri. Setiap undakan menciptakan estetika unik, sangat cocok untuk foto dan relaksasi.\r\n",
-      "description": "Air terjun bertingkat tujuh dengan panorama alam yang asri. Setiap undakan menciptakan estetika unik, sangat cocok untuk foto dan relaksasi.\r\n",
-      "entrance_fee": "Rp 10.000 per orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:21:37.548Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "10",
-      "title": "Baturraden Adventure Forest",
-      "location": "Desa Petahunan, Kecamatan Pekuncen, Kabupaten Banyumas, Jawa Tengah.",
-      "type": "wisata-taman",
-      "category": "wisata",
-      "short_description": "Baturraden Adventure Forest (BAF) atau Rimba Tualang Baturraden adalah bentuk baru wahana ekowisata dan petualangan rimba dengan pemandangan hutan damar dan pinus serta aneka vegetasi hutan yang membentang di kaki Gunung Slamet seluas 50Ha.",
-      "description": "Baturraden Adventure Forest (BAF) atau Rimba Tualang Baturraden adalah bentuk baru wahana ekowisata dan petualangan rimba dengan pemandangan hutan damar dan pinus serta aneka vegetasi hutan yang membentang di kaki Gunung Slamet seluas 50Ha.\r\n\r\nBAF tidak hanya menyajikan pemandangan alam Baturraden yang sudah terkenal pesonanya, tetapi juga mengemas pesona 4 unsur alam; gunung, sungai, hutan dan kabut, ke dalam berbagai jenis petualangan fisik (physical adventure) dan petualangan wawasan (mind adventure) dalam berbagai kegiatan; Mountain Adventure, Water Adventure, Tree Adventure & Eco Adventure.\r\nBAF didesain untuk personal adventure maupun group adventure untuk outing & training perusahaan, pelatihan berwawasan ramah lingkungan bagi pelajar, hingga gathering komunitas seperti; family adventure, reunion, hobby clubs, nature & outdoor party. \r\n",
-      "entrance_fee": "TEAM BUILDINGAY Rp 395.000,-/org",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:24:05.922Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "11",
-      "title": "Museum Jendral Soedirman ",
-      "location": "Pasir Kidul, Kec. Purwokerto Barat, Kab. Banyumas, Jawa Tengah",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Museum Pangsar Soedirman atau lebih dikenal sebagai Museum Panglima Besar Jendral Soedirman. Museum ini merupakan objek wisata budaya berbasis edukasi yang menyimpan sisi sejarah dari perjuangan Jendral Soedirman. Pada Bangunan luarnya terdapat patung Jendral Soedirman menunggangi kuda disertai monumen berlambang Garuda Pancasila yang melambangkan perjuangannya untuk melawan penjajah demi kemerdekaan NKRI.",
-      "description": "Museum Pangsar Soedirman atau lebih dikenal sebagai Museum Panglima Besar Jendral Soedirman. Museum ini merupakan objek wisata budaya berbasis edukasi yang menyimpan sisi sejarah dari perjuangan Jendral Soedirman. Pada Bangunan luarnya terdapat patung Jendral Soedirman menunggangi kuda disertai monumen berlambang Garuda Pancasila yang melambangkan perjuangannya untuk melawan penjajah demi kemerdekaan NKRI.",
-      "entrance_fee": "Rp 3.000–5.000/orang; parkir motor Rp 1.000, mobil Rp 2.000",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:27:38.838Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "12",
-      "title": "Museum Wayang Sendang Mas",
-      "location": "Jl. Budi Utomo No.1, Sudagaran, Banyumas.",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Museum yang mulai dibangun sejak tahun 1982 ini, terus dikembangkan sampai sekarang. Nama Sendang Mas merupakan bentuk singkat dari Seni Pedalangan Banyumas. Hal ini untuk menegaskan betapa berbedanya Wayang Gagrag Banyumasan dengan jenis wayang lainnya.  ",
-      "description": "Museum yang mulai dibangun sejak tahun 1982 ini, terus dikembangkan sampai sekarang. Nama Sendang Mas merupakan bentuk singkat dari Seni Pedalangan Banyumas. Hal ini untuk menegaskan betapa berbedanya Wayang Gagrag Banyumasan dengan jenis wayang lainnya.  \r\n",
-      "entrance_fee": "Rp 3.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-14T23:28:49.611Z",
-      "updated_at": "2025-08-15T03:04:50.344Z"
-    },
-    {
-      "id": "13",
-      "title": "Museum BRI",
-      "location": "Jl. Jenderal Sudirman No.57, Purwokerto Barat",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Merupakan satu-satunya museum perbankan yang ada di Indonesia yang terletak di pusat kota Purwokerto. Bank Rakyat Indonesia ini untuk pertama kalinya didirikan di Purwokerto oleh Raden Aria Wiratmadja dengan nama Hulp-En Spaarbank Der Inlandsche Bestuurs Amatenaren atau Bank Bantuan Priyayi Pribumi, pada tanggal 16 Desember 1895 yang kemudian dijadikan sebagai hari kelahiran BRI.\r\n",
-      "description": "Merupakan satu-satunya museum perbankan yang ada di Indonesia yang terletak di pusat kota Purwokerto. Bank Rakyat Indonesia ini untuk pertama kalinya didirikan di Purwokerto oleh Raden Aria Wiratmadja dengan nama Hulp-En Spaarbank Der Inlandsche Bestuurs Amatenaren atau Bank Bantuan Priyayi Pribumi, pada tanggal 16 Desember 1895 yang kemudian dijadikan sebagai hari kelahiran BRI.\r\n\r\n\r\nJam buka biasanya 08.00–15.00 WIB.\r\n",
-      "entrance_fee": "Gratis, cukup isi buku tamu",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:04:26.048Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "14",
-      "title": "Masjid Saka Tunggal (Baitussalam)",
-      "location": "Desa Cikakak, Kecamatan Wangon, Kabupaten Banyumas",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Masjid Saka Tunggal di Desa Cikakak, Kecamatan Wangon dianggap sebagai salah satu peninggalan penyebaran agama Islam yang tertua di wilayah Banyumas. Masjid ini dibangun oleh Kyai Mustolih pada tahun 1288 seperti yang tertulis pada Saka Guru (Tiang Utama) masjid ini. \r\n",
-      "description": "Masjid Saka Tunggal di Desa Cikakak, Kecamatan Wangon dianggap sebagai salah satu peninggalan penyebaran agama Islam yang tertua di wilayah Banyumas. Masjid ini dibangun oleh Kyai Mustolih pada tahun 1288 seperti yang tertulis pada Saka Guru (Tiang Utama) masjid ini. \r\n\r\n\r\nTermasuk Cagar Budaya, monyet dianggap sakral\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:06:00.360Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "15",
-      "title": "Pendopo Si Panji",
-      "location": "Dekat Alun‑alun Purwokerto",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Pendopo Si Panji adalah sebuah bangunan selasar bergaya Jawa yang menjadi salah satu tempat bersejarah di Purwokerto. Pendopo Si Panji kini berlokasi di Jalan Kabupaten, Kelurahan Sokanegara, Purwokerto, tepatnya di dalam kompleks perkantoran Sekretariat Daerah Kabupaten Banyumas",
-      "description": "Pendopo Si Panji adalah sebuah bangunan selasar bergaya Jawa yang menjadi salah satu tempat bersejarah di Purwokerto. Pendopo Si Panji kini berlokasi di Jalan Kabupaten, Kelurahan Sokanegara, Purwokerto, tepatnya di dalam kompleks perkantoran Sekretariat Daerah Kabupaten Banyumas",
-      "entrance_fee": "Umumnya gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:07:19.556Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "16",
-      "title": "Klenteng Hok Tek Bio / Boen Tek Bio",
-      "location": "Sudagaran, Kecamatan Banyumas",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Klenteng Hok Tek Bio Purwokerto di dirikan pada tahun 1831 oleh Oey Yoe Wan, seorang pemimpin pedagang China yang sering bermalam di klenteng. Semula klenteng ini menyerupai rumah joglo, kemudian bangunan tersebut di renovasi atau direhab pada tahun 1979 dan terakhir pada tahun 1987.\r\n",
-      "description": "Klenteng Hok Tek Bio Purwokerto di dirikan pada tahun 1831 oleh Oey Yoe Wan, seorang pemimpin pedagang China yang sering bermalam di klenteng. Semula klenteng ini menyerupai rumah joglo, kemudian bangunan tersebut di renovasi atau direhab pada tahun 1979 dan terakhir pada tahun 1987.\r\n",
-      "entrance_fee": "Gratis masuk",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:09:50.500Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "17",
-      "title": "Gua Maria Kaliori",
-      "location": "Jl. Gua Maria Kaliori, Kalibagor.",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Terletak di perbukitan yang hijau dengan suasana sejuk dan nyaman di desa Kaliori Kecamatan Kalibagor yang berjarak sekitar 14 kilometer arah timur kota Purwokerto. Prakarsa pembangunan tempat ziarah ini bermula dari beberapa aktivis umat Katolik di Banyumas. Kemudian mendapat tanggapan dan dukungan sepenuhnya dari Pastor Paroki di Purwokerto beserta komunitasnya.\r\n",
-      "description": "Terletak di perbukitan yang hijau dengan suasana sejuk dan nyaman di desa Kaliori Kecamatan Kalibagor yang berjarak sekitar 14 kilometer arah timur kota Purwokerto. Prakarsa pembangunan tempat ziarah ini bermula dari beberapa aktivis umat Katolik di Banyumas. Kemudian mendapat tanggapan dan dukungan sepenuhnya dari Pastor Paroki di Purwokerto beserta komunitasnya.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:14:09.725Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "18",
-      "title": "Monumen Gatot Subroto ",
-      "location": "Desa (kabupaten) tempat makam berada di wilayah Banyumas, akses mudah dari Purwokerto tengah.",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Makam tokoh pendiri Kabupaten Banyumas, Raden Joko Kaiman, yang dihormati sebagai leluhur masyarakat lokal sebagai ziarah sejarah",
-      "description": "Makam tokoh pendiri Kabupaten Banyumas, Raden Joko Kaiman, yang dihormati sebagai leluhur masyarakat lokal sebagai ziarah sejarah ",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:16:37.632Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "19",
-      "title": "Rumah Lengger Kota Lama Banyumas",
-      "location": "Kawasan Banjoemas Kota Lama, Kecamatan Banyumas.",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Pusat pelestarian tari lengger khas Banyumas, terintegrasi dalam kawasan Kota Lama sebagai bagian dari heritage Kadipaten \r\n",
-      "description": "Pusat pelestarian tari lengger khas Banyumas, terintegrasi dalam kawasan Kota Lama sebagai bagian dari heritage Kadipaten \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:20:00.562Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "20",
-      "title": "Watu Lumpang",
-      "location": "Kecamatan Cilongok, Kabupaten Banyumas.",
-      "type": "wisata-sejarah",
-      "category": "wisata",
-      "short_description": "Batu berbentuk lumpang besar (wadah) yang diyakini peninggalan zaman dahulu, memiliki fungsi ritual atau penanda kuno\r\n",
-      "description": "Batu berbentuk lumpang besar (wadah) yang diyakini peninggalan zaman dahulu, memiliki fungsi ritual atau penanda kuno\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:21:15.285Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "21",
-      "title": "Taman Apung Maskemambang",
-      "location": "Jl. Karang Kobar No. 9, Glempang, Bancarkembar, Purwokerto Utara, Kabupaten Bany",
-      "type": "wisata-buatan",
-      "category": "wisata",
-      "short_description": "Penjelasan singkat wisata:  Taman terapung di atas air yang menawarkan kawasan terbuka hijau dan suasana rindang, nyaman dikunjungi siang maupun malam hari",
-      "description": "Penjelasan singkat wisata:  Taman terapung di atas air yang menawarkan kawasan terbuka hijau dan suasana rindang, nyaman dikunjungi siang maupun malam hari",
-      "entrance_fee": "2000",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:27:19.235Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "22",
-      "title": "Small World Purwokerto",
-      "location": "Jalan Raya Baturraden Barat, Ketenger, Desa Karangmangu, Kecamatan Baturaden, Purwokerto",
-      "type": "wisata-buatan",
-      "category": "wisata",
-      "short_description": "Penjelasan singkat wisata:  Taman edukasi miniatur landmark dunia seperti Menara Eiffel, kincir angin Belanda; cocok untuk foto keluarga dan anak-anak\r\n",
-      "description": "Penjelasan singkat wisata:  Taman edukasi miniatur landmark dunia seperti Menara Eiffel, kincir angin Belanda; cocok untuk foto keluarga dan anak-anak\r\n",
-      "entrance_fee": "Rp 15.000–20.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:28:40.271Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "23",
-      "title": "Dreamland Park Pancasan Ajibarang",
-      "location": "Kecamatan Ajibarang, Kabupaten Banyumas, Jateng",
-      "type": "wisata-buatan",
-      "category": "wisata",
-      "short_description": "Taman rekreasi buatan yang menawarkan berbagai wahana permainan outdoor yang ramah anak dan keluarga\r\n",
-      "description": "Taman rekreasi buatan yang menawarkan berbagai wahana permainan outdoor yang ramah anak dan keluarga\r\n",
-      "entrance_fee": "Rp 25.000/Orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:29:52.646Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "24",
-      "title": "Kidung Kampoengku",
-      "location": "JLN. R Soepeno Karangnangka - beji, RT.01/RW.01, Karangnangka, Kec. Kedungbanteng, Kabupaten Banyumas, Jawa Tengah 53152",
-      "type": "wisata-buatan",
-      "category": "wisata",
-      "short_description": "wahana outbond berbasis desa yang didirikan sejak tahun 2006. Mereka menawarkan berbagai aktivitas seperti Wisata Edukasi Agro, River Tubing, Flying Fox, dan Kolam.",
-      "description": "wahana outbond berbasis desa yang didirikan sejak tahun 2006. Mereka menawarkan berbagai aktivitas seperti Wisata Edukasi Agro, River Tubing, Flying Fox, dan Kolam. Ini menunjukkan Kidung Kampoengku sebagai destinasi yang cocok untuk kegiatan rekreasi dan pendidikan di lingkungan pedesaan. Lokasi spesifik dan detail harga tidak disertakan dalam hasil pencarian, tetapi aktivitas yang ditawarkan mengindikasikan bahwa mereka berfokus pada kegiatan luar ruangan dan pengalaman yang berorientasi pada alam.\r\n",
-      "entrance_fee": "Rp 15.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:31:39.538Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "25",
-      "title": "Wisata Buken ",
-      "location": "Dusun II, Banjarsari Kulon, Sumbang, Banyumas Regency, Central Java 53183",
-      "type": "wisata-buatan",
-      "category": "wisata",
-      "short_description": " Wisata Buken, atau Bukit Kendalisada, adalah salah satu tempat wisata air terbaik di Purwokerto. Informasi lebih lanjut tentang daya tarik, fasilitas, dan jam operasional mungkin diperlukan untuk perencanaan kunjungan yang lebih baik.\r\n",
-      "description": " Wisata Buken, atau Bukit Kendalisada, adalah salah satu tempat wisata air terbaik di Purwokerto. Informasi lebih lanjut tentang daya tarik, fasilitas, dan jam operasional mungkin diperlukan untuk perencanaan kunjungan yang lebih baik.\r\n",
-      "entrance_fee": "Rp 18.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:33:42.481Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "26",
-      "title": "Makam Mbah Atas Angin ",
-      "location": "Desa Kemutung Lor, Kec. Baturraden, Banyumas (sekitar area Pancuran Tujuh).",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Tempat ziarah ulama Turki‑Jawa Syekh Maulana Magribi, dikenal sebagai Mbah Atas Angin, dikunjungi untuk berdoa dan mandi di sumber air panas “Pancuran Pitu” yang diyakini berkhasiat menyembuhkan.\r\n",
-      "description": "Tempat ziarah ulama Turki‑Jawa Syekh Maulana Magribi, dikenal sebagai Mbah Atas Angin, dikunjungi untuk berdoa dan mandi di sumber air panas “Pancuran Pitu” yang diyakini berkhasiat menyembuhkan.\r\n",
-      "entrance_fee": "Rp 14.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:35:51.355Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "27",
-      "title": " Masjid Agung Nur Sulaiman",
-      "location": "Mruyung, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Masjid kebanggaan umat Islam Banyumas, dibangun sekitar abad ke-18, menjadi pusat keagamaan dan sosial. \r\n",
-      "description": "Masjid kebanggaan umat Islam Banyumas, dibangun sekitar abad ke-18, menjadi pusat keagamaan dan sosial. \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:36:59.607Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "28",
-      "title": "Makam Eyang Gusti Aji ",
-      "location": "Petilasan ulama Panembahan Giri Rahayu, dipercaya sebagai penyebar agama Islam di kawasan Pekuncen. ",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Petilasan ulama Panembahan Giri Rahayu, dipercaya sebagai penyebar agama Islam di kawasan Pekuncen. ",
-      "description": "Petilasan ulama Panembahan Giri Rahayu, dipercaya sebagai penyebar agama Islam di kawasan Pekuncen. ",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:38:16.629Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "29",
-      "title": "Situs Lembu Ayu ",
-      "location": " Desa Susukan, Kecamatan Susukan",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": " Lokasi petilasan Ki Pandung Aguna, sosok legenda lokal yang dikenal mencuri dan membagi hasilnya ke orang miskin. Wisata ziarah sekaligus sejarah lokal.\r\n",
-      "description": " Lokasi petilasan Ki Pandung Aguna, sosok legenda lokal yang dikenal mencuri dan membagi hasilnya ke orang miskin. Wisata ziarah sekaligus sejarah lokal.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:40:06.934Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "30",
-      "title": "Situs Batu Guling",
-      "location": "Desa Darar, Kecamatan Darar, Banyumas. ",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Batu besar terselip di area datar, dianggap simbol spiritual dan sering menjadi tempat peziarah.",
-      "description": "Batu besar terselip di area datar, dianggap simbol spiritual dan sering menjadi tempat peziarah.",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:41:14.729Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "31",
-      "title": " Makam Syekh Makdum Wali",
-      "location": "Kecamatan Karanglewas, dekat Museum Jenderal Sudirman.",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Makam ulama Wali dari era Demak yang menyebarkan agama Islam di Banyumas, sering dikunjungi peziarah lokal.",
-      "description": "Makam ulama Wali dari era Demak yang menyebarkan agama Islam di Banyumas, sering dikunjungi peziarah lokal.",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:42:35.236Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "32",
-      "title": " Tawur Agung Kasanga – Klinthing Somagede",
-      "location": " Desa Klinthing, Kecamatan Somagede, Banyumas.",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Festival budaya dan spiritual Hindu tiap Nyepi, termasuk parade ogoh‑ogoh yang menjadi atraksi religius dan seni. ",
-      "description": "Festival budaya dan spiritual Hindu tiap Nyepi, termasuk parade ogoh‑ogoh yang menjadi atraksi religius dan seni. ",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:43:38.301Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
-    },
-    {
-      "id": "33",
-      "title": "Gua Sarabadak",
-      "location": "Dusun III Kalipagu, Ketenger, Baturraden, Banyumas.",
-      "type": "wisata-religi",
-      "category": "wisata",
-      "short_description": "Petilasan Mbah Atas Angin dan jatidiri spiritual di area Pancuran Pitu & Pancuran 7; Goa yang di dalamnya terdapat kombinasi aliran air panas dan dingin.\r\n",
-      "description": "Petilasan Mbah Atas Angin dan jatidiri spiritual di area Pancuran Pitu & Pancuran 7; Goa yang di dalamnya terdapat kombinasi aliran air panas dan dingin.\r\n",
-      "entrance_fee": "Rp 5.000–15.000/orang",
-      "contact": "",
-      "address": "",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:44:54.913Z",
-      "updated_at": "2025-08-15T03:04:50.345Z"
+      "created_at": "2025-08-25T14:33:07.559Z",
+      "updated_at": "2025-09-01T03:54:45.363Z"
     }
   ],
   "kuliner": [
     {
       "id": "1",
-      "title": "Waroenk Ora Umum",
-      "location": "Jl. DR Soeparno No. 98, Arcawinangun, Purwokerto Timur, Kabupaten Banyumas, Jawa Tengah 53113",
-      "type": "rumah-makan",
-      "category": "kuliner",
-      "short_description": "Waroenk Ora Umum adalah café all‑day yang buka 24 jam setiap hari, tepat di jantung Purwokerto Timur (Jl. Dr. Soeparno No. 98). Tempat ini dirancang sangat luas, dengan pilihan ruang AC maupun non‑AC, cocok untuk buka malam atau bagi mereka yang ingin kerja lembur maupun nongkrong sore. Ulasan menyebut tempatnya “vibrant” dan cocok untuk kumpul, sekaligus memiliki suasana santai yang ramah mahasiswa dan pekerja muda \r\nCafé ini terkenal dengan menu yang variatif: mulai dari kopi tubruk, kopi susu gula aren, menu indomie ala kreatif, rice bowl, hingga camilan ringan. Pelayanannya cepat dan efisien, tersedia mushola serta toilet bersih—sesuai kebutuhan pengunjung modern \r\nReview Google juga menyebutkan warkop ini cocok untuk yang kepepet kelaparan tengah malam karena buka non-stop dan harga yang sangat terjangkau\r\n",
-      "description": "Waroenk Ora Umum adalah café all‑day yang buka 24 jam setiap hari, tepat di jantung Purwokerto Timur (Jl. Dr. Soeparno No. 98). Tempat ini dirancang sangat luas, dengan pilihan ruang AC maupun non‑AC, cocok untuk buka malam atau bagi mereka yang ingin kerja lembur maupun nongkrong sore. Ulasan menyebut tempatnya “vibrant” dan cocok untuk kumpul, sekaligus memiliki suasana santai yang ramah mahasiswa dan pekerja muda \r\nCafé ini terkenal dengan menu yang variatif: mulai dari kopi tubruk, kopi susu gula aren, menu indomie ala kreatif, rice bowl, hingga camilan ringan. Pelayanannya cepat dan efisien, tersedia mushola serta toilet bersih—sesuai kebutuhan pengunjung modern \r\nReview Google juga menyebutkan warkop ini cocok untuk yang kepepet kelaparan tengah malam karena buka non-stop dan harga yang sangat terjangkau\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "Jl. DR Soeparno No. 98, Arcawinangun, Purwokerto Timur, Kabupaten Banyumas, Jawa Tengah 53113\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "WiFi Gratis",
-        "Harga Terjangkau",
-        "Live Music"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:51:53.066Z",
-      "updated_at": "2025-08-15T03:04:50.345Z",
-      "menu_highlight": "",
-      "price_range": "Rp 3.000–Rp 30.000;"
-    },
-    {
-      "id": "2",
-      "title": "Umaeh Inyong",
-      "location": "Jl. Jend. Ahmad Yani No.47, Karanganjing, Kedungwuluh, Purwokerto Barat",
+      "img_sm": "/uploads/culinary_sm_1756294327867.png",
+      "img_lg": "/uploads/culinary_lg_1756294327869.png",
+      "title": "daaduwodhauow",
+      "location": "Banyumas, Indonesia",
+      "short_description": "damkwl'kdaw",
+      "description": "ak;dwao'sko'ds",
       "type": "cafe",
-      "category": "kuliner",
-      "short_description": "Rumah makan dengan konsep tradisional yang kental dengan citra rasa Banyumasnya menempati gedung lawas yang masih mempertahankan keasliannya, ditambah dengan perabotan klasik dan beragam menu makanan dan minuman khas dengan nama Banyumasan.",
-      "description": "Rumah makan dengan konsep tradisional yang kental dengan citra rasa Banyumasnya menempati gedung lawas yang masih mempertahankan keasliannya, ditambah dengan perabotan klasik dan beragam menu makanan dan minuman khas dengan nama Banyumasan.",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Jend. Ahmad Yani No.47, Karanganjing, Kedungwuluh, Purwokerto Barat\r\n",
+      "price_range": "25.000 - 50.000",
+      "cuisine": "Indonesia",
+      "opening_hours": "10:00 - 22:00",
+      "contact": "98889898",
+      "address": "mdkawmkdmaa,dawdad",
       "features": [
         "Masakan Indonesia",
         "Suasana Nyaman",
-        "Harga Terjangkau",
         "Masakan Tradisional",
-        "Parkir Luas",
-        "WiFi Gratis"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:54:19.553Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "Rp 15.000–Rp 35.000/porsi."
-    },
-    {
-      "id": "3",
-      "title": " Table Nine Resto",
-      "location": "Jl. Raya Baturaden No.124, Pabuaran, Purwokerto Utara",
-      "type": "resto",
-      "category": "kuliner",
-      "short_description": "Restoran mewah yang satu ini masih dibawah bendera Pringsewu Group. Table Nine Kitchen memiliki penataan tempat yang santai dan cocok untuk dijadikan tempat hang out dari berbagai kalangan. Disini menyajikan menu yang cukup lengkap dari Western food, Chinese food, Javaneshe food, dan Indonesian food.\r\n",
-      "description": "Restoran mewah yang satu ini masih dibawah bendera Pringsewu Group. Table Nine Kitchen memiliki penataan tempat yang santai dan cocok untuk dijadikan tempat hang out dari berbagai kalangan. Disini menyajikan menu yang cukup lengkap dari Western food, Chinese food, Javaneshe food, dan Indonesian food.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Raya Baturaden No.124, Pabuaran, Purwokerto Utara",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "Parkir Luas",
-        "WiFi Gratis",
-        "Live Music",
-        "Reservasi"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T00:56:03.299Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "25.000 - 50.000"
-    },
-    {
-      "id": "4",
-      "title": "Gubug Makan Mang Engking",
-      "location": "Jl. Profesor DR. HR Boenyamin No.110, Sumampir Wetan, Pabuaran, Purwokerto Utara",
-      "type": "resto",
-      "category": "kuliner",
-      "short_description": "Berkunjung ke Gubug Makan Mang Engking merupakan salah satu rekomendasi restoran khas Sunda yang bernuansa ala pedesaan. Suasana tersebut bisa dilihat dari interior dan eksterior bangunan yang sangat unik, mulai dari sawah yang ada di sekelilingnya, kolam ikan, gasebo atau gubug ciri khas Mang Engking.\r\n",
-      "description": "Berkunjung ke Gubug Makan Mang Engking merupakan salah satu rekomendasi restoran khas Sunda yang bernuansa ala pedesaan. Suasana tersebut bisa dilihat dari interior dan eksterior bangunan yang sangat unik, mulai dari sawah yang ada di sekelilingnya, kolam ikan, gasebo atau gubug ciri khas Mang Engking.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Profesor DR. HR Boenyamin No.110, Sumampir Wetan, Pabuaran, Purwokerto Utara\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "Parkir Luas",
-        "WiFi Gratis",
-        "Masakan Tradisional",
-        "Harga Terjangkau",
-        "Reservasi"
-      ],
-      "recommended": true,
-      "created_at": "2025-08-15T00:58:04.444Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "Rp15.000 – Rp20.000/porsi"
-    },
-    {
-      "id": "5",
-      "title": " Warkop Sriwedari",
-      "location": "Jl. Gunung Merapi No. 4, Bancarkembar, Purwokerto Utara, Banyumas (barat lapangan Glempang)",
-      "type": "cafe",
-      "category": "kuliner",
-      "short_description": "Soft opening pada pertengahan Februari 2025, warkop baru ini langsung ramai dibicarakan—dibuka 24 jam dengan menu murah meriah, semua di bawah Rp 20.000 per item Tempat ini dinilai “super cozy” oleh banyak penikmat kuliner, dengan suasana yang cocok untuk nongkrong dari pagi hingga malam maupun larut malam. \r\n",
-      "description": "Soft opening pada pertengahan Februari 2025, warkop baru ini langsung ramai dibicarakan—dibuka 24 jam dengan menu murah meriah, semua di bawah Rp 20.000 per item Tempat ini dinilai “super cozy” oleh banyak penikmat kuliner, dengan suasana yang cocok untuk nongkrong dari pagi hingga malam maupun larut malam. \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Gunung Merapi No. 4, Bancarkembar, Purwokerto Utara, Banyumas (barat lapangan Glempang)\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "WiFi Gratis",
-        "Parkir Luas",
-        "Harga Terjangkau"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:00:07.852Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "di bawah Rp 20.000"
-    },
-    {
-      "id": "6",
-      "title": "Warkop Sarinah",
-      "location": "Pasar Sarimulyo, Blok F No. 7, Jl. Kyai Moch. Syafei, Kebondalem, Purwokerto Timur, Banyumas",
-      "type": "cafe",
-      "category": "kuliner",
-      "short_description": "Warkop jadul bergaya kopitiam retro ala era 80–90‑an, buka 24 jam nonstop, lokasi di kawasan Pasar Sarimulyo Kebondalem",
-      "description": "Warkop jadul bergaya kopitiam retro ala era 80–90‑an, buka 24 jam nonstop, lokasi di kawasan Pasar Sarimulyo Kebondalem",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Pasar Sarimulyo, Blok F No. 7, Jl. Kyai Moch. Syafei, Kebondalem, Purwokerto Timur, Banyumas\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "Harga Terjangkau"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:03:08.913Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "Rp 3.000–Rp 15.000"
-    },
-    {
-      "id": "7",
-      "title": "Warkop Lestari",
-      "location": "Jl. Gelora Indah I, Arcawinangun, Purwokerto Timur, Banyumas, Jawa Tengah",
-      "type": "cafe",
-      "category": "kuliner",
-      "short_description": "Warkop dengan konsep semi‑outdoor dan menu minuman khas Aceh. Pilihan camilan dan panganan berat berasal dari Sumatra (Mie Aceh, nasi hainan, roti bakar)\r\n",
-      "description": "Warkop dengan konsep semi‑outdoor dan menu minuman khas Aceh. Pilihan camilan dan panganan berat berasal dari Sumatra (Mie Aceh, nasi hainan, roti bakar)\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Gelora Indah I, Arcawinangun, Purwokerto Timur, Banyumas, Jawa Tengah\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "Live Music",
-        "Harga Terjangkau",
         "Parkir Luas"
       ],
       "recommended": false,
-      "created_at": "2025-08-15T01:04:41.487Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "Rp 3.000–Rp 100.000"
-    },
-    {
-      "id": "8",
-      "title": "Warung Kopi Sepuran",
-      "location": "Jl. Raya Kebocoran Gang Buntu, Kedungbanteng, Banyumas, Jawa Tengah",
-      "type": "cafe",
-      "category": "kuliner",
-      "short_description": "Bisa ngopi sambil melihat kereta api lewat di dekat rel. Nuansa pedesaan syahdu, cocok untuk keluarga. Menu prasmanan dan makanan tradisional seperti ayam, bandeng, pepes tahu dengan harga terjangkau\r\n",
-      "description": "Bisa ngopi sambil melihat kereta api lewat di dekat rel. Nuansa pedesaan syahdu, cocok untuk keluarga. Menu prasmanan dan makanan tradisional seperti ayam, bandeng, pepes tahu dengan harga terjangkau\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Raya Kebocoran Gang Buntu, Kedungbanteng, Banyumas, Jawa Tengah\r\n",
-      "features": [
-        "Masakan Indonesia",
-        "Suasana Nyaman",
-        "WiFi Gratis",
-        "Harga Terjangkau",
-        "Live Music",
-        "Parkir Luas"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:07:46.478Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "menu_highlight": "",
-      "price_range": "Rp 4.000–Rp 30.000"
+      "created_at": "2025-08-27T11:32:07.871Z",
+      "updated_at": "2025-08-27T11:32:07.871Z"
     }
   ],
   "penginapan": [
     {
       "id": "1",
-      "title": "Green Valley Resort Baturraden",
-      "location": "Jalan Raya Baturraden KM 8, Baturraden, Purwokerto, Jawa Tengah.",
-      "type": "vila",
-      "category": "penginapan",
-      "short_description": "Green Valley menyajikan suasana alam pegunungan di Baturraden dengan villa bergaya tropis lengkap fasilitas resort. Cocok untuk keluarga atau acara kantor.",
-      "description": "Green Valley menyajikan suasana alam pegunungan di Baturraden dengan villa bergaya tropis lengkap fasilitas resort. Cocok untuk keluarga atau acara kantor.",
-      "entrance_fee": "Gratis",
-      "contact": "(0281) 681123  | Booking via Traveloka / Agoda",
+      "img_sm": "/uploads/accommodation_sm_1756345399279.png",
+      "img_lg": "/uploads/accommodation_lg_1756345399282.png",
+      "title": "dwadawd",
+      "location": "Banyumas, Indonesia",
+      "short_description": "dwdwad",
+      "description": "dawdawd",
+      "type": "hotel",
+      "price_range": "500.000 - 1.000.000",
+      "rating": "3",
+      "contact": "(0281) 681123 ",
       "address": "Jalan Raya Baturraden KM 8, Baturraden, Purwokerto, Jawa Tengah.",
-      "features": [
-        "Fasilitas Dasar"
+      "amenities": [
+        "WiFi",
+        "Spa"
       ],
       "recommended": false,
-      "created_at": "2025-08-15T01:13:12.207Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "2",
-      "title": "Hening Pool Villa",
-      "location": "Jalan Raya Baturraden KM 8, Baturraden, Purwokerto, Jawa Tengah.",
-      "type": "vila",
-      "category": "penginapan",
-      "short_description": "villa bergaya tropis lengkap fasilitas resort. Cocok untuk keluarga atau acara kantor.",
-      "description": "villa bergaya tropis lengkap fasilitas resort. Cocok untuk keluarga atau acara kantor.",
-      "entrance_fee": "Gratis",
-      "contact": "(0281) 681123  | Booking via Traveloka / Agoda",
-      "address": "Jalan Raya Baturraden KM 8, Baturraden, Purwokerto, Jawa Tengah.",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:15:58.309Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "3",
-      "title": "Pool Villa Saung Suluh Baturaden",
-      "location": " Jl. Gerlangu No.9, Dusun II, Karangtengah, Baturaden, Purwokerto, Jawa Tengah.",
-      "type": "hotel",
-      "category": "penginapan",
-      "short_description": "Private villa 3 kamar ideal untuk 6 orang, terletak di kawasan Baturaden, dengan akses mudah ke destinasi wisata sekitar.\r\n",
-      "description": "Private villa 3 kamar ideal untuk 6 orang, terletak di kawasan Baturaden, dengan akses mudah ke destinasi wisata sekitar.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "0851-3374-6800  | Booking via Traveloka / Agoda",
-      "address": " Jl. Gerlangu No.9, Dusun II, Karangtengah, Baturaden, Purwokerto, Jawa Tengah.",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:18:00.987Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "4",
-      "title": "Kika Pool Villa & BBQ",
-      "location": "Dusun I, Kediri, Kec. Karanglewas, Kabupaten Banyumas, Jawa Tengah",
-      "type": "vila",
-      "category": "penginapan",
-      "short_description": "Villa 3–4 kamar tidur untuk 8–12 orang dengan kolam renang pribadi dan area BBQ. Estetik, cocok gathering keluarga atau teman.",
-      "description": "Villa 3–4 kamar tidur untuk 8–12 orang dengan kolam renang pribadi dan area BBQ. Estetik, cocok gathering keluarga atau teman.",
-      "entrance_fee": "Gratis",
-      "contact": " 0281) 681123  | Booking via Traveloka / Agoda",
-      "address": "Dusun I, Kediri, Kec. Karanglewas, Kabupaten Banyumas, Jawa Tengah",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:19:35.202Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "5",
-      "title": "Aston Purwokerto Hotel & Convention Center",
-      "location": "Jl. Overste Isdiman No.33, Purwokerto, Kabupaten Banyumas, Jawa Tengah",
-      "type": "hotel",
-      "category": "penginapan",
-      "short_description": "Hotel modern dan nyaman, cocok untuk bisnis atau liburan keluarga. Fasilitas mewah termasuk spa, jacuzzi, gym, serta kolam renang outdoor dan indoor.\r\n",
-      "description": "Deluxe Room (tanpa sarapan): mulai dari Rp 685.912\r\nDeluxe Room termasuk sarapan (1 pax): sekitar Rp 836.834\r\nDouble or Twin Deluxe (tanpa sarapan): mulai dari Rp 711.083\r\nDouble or Twin Deluxe (dengan sarapan): sekitar Rp 867.544\r\nDeluxe Room – Smoking (tanpa sarapan): sekitar Rp 737.259\r\nDeluxe Room – Smoking (dengan sarapan): sekitar Rp 899.482\r\nPremier Deluxe Room (dengan sarapan): mulai dari Rp 962.914, hingga sekitar Rp 1.173.521\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "(0281) 628000  | Booking via Traveloka / Agoda / Tiket.com",
-      "address": "Jl. Overste Isdiman No.33, Purwokerto, Kabupaten Banyumas, Jawa Tengah",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:23:21.758Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "6",
-      "title": "Grand Karlita Hotel Purwokerto",
-      "location": "Jl. S. Parman No.296, Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah.",
-      "type": "hotel",
-      "category": "penginapan",
-      "short_description": " Hotel keluarga yang praktis dengan kamar bersih, ruang meeting, dan kolam renang. Cocok untuk keluarga dan kelompok wisata.\r\n",
-      "description": "Superior Room with King Bed (dengan sarapan, 1 orang): mulai dari Rp 477.957\r\nKing Superior Room (dengan sarapan, 1 orang): sekitar Rp 483.354\r\nSuperior Room (tanpa sarapan): mulai Rp 484.650 hingga Rp 491.850\r\nDouble or Twin Superior (dengan sarapan): Rp 493.346; tanpa sarapan: Rp 507.734\r\nDeluxe Room (dengan sarapan): antara Rp 535.200 – Rp 635.700 per malam\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "(0281) 7772500  | Booking via Traveloka / Agoda / Tiket.com ",
-      "address": "Jl. S. Parman No.296, Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah.",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:33:16.443Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "7",
-      "title": "Java Heritage Hotel Purwokerto",
-      "location": "Jl. Dr. Angka No.71, Sokanegara, Purwokerto Timur, Kabupaten Banyumas, Jateng.",
-      "type": "hotel",
-      "category": "penginapan",
-      "short_description": "Hotel dekorasi Jawa klasik dengan ukiran kayu dan kain batik, serta infinity rooftop pool dan kid‑friendly facilities. Menawarkan pengalaman budaya lokal yang kental.",
-      "description": "Deluxe Bungalow: Rp 695.000\r\nDeluxe: Rp 795.000\r\nDeluxe Garden / Teras Deluxe: Rp 765.000\r\nGrand Deluxe / Premium Deluxe Balcony / Tropical Garden View Room: Rp 950.000\r\nPremium Grand Deluxe / Premium Grand Deluxe New: Rp 1.175.000\r\nExecutive Pool: Rp 1.750.000\r\nJunior Suite: Rp 2.300.000\r\nSuite Pool: Rp 2.000.000\r\nExecutive Suite: Rp 3.300.000\r\nRuang Akuatik: Rp 1.500.000\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "Telp (0281) 634‑321  | Booking via Traveloka / Agoda / Tiket.com",
-      "address": "Jl. Dr. Angka No.71, Sokanegara, Purwokerto Timur, Kabupaten Banyumas, Jateng.",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:35:52.781Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "8",
-      "title": " Luminor Hotel Purwokerto by WH",
-      "location": "Jl. Jend. Sudirman No.324, Sokanegara, Purwokerto Timur.",
-      "type": "hotel",
-      "category": "penginapan",
-      "short_description": " Desain estetis Instagramable, populer untuk pre‑wedding. Memiliki infinity sky pool & resto fusion unik.\r\n",
-      "description": "Deluxe (resmi media) ~Rp 1.075.000\r\nExecutive (resmi media) Rp 1.450.000\r\nSuite (resmi media) ~Rp 2.000.000\r\nDeluxe/Executive/Family (Tiket.com) ~Rp 568.000 – Rp 1.067.000 \r\nPromo Paket (Freedom / Ramadan) ~Rp 520.000 – Rp 525.000 nett \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "Telp (0281) 7771988  | Booking via Traveloka / Agoda / Tiket.com",
-      "address": "Jl. Jend. Sudirman No.324, Sokanegara, Purwokerto Timur.",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:38:05.252Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "9",
-      "title": "Nariska Suite Homestay Purwokerto",
-      "location": "Purwokerto Timur",
-      "type": "homestay",
-      "category": "penginapan",
-      "short_description": "Homestay ini sangat cocok untuk keluarga atau rombongan. Memiliki ulasan yang sangat memuaskan dari para tamu karena tempatnya bersih, nyaman, dan strategis.\r\n",
-      "description": "Homestay ini sangat cocok untuk keluarga atau rombongan. Memiliki ulasan yang sangat memuaskan dari para tamu karena tempatnya bersih, nyaman, dan strategis.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "Telepon: 0812-9292-9390 | Booking via Traveloka",
-      "address": "Purwokerto Timur",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:39:35.712Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "10",
-      "title": "Hening Pool Residence",
-      "location": "Jl. Bumi Arca Indah Blk. Raya No.11A, Arcawinangun, Kec. Purwokerto Tim., Kabupaten Banyumas, Jawa Tengah 53113",
-      "type": "homestay",
-      "category": "penginapan",
-      "short_description": "Penginapan modern dengan sentuhan klasik yang dilengkapi dengan kolam renang pribadi. Sangat cocok untuk keluarga atau grup besar yang mencari kenyamanan dan fasilitas lengkap.oto No.144, Berkoh, Purwokerto Selatan, Banyumas\r\n",
-      "description": "Penginapan modern dengan sentuhan klasik yang dilengkapi dengan kolam renang pribadi. Sangat cocok untuk keluarga atau grup besar yang mencari kenyamanan dan fasilitas lengkap.oto No.144, Berkoh, Purwokerto Selatan, Banyumas\r\n",
-      "entrance_fee": "Gratis",
-      "contact": " 0811-1389-770",
-      "address": "Jl. Bumi Arca Indah Blk. Raya No.11A, Arcawinangun, Kec. Purwokerto Tim., Kabupaten Banyumas, Jawa Tengah 53113",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:41:19.348Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
-    },
-    {
-      "id": "11",
-      "title": "Oemah Kalpataru Homestay Syariah Purwokerto",
-      "location": "Jl. Kalpataru II No.69, Sumampir Kulon, Sumampir, Kec. Purwokerto Utara, Kabupaten Banyumas, Jawa Tengah 53126",
-      "type": "homestay",
-      "category": "penginapan",
-      "short_description": "Homestay ini menawarkan akomodasi satu rumah khusus untuk keluarga atau grup (khusus laki-laki atau perempuan saja). Lokasinya strategis, dekat dengan berbagai kampus dan pusat kuliner.",
-      "description": "Homestay ini menawarkan akomodasi satu rumah khusus untuk keluarga atau grup (khusus laki-laki atau perempuan saja). Lokasinya strategis, dekat dengan berbagai kampus dan pusat kuliner.",
-      "entrance_fee": "Gratis",
-      "contact": " 0852-2783-3136",
-      "address": "Jl. Kalpataru II No.69, Sumampir Kulon, Sumampir, Kec. Purwokerto Utara, Kabupaten Banyumas, Jawa Tengah 53126",
-      "features": [
-        "Fasilitas Dasar"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:42:31.425Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "room_types": [
-        "Standard"
-      ],
-      "price_range": "500.000 - 1.000.000"
+      "created_at": "2025-08-28T01:43:19.286Z",
+      "updated_at": "2025-08-28T01:43:19.286Z"
     }
   ],
   "oleh_oleh": [
     {
       "id": "1",
-      "title": "Jenang jaket",
-      "location": "Jl. Adipati Mersi No.68, Mersi, Kec. Purwokerto Tim., Kabupaten Banyumas, Jawa Tengah 53112",
+      "img_sm": "/uploads/souvenir_sm_1756380127846.png",
+      "img_lg": "/uploads/souvenir_lg_1756380127848.jpg",
+      "title": "wdawdadawd",
+      "location": "dawdawdawd",
+      "short_description": "awdawdawd",
+      "description": "wdawdawda",
       "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Jenang manis khas Banyumas dengan tekstur kenyal dan rasa gurih legit, dibungkus plastik kecil-kecil.",
-      "description": "Jenang manis khas Banyumas dengan tekstur kenyal dan rasa gurih legit, dibungkus plastik kecil-kecil.",
-      "entrance_fee": "Gratis",
-      "contact": "(0281) 6441216",
-      "address": "Jl. Adipati Mersi No.68, Mersi, Kec. Purwokerto Tim., Kabupaten Banyumas, Jawa Tengah 53112",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:45:49.443Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "2",
-      "title": "Getuk Goreng Sokaraja",
-      "location": "Jl. Jendral Soedirman No. 35, Sokaraja",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Getuk berbahan singkong yang digoreng dan dilapisi gula merah, memiliki rasa manis dan legit.",
-      "description": "Getuk berbahan singkong yang digoreng dan dilapisi gula merah, memiliki rasa manis dan legit.",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Jl. Jendral Soedirman No. 35, Sokaraja",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:47:13.717Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "3",
-      "title": "Mendoan Kering",
-      "location": "Jl. Mayjend. Sutoyo No.21, Sawangan, Kedungwuluh, Kec. Purwokerto Bar., Kabupaten Banyumas, Jawa Tengah 53131",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Mendoan khas Banyumas yang dikeringkan, renyah dan gurih, cocok untuk camilan atau oleh-oleh.",
-      "description": "Mendoan khas Banyumas yang dikeringkan, renyah dan gurih, cocok untuk camilan atau oleh-oleh.",
-      "entrance_fee": "Gratis",
-      "contact": " 0811-2648-830",
-      "address": "Jl. Mayjend. Sutoyo No.21, Sawangan, Kedungwuluh, Kec. Purwokerto Bar., Kabupaten Banyumas, Jawa Tengah 53131",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:48:21.624Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "4",
-      "title": "Nopia & Mino",
-      "location": "Buntu, Pesayangan, Kedungwuluh, Kec. Purwokerto Bar., Kabupaten Banyumas, Jawa Tengah 53131",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Kue berbentuk bulat keras berisi gula merah cair, ada versi kecil bernama Mino.",
-      "description": "Kue berbentuk bulat keras berisi gula merah cair, ada versi kecil bernama Mino.",
-      "entrance_fee": "Gratis",
-      "contact": "0856-4377-1901",
-      "address": "Buntu, Pesayangan, Kedungwuluh, Kec. Purwokerto Bar., Kabupaten Banyumas, Jawa Tengah 53131",
+      "category": "Makanan",
+      "price_range": "25.000 - 100.000",
+      "contact": "090090",
+      "address": "bawndaipw",
       "features": [
         "Produk Lokal,Kualitas Terjamin"
       ],
       "recommended": false,
-      "created_at": "2025-08-15T01:50:07.076Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "5",
-      "title": "Sagon Ketan",
-      "location": "Jl. Krida Mandala, Dusun II, Pekaja, Kec. Kalibagor, Kabupaten Banyumas, Jawa Tengah",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Kue kering tradisional berbahan dasar ketan sangrai dan kelapa parut, bertekstur renyah dan manis.",
-      "description": "Kue kering tradisional berbahan dasar ketan sangrai dan kelapa parut, bertekstur renyah dan manis.",
-      "entrance_fee": "Gratis",
-      "contact": "0813-2766-9971",
-      "address": "Jl. Krida Mandala, Dusun II, Pekaja, Kec. Kalibagor, Kabupaten Banyumas, Jawa Tengah",
-      "features": [
-        "Produk Lokal,Kualitas Terjamin"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:51:06.633Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "6",
-      "title": "Sale Pisang",
-      "location": "Jl jembatan gantung RT 02 RW 06, Kedungparuk, Ledug, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Pisang yang dikeringkan dan dilapisi gula, manis dan tahan lama.",
-      "description": "Pisang yang dikeringkan dan dilapisi gula, manis dan tahan lama.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "0857-1260-8652",
-      "address": "Jl jembatan gantung RT 02 RW 06, Kedungparuk, Ledug, Kec. Kembaran, Kabupaten Banyumas, Jawa Tengah",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:52:02.384Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "7",
-      "title": "Tape Ketan Hijau ",
-      "location": "Dusun I, Banteran, Kec. Sumbang, Kabupaten Banyumas, Jawa Tengah",
-      "type": "makanan",
-      "category": "oleh_oleh",
-      "short_description": "Tape manis dengan warna hijau khas dari daun katuk, disajikan dalam wadah daun pisang atau plastik kecil.",
-      "description": "Tape manis dengan warna hijau khas dari daun katuk, disajikan dalam wadah daun pisang atau plastik kecil.",
-      "entrance_fee": "Gratis",
-      "contact": " 0857-0036-0115",
-      "address": "Dusun I, Banteran, Kec. Sumbang, Kabupaten Banyumas, Jawa Tengah",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:52:45.074Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "8",
-      "title": "BATIK I’AH",
-      "location": " Jl. Pramuka No.3, RT.04/RW.06, Dusun I, Sokaraja Kulon, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181, Indonesia, Sokaraja Kulon, Sokaraja.",
-      "type": "pakaian",
-      "category": "oleh_oleh",
-      "short_description": "Batik I'ah merupakan Batik tulis dan Batik kombinasi.",
-      "description": "Batik I'ah merupakan Batik tulis dan Batik kombinasi.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "087837426544",
-      "address": " Jl. Pramuka No.3, RT.04/RW.06, Dusun I, Sokaraja Kulon, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181, Indonesia, Sokaraja Kulon, Sokaraja.",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:54:14.505Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "9",
-      "title": "BATIK BANYUMAS",
-      "location": "Jl. Kranji No.53, Kelurahan Kranji, Kec. Purwokerto Timur, Kabupaten Banyumas, Jawa Tengah 53116, Indonesia, Kranji, Purwokerto Timur.",
-      "type": "pakaian",
-      "category": "oleh_oleh",
-      "short_description": "Toko Batik Banyumasan terletak dipusat kota Purwokerto. Motif Batik Banyumasan mempunyai ciri pola batik tersendiri yang merupakan ciri batik pedalaman, yaitu banyak terinspirasi motif sulur/ tumbuh-tumbuhan dan hewan. ",
-      "description": "Toko Batik Banyumasan terletak dipusat kota Purwokerto. Motif Batik Banyumasan mempunyai ciri pola batik tersendiri yang merupakan ciri batik pedalaman, yaitu banyak terinspirasi motif sulur/ tumbuh-tumbuhan dan hewan. ",
-      "entrance_fee": "Gratis",
-      "contact": "0858 9006 1610",
-      "address": "Jl. Kranji No.53, Kelurahan Kranji, Kec. Purwokerto Timur, Kabupaten Banyumas, Jawa Tengah 53116, Indonesia, Kranji, Purwokerto Timur.\r\n",
-      "features": [
-        "Produk Lokal,Kualitas Terjamin"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:55:38.270Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "10",
-      "title": "Batik Putra Serayu",
-      "location": "Jalur Gumilir - Purwokerto, Notog Kidul, Notog, Kec. Patikraja, Kabupaten Banyumas, Jawa Tengah 53171, Indonesia, Notog, Patikraja ",
-      "type": "pakaian",
-      "category": "oleh_oleh",
-      "short_description": "Putra Serayu merupakan usaha   Produksi Batik -  Ecoprint  - Fashion - Craf.",
-      "description": "Putra Serayu merupakan usaha   Produksi Batik -  Ecoprint  - Fashion - Craf.",
-      "entrance_fee": "Gratis",
-      "contact": "",
-      "address": "Jalur Gumilir - Purwokerto, Notog Kidul, Notog, Kec. Patikraja, Kabupaten Banyumas, Jawa Tengah 53171, Indonesia, Notog, Patikraja ",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:56:59.616Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "11",
-      "title": "HANS BATIK DAN REST AREA",
-      "location": "Dusun I Wiradadi, Wiradadi, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181, Indonesia, Wiradadi, Sokaraja",
-      "type": "pakaian",
-      "category": "oleh_oleh",
-      "short_description": "HANS BATIK & REST AREA Sahabat wisata Anda Pusat Batik Banyumasan dan Oleh-oleh Khas Purwokerto One Stop Service semua kebutuhan Wisata anda Tersedia fasilitas Oleh-oleh, Resto, Musholla, Toilet Umum dan Jasa Informasi Wisata.",
-      "description": "HANS BATIK & REST AREA Sahabat wisata Anda\r\nPusat Batik Banyumasan dan Oleh-oleh Khas Purwokerto\r\nOne Stop Service semua kebutuhan Wisata anda\r\nTersedia fasilitas Oleh-oleh, Resto, Musholla, Toilet Umum dan Jasa Informasi Wisata.",
-      "entrance_fee": "Gratis",
-      "contact": "08156508711",
-      "address": "Dusun I Wiradadi, Wiradadi, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181, Indonesia, Wiradadi, Sokaraja",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T01:59:00.335Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "12",
-      "title": "BATIK BANYUMAS HADIPRIYANTO",
-      "location": "Jl. Mruyung No.9, Banyumas, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192, Indonesia, Sudagaran, Banyumas",
-      "type": "pakaian",
-      "category": "oleh_oleh",
-      "short_description": "Batik Hadipriyanto merupakan pusat kerajinan batik khas Banyumas yang telah mengakar sejak tahun 1957. Dimulai dari usaha rumahan, kini kami telah berkembang menjadi simbol keindahan dan keaslian batik Banyumasan. Kami melibatkan para pengrajin lokal sebagai upaya pelestarian budaya serta pemberdayaan masyarakat.",
-      "description": "Batik Hadipriyanto merupakan pusat kerajinan batik khas Banyumas yang telah mengakar sejak tahun 1957. Dimulai dari usaha rumahan, kini kami telah berkembang menjadi simbol keindahan dan keaslian batik Banyumasan. Kami melibatkan para pengrajin lokal sebagai upaya pelestarian budaya serta pemberdayaan masyarakat.\r\n\r\nKoleksi batik kami menonjolkan pola-pola khas dengan berbagai motif tradisional yang sarat makna. Kunjungi galeri kami untuk melihat langsung proses kreatif di balik setiap karya.",
-      "entrance_fee": "Gratis",
-      "contact": "@batikhadipriyanto | 0821-3689-6800 ",
-      "address": "Jl. Mruyung No.9, Banyumas, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192, Indonesia, Sudagaran, Banyumas",
-      "features": [
-        "-"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T02:01:22.859Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
+      "created_at": "2025-08-28T11:22:07.851Z",
+      "updated_at": "2025-08-28T11:22:07.851Z"
     }
   ],
   "desa_wisata": [
     {
       "id": "1",
-      "title": "Desa Wisata Cikakak",
-      "location": "Desa Cikakak, Kecamatan Wangon, Kabupaten Banyumas, Jateng",
+      "img_sm": "/placeholder.jpg",
+      "img_lg": "/placeholder.jpg",
+      "title": "dawdawd",
+      "location": "Banyumas, Indonesia",
+      "short_description": "dawaddaw",
+      "description": "dawdawdad",
       "type": "desa",
-      "category": "desa_wisata",
-      "short_description": "Cikakak merupakan desa di wilayah Kecamatan Wangon, Kabupaten Banyumas. Desa ini memiliki wisata religi yaitu Masjid Saka Tunggal yang merupakan salah satu masjid tertua di Indonesia yang dibangun pada tahun 1288 Hijriah oleh Mbah Tolih yang sekaligus guru dan penyebar agama Islam di daerah ini.",
-      "description": "Cikakak merupakan desa di wilayah Kecamatan Wangon, Kabupaten Banyumas. Desa ini memiliki wisata religi yaitu Masjid Saka Tunggal yang merupakan salah satu masjid tertua di Indonesia yang dibangun pada tahun 1288 Hijriah oleh Mbah Tolih yang sekaligus guru dan penyebar agama Islam di daerah ini.\r\nDesa wisata Cikakak memiliki daya tarik tersendiri yang masih memiliki potensi alam yang asri, serta satwa monyet ekor panjang yang jinak. Salah satu kegiatan tahunan yang selalu ditunggu oleh masyarakat luar Desa Cikakak adalah Rewanda Bojana  (tradisi memberi makan ratusan ekor monyet) di komplek Masjid Saka Tunggal. Selain itu pengunjung juga dapat menikmati wisata kuliner khas Cikakak berupa cethot, ayam gecok, nasi penggel, es badeg (nira), wajik kethek dan masih banyak lainnya pada hari sabtu dan minggu di Pasar Tradisional Antap. \r\nTidak hanya daya tarik wisata, namun Desa Cikakak juga mendapatkan Anugerah masuk kategori 50  Desa Wisata Terbaik melalui Anugerah Desa Wisata Indonesia Tahun 2021 yang langsung diresmikan oleh Menteri Pariwisata dan Ekonomi Kreatif, Bapak Sandiaga Uno.  Tidak sampai disitu saja, Desa Cikakak juga mendapat 4 juara dalam ajang  Gelar Desa Wisata Provinsi Jawa Tengah Tahun 2021 yaitu menjadi Juara 1 umum, Juara 1 katagori pengelolaan, Juara 1 katagori atraksi budaya, dan Juara 2 katagori vidio profil. \r\nIngin melihat langsung Masjid yang hanya memiliki satu saka ini atau langsung ingin berinteraksi dengan primata yang lucu? Kalian bisa langsung cek paket wisata yang dimiliki. \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "@desawisata_cikakak",
-      "address": "Desa Cikakak, Kecamatan Wangon, Kabupaten Banyumas, Jateng",
+      "category": "alam",
+      "contact": "adwawdawd",
+      "address": "dawdawd",
       "features": [
         "Budaya Lokal,Akomodasi Homestay"
       ],
       "recommended": false,
-      "created_at": "2025-08-15T02:04:51.661Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "2",
-      "title": "Desa Wisata Pekunden",
-      "location": "Pekunden Tengah, Pekunden, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192, Indonesia, Pekunden, Banyumas ",
-      "type": "desa",
-      "category": "desa_wisata",
-      "short_description": "Budaya & Edukasi",
-      "description": "Desa Wisata Pekunden yang terletak di Kecamatan Banyumas, Kabupaten Banyumas, Provinsi Jawa Tengah, merupakan destinasi wisata berbasis budaya dan edukasi yang dikelola oleh Kelompok Sadar Wisata (Pokdarwis). Desa ini juga telah meraih berbagai penghargaan seperti juara 1 Gelar Desa Wisata Jawa Tengah tahun 2022 dan masuk dalam 75 besar Anugrah Desa Wisata Indonesia (ADWI) pada tahun 2023. Desa Pekunden ini memiliki banyak sekali wisata edukasi seperti Kampoeng Nopia yaitu sebuah makanan tradisional khas banyumas. Di Kampoeng Nopia ini wisatawan dapat melihat langsung proses pembuatan kue tradisional nopia yang di panggang secara tradisional menggunakan tungku tanah. Selain Kampoeng Nopia di desa ini juga terdapat edukasi lainnya yaitu kebun buah naga dan Omah Gamelan yang merupakan tempat edukasi tentang pembuatan dan permainan alat musik tradisional jawa seperti gamelan, calung, dan wayang kulit. \r\n",
-      "entrance_fee": "Gratis",
-      "contact": "089654020934",
-      "address": "Pekunden Tengah, Pekunden, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192, Indonesia, Pekunden, Banyumas ",
-      "features": [
-        "Budaya Lokal,Akomodasi Homestay"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T02:06:02.162Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "3",
-      "title": "Desa Wisata Banjarpanepen",
-      "location": "Kali Cawang Banjarpanepen, Sidakampir, Banjarpanepen, Kec. Sumpiuh, Kabupaten Banyumas, Jawa Tengah 53195, Indonesia, Banjarpanepen, Sumpiuh ",
-      "type": "desa",
-      "category": "desa_wisata",
-      "short_description": "Alam & Budaya",
-      "description": "Desa Wisata Banjarpanepen terletak di Kecamatan Sumpiuh KabupatenBanyumas. Jarak dari ibukota kabupaten sejauh ± 35 km. Walaupun berjarak cukup jauh, akan tetapi Desa Bajarpanepenmemiliki potensi wisata yang menarik, diantaranya Wisata Edukatif yaitu PembuatanGula kristal, Pembuatan Karag dan budidaya Madu Klanceng. Wisata Budaya berupaTradisi Ruat Bumi oleh masyarakat setempat, Kungkum (berendam) di Kali Cawangpada malam Bulan Purnama setiap bulan Sadran/Saban dan fasilitas penginapan sudahtersedia 4 Homestay.Desaini juga memiliki cagar budaya yaitu Petilasan Patih Gajah Mada  yang menurut cerita wrga setempat pernah menjadi petilasan Sang Patih, petiasan ini yang disebutWatu Jonggol. Kemudian terdapat wisata alam yaitu Kali Cawang, Curug Kelapa,dan Bukit Pengaritan. Desa Banjarpanepen dicanangkan oleh Bupati Banyumassebagai “Desa Kerukunan” karena terdapat 4 keyakinan yang hidup rukun. Empatkeyakinan tersebut yaitu: Islam, Kristen, Buddha dan kepercayaan terhadap Tuhan YME. Masing masing keyakinan tersebutmemiliki tempat Ibadah di Desa Banjarpanepen.Desa wisata Banjarpanepen memiliki banyak keindahan alam yang dapat dinikmati oleh wisatawan, diantaranya di kawasan pegunungan desa wisata Banjarpanepen terdapat hutan pinus dan karet yang dimiliki oleh perhutani dan dikelola oleh masyarakat lokal. Adapun wisatawan dapat menikmati keindahan alam tersebut bersama dengan cafe kopi terdekat. Selain itu terdapat sungai dengan air yang jernih yang sudah dibendung di Kalicawang untuk dinikmati oleh wisatawan untuk berenang.Homestay.",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Kali Cawang Banjarpanepen, Sidakampir, Banjarpanepen, Kec. Sumpiuh, Kabupaten Banyumas, Jawa Tengah 53195, Indonesia, Banjarpanepen, Sumpiuh ",
-      "features": [
-        "Budaya Lokal,Akomodasi Homestay"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T02:08:12.309Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
-    },
-    {
-      "id": "4",
-      "title": "Desa Wisata Karangsalam",
-      "location": "Curug Telu, Sawah & Hutan, Karangsalam, Kec. Baturaden, Kabupatén Banyumas, Jawa Tengah 53151, Indonesia, Karangsalam, Baturraden",
-      "type": "desa",
-      "category": "desa_wisata",
-      "short_description": "Desa Wisata Karangsalam terletak di bagian selatan lereng Gunung Slamet dan berada paling utara di wilayah Kec. Baturraden, Kab. Banyumas. Desa wisata ini menawarkan daya tarik wisata alam bernama Curug Telu yang memiliki arti sesuai dengan namanya yakni Curug berjumlah 3 dengan ketinggian 50 meter. Terdapat juga Sendang Bidadari yang memilki sumber mata air. Desa Wisata Karangsalam juga menawarkan daya tarik wisata budaya berupa kesenian Tari Kuda Lumping, Ider-ider Desa dan kegiatan kesenian Calung Remaja.\r\nPotensi wisata yang tersedia berupa wisata edukasi budidaya Jamur Tiram hingga edukasi ternak sapi dan kambing. Tidak hanya itu saja, di sini juga tersedia wisata kuliner dan wisata minat khusus berupa kegiatan tracking (jelajah curug) dengan jalur Curug Telu, Sendang Bidadari dan Kedung Ila.\r\nfasilitas yang tersedia antara lain homestay, gazebo, warung makan, camping area, dan mushola.\r\n",
-      "description": "Desa Wisata Karangsalam terletak di bagian selatan lereng Gunung Slamet dan berada paling utara di wilayah Kec. Baturraden, Kab. Banyumas. Desa wisata ini menawarkan daya tarik wisata alam bernama Curug Telu yang memiliki arti sesuai dengan namanya yakni Curug berjumlah 3 dengan ketinggian 50 meter. Terdapat juga Sendang Bidadari yang memilki sumber mata air. Desa Wisata Karangsalam juga menawarkan daya tarik wisata budaya berupa kesenian Tari Kuda Lumping, Ider-ider Desa dan kegiatan kesenian Calung Remaja.\r\nPotensi wisata yang tersedia berupa wisata edukasi budidaya Jamur Tiram hingga edukasi ternak sapi dan kambing. Tidak hanya itu saja, di sini juga tersedia wisata kuliner dan wisata minat khusus berupa kegiatan tracking (jelajah curug) dengan jalur Curug Telu, Sendang Bidadari dan Kedung Ila.\r\nfasilitas yang tersedia antara lain homestay, gazebo, warung makan, camping area, dan mushola.\r\n",
-      "entrance_fee": "Gratis",
-      "contact": "-",
-      "address": "Curug Telu, Sawah & Hutan, Karangsalam, Kec. Baturaden, Kabupatén Banyumas, Jawa Tengah 53151, Indonesia, Karangsalam, Baturraden",
-      "features": [
-        "Budaya Lokal,Akomodasi Homestay"
-      ],
-      "recommended": false,
-      "created_at": "2025-08-15T02:09:27.523Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
+      "created_at": "2025-08-28T11:22:40.437Z",
+      "updated_at": "2025-08-28T11:22:40.437Z"
     }
   ],
   "biro_perjalanan": [
     {
       "id": "1",
-      "title": "Smart Tour Purwokerto",
-      "location": "Jl. Patriot No. 36, Gandasuli, Purwokerto",
-      "type": "biro",
-      "category": "biro_perjalanan",
-      "short_description": "Didirikan pertama sebagai bisnis “SMART Education” pada pertengahan 2010, lalu resmi menjadi CV. Smart 99 Group sejak 1 Oktober 2012. Unit layanan mencakup wisata pendidikan, tour keluarga, study tour, ziarah, MICE, hingga paket Haji/Umroh.",
-      "description": "Didirikan pertama sebagai bisnis “SMART Education” pada pertengahan 2010, lalu resmi menjadi CV. Smart 99 Group sejak 1 Oktober 2012. Unit layanan mencakup wisata pendidikan, tour keluarga, study tour, ziarah, MICE, hingga paket Haji/Umroh.",
-      "entrance_fee": "Gratis",
-      "contact": "{\"whatsapp\":\"0857 2649 2521\",\"email\":\"info@biroperjalanan.com\",\"instagram\":\"smarttour_purwokerto\",\"website\":\"https://www.youtube.com/@smarttourpurwokerto3460\"}",
-      "address": "Jl. Patriot No. 36, Gandasuli, Purwokerto",
-      "features": [
-        "Fasilitas Dasar"
+      "img_sm": "/uploads/agency_sm_1756380248712.png",
+      "img_lg": "/uploads/agency_lg_1756380248713.png",
+      "title": "Biro Perjalanan Banyumas Travel",
+      "location": "Banyumas, Indonesia",
+      "short_description": "Biro perjalanan terpercaya untuk wisata Banyumas dan sekitarnya",
+      "description": "Biro Perjalanan Banyumas Travel adalah agen perjalanan terpercaya yang menyediakan berbagai paket wisata untuk destinasi Banyumas dan sekitarnya. Kami menawarkan layanan profesional dengan harga terjangkau dan kualitas terbaik.",
+      "type": "biro-perjalanan",
+      "category": "Biro Perjalanan",
+      "contact": "{\"whatsapp\":\"0857 2649 2521\",\"email\":\"admin@gmail.com\",\"instagram\":\"@banyumastravel\",\"website\":\"https://www.banyumastravel.com\",\"phone\":\"0281-123456\"}",
+      "address": "Jl. Raya Banyumas No. 123, Banyumas, Jawa Tengah",
+      "services": [
+        "Paket wisata lokal (one day trip, city tour)",
+        "Layanan sewa mobil",
+        "Open trip / private trip",
+        "Paket Wisata",
+        "Tiket Pesawat",
+        "Hotel Booking",
+        "Tour Guide"
       ],
-      "recommended": false,
-      "created_at": "2025-08-15T02:29:15.873Z",
-      "updated_at": "2025-08-15T03:04:50.346Z"
+      "facilities": [
+        "Kantor Cabang",
+        "Online Booking",
+        "24/7 Support",
+        "WiFi",
+        "Parkir Luas",
+        "Ruang Tunggu"
+      ],
+      "features": [
+        "Fasilitas Dasar",
+        "Tour Guide Berpengalaman",
+        "Transportasi Nyaman",
+        "Akomodasi Berkualitas",
+        "Asuransi Perjalanan"
+      ],
+      "price_range": "500.000 - 2.000.000",
+      "opening_hours": "08:00 - 17:00",
+      "rating": "4.5",
+      "coordinates": {
+        "lat": -7.3056,
+        "lng": 109.2194
+      },
+      "gallery": [
+        "/uploads/agency_sm_1756380248712.png",
+        "/uploads/agency_lg_1756380248713.png",
+        "/hero/caub.jpg",
+        "/hero/menara teratai.jpg"
+      ],
+      "manager": {
+        "name": "Ahmad Rizki",
+        "phone": "0281-123456",
+        "email": "rizki@banyumastravel.com",
+        "whatsapp": "0857 2649 2521",
+        "instagram": "@rizki_travel",
+        "website": "https://www.banyumastravel.com",
+        "position": "Manager",
+        "experience": "5 tahun",
+        "rating": "4.8",
+        "availability": "24/7"
+      },
+      "prices": [
+        {
+          "id": 1,
+          "name": "Paket Wisata Banyumas 1 Hari",
+          "category": "domestik",
+          "duration": "1 hari",
+          "price": "Rp 350.000",
+          "originalPrice": "Rp 400.000",
+          "description": "Wisata ke destinasi populer Banyumas dengan transportasi dan makan siang",
+          "includes": [
+            "Transportasi AC",
+            "Makan Siang",
+            "Tiket Masuk",
+            "Tour Guide",
+            "Asuransi"
+          ],
+          "excludes": [
+            "Makan Pagi",
+            "Makan Malam",
+            "Pengeluaran Pribadi"
+          ],
+          "departure": "08:00 WIB",
+          "capacity": "Min. 10 orang",
+          "vehicle": "Bus AC",
+          "rating": 4.8,
+          "reviews": 45
+        },
+        {
+          "id": 2,
+          "name": "Paket Wisata Banyumas 2 Hari 1 Malam",
+          "category": "domestik",
+          "duration": "2 hari",
+          "price": "Rp 750.000",
+          "originalPrice": "Rp 850.000",
+          "description": "Paket lengkap 2 hari 1 malam dengan akomodasi hotel bintang 3",
+          "includes": [
+            "Transportasi AC",
+            "Akomodasi Hotel",
+            "Makan 3x",
+            "Tiket Masuk",
+            "Tour Guide",
+            "Asuransi"
+          ],
+          "excludes": [
+            "Pengeluaran Pribadi",
+            "Tips"
+          ],
+          "departure": "07:00 WIB",
+          "capacity": "Min. 8 orang",
+          "vehicle": "Bus AC",
+          "rating": 4.9,
+          "reviews": 32
+        }
+      ],
+      "recommended": true,
+      "created_at": "2025-08-28T11:24:08.714Z",
+      "updated_at": "2025-08-31T07:43:58.687Z"
     }
   ],
   "events": [
     {
       "id": "1",
-      "title": "Sukacita Teh Desa",
-      "location": "Alun Alun Purwokerto",
+      "img_sm": "/uploads/event_sm_1756380332316.png",
+      "img_lg": "/uploads/event_lg_1756380332317.png",
+      "title": "dawdawda",
+      "location": "Banyumas, Indonesia",
+      "short_description": "dawdaw",
+      "description": "dwawda",
       "type": "festival",
-      "category": "events",
-      "short_description": "Sukacita teh desa",
-      "description": "Sukacita teh desa",
-      "entrance_fee": "Gratis",
+      "category": "event-rakyat",
+      "date": "2025-08-28",
+      "time": "18:24",
       "contact": "",
-      "address": "Alun Alun Purwokerto",
+      "address": "Banyumas, Indonesia",
       "features": [
         "Hiburan",
         "Makanan"
       ],
+      "seats": [
+        {
+          "seat": "vip",
+          "price": 150000,
+          "desc": "Dekat panggung, kursi premium",
+          "id": "1-seat-0"
+        },
+        {
+          "seat": "reguler",
+          "price": 75000,
+          "desc": "Kursi standar",
+          "id": "1-seat-1"
+        },
+        {
+          "seat": "festival",
+          "price": 50000,
+          "desc": "Berdiri, area festival",
+          "id": "1-seat-2"
+        }
+      ],
       "recommended": false,
-      "created_at": "2025-08-15T03:01:57.294Z",
-      "updated_at": "2025-08-15T03:04:50.346Z",
-      "event_date": "",
-      "event_time": "",
-      "organizer": ""
+      "created_at": "2025-08-28T11:25:32.318Z",
+      "updated_at": "2025-08-28T11:25:32.318Z"
+    }
+  ],
+  "menu_items": [
+    {
+      "id": "1",
+      "name": "Nasi Goreng Spesial",
+      "description": "Nasi goreng dengan telur, ayam, dan sayuran segar khas Banyumas",
+      "price": 25000,
+      "image": "/uploads/menu/menu_1756699660793.png",
+      "rating": 4.8,
+      "cookingTime": "10-15 menit",
+      "isPopular": true,
+      "isSpicy": false,
+      "category": "Makanan Utama",
+      "destinationId": "1",
+      "destinationSlug": "daaduwodhauow",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Fresh"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z",
+      "updatedAt": "2025-09-01T04:07:40.795Z"
+    },
+    {
+      "id": "2",
+      "name": "Sate Banyumas",
+      "description": "Sate ayam dengan bumbu kacang khas Banyumas yang lezat",
+      "price": 35000,
+      "image": "/placeholder.jpg",
+      "rating": 4.9,
+      "cookingTime": "15-20 menit",
+      "isPopular": true,
+      "isSpicy": true,
+      "category": "Sate",
+      "destinationId": "1",
+      "destinationSlug": "daaduwodhauow",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Signature"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Soto Sokaraja",
+      "description": "Soto ayam dengan kuah bening dan pelengkap lengkap",
+      "price": 28000,
+      "image": "/placeholder.jpg",
+      "rating": 4.7,
+      "cookingTime": "12-18 menit",
+      "isPopular": false,
+      "isSpicy": false,
+      "category": "Soto",
+      "destinationId": "1",
+      "destinationSlug": "daaduwodhauow",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Traditional"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "name": "Es Cendol Banyumas",
+      "description": "Es cendol dengan santan dan gula merah khas Banyumas",
+      "price": 8000,
+      "image": "/placeholder.jpg",
+      "rating": 4.8,
+      "cookingTime": "5-8 menit",
+      "isPopular": true,
+      "isSpicy": false,
+      "category": "Minuman",
+      "destinationId": "1",
+      "destinationSlug": "daaduwodhauow",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Dessert"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "5",
+      "name": "Gudeg Banyumas",
+      "description": "Gudeg nangka muda dengan telur dan ayam, manis gurih",
+      "price": 32000,
+      "image": "/placeholder.jpg",
+      "rating": 4.6,
+      "cookingTime": "20-25 menit",
+      "isPopular": false,
+      "isSpicy": false,
+      "category": "Makanan Utama",
+      "destinationId": "2",
+      "destinationSlug": "rumah-makan-tradisional",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Local"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "6",
+      "name": "Bakso Malang",
+      "description": "Bakso daging sapi dengan kuah kaldu yang gurih",
+      "price": 22000,
+      "image": "/placeholder.jpg",
+      "rating": 4.5,
+      "cookingTime": "8-12 menit",
+      "isPopular": false,
+      "isSpicy": false,
+      "category": "Bakso",
+      "destinationId": "2",
+      "destinationSlug": "rumah-makan-tradisional",
+      "halal": true,
+      "available": true,
+      "additionalInfo": [
+        "Halal",
+        "Comfort"
+      ],
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
     }
   ],
   "users": [
@@ -1456,6 +556,792 @@
       "created_at": "2025-08-15T03:08:26.056Z",
       "updated_at": "2025-08-15T03:10:17.364Z",
       "verified_at": "2025-08-15T03:10:17.364Z"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "1",
+      "name": "kamar fadhil anin ",
+      "description": "Kamar standar dengan AC dan TV, nyaman untuk istirahat",
+      "capacity": "2",
+      "size": "24m²",
+      "bedType": "1 Queen Bed",
+      "price": 150000,
+      "accommodationId": "1",
+      "accommodationSlug": "",
+      "accommodationTitle": "dwadawd",
+      "facilities": [
+        "AC",
+        "TV",
+        "Air mineral",
+        "Kamar mandi dalam"
+      ],
+      "isPopular": false,
+      "available": true,
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-09-01T06:07:08.177Z"
+    },
+    {
+      "id": "2",
+      "name": "Deluxe Room",
+      "description": "Kamar luas dengan balkon dan pemandangan indah",
+      "capacity": "2",
+      "size": "32m²",
+      "bedType": "1 King Bed",
+      "price": 250000,
+      "accommodationId": "1",
+      "accommodationSlug": "dwadawd",
+      "accommodationTitle": "dwadawd",
+      "facilities": [
+        "AC",
+        "TV",
+        "Air panas",
+        "Balkon",
+        "Mini Bar"
+      ],
+      "isPopular": true,
+      "available": true,
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Family Room",
+      "description": "Kamar keluarga untuk 4 orang dengan ruang tamu",
+      "capacity": "4",
+      "size": "45m²",
+      "bedType": "2 Queen Bed",
+      "price": 350000,
+      "accommodationId": "1",
+      "accommodationSlug": "dwadawd",
+      "accommodationTitle": "dwadawd",
+      "facilities": [
+        "2 Queen Bed",
+        "AC",
+        "TV",
+        "Ruang tamu",
+        "Kamar mandi dalam"
+      ],
+      "isPopular": true,
+      "available": true,
+      "created_at": "2025-01-27T10:00:00.000Z",
+      "updated_at": "2025-01-27T10:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "name": "fadhil rasya",
+      "description": "DWADWW",
+      "capacity": "5",
+      "size": "24m²",
+      "bedType": "1 Single Bed",
+      "price": 222000,
+      "accommodationId": "1",
+      "accommodationSlug": "",
+      "accommodationTitle": "dwadawd",
+      "facilities": [
+        "AC",
+        "Kamar Mandi Dalam",
+        "Ruang Tamu"
+      ],
+      "isPopular": false,
+      "available": true,
+      "created_at": "2025-09-01T06:24:53.225Z",
+      "updated_at": "2025-09-01T06:52:23.594Z"
+    }
+  ],
+  "souvenir_packages": [
+    {
+      "id": "1756713975502",
+      "name": "Paket Oleh-oleh Banyumas Premium",
+      "description": "Paket lengkap berisi bakpia pathok, gula kelapa, dan keripik singkong khas Banyumas",
+      "price": 75000,
+      "souvenirId": "souvenir_001",
+      "souvenirTitle": "Paket Premium",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:15.502Z",
+      "updatedAt": "2025-09-01T08:06:15.502Z"
+    },
+    {
+      "id": "1756713976042",
+      "name": "Batik Tulis Banyumas Asli",
+      "description": "Batik tulis tangan dengan motif tradisional khas Banyumas, cocok untuk koleksi",
+      "price": 250000,
+      "souvenirId": "souvenir_002",
+      "souvenirTitle": "Batik Tulis",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:16.042Z",
+      "updatedAt": "2025-09-01T08:06:16.042Z"
+    },
+    {
+      "id": "1756713976579",
+      "name": "Wedang Jahe Rempah",
+      "description": "Minuman jahe hangat dengan campuran rempah tradisional, cocok untuk cuaca dingin",
+      "price": 15000,
+      "souvenirId": "souvenir_003",
+      "souvenirTitle": "Wedang Jahe",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:16.579Z",
+      "updatedAt": "2025-09-01T08:06:16.579Z"
+    },
+    {
+      "id": "1756713977107",
+      "name": "Keripik Singkong Banyumas",
+      "description": "Keripik singkong renyah dengan 5 varian rasa: original, balado, keju, barbeque, dan sambal",
+      "price": 20000,
+      "souvenirId": "souvenir_004",
+      "souvenirTitle": "Keripik Singkong",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:17.107Z",
+      "updatedAt": "2025-09-01T08:06:17.107Z"
+    },
+    {
+      "id": "1756713977631",
+      "name": "Gula Kelapa Murni",
+      "description": "Gula kelapa asli tanpa campuran, rasa manis alami dan tekstur lembut",
+      "price": 25000,
+      "souvenirId": "souvenir_005",
+      "souvenirTitle": "Gula Kelapa",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:17.631Z",
+      "updatedAt": "2025-09-01T08:06:17.631Z"
+    },
+    {
+      "id": "1756713978158",
+      "name": "Tas Anyaman Bambu",
+      "description": "Tas anyaman bambu tradisional dengan motif unik, ramah lingkungan dan tahan lama",
+      "price": 120000,
+      "souvenirId": "souvenir_006",
+      "souvenirTitle": "Tas Anyaman",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:18.158Z",
+      "updatedAt": "2025-09-01T08:06:18.158Z"
+    },
+    {
+      "id": "1756713978685",
+      "name": "Paket Oleh-oleh Ekonomis",
+      "description": "Paket hemat berisi keripik singkong, wedang jahe, dan gula kelapa",
+      "price": 45000,
+      "souvenirId": "souvenir_007",
+      "souvenirTitle": "Paket Ekonomis",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:18.685Z",
+      "updatedAt": "2025-09-01T08:06:18.685Z"
+    },
+    {
+      "id": "1756713979223",
+      "name": "Batik Cap Banyumas",
+      "description": "Batik cap dengan motif khas Banyumas, harga terjangkau dengan kualitas bagus",
+      "price": 180000,
+      "souvenirId": "souvenir_008",
+      "souvenirTitle": "Batik Cap",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:19.223Z",
+      "updatedAt": "2025-09-01T08:06:19.223Z"
+    },
+    {
+      "id": "1756713979755",
+      "name": "Kopi Robusta Banyumas",
+      "description": "Kopi robusta asli Banyumas dengan aroma kuat dan rasa khas",
+      "price": 35000,
+      "souvenirId": "souvenir_009",
+      "souvenirTitle": "Kopi Robusta",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:19.755Z",
+      "updatedAt": "2025-09-01T08:06:19.755Z"
+    },
+    {
+      "id": "1756713980285",
+      "name": "Paket Kerajinan Lengkap",
+      "description": "Paket berisi batik, tas anyaman, dan souvenir kecil lainnya",
+      "price": 350000,
+      "souvenirId": "souvenir_010",
+      "souvenirTitle": "Paket Kerajinan",
+      "available": true,
+      "createdAt": "2025-09-01T08:06:20.285Z",
+      "updatedAt": "2025-09-01T08:06:20.285Z"
+    },
+    {
+      "id": "1756714171445",
+      "name": "Paket Oleh-oleh Banyumas Premium",
+      "description": "Paket lengkap berisi bakpia pathok, gula kelapa, dan keripik singkong khas Banyumas",
+      "price": 75000,
+      "souvenirId": "souvenir_001",
+      "souvenirTitle": "Paket Premium",
+      "available": true,
+      "category": "Paket",
+      "type": "Paket",
+      "createdAt": "2025-09-01T08:09:31.445Z",
+      "updatedAt": "2025-09-01T08:09:31.445Z"
+    },
+    {
+      "id": "1756714171983",
+      "name": "Batik Tulis Banyumas Asli",
+      "description": "Batik tulis tangan dengan motif tradisional khas Banyumas, cocok untuk koleksi",
+      "price": 250000,
+      "souvenirId": "souvenir_002",
+      "souvenirTitle": "Batik Tulis",
+      "available": true,
+      "category": "Kerajinan",
+      "type": "Kerajinan",
+      "createdAt": "2025-09-01T08:09:31.983Z",
+      "updatedAt": "2025-09-01T08:09:31.983Z"
+    },
+    {
+      "id": "1756714172515",
+      "name": "Wedang Jahe Rempah",
+      "description": "Minuman jahe hangat dengan campuran rempah tradisional, cocok untuk cuaca dingin",
+      "price": 15000,
+      "souvenirId": "souvenir_003",
+      "souvenirTitle": "Wedang Jahe",
+      "available": true,
+      "category": "Minuman",
+      "type": "Minuman",
+      "createdAt": "2025-09-01T08:09:32.515Z",
+      "updatedAt": "2025-09-01T08:09:32.515Z"
+    },
+    {
+      "id": "1756714173036",
+      "name": "Keripik Singkong Banyumas",
+      "description": "Keripik singkong renyah dengan 5 varian rasa: original, balado, keju, barbeque, dan sambal",
+      "price": 20000,
+      "souvenirId": "souvenir_004",
+      "souvenirTitle": "Keripik Singkong",
+      "available": true,
+      "category": "Makanan",
+      "type": "Makanan",
+      "createdAt": "2025-09-01T08:09:33.036Z",
+      "updatedAt": "2025-09-01T08:09:33.036Z"
+    },
+    {
+      "id": "1756714173559",
+      "name": "Gula Kelapa Murni",
+      "description": "Gula kelapa asli tanpa campuran, rasa manis alami dan tekstur lembut",
+      "price": 25000,
+      "souvenirId": "souvenir_005",
+      "souvenirTitle": "Gula Kelapa",
+      "available": true,
+      "category": "Makanan",
+      "type": "Makanan",
+      "createdAt": "2025-09-01T08:09:33.559Z",
+      "updatedAt": "2025-09-01T08:09:33.559Z"
+    },
+    {
+      "id": "1756714174084",
+      "name": "Tas Anyaman Bambu",
+      "description": "Tas anyaman bambu tradisional dengan motif unik, ramah lingkungan dan tahan lama",
+      "price": 120000,
+      "souvenirId": "souvenir_006",
+      "souvenirTitle": "Tas Anyaman",
+      "available": true,
+      "category": "Kerajinan",
+      "type": "Kerajinan",
+      "createdAt": "2025-09-01T08:09:34.084Z",
+      "updatedAt": "2025-09-01T08:09:34.084Z"
+    },
+    {
+      "id": "1756714174609",
+      "name": "Paket Oleh-oleh Ekonomis",
+      "description": "Paket hemat berisi keripik singkong, wedang jahe, dan gula kelapa",
+      "price": 45000,
+      "souvenirId": "souvenir_007",
+      "souvenirTitle": "Paket Ekonomis",
+      "available": true,
+      "category": "Paket",
+      "type": "Paket",
+      "createdAt": "2025-09-01T08:09:34.609Z",
+      "updatedAt": "2025-09-01T08:09:34.609Z"
+    },
+    {
+      "id": "1756714175138",
+      "name": "Batik Cap Banyumas",
+      "description": "Batik cap dengan motif khas Banyumas, harga terjangkau dengan kualitas bagus",
+      "price": 180000,
+      "souvenirId": "souvenir_008",
+      "souvenirTitle": "Batik Cap",
+      "available": true,
+      "category": "Kerajinan",
+      "type": "Kerajinan",
+      "createdAt": "2025-09-01T08:09:35.138Z",
+      "updatedAt": "2025-09-01T08:09:35.138Z"
+    },
+    {
+      "id": "1756714175675",
+      "name": "Kopi Robusta Banyumas",
+      "description": "Kopi robusta asli Banyumas dengan aroma kuat dan rasa khas",
+      "price": 35000,
+      "souvenirId": "souvenir_009",
+      "souvenirTitle": "Kopi Robusta",
+      "available": true,
+      "category": "Minuman",
+      "type": "Minuman",
+      "createdAt": "2025-09-01T08:09:35.675Z",
+      "updatedAt": "2025-09-01T08:09:35.675Z"
+    },
+    {
+      "id": "1756714176199",
+      "name": "Paket Kerajinan Lengkap",
+      "description": "Paket berisi batik, tas anyaman, dan souvenir kecil lainnya",
+      "price": 350000,
+      "souvenirId": "souvenir_010",
+      "souvenirTitle": "Paket Kerajinan",
+      "available": true,
+      "category": "Paket",
+      "type": "Paket",
+      "createdAt": "2025-09-01T08:09:36.199Z",
+      "updatedAt": "2025-09-01T08:09:36.199Z"
+    },
+    {
+      "id": "1756715195845",
+      "name": "Paket Hemat Toko Oleh-oleh Banyumas",
+      "description": "Paket hemat berisi keripik singkong, wedang jahe, dan gula kelapa dari toko kami",
+      "price": 45000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:35.845Z",
+      "updatedAt": "2025-09-01T08:26:35.845Z"
+    },
+    {
+      "id": "1756715196392",
+      "name": "Paket Premium Toko Oleh-oleh Banyumas",
+      "description": "Paket premium berisi batik tulis, tas anyaman, dan kopi robusta khas Banyumas",
+      "price": 350000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:36.392Z",
+      "updatedAt": "2025-09-01T08:26:36.392Z"
+    },
+    {
+      "id": "1756715196920",
+      "name": "Paket Batik Toko Oleh-oleh Banyumas",
+      "description": "Paket khusus batik berisi batik tulis dan batik cap dengan motif khas Banyumas",
+      "price": 250000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:36.920Z",
+      "updatedAt": "2025-09-01T08:26:36.920Z"
+    },
+    {
+      "id": "1756715197456",
+      "name": "Paket Makanan Toko Oleh-oleh Banyumas",
+      "description": "Paket makanan berisi keripik singkong, gula kelapa, dan berbagai camilan khas",
+      "price": 75000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:37.456Z",
+      "updatedAt": "2025-09-01T08:26:37.456Z"
+    },
+    {
+      "id": "1756715197982",
+      "name": "Paket Minuman Toko Oleh-oleh Banyumas",
+      "description": "Paket minuman berisi wedang jahe, kopi robusta, dan teh tradisional",
+      "price": 55000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:37.982Z",
+      "updatedAt": "2025-09-01T08:26:37.982Z"
+    },
+    {
+      "id": "1756715198506",
+      "name": "Paket Kerajinan Toko Oleh-oleh Banyumas",
+      "description": "Paket kerajinan berisi tas anyaman bambu dan souvenir tangan lainnya",
+      "price": 180000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:38.506Z",
+      "updatedAt": "2025-09-01T08:26:38.506Z"
+    },
+    {
+      "id": "1756715199036",
+      "name": "Paket Keluarga Toko Oleh-oleh Banyumas",
+      "description": "Paket lengkap untuk keluarga berisi berbagai oleh-oleh dari semua kategori",
+      "price": 500000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:39.036Z",
+      "updatedAt": "2025-09-01T08:26:39.036Z"
+    },
+    {
+      "id": "1756715199564",
+      "name": "Paket Wisatawan Toko Oleh-oleh Banyumas",
+      "description": "Paket khusus wisatawan dengan ukuran travel-friendly dan harga terjangkau",
+      "price": 120000,
+      "souvenirId": "oleh_oleh_001",
+      "souvenirTitle": "Toko Oleh-oleh Banyumas",
+      "available": true,
+      "category": "Toko Oleh-oleh Umum",
+      "type": "Toko Oleh-oleh Umum",
+      "createdAt": "2025-09-01T08:26:39.564Z",
+      "updatedAt": "2025-09-01T08:26:39.564Z"
+    }
+  ],
+  "village_packages": [
+    {
+      "id": "pkg_1756722076797_0",
+      "title": "Tiket Masuk",
+      "description": "Tiket masuk ke desa wisata dengan akses ke semua area umum",
+      "price": 10000,
+      "category": "Tiket & Parkir",
+      "duration": "Seharian",
+      "rating": 4.8,
+      "popular": true,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "Tidak terbatas",
+      "minOrder": 1,
+      "terms": "Wajib membawa KTP, Minimal pemesanan 1 hari sebelumnya, Pembayaran di muka",
+      "contact": "0812-3456-7890",
+      "location": "Gerbang utama desa wisata",
+      "availableTime": "08:00-17:00",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "10",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Akses ke semua area umum, Pemandangan indah, Suasana pedesaan",
+      "includedItems": "Tiket masuk, Peta desa, Brosur informasi",
+      "excludedItems": "Makanan, Minuman, Transportasi",
+      "cancellationPolicy": "Bisa dibatalkan 24 jam sebelumnya, Refund 50% jika dibatalkan H-1",
+      "ageRestriction": "Semua umur",
+      "difficultyLevel": "Mudah",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Gratis anak < 3 tahun",
+        "Diskon pelajar 50%",
+        "Diskon lansia 25%"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076797_1",
+      "title": "Jasa Pemandu",
+      "description": "Pemandu wisata lokal yang akan menjelaskan budaya dan sejarah desa",
+      "price": 50000,
+      "category": "Layanan",
+      "duration": "2-3 jam",
+      "rating": 4.9,
+      "popular": true,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "10 orang",
+      "minOrder": 1,
+      "terms": "Wajib reservasi minimal 1 hari sebelumnya, Pemandu berpengalaman",
+      "contact": "0812-3456-7890",
+      "location": "Pusat informasi desa wisata",
+      "availableTime": "08:00-16:00",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "15",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Pemandu lokal berpengalaman, Penjelasan budaya lengkap, Bahasa Indonesia",
+      "includedItems": "Pemandu wisata, Penjelasan budaya, Penjelasan sejarah",
+      "excludedItems": "Makanan, Minuman, Transportasi",
+      "cancellationPolicy": "Bisa dibatalkan 24 jam sebelumnya, Refund 75% jika dibatalkan H-1",
+      "ageRestriction": "5+ tahun",
+      "difficultyLevel": "Mudah",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Max 10 orang",
+        "Termasuk sejarah",
+        "Bahasa Indonesia"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076797_2",
+      "title": "Paket Berkebun",
+      "description": "Aktivitas berkebun tradisional dengan bimbingan petani lokal",
+      "price": 20000,
+      "category": "Aktivitas",
+      "duration": "1-2 jam",
+      "rating": 4.7,
+      "popular": false,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "15 orang",
+      "minOrder": 2,
+      "terms": "Wajib membawa pakaian yang nyaman, Minimal pemesanan 2 orang",
+      "contact": "0812-3456-7890",
+      "location": "Area kebun desa wisata",
+      "availableTime": "07:00-11:00, 15:00-17:00",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "20",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Pengalaman berkebun tradisional, Bimbingan petani lokal, Hasil panen segar",
+      "includedItems": "Alat berkebun, Bimbingan petani, Hasil panen",
+      "excludedItems": "Pakaian, Sepatu, Topi",
+      "cancellationPolicy": "Bisa dibatalkan 12 jam sebelumnya, Refund 50% jika dibatalkan H-1",
+      "ageRestriction": "7+ tahun",
+      "difficultyLevel": "Sedang",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Alat disediakan",
+        "Hasil panen",
+        "Edukasi pertanian"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076798_3",
+      "title": "Memasak Tradisional",
+      "description": "Belajar memasak masakan tradisional khas desa dengan resep turun temurun",
+      "price": 30000,
+      "category": "Aktivitas",
+      "duration": "2-3 jam",
+      "rating": 4.8,
+      "popular": true,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "8 orang",
+      "minOrder": 2,
+      "terms": "Wajib membawa celemek, Minimal pemesanan 2 orang, Reservasi 1 hari sebelumnya",
+      "contact": "0812-3456-7890",
+      "location": "Dapur tradisional desa wisata",
+      "availableTime": "09:00-12:00, 14:00-17:00",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "25",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Resep turun temurun, Bahan segar lokal, Bisa dibawa pulang",
+      "includedItems": "Bahan masakan, Peralatan dapur, Resep masakan",
+      "excludedItems": "Celemek, Topi chef, Sepatu dapur",
+      "cancellationPolicy": "Bisa dibatalkan 24 jam sebelumnya, Refund 60% jika dibatalkan H-1",
+      "ageRestriction": "10+ tahun",
+      "difficultyLevel": "Sedang",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Bahan disediakan",
+        "Resep dibagikan",
+        "Bisa dibawa pulang"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076798_4",
+      "title": "Kerajinan Tangan",
+      "description": "Membuat kerajinan tangan tradisional dengan bahan alami",
+      "price": 25000,
+      "category": "Aktivitas",
+      "duration": "1-2 jam",
+      "rating": 4.6,
+      "popular": false,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "12 orang",
+      "minOrder": 2,
+      "terms": "Wajib membawa pakaian yang nyaman, Minimal pemesanan 2 orang",
+      "contact": "0812-3456-7890",
+      "location": "Workshop kerajinan desa wisata",
+      "availableTime": "09:00-12:00, 14:00-17:00",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "15",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Bahan alami lokal, Teknik tradisional, Hasil kerajinan unik",
+      "includedItems": "Bahan kerajinan, Peralatan, Panduan lengkap",
+      "excludedItems": "Pakaian, Sepatu, Topi",
+      "cancellationPolicy": "Bisa dibatalkan 12 jam sebelumnya, Refund 50% jika dibatalkan H-1",
+      "ageRestriction": "8+ tahun",
+      "difficultyLevel": "Sedang",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Bahan disediakan",
+        "Hasil dibawa pulang",
+        "Panduan lengkap"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076798_5",
+      "title": "Homestay Standard",
+      "description": "Menginap di rumah warga dengan fasilitas standar dan suasana pedesaan",
+      "price": 100000,
+      "category": "Penginapan",
+      "duration": "Per malam",
+      "rating": 4.5,
+      "popular": false,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "4 orang",
+      "minOrder": 1,
+      "terms": "Check-in 14:00, Check-out 11:00, Wajib membawa KTP",
+      "contact": "0812-3456-7890",
+      "location": "Rumah warga desa wisata",
+      "availableTime": "24 jam",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "20",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Suasana pedesaan asli, Keramahan warga lokal, Pengalaman menginap unik",
+      "includedItems": "Kamar tidur, Sarapan, WiFi, Kamar mandi dalam",
+      "excludedItems": "Makan siang, Makan malam, Transportasi",
+      "cancellationPolicy": "Bisa dibatalkan 48 jam sebelumnya, Refund 70% jika dibatalkan H-1",
+      "ageRestriction": "Semua umur",
+      "difficultyLevel": "Mudah",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Sarapan",
+        "WiFi",
+        "Kamar mandi dalam"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076798_6",
+      "title": "Homestay Premium",
+      "description": "Menginap di rumah warga dengan fasilitas premium dan kenyamanan maksimal",
+      "price": 150000,
+      "category": "Penginapan",
+      "duration": "Per malam",
+      "rating": 4.8,
+      "popular": true,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "6 orang",
+      "minOrder": 1,
+      "terms": "Check-in 14:00, Check-out 11:00, Wajib membawa KTP, Reservasi 2 hari sebelumnya",
+      "contact": "0812-3456-7890",
+      "location": "Rumah warga premium desa wisata",
+      "availableTime": "24 jam",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "25",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Fasilitas premium, Kenyamanan maksimal, Suasana pedesaan mewah",
+      "includedItems": "Kamar tidur premium, Sarapan, WiFi, AC, Kamar mandi dalam, Terrace",
+      "excludedItems": "Makan siang, Makan malam, Transportasi, Laundry",
+      "cancellationPolicy": "Bisa dibatalkan 72 jam sebelumnya, Refund 80% jika dibatalkan H-1",
+      "ageRestriction": "Semua umur",
+      "difficultyLevel": "Mudah",
+      "seasonality": "Sepanjang Tahun",
+      "features": [
+        "Sarapan",
+        "WiFi",
+        "AC",
+        "Kamar mandi dalam",
+        "Terrace"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "pkg_1756722076798_7",
+      "title": "Paket Camping",
+      "description": "Camping di area desa wisata dengan pemandangan alam yang indah",
+      "price": 50000,
+      "category": "Aktivitas",
+      "duration": "Per malam",
+      "rating": 4.7,
+      "popular": false,
+      "available": true,
+      "image": "/placeholder.jpg",
+      "maxCapacity": "20 orang",
+      "minOrder": 2,
+      "terms": "Wajib membawa sleeping bag, Minimal pemesanan 2 orang, Reservasi 3 hari sebelumnya",
+      "contact": "0812-3456-7890",
+      "location": "Area camping desa wisata",
+      "availableTime": "24 jam",
+      "discount": "Diskon tersedia",
+      "discountType": "percentage",
+      "discountValue": "30",
+      "discountValidUntil": "2025-12-31",
+      "highlights": "Pemandangan alam indah, Suasana camping nyaman, Aktivitas outdoor seru",
+      "includedItems": "Tenda camping, Makan malam, Sarapan, Pemandu camping",
+      "excludedItems": "Sleeping bag, Pakaian pribadi, Transportasi, Peralatan pribadi",
+      "cancellationPolicy": "Bisa dibatalkan 48 jam sebelumnya, Refund 60% jika dibatalkan H-1",
+      "ageRestriction": "12+ tahun",
+      "difficultyLevel": "Sedang",
+      "seasonality": "Musim Kemarau",
+      "features": [
+        "Tenda disediakan",
+        "Makan malam",
+        "Sarapan",
+        "Pemandu"
+      ],
+      "villageId": "desa_wisata_001",
+      "villageSlug": "desa-wisata-banyumas",
+      "created_at": "2025-09-01T10:21:16.795Z",
+      "updated_at": "2025-09-01T10:21:16.795Z"
+    },
+    {
+      "id": "1756722469167",
+      "title": "dawadwd",
+      "description": "dalkhuowhaldhwushudhuw",
+      "price": 222000,
+      "category": "Penginapan",
+      "duration": "1 hari",
+      "villageId": "1",
+      "villageSlug": "dawdawd",
+      "features": [
+        "Fasilitas Dasar"
+      ],
+      "popular": false,
+      "available": true,
+      "rating": 4.8,
+      "image": "",
+      "maxCapacity": "100 orang",
+      "minOrder": 90,
+      "terms": "dlanwlkamwld",
+      "contact": "",
+      "location": "Desa Petahunan, Kecamatan Pekuncen, Kabupaten Banyumas, Jawa Tengah.",
+      "availableTime": "09.00-19.00",
+      "discount": "",
+      "discountType": "percentage",
+      "discountValue": "",
+      "discountValidUntil": "",
+      "highlights": "",
+      "includedItems": [
+        "makanan"
+      ],
+      "excludedItems": [
+        "makanan e dewek"
+      ],
+      "cancellationPolicy": "dwajnwdjlla",
+      "ageRestriction": "semua umur ",
+      "difficultyLevel": "Mudah",
+      "seasonality": "Musim Hujan",
+      "created_at": "2025-09-01T10:27:49.169Z",
+      "updated_at": "2025-09-01T10:27:49.169Z"
     }
   ]
 }

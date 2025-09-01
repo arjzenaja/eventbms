@@ -7,7 +7,7 @@ const dbPath = path.join(process.cwd(), 'db.json');
 
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -43,7 +43,7 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     
     // Read the database file
@@ -94,7 +94,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));

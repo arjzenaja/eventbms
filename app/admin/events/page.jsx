@@ -199,13 +199,22 @@ export default function AdminEvents() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <h1 className="text-3xl font-bold text-gray-900">Events</h1>
-              <Link 
-                href="/admin/events/new" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <span>+</span>
-                Add New
-              </Link>
+              <div className="flex gap-2">
+                <Link 
+                  href="/admin/events/packages" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>📦</span>
+                  Kelola Paket
+                </Link>
+                <Link 
+                  href="/admin/events/new" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Add New
+                </Link>
+              </div>
             </div>
           </div>
         </div>

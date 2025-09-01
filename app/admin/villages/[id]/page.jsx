@@ -20,6 +20,7 @@ export default function EditVillagePage() {
     category: 'Desa Wisata',
     contact: '',
     address: '',
+    coordinates: { lat: '', lng: '' },
     features: ['Budaya Lokal', 'Akomodasi Homestay'],
     recommended: false,
   });
@@ -56,6 +57,10 @@ export default function EditVillagePage() {
             category: village.category || 'Desa Wisata',
             contact: village.contact || '',
             address: village.address || '',
+            coordinates: {
+              lat: village.coordinates?.latitude || village.coordinates?.lat || '',
+              lng: village.coordinates?.longitude || village.coordinates?.lng || ''
+            },
             features: village.features || ['Budaya Lokal', 'Akomodasi Homestay'],
             recommended: village.recommended || false,
           });
@@ -84,6 +89,16 @@ export default function EditVillagePage() {
     setForm(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleCoordinateChange = (field, value) => {
+    setForm(prev => ({
+      ...prev,
+      coordinates: {
+        ...prev.coordinates,
+        [field]: value
+      }
     }));
   };
 
@@ -375,6 +390,51 @@ export default function EditVillagePage() {
                       placeholder="Alamat lengkap desa wisata"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Koordinat Lokasi */}
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">📍 Koordinat Lokasi</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Latitude (Latitude)
+                    </label>
+                    <input
+                      type="text"
+                      value={form.coordinates.lat}
+                      onChange={(e) => handleCoordinateChange('lat', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Contoh: -7.123456"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Format: -7.123456 (negatif untuk belahan bumi selatan)</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Longitude (Longitude)
+                    </label>
+                    <input
+                      type="text"
+                      value={form.coordinates.lng}
+                      onChange={(e) => handleCoordinateChange('lng', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Contoh: 109.123456"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Format: 109.123456 (positif untuk belahan bumi timur)</p>
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <p className="text-sm text-blue-800">
+                    <strong>💡 Cara mendapatkan koordinat:</strong>
+                  </p>
+                  <ul className="text-xs text-blue-700 mt-1 space-y-1">
+                    <li>• Buka Google Maps dan cari lokasi desa wisata</li>
+                    <li>• Klik kanan pada lokasi dan pilih "What's here?"</li>
+                    <li>• Koordinat akan muncul di bagian bawah</li>
+                    <li>• Atau gunakan aplikasi GPS di smartphone</li>
+                  </ul>
                 </div>
               </div>
 

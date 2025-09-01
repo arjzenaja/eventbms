@@ -77,6 +77,8 @@ export default function AdminVillages() {
       Biaya_Masuk: item.entrance_fee || 'Gratis',
       Kontak: item.contact || '',
       Alamat: item.address || '',
+      Latitude: item.coordinates?.latitude || item.coordinates?.lat || '',
+      Longitude: item.coordinates?.longitude || item.coordinates?.lng || '',
       Direkomendasikan: item.recommended ? 'Ya' : 'Tidak'
     }));
 
@@ -143,13 +145,22 @@ export default function AdminVillages() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <h1 className="text-3xl font-bold text-gray-900">Desa Wisata</h1>
-              <Link 
-                href="/admin/villages/new" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <span>+</span>
-                Add New
-              </Link>
+              <div className="flex gap-2">
+                <Link 
+                  href="/admin/villages/packages" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>📦</span>
+                  Kelola Paket
+                </Link>
+                <Link 
+                  href="/admin/villages/new" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Add New
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -379,13 +390,14 @@ export default function AdminVillages() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KATEGORI</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BIAYA MASUK</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KOORDINAT</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredVillages.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
                         Tidak ada data desa wisata yang ditemukan
                       </td>
                     </tr>
@@ -419,6 +431,16 @@ export default function AdminVillages() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.category || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.entrance_fee || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {item.coordinates ? (
+                            <div className="text-xs">
+                              <div>Lat: {item.coordinates.latitude || item.coordinates.lat || '-'}</div>
+                              <div>Lng: {item.coordinates.longitude || item.coordinates.lng || '-'}</div>
+                            </div>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center space-x-2">
                             <Link

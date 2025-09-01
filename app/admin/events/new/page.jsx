@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Upload, Calendar, MapPin, Users, DollarSign, Info } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import GalleryUploader from '@/components/GalleryUploader';
 
 export default function NewEvent() {
   const [formData, setFormData] = useState({
@@ -30,7 +31,11 @@ export default function NewEvent() {
     poster_link: '',
     ticket_link: '',
     additional_info: '',
-    recommended: false
+    latitude: '',
+    longitude: '',
+    opening_hours: '',
+    recommended: false,
+    seats: []
   });
 
   const [imageFiles, setImageFiles] = useState({
@@ -41,6 +46,7 @@ export default function NewEvent() {
     img_sm: null,
     img_lg: null
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -145,29 +151,48 @@ export default function NewEvent() {
     }
   };
 
+  // Seats handlers
+  const addSeat = () => {
+    setFormData(prev => ({
+      ...prev,
+      seats: [
+        ...prev.seats,
+        { seat: '', price: '', desc: '', includes: [], terms_requirements: [], terms_cancellation: [] }
+      ]
+    }));
+  };
+
+  const removeSeat = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      seats: prev.seats.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateSeatField = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      seats: prev.seats.map((s, i) => i === index ? { ...s, [field]: value } : s)
+    }));
+  };
+
   const handleImageChange = (e) => {
     const { name, files } = e.target;
     const file = files[0];
     
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         alert('File harus berupa gambar');
         return;
       }
-      
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Ukuran file maksimal 5MB');
         return;
       }
-      
       setImageFiles(prev => ({
         ...prev,
         [name]: file
       }));
-      
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreviews(prev => ({
@@ -203,12 +228,11 @@ export default function NewEvent() {
     setError('');
 
     try {
-      // Create FormData for file upload
       const formDataToSend = new FormData();
-      
-      // Add form data
       Object.keys(formData).forEach(key => {
         if (key === 'pricing') {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else if (key === 'seats') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else if (Array.isArray(formData[key])) {
           formDataToSend.append(key, JSON.stringify(formData[key]));
@@ -216,53 +240,29 @@ export default function NewEvent() {
           formDataToSend.append(key, formData[key]);
         }
       });
-      
-      // Add image files
-      if (imageFiles.img_sm) {
-        formDataToSend.append('img_sm', imageFiles.img_sm);
-      }
-      if (imageFiles.img_lg) {
-        formDataToSend.append('img_lg', imageFiles.img_lg);
+
+      if (imageFiles.img_sm) formDataToSend.append('img_sm', imageFiles.img_sm);
+      if (imageFiles.img_lg) formDataToSend.append('img_lg', imageFiles.img_lg);
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery[]', file));
       }
 
       const response = await fetch('/api/events', {
         method: 'POST',
-        body: formDataToSend, // Don't set Content-Type header, let browser set it with boundary
+        body: formDataToSend,
       });
       
       const data = await response.json();
       
       if (data.success) {
         alert('Event berhasil dibuat!');
-        // Reset form
+        // Reset minimal
         setFormData({
-          title: '',
-          short_description: '',
-          description: '',
-          event_type: '',
-          category: '',
-          date: '',
-          time: '',
-          end_date: '',
-          end_time: '',
-          location: '',
-          organizer: '',
-          highlights: [],
-          performers: [],
-          pricing: {
-            presale: '',
-            normal: '',
-            vip: '',
-            free: false
-          },
-          facilities: [],
-          poster_link: '',
-          ticket_link: '',
-          additional_info: '',
-          recommended: false
+          title: '', short_description: '', description: '', event_type: '', category: '', date: '', time: '', end_date: '', end_time: '', location: '', organizer: '', highlights: [], performers: [], pricing: { presale: '', normal: '', vip: '', free: false }, facilities: [], poster_link: '', ticket_link: '', additional_info: '', latitude: '', longitude: '', opening_hours: '', recommended: false, seats: []
         });
         setImageFiles({ img_sm: null, img_lg: null });
         setImagePreviews({ img_sm: null, img_lg: null });
+        setGalleryFiles([]);
       } else {
         setError(data.message || 'Gagal membuat event');
       }
@@ -741,6 +741,43 @@ export default function NewEvent() {
               </div>
             </div>
 
+            {/* Paket / Seats */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Paket / Seats</h2>
+              <div className="space-y-4">
+                {formData.seats.map((s, idx) => (
+                  <div key={idx} className="border rounded-lg p-4 space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <input type="text" placeholder="Nama paket (VIP/Reguler)" value={s.seat}
+                        onChange={(e)=>updateSeatField(idx,'seat',e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                      <input type="number" placeholder="Harga (angka)" value={s.price}
+                        onChange={(e)=>updateSeatField(idx,'price',e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                      <input type="text" placeholder="Deskripsi singkat" value={s.desc}
+                        onChange={(e)=>updateSeatField(idx,'desc',e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <input type="text" placeholder="Fitur termasuk (pisahkan koma)" value={Array.isArray(s.includes)? s.includes.join(', ') : s.includes}
+                        onChange={(e)=>updateSeatField(idx,'includes', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                      <input type="text" placeholder="Syarat (pisahkan koma)" value={Array.isArray(s.terms_requirements)? s.terms_requirements.join(', ') : s.terms_requirements}
+                        onChange={(e)=>updateSeatField(idx,'terms_requirements', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                      <input type="text" placeholder="Pembatalan (pisahkan koma)" value={Array.isArray(s.terms_cancellation)? s.terms_cancellation.join(', ') : s.terms_cancellation}
+                        onChange={(e)=>updateSeatField(idx,'terms_cancellation', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                        className="w-full px-3 py-2 border rounded-lg" />
+                    </div>
+                    <div className="flex justify-end">
+                      <button type="button" onClick={()=>removeSeat(idx)} className="text-red-600 text-sm">Hapus Paket</button>
+                    </div>
+                  </div>
+                ))}
+                <button type="button" onClick={addSeat} className="px-4 py-2 bg-blue-600 text-white rounded-lg">+ Tambah Paket</button>
+              </div>
+            </div>
+
             {/* Facilities */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Fasilitas & Keamanan</h2>
@@ -820,6 +857,19 @@ export default function NewEvent() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   placeholder="Contoh: Akses transportasi, info stand pendaftaran, live streaming, parkir gratis, dresscode, larangan bawa makanan, akses untuk difabel, live TikTok/IG, dll."
                 />
+              </div>
+            </div>
+
+            {/* Lokasi & Penyelenggara */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <MapPin className="w-5 h-5 mr-2 text-blue-600" />
+                Koordinat & Jam Operasional
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" name="latitude" value={formData.latitude} onChange={handleInputChange} placeholder="Latitude" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                <input type="text" name="longitude" value={formData.longitude} onChange={handleInputChange} placeholder="Longitude" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                <input type="text" name="opening_hours" value={formData.opening_hours} onChange={handleInputChange} placeholder="09:00 - 21:00" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
               </div>
             </div>
 
@@ -936,6 +986,12 @@ export default function NewEvent() {
                   Tandai sebagai event yang direkomendasikan
                 </label>
               </div>
+            </div>
+
+            {/* Galeri Event */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Galeri Event</h2>
+              <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
             </div>
 
             {/* Submit Buttons */}

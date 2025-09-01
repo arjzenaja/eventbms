@@ -194,13 +194,22 @@ export default function AdminCulinary() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <h1 className="text-3xl font-bold text-gray-900">Kuliner</h1>
-              <Link 
-                href="/admin/culinary/new" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <span>+</span>
-                Add New
-              </Link>
+              <div className="flex gap-3">
+                <Link 
+                  href="/admin/culinary/menu" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>🍽️</span>
+                  Kelola Menu
+                </Link>
+                <Link 
+                  href="/admin/culinary/new" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Add New
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -433,13 +442,14 @@ export default function AdminCulinary() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">JENIS MASAKAN</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RENTANG HARGA</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LOKASI</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KONTAK</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AKSI</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredCulinaryItems.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
                         Tidak ada data kuliner yang ditemukan
                       </td>
                     </tr>
@@ -474,6 +484,9 @@ export default function AdminCulinary() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.cuisine || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.price_range || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {item.contact || item.phone || item.whatsapp || '-'}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center space-x-2">
                             <Link

@@ -27,7 +27,16 @@ export default function EditCulinaryItem() {
     features: ['Masakan Indonesia', 'Suasana Nyaman'],
     img_sm: '',
     img_lg: '',
-    recommended: false
+    recommended: false,
+    // Field tambahan yang ada di halaman detail
+    manager: '',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    website: '',
+    gallery: [],
+    menu: [],
+    category: 'Kuliner'
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,7 +45,7 @@ export default function EditCulinaryItem() {
   useEffect(() => {
     const fetchCulinaryItem = async () => {
       try {
-        const response = await fetch(`/api/culinary/${id}`);
+        const response = await fetch(`/api/kuliner/${id}`);
         const data = await response.json();
         
         if (data.success) {
@@ -54,7 +63,16 @@ export default function EditCulinaryItem() {
             features: data.kuliner.features || ['Masakan Indonesia', 'Suasana Nyaman'],
             img_sm: data.kuliner.img_sm || '',
             img_lg: data.kuliner.img_lg || '',
-            recommended: data.kuliner.recommended || false
+            recommended: data.kuliner.recommended || false,
+            // Field tambahan
+            manager: data.kuliner.manager || '',
+            phone: data.kuliner.phone || '',
+            whatsapp: data.kuliner.whatsapp || '',
+            email: data.kuliner.email || '',
+            website: data.kuliner.website || '',
+            gallery: data.kuliner.gallery || [],
+            menu: data.kuliner.menu || [],
+            category: data.kuliner.category || 'Kuliner'
           });
         } else {
           setError(data.message);
@@ -85,7 +103,7 @@ export default function EditCulinaryItem() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/culinary/${id}`, {
+      const response = await fetch(`/api/kuliner/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -302,20 +320,126 @@ export default function EditCulinaryItem() {
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                      Alamat Lengkap
-                    </label>
-                    <textarea
-                      id="address"
-                      name="address"
-                      rows={2}
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Alamat lengkap lokasi kuliner"
-                    />
-                  </div>
+                                   <div>
+                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                     Alamat Lengkap
+                   </label>
+                   <textarea
+                     id="address"
+                     name="address"
+                     rows={2}
+                     value={formData.address}
+                     onChange={handleInputChange}
+                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                     placeholder="Alamat lengkap lokasi kuliner"
+                   />
+                 </div>
+
+                 {/* Informasi Pengelola */}
+                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Informasi Pengelola</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                       <label htmlFor="manager" className="block text-sm font-medium text-gray-700">
+                         Nama Pengelola
+                       </label>
+                       <input
+                         type="text"
+                         id="manager"
+                         name="manager"
+                         value={formData.manager}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nama pemilik atau pengelola"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                         Nomor Telepon
+                       </label>
+                       <input
+                         type="text"
+                         id="phone"
+                         name="phone"
+                         value={formData.phone}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nomor telepon utama"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
+                         WhatsApp
+                       </label>
+                       <input
+                         type="text"
+                         id="whatsapp"
+                         name="whatsapp"
+                         value={formData.whatsapp}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Nomor WhatsApp"
+                       />
+                     </div>
+
+                     <div>
+                       <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                         Email
+                       </label>
+                       <input
+                         type="email"
+                         id="email"
+                         name="email"
+                         value={formData.email}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Email pengelola"
+                       />
+                     </div>
+
+                     <div className="md:col-span-2">
+                       <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+                         Website
+                       </label>
+                       <input
+                         type="url"
+                         id="website"
+                         name="website"
+                         value={formData.website}
+                         onChange={handleInputChange}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="https://website.com"
+                       />
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Menu Section */}
+                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Menu Makanan</h3>
+                   <div className="space-y-4">
+                     <div>
+                       <label htmlFor="menu" className="block text-sm font-medium text-gray-700 mb-2">
+                         Daftar Menu (Opsional)
+                       </label>
+                       <textarea
+                         id="menu"
+                         name="menu"
+                         rows={4}
+                         value={formData.menu.join('\n')}
+                         onChange={(e) => {
+                           const menuArray = e.target.value.split('\n').map(item => item.trim()).filter(item => item);
+                           setFormData(prev => ({ ...prev, menu: menuArray }));
+                         }}
+                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                         placeholder="Masukkan menu satu per baris&#10;Contoh:&#10;Mendoan Tempe - Rp 8.000&#10;Soto Sokaraja - Rp 18.000&#10;Getuk Goreng - Rp 10.000"
+                       />
+                       <p className="text-xs text-gray-500 mt-1">Masukkan menu satu per baris. Format: Nama Menu - Harga</p>
+                     </div>
+                   </div>
+                 </div>
                 </div>
 
                 <div>

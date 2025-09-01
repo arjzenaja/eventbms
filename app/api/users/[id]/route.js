@@ -5,7 +5,7 @@ import path from 'path';
 // GET user by ID
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     const dbPath = path.join(process.cwd(), 'db.json');
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -38,7 +38,7 @@ export async function GET(request, { params }) {
 // PUT update user
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { name, email, phone, address } = await request.json();
     
     const dbPath = path.join(process.cwd(), 'db.json');

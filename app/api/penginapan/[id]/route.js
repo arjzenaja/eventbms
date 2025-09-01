@@ -19,10 +19,36 @@ export async function GET(request, { params }) {
         message: 'Akomodasi tidak ditemukan'
       }, { status: 404 });
     }
-    
+    // Attach related rooms (mapped to user-facing schema) so the user page can render rooms
+    const allRooms = Array.isArray(dbData.rooms) ? dbData.rooms : [];
+    const relatedRooms = allRooms
+      .filter(room => room.accommodationId === id)
+      .map(room => ({
+        id: room.id,
+        name: room.name,
+        description: room.description || '',
+        price: room.price,
+        // User page expects `includes` (array of facilities)
+        includes: Array.isArray(room.facilities) ? room.facilities : (room.facilities ? [room.facilities] : []),
+        // User page expects human readable capacity like "2 orang"
+        capacity: room.capacity ? `${room.capacity} orang` : undefined,
+        size: room.size,
+        // User page expects `bed`
+        bed: room.bedType,
+        // User page expects `popular`
+        popular: Boolean(room.isPopular),
+        // Keep availability if needed elsewhere
+        available: room.available !== false
+      }));
+
+    const responseData = {
+      ...accommodation,
+      rooms: relatedRooms
+    };
+
     return NextResponse.json({
       success: true,
-      penginapan: accommodation
+      penginapan: responseData
     });
   } catch (error) {
     console.error('Error reading accommodation:', error);

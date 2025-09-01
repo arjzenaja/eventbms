@@ -47,6 +47,21 @@ export async function POST(request) {
     const amenities = formData.get('amenities') || ['WiFi', 'AC', 'Kamar Mandi Dalam'];
     const recommended = formData.get('recommended') === 'true';
     
+    // Field baru yang perlu ditambahkan
+    const price = formData.get('price') || '';
+    const star_rating = formData.get('star_rating') || '3';
+    const manager = formData.get('manager') || '';
+    const phone = formData.get('phone') || '';
+    const whatsapp = formData.get('whatsapp') || '';
+    const email = formData.get('email') || '';
+    const website = formData.get('website') || '';
+    const lat = formData.get('lat') || '';
+    const lng = formData.get('lng') || '';
+
+    const opening_hours = formData.get('opening_hours') || '';
+    const slug = formData.get('slug') || '';
+    const category = formData.get('category') || 'Penginapan';
+    
     // Validate required fields
     if (!title || !location) {
       return NextResponse.json({
@@ -58,6 +73,7 @@ export async function POST(request) {
     // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const galleryFiles = formData.getAll('gallery[]');
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -67,6 +83,7 @@ export async function POST(request) {
     
     let img_sm_path = '/placeholder.jpg';
     let img_lg_path = '/placeholder.jpg';
+    const galleryPaths = [];
     
     // Save small image
     if (img_sm && img_sm instanceof File) {
@@ -88,6 +105,17 @@ export async function POST(request) {
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
       fs.writeFileSync(img_lg_path_full, img_lg_buffer);
       img_lg_path = `/uploads/${img_lg_filename}`;
+    }
+    // Save gallery images
+    for (const file of galleryFiles) {
+      if (file && file instanceof File) {
+        const ext = path.extname(file.name) || '.jpg';
+        const filename = `accommodation_gallery_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`;
+        const full = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        fs.writeFileSync(full, buffer);
+        galleryPaths.push(`/uploads/${filename}`);
+      }
     }
     
     // Read the database file
@@ -118,11 +146,14 @@ export async function POST(request) {
       }
     }
     
+
+
     // Create new penginapan item
     const newPenginapanItem = {
       id: newId,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      gallery: galleryPaths,
       title: title,
       location: location,
       short_description: short_description || description?.substring(0, 100) || description,
@@ -134,6 +165,18 @@ export async function POST(request) {
       address: address,
       amenities: Array.isArray(parsedAmenities) ? parsedAmenities : [parsedAmenities],
       recommended: recommended,
+      // Management team fields
+      manager: manager,
+      phone: phone,
+      whatsapp: whatsapp,
+      email: email,
+      website: website,
+      // Location coordinates
+      coordinates: { lat: lat, lng: lng },
+
+      opening_hours: opening_hours,
+      slug: slug,
+      category: category,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };

@@ -25,7 +25,8 @@ export default function EditEvent() {
     contact: '',
     address: '',
     features: ['Hiburan', 'Makanan'],
-    recommended: false
+    recommended: false,
+    seats: []
   });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
@@ -64,7 +65,8 @@ export default function EditEvent() {
             contact: event.contact || '',
             address: event.address || '',
             features: event.features || ['Hiburan', 'Makanan'],
-            recommended: event.recommended || false
+            recommended: event.recommended || false,
+            seats: Array.isArray(event.seats) ? event.seats : []
           });
           setCurrentImages({
             img_sm: event.img_sm || '',
@@ -149,7 +151,7 @@ export default function EditEvent() {
       
       // Add form data
       Object.keys(formData).forEach(key => {
-        if (key === 'features') {
+        if (key === 'features' || key === 'seats') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else {
           formDataToSend.append(key, formData[key]);
@@ -183,6 +185,23 @@ export default function EditEvent() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Seats form helpers
+  const addSeat = () => {
+    setFormData(prev => ({
+      ...prev,
+      seats: [...prev.seats, { seat: '', price: '', desc: '', includes: [], terms_requirements: [], terms_cancellation: [] }]
+    }));
+  };
+  const removeSeat = (index) => {
+    setFormData(prev => ({ ...prev, seats: prev.seats.filter((_,i)=>i!==index) }));
+  };
+  const updateSeatField = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      seats: prev.seats.map((s,i)=> i===index ? { ...s, [field]: value } : s)
+    }));
   };
 
   if (isLoading) {
@@ -431,6 +450,43 @@ export default function EditEvent() {
                       placeholder="Alamat lengkap event"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Seats / Packages */}
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Paket / Seats</h2>
+                <div className="space-y-4">
+                  {formData.seats.map((s, idx) => (
+                    <div key={idx} className="border rounded-lg p-4 space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" placeholder="Nama paket" value={s.seat}
+                          onChange={(e)=>updateSeatField(idx,'seat',e.target.value)}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                        <input type="number" placeholder="Harga" value={s.price}
+                          onChange={(e)=>updateSeatField(idx,'price',e.target.value)}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                        <input type="text" placeholder="Deskripsi" value={s.desc}
+                          onChange={(e)=>updateSeatField(idx,'desc',e.target.value)}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" placeholder="Fitur termasuk (koma)" value={Array.isArray(s.includes)? s.includes.join(', ') : s.includes}
+                          onChange={(e)=>updateSeatField(idx,'includes', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                        <input type="text" placeholder="Syarat (koma)" value={Array.isArray(s.terms_requirements)? s.terms_requirements.join(', ') : s.terms_requirements}
+                          onChange={(e)=>updateSeatField(idx,'terms_requirements', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                        <input type="text" placeholder="Pembatalan (koma)" value={Array.isArray(s.terms_cancellation)? s.terms_cancellation.join(', ') : s.terms_cancellation}
+                          onChange={(e)=>updateSeatField(idx,'terms_cancellation', e.target.value.split(',').map(t=>t.trim()).filter(Boolean))}
+                          className="w-full px-3 py-2 border rounded-lg" />
+                      </div>
+                      <div className="flex justify-end">
+                        <button type="button" onClick={()=>removeSeat(idx)} className="text-red-600 text-sm">Hapus Paket</button>
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addSeat} className="px-4 py-2 bg-blue-600 text-white rounded-lg">+ Tambah Paket</button>
                 </div>
               </div>
 

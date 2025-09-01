@@ -16,7 +16,7 @@ const EventSearch = () => {
         type="text"
         placeholder="Cari Jelajahi Banyumas"
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 dark:text-white placeholder-gray-700 dark:placeholder-gray-300 !text-gray-900 dark:!text-white shadow-none"
+        className="w-full p-0 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder-white/70 shadow-none"
         style={{ backgroundColor: 'transparent' }}
       />
     </div> 

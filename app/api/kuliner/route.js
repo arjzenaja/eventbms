@@ -48,9 +48,71 @@ export async function POST(request) {
     const features = formData.get('features') || ['Masakan Indonesia', 'Suasana Nyaman'];
     const recommended = formData.get('recommended') === 'true';
     
+    // Field tambahan
+    const manager = formData.get('manager') || '';
+    const phone = formData.get('phone') || '';
+    const whatsapp = formData.get('whatsapp') || '';
+    const email = formData.get('email') || '';
+    const website = formData.get('website') || '';
+    const menu = formData.get('menu') || [];
+    const category = formData.get('category') || 'Kuliner';
+    
+    // Field baru yang perlu ditambahkan
+    const rating = formData.get('rating') || '';
+    const instagram = formData.get('instagram') || '';
+    const slug = formData.get('slug') || '';
+    const lat = formData.get('lat') || '';
+    const lng = formData.get('lng') || '';
+    const halal_status = formData.get('halal_status') === 'true';
+    const delivery_available = formData.get('delivery_available') === 'true';
+    const reservation_available = formData.get('reservation_available') === 'true';
+    
     // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const galleryFiles = formData.getAll('gallery[]');
+
+    // Prepare uploads directory
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+
+    let img_sm_path = '/upcoming/img/food/1-sm.png';
+    let img_lg_path = '/upcoming/img/food/1-lg.png';
+    const galleryPaths = [];
+
+    // Save small image
+    if (img_sm && img_sm instanceof File) {
+      const ext = path.extname(img_sm.name) || '.jpg';
+      const filename = `culinary_sm_${Date.now()}${ext}`;
+      const full = path.join(uploadsDir, filename);
+      const buffer = Buffer.from(await img_sm.arrayBuffer());
+      fs.writeFileSync(full, buffer);
+      img_sm_path = `/uploads/${filename}`;
+    }
+
+    // Save large image
+    if (img_lg && img_lg instanceof File) {
+      const ext = path.extname(img_lg.name) || '.jpg';
+      const filename = `culinary_lg_${Date.now()}${ext}`;
+      const full = path.join(uploadsDir, filename);
+      const buffer = Buffer.from(await img_lg.arrayBuffer());
+      fs.writeFileSync(full, buffer);
+      img_lg_path = `/uploads/${filename}`;
+    }
+
+    // Save gallery images
+    for (const file of galleryFiles) {
+      if (file && file instanceof File) {
+        const ext = path.extname(file.name) || '.jpg';
+        const filename = `culinary_gallery_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`;
+        const full = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        fs.writeFileSync(full, buffer);
+        galleryPaths.push(`/uploads/${filename}`);
+      }
+    }
     
     // Read the database file
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -75,8 +137,9 @@ export async function POST(request) {
     // Create new kuliner item
     const newKulinerItem = {
       id: newId,
-      img_sm: img_sm ? `/uploads/culinary_sm_${Date.now()}.jpg` : '/upcoming/img/food/1-sm.png',
-      img_lg: img_lg ? `/uploads/culinary_lg_${Date.now()}.jpg` : '/upcoming/img/food/1-lg.png',
+      img_sm: img_sm_path,
+      img_lg: img_lg_path,
+      gallery: galleryPaths,
       title: title,
       location: location,
       short_description: short_description || description?.substring(0, 100) || description,
@@ -89,6 +152,22 @@ export async function POST(request) {
       address: address,
       features: Array.isArray(features) ? features : [features],
       recommended: recommended,
+      // Field tambahan
+      manager: manager,
+      phone: phone,
+      whatsapp: whatsapp,
+      email: email,
+      website: website,
+      menu: Array.isArray(menu) ? menu : [menu],
+      category: category,
+      // Field baru yang perlu ditambahkan
+      rating: rating,
+      instagram: instagram,
+      slug: slug,
+      coordinates: { lat: lat, lng: lng },
+      halal_status: halal_status,
+      delivery_available: delivery_available,
+      reservation_available: reservation_available,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };

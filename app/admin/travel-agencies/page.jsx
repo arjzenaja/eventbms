@@ -75,7 +75,21 @@ export default function AdminTravelAgencies() {
       Kategori: item.category || 'Biro Perjalanan',
       Deskripsi: item.short_description || '',
       Biaya: item.price_range || 'Tidak ada info',
-      Kontak: item.contact || '',
+      Kontak: (() => {
+        try {
+          if (typeof item.contact === 'string' && item.contact.startsWith('{')) {
+            const contactData = JSON.parse(item.contact);
+            return `${contactData.phone || ''} | ${contactData.email || ''} | ${contactData.whatsapp || ''}`;
+          } else if (typeof item.contact === 'string') {
+            return item.contact;
+          } else if (item.contact && typeof item.contact === 'object') {
+            return `${item.contact.phone || ''} | ${item.contact.email || ''} | ${item.contact.whatsapp || ''}`;
+          }
+          return '';
+        } catch (e) {
+          return item.contact || '';
+        }
+      })(),
       Alamat: item.address || '',
       Direkomendasikan: item.recommended ? 'Ya' : 'Tidak'
     }));
@@ -143,13 +157,22 @@ export default function AdminTravelAgencies() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
               <h1 className="text-3xl font-bold text-gray-900">Biro Perjalanan</h1>
-              <Link 
-                href="/admin/travel-agencies/new" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
-              >
-                <span>+</span>
-                Add New
-              </Link>
+              <div className="flex gap-2">
+                <Link 
+                  href="/admin/travel-agencies/prices" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>💰</span>
+                  Kelola Harga
+                </Link>
+                <Link 
+                  href="/admin/travel-agencies/new" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Add New
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -417,7 +440,35 @@ export default function AdminTravelAgencies() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.category || '-'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.contact || '-'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {(() => {
+                            try {
+                              if (typeof item.contact === 'string' && item.contact.startsWith('{')) {
+                                const contactData = JSON.parse(item.contact);
+                                return (
+                                  <div className="text-xs">
+                                    <div>📱 {contactData.phone || '-'}</div>
+                                    <div>📧 {contactData.email || '-'}</div>
+                                    <div>📱 {contactData.whatsapp || '-'}</div>
+                                  </div>
+                                );
+                              } else if (typeof item.contact === 'string') {
+                                return item.contact;
+                              } else if (item.contact && typeof item.contact === 'object') {
+                                return (
+                                  <div className="text-xs">
+                                    <div>📱 {item.contact.phone || '-'}</div>
+                                    <div>📧 {item.contact.email || '-'}</div>
+                                    <div>📱 {item.contact.whatsapp || '-'}</div>
+                                  </div>
+                                );
+                              }
+                              return '-';
+                            } catch (e) {
+                              return item.contact || '-';
+                            }
+                          })()}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center space-x-2">
