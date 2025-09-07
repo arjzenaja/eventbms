@@ -1,10 +1,50 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import GalleryUploader from '@/components/GalleryUploader';
+
+function CustomSelect({ label, value, onChange, options, className = '' }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const close = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, []);
+  const current = options.find(o => o.value === value) || options[0];
+  return (
+    <div className={className} ref={ref}>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <button type="button" onClick={() => setOpen(o => !o)} className={`w-full px-4 py-3 border rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 flex items-center justify-between shadow-sm ${open ? 'border-indigo-500' : 'border-gray-300'}`}>
+        <span className="flex items-center gap-3">
+          <span className="text-xl leading-none">{current?.icon}</span>
+          <span className="font-medium truncate">{current?.label}</span>
+        </span>
+        <svg className={`w-5 h-5 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.25 8.29a.75.75 0 01-.02-1.08z" clipRule="evenodd"/></svg>
+      </button>
+      {open && (
+        <div className="relative">
+          <div className="absolute z-20 mt-2 w-full bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+            <div className="max-h-72 overflow-y-auto">
+              {options.map(opt => (
+                <button key={opt.value} type="button" onClick={() => { onChange(opt.value); setOpen(false); }} className={`w-full px-4 py-3 flex items-center justify-between text-left hover:bg-indigo-50 ${value === opt.value ? 'bg-indigo-50' : ''}`}>
+                  <span className="flex items-center gap-3">
+                    <span className="text-xl leading-none">{opt.icon}</span>
+                    <span className={`font-medium ${value === opt.value ? 'text-indigo-700' : 'text-gray-900'}`}>{opt.label}</span>
+                  </span>
+                  {value === opt.value && <svg className="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function NewAccommodation() {
   const router = useRouter();
@@ -192,14 +232,23 @@ export default function NewAccommodation() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Tambah Penginapan Baru</h1>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-indigo-100 rounded-xl">
+                  <svg className="w-7 h-7 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-3a2 2 0 01-2-2V12H8v8a2 2 0 01-2 2H3a2 2 0 01-2-2V10z"/></svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Tambah Penginapan Baru</h1>
+                  <p className="text-gray-600 mt-1">Lengkapi detail penginapan, lokasi, fasilitas, dan gambar.</p>
+                </div>
+              </div>
               <Link 
                 href="/admin/accommodation" 
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
               >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Kembali
               </Link>
             </div>
@@ -208,17 +257,22 @@ export default function NewAccommodation() {
         
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="bg-white shadow sm:rounded-lg">
-              <form onSubmit={handleSubmit} className="space-y-6 p-6">
+            <div className="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden">
+              <form onSubmit={handleSubmit} className="space-y-8 p-8">
                 {/* Basic Information */}
-                <div className="border-b border-gray-200 pb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
+                <div className="border-b border-gray-200 pb-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-blue-100 rounded-lg"><svg className="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                    <h3 className="text-lg font-semibold text-gray-900">Informasi Dasar</h3>
+                  </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                         Nama Penginapan *
                       </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">🏨</div>
                       <input
                         type="text"
                         id="title"
@@ -226,36 +280,26 @@ export default function NewAccommodation() {
                         required
                         value={formData.title}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="Masukkan nama penginapan"
                       />
+                      </div>
                     </div>
 
-                    <div>
-                      <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-                        Tipe Penginapan *
-                      </label>
-                      <select
-                        id="type"
-                        name="type"
-                        required
+                    <CustomSelect
+                      label="Tipe Penginapan *"
                         value={formData.type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        {accommodationTypes.map(type => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                      onChange={(v) => setFormData(prev => ({ ...prev, type: v }))}
+                      options={accommodationTypes.map(t => ({ value: t.value, label: t.label, icon: '🏷️' }))}
+                    />
                   </div>
 
                   <div className="mt-6">
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="location" className="block text-sm font-semibold text-gray-700">
                       Lokasi *
                     </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">📍</div>
                     <input
                       type="text"
                       id="location"
@@ -263,13 +307,14 @@ export default function NewAccommodation() {
                       required
                       value={formData.location}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                       placeholder="Masukkan lokasi"
                     />
+                    </div>
                   </div>
 
                   <div className="mt-6">
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
                       Deskripsi *
                     </label>
                     <textarea
@@ -279,13 +324,13 @@ export default function NewAccommodation() {
                       rows={4}
                       value={formData.description}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                       placeholder="Masukkan deskripsi penginapan"
                     />
                   </div>
 
                   <div className="mt-6">
-                    <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="short_description" className="block text-sm font-semibold text-gray-700">
                       Deskripsi Singkat
                     </label>
                     <textarea
@@ -294,7 +339,7 @@ export default function NewAccommodation() {
                       rows={2}
                       value={formData.short_description}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                       placeholder="Masukkan deskripsi singkat (opsional)"
                     />
                     <p className="text-xs text-gray-500 mt-1">Deskripsi singkat akan digunakan untuk preview di card dan list</p>
@@ -302,8 +347,8 @@ export default function NewAccommodation() {
                 </div>
 
                 {/* Management Team */}
-                <div className="border-b border-gray-200 pb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Tim Pengelola</h3>
+                <div className="border-b border-gray-200 pb-8">
+                  <div className="flex items-center gap-3 mb-6"><div className="p-2 bg-yellow-100 rounded-lg"><svg className="w-6 h-6 text-yellow-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><h3 className="text-lg font-semibold text-gray-900">Tim Pengelola</h3></div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -316,7 +361,7 @@ export default function NewAccommodation() {
                         name="manager"
                         value={formData.manager}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="Nama manager penginapan"
                       />
                     </div>
@@ -331,7 +376,7 @@ export default function NewAccommodation() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="08123456789"
                       />
                     </div>
@@ -346,7 +391,7 @@ export default function NewAccommodation() {
                         name="whatsapp"
                         value={formData.whatsapp}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="08123456789"
                       />
                     </div>
@@ -361,7 +406,7 @@ export default function NewAccommodation() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="manager@penginapan.com"
                       />
                     </div>
@@ -376,7 +421,7 @@ export default function NewAccommodation() {
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="https://www.penginapan.com"
                       />
                     </div>
@@ -384,8 +429,8 @@ export default function NewAccommodation() {
                 </div>
 
                 {/* Location Coordinates */}
-                <div className="border-b border-gray-200 pb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Koordinat Lokasi</h3>
+                <div className="border-b border-gray-200 pb-8">
+                  <div className="flex items-center gap-3 mb-6"><div className="p-2 bg-indigo-100 rounded-lg"><svg className="w-6 h-6 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><h3 className="text-lg font-semibold text-gray-900">Koordinat Lokasi</h3></div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -398,7 +443,7 @@ export default function NewAccommodation() {
                         name="lat"
                         value={formData.coordinates.lat}
                         onChange={(e) => handleCoordinateChange('lat', e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="-7.123456"
                       />
                       <p className="text-xs text-gray-500 mt-1">Contoh: -7.123456</p>
@@ -414,7 +459,7 @@ export default function NewAccommodation() {
                         name="lng"
                         value={formData.coordinates.lng}
                         onChange={(e) => handleCoordinateChange('lng', e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="109.123456"
                       />
                       <p className="text-xs text-gray-500 mt-1">Contoh: 109.123456</p>
@@ -425,8 +470,8 @@ export default function NewAccommodation() {
 
 
                 {/* Pricing and Contact */}
-                <div className="border-b border-gray-200 pb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Kontak</h3>
+                <div className="border-b border-gray-200 pb-8">
+                  <div className="flex items-center gap-3 mb-6"><div className="p-2 bg-green-100 rounded-lg"><svg className="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg></div><h3 className="text-lg font-semibold text-gray-900">Harga dan Kontak</h3></div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -467,7 +512,7 @@ export default function NewAccommodation() {
                           }}
                           required
                           maxLength="6"
-                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 bg-white text-gray-900 shadow-sm"
                           placeholder="500"
                         />
                       </div>
@@ -484,7 +529,7 @@ export default function NewAccommodation() {
                         required
                         value={formData.contact}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="Masukkan kontak penginapan"
                       />
                     </div>
@@ -500,7 +545,7 @@ export default function NewAccommodation() {
                         required
                         value={formData.address}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
                         placeholder="Masukkan alamat penginapan"
                       />
                     </div>
@@ -508,8 +553,8 @@ export default function NewAccommodation() {
                 </div>
 
                 {/* Image Upload Section */}
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Gambar Penginapan</h3>
+                <div className="border-b border-gray-200 pb-8">
+                  <div className="flex items-center gap-3 mb-6"><div className="p-2 bg-teal-100 rounded-lg"><svg className="w-6 h-6 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div><h3 className="text-lg font-semibold text-gray-900">Gambar Penginapan</h3></div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
@@ -531,19 +576,19 @@ export default function NewAccommodation() {
                         name="img_sm"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 shadow-sm transition-all duration-200"
                       />
                       {imagePreviews.img_sm && (
                         <div className="mt-2 relative">
                           <img 
                             src={imagePreviews.img_sm} 
                             alt="Preview Gambar Kecil" 
-                            className="w-32 h-32 object-cover rounded-md border"
+                            className="w-32 h-32 object-cover rounded-xl border-2 border-gray-200 shadow-sm"
                           />
                           <button
                             type="button"
                             onClick={() => handleRemoveImage('img_sm')}
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                            className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold shadow-lg"
                             title="Hapus gambar"
                           >
                             ×
@@ -573,19 +618,19 @@ export default function NewAccommodation() {
                         name="img_lg"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 shadow-sm transition-all duration-200"
                       />
                       {imagePreviews.img_lg && (
                         <div className="mt-2 relative">
                           <img 
                             src={imagePreviews.img_lg} 
                             alt="Preview Gambar Besar" 
-                            className="w-32 h-32 object-cover rounded-md border"
+                            className="w-32 h-32 object-cover rounded-xl border-2 border-gray-200 shadow-sm"
                           />
                           <button
                             type="button"
                             onClick={() => handleRemoveImage('img_lg')}
-                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"
+                            className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold shadow-lg"
                             title="Hapus gambar"
                           >
                             ×
@@ -639,7 +684,7 @@ export default function NewAccommodation() {
                   </div>
                 </div>
 
-                <div className="flex items-center">
+                <div className="pt-6 border-t border-gray-200 flex items-center">
                   <input
                     type="checkbox"
                     id="recommended"
@@ -653,19 +698,20 @@ export default function NewAccommodation() {
                   </label>
                 </div>
 
-                <div className="flex justify-end space-x-3">
+                <div className="flex justify-end space-x-4">
                   <Link
                     href="/admin/accommodation"
-                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transform transition-all duration-200 hover:scale-105 active:scale-95"
                   >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     Batal
                   </Link>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md"
+                    className={`inline-flex items-center gap-2 px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105 active:scale-95 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    {isSubmitting ? 'Menyimpan...' : 'Simpan Penginapan'}
+                    {isSubmitting ? (<><svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Menyimpan...</>) : (<><svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg> Simpan Penginapan</>)}
                   </button>
                 </div>
               </form>
@@ -676,6 +722,7 @@ export default function NewAccommodation() {
     </ProtectedRoute>
   );
 }
+
 
 
 

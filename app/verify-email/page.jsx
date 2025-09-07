@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '@/context/UserContext';
 import { MailCheck, Mail, RefreshCw, ExternalLink, Copy, ShieldCheck, Clock, Sparkles } from 'lucide-react';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useUser();
@@ -163,7 +163,7 @@ export default function VerifyEmailPage() {
               </p>
               <div className="mt-4 grid grid-cols-1 gap-2 text-sm text-gray-700">
                 <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-green-600" /> Buka email berjudul <span className="italic">"Verifikasi Email Akun Dolan Banyumas"</span></div>
-                <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-blue-600" /> Klik tombol “Verifikasi Email” di dalam email</div>
+                <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-blue-600" /> Klik tombol "Verifikasi Email" di dalam email</div>
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-600" /> Cek folder Spam/Promosi jika tidak menemukan email</div>
               </div>
 
@@ -215,6 +215,14 @@ export default function VerifyEmailPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
 

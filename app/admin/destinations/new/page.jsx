@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import AdminMapSelector from '@/components/AdminMapSelector';
@@ -43,6 +43,78 @@ export default function NewDestinationPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Custom dropdown states
+  const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const [isTypeShown, setIsTypeShown] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isCategoryShown, setIsCategoryShown] = useState(false);
+  const typeRef = useRef(null);
+  const categoryRef = useRef(null);
+
+  const typeOptions = [
+    { value: 'wisata-alam', label: 'Wisata Alam', icon: '🏞️' },
+    { value: 'wisata-taman', label: 'Wisata Taman', icon: '🌳' },
+    { value: 'wisata-budaya', label: 'Wisata Budaya', icon: '🏛️' },
+    { value: 'wisata-sejarah', label: 'Wisata Sejarah', icon: '🕰️' },
+    { value: 'wisata-buatan', label: 'Wisata Buatan', icon: '🎡' },
+    { value: 'wisata-minat-khusus', label: 'Wisata Minat Khusus', icon: '🎯' },
+    { value: 'wisata-religi', label: 'Wisata Religi', icon: '🕌' },
+  ];
+
+  const categoryOptions = [
+    { value: 'Wisata', label: 'Wisata', icon: '🗺️' },
+    { value: 'Kuliner', label: 'Kuliner', icon: '🍜' },
+    { value: 'Penginapan', label: 'Penginapan', icon: '🏨' },
+    { value: 'Transportasi', label: 'Transportasi', icon: '🚌' },
+    { value: 'Edukasi', label: 'Edukasi', icon: '🎓' },
+    { value: 'Olahraga', label: 'Olahraga', icon: '🏃' },
+    { value: 'Lainnya', label: 'Lainnya', icon: '➕' },
+  ];
+
+  const getTypeLabel = (v) => typeOptions.find(o => o.value === v)?.label || v;
+  const getCategoryLabel = (v) => categoryOptions.find(o => o.value === v)?.label || v;
+
+  // Outside click / ESC handlers
+  useEffect(() => {
+    const onDown = (e) => {
+      if (typeRef.current && !typeRef.current.contains(e.target)) {
+        if (isTypeOpen) {
+          setIsTypeShown(false);
+          setTimeout(() => setIsTypeOpen(false), 150);
+        }
+      }
+      if (categoryRef.current && !categoryRef.current.contains(e.target)) {
+        if (isCategoryOpen) {
+          setIsCategoryShown(false);
+          setTimeout(() => setIsCategoryOpen(false), 150);
+        }
+      }
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        if (isTypeOpen) {
+          setIsTypeShown(false);
+          setTimeout(() => setIsTypeOpen(false), 150);
+        }
+        if (isCategoryOpen) {
+          setIsCategoryShown(false);
+          setTimeout(() => setIsCategoryOpen(false), 150);
+        }
+      }
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isTypeOpen, isCategoryOpen]);
+
+  const openType = () => { if (!isTypeOpen) { setIsTypeOpen(true); setTimeout(() => setIsTypeShown(true), 0);} };
+  const closeType = () => { if (isTypeOpen) { setIsTypeShown(false); setTimeout(() => setIsTypeOpen(false), 150);} };
+  const openCategory = () => { if (!isCategoryOpen) { setIsCategoryOpen(true); setTimeout(() => setIsCategoryShown(true), 0);} };
+  const closeCategory = () => { if (isCategoryOpen) { setIsCategoryShown(false); setTimeout(() => setIsCategoryOpen(false), 150);} };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -130,6 +202,13 @@ export default function NewDestinationPage() {
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
       }
+      
+      // Add gallery images
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach((file, index) => {
+          formDataToSend.append('gallery_images', file);
+        });
+      }
 
       // Attach pricing JSON (backend can ignore if not implemented yet)
       formDataToSend.append('pricing', JSON.stringify({
@@ -175,15 +254,27 @@ export default function NewDestinationPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Tambah Destinasi Baru</h1>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7l9-4 9 4-9 4-9-4z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 7v10l-9 4-9-4V7" />
+                  </svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Tambah Destinasi Baru</h1>
+                  <p className="mt-1 text-sm text-gray-500">Lengkapi informasi destinasi, lokasi, gambar, dan harga.</p>
+                </div>
+              </div>
               <Link 
                 href="/admin/destinations"
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
               >
-                ← Kembali ke Destinasi
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
+                Kembali ke Destinasi
               </Link>
             </div>
           </div>
@@ -191,8 +282,8 @@ export default function NewDestinationPage() {
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                     {error}
@@ -212,7 +303,7 @@ export default function NewDestinationPage() {
                       value={formData.title}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-500 shadow-sm transition-all duration-200"
                       placeholder="Contoh: Hutan Pinus Limpakuwus"
                     />
                   </div>
@@ -229,7 +320,7 @@ export default function NewDestinationPage() {
                       onChange={handleInputChange}
                       required
                       rows={2}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-500 shadow-sm transition-all duration-200"
                       placeholder="Deskripsi singkat destinasi wisata..."
                     />
                   </div>
@@ -246,7 +337,7 @@ export default function NewDestinationPage() {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-500 shadow-sm transition-all duration-200"
                       placeholder="Deskripsi lengkap tentang destinasi wisata..."
                     />
                   </div>
@@ -261,49 +352,85 @@ export default function NewDestinationPage() {
                   </div>
 
                                     {/* Tipe */}
-                  <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                      Tipe Destinasi *
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                  <div ref={typeRef}>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tipe Destinasi *</label>
+                    <button
+                      type="button"
+                      onClick={() => (isTypeOpen ? closeType() : openType())}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 flex items-center justify-between shadow-sm"
+                      aria-haspopup="listbox"
+                      aria-expanded={isTypeOpen}
                     >
-                      <option value="wisata-alam">Wisata Alam</option>
-                      <option value="wisata-taman">Wisata Taman</option>
-                      <option value="wisata-budaya">Wisata Budaya</option>
-                      <option value="wisata-sejarah">Wisata Sejarah</option>
-                      <option value="wisata-buatan">Wisata Buatan</option>
-                      <option value="wisata-minat-khusus">Wisata Minat Khusus</option>
-                      <option value="wisata-religi">Wisata Religi</option>
-                    </select>
+                      <span className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h18M3 12h18M3 20h18"/></svg>
+                        <span className="text-gray-900 font-medium">{getTypeLabel(formData.type)}</span>
+                      </span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    {isTypeOpen && (
+                      <div className="relative">
+                        <ul className={`absolute z-20 mt-2 w-full max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl transform transition duration-150 ease-out origin-top ${isTypeShown ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1'}`}>
+                          {typeOptions.map((opt) => (
+                            <li key={opt.value}>
+                              <button
+                                type="button"
+                                onClick={() => { setFormData(prev => ({ ...prev, type: opt.value })); closeType(); }}
+                                className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 outline-none ${formData.type === opt.value ? 'bg-blue-50' : ''}`}
+                              >
+                                <span className="flex items-center gap-3">
+                                  <span className="text-xl leading-none">{opt.icon}</span>
+                                  <span className={`text-sm ${formData.type === opt.value ? 'text-blue-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</span>
+                                </span>
+                                {formData.type === opt.value && (
+                                  <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+                                )}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
 
                   {/* Kategori */}
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                      Kategori Destinasi *
-                    </label>
-                    <select
-                      id="category"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                  <div ref={categoryRef}>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Kategori Destinasi *</label>
+                    <button
+                      type="button"
+                      onClick={() => (isCategoryOpen ? closeCategory() : openCategory())}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 flex items-center justify-between shadow-sm"
+                      aria-haspopup="listbox"
+                      aria-expanded={isCategoryOpen}
                     >
-                      <option value="Wisata">Wisata</option>
-                      <option value="Kuliner">Kuliner</option>
-                      <option value="Penginapan">Penginapan</option>
-                      <option value="Transportasi">Transportasi</option>
-                      <option value="Edukasi">Edukasi</option>
-                      <option value="Olahraga">Olahraga</option>
-                      <option value="Lainnya">Lainnya</option>
-                    </select>
+                      <span className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h18M3 12h18M3 20h18"/></svg>
+                        <span className="text-gray-900 font-medium">{getCategoryLabel(formData.category)}</span>
+                      </span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    {isCategoryOpen && (
+                      <div className="relative">
+                        <ul className={`absolute z-20 mt-2 w-full max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl transform transition duration-150 ease-out origin-top ${isCategoryShown ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1'}`}>
+                          {categoryOptions.map((opt) => (
+                            <li key={opt.value}>
+                              <button
+                                type="button"
+                                onClick={() => { setFormData(prev => ({ ...prev, category: opt.value })); closeCategory(); }}
+                                className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 outline-none ${formData.category === opt.value ? 'bg-blue-50' : ''}`}
+                              >
+                                <span className="flex items-center gap-3">
+                                  <span className="text-xl leading-none">{opt.icon}</span>
+                                  <span className={`text-sm ${formData.category === opt.value ? 'text-blue-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</span>
+                                </span>
+                                {formData.category === opt.value && (
+                                  <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+                                )}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
 
                   {/* Biaya Masuk */}
@@ -311,15 +438,21 @@ export default function NewDestinationPage() {
                     <label htmlFor="entrance_fee" className="block text-sm font-medium text-gray-700 mb-2">
                       Biaya Masuk
                     </label>
-                    <input
-                      type="text"
-                      id="entrance_fee"
-                      name="entrance_fee"
-                      value={formData.entrance_fee}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="Contoh: Rp 10.000 atau Gratis"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 16v-4"/></svg>
+                      </div>
+                      <input
+                        type="text"
+                        id="entrance_fee"
+                        name="entrance_fee"
+                        value={formData.entrance_fee}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                        placeholder="Contoh: Rp 10.000 atau Gratis"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Isi dengan angka atau tulis “Gratis”.</p>
                   </div>
 
                   {/* Jam Buka */}
@@ -327,15 +460,20 @@ export default function NewDestinationPage() {
                     <label htmlFor="opening_hours" className="block text-sm font-medium text-gray-700 mb-2">
                       Jam Buka
                     </label>
-                    <input
-                      type="text"
-                      id="opening_hours"
-                      name="opening_hours"
-                      value={formData.opening_hours}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="Contoh: 08.00 - 17.00"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      </div>
+                      <input
+                        type="text"
+                        id="opening_hours"
+                        name="opening_hours"
+                        value={formData.opening_hours}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                        placeholder="Contoh: 08.00 - 17.00"
+                      />
+                    </div>
                   </div>
 
                   {/* Rating */}
@@ -343,18 +481,23 @@ export default function NewDestinationPage() {
                     <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-2">
                       Rating (1-5)
                     </label>
-                    <input
-                      type="number"
-                      id="rating"
-                      name="rating"
-                      value={formData.rating}
-                      onChange={handleInputChange}
-                      min="1"
-                      max="5"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="Contoh: 4.5"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                      </div>
+                      <input
+                        type="number"
+                        id="rating"
+                        name="rating"
+                        value={formData.rating}
+                        onChange={handleInputChange}
+                        min="1"
+                        max="5"
+                        step="0.1"
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                        placeholder="Contoh: 4.5"
+                      />
+                    </div>
                   </div>
 
                   {/* Pengelola Wisata */}
@@ -368,7 +511,7 @@ export default function NewDestinationPage() {
                       name="manager"
                       value={formData.manager}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                       placeholder="Nama pengelola atau kontak"
                     />
                   </div>
@@ -378,15 +521,20 @@ export default function NewDestinationPage() {
                     <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-2">
                       Kontak (Phone/WhatsApp)
                     </label>
-                    <input
-                      type="text"
-                      id="contact"
-                      name="contact"
-                      value={formData.contact}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
-                      placeholder="Contoh: 08123456789 atau +628123456789"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 19.72V23a2 2 0 01-2 2h-1C9.163 25 3 18.837 3 11V10a2 2 0 012-2z"/></svg>
+                      </div>
+                      <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        value={formData.contact}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
+                        placeholder="Contoh: 08123456789 atau +628123456789"
+                      />
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">Masukkan nomor telepon atau WhatsApp</p>
                   </div>
 
@@ -401,7 +549,7 @@ export default function NewDestinationPage() {
                       value={formData.address}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                       placeholder="Alamat lengkap destinasi wisata..."
                     />
                   </div>
@@ -411,7 +559,7 @@ export default function NewDestinationPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Fitur & Fasilitas
                     </label>
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {[
                           'Parkir Luas',
@@ -467,7 +615,7 @@ export default function NewDestinationPage() {
                               }
                             }
                           }}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 text-sm"
                         />
                       </div>
                       {formData.features.length > 0 && (
@@ -502,7 +650,7 @@ export default function NewDestinationPage() {
 
                   {/* Pricing (Baru) */}
                   <div className="md:col-span-2">
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                       <h3 className="text-base font-semibold text-gray-900 mb-3">Pricing</h3>
                       <div className="flex flex-wrap items-center gap-4 mb-3">
                         <label className="inline-flex items-center gap-2 text-gray-700 font-medium">
@@ -538,7 +686,7 @@ export default function NewDestinationPage() {
                         <select
                           value={pricing.unit}
                           onChange={(e) => setPricing(prev => ({ ...prev, unit: e.target.value }))}
-                          className="ml-auto px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          className="ml-auto px-3 py-2 border border-gray-300 rounded-lg text-sm"
                           title="Unit standar"
                         >
                           <option value="per_tiket">/ tiket</option>
@@ -556,12 +704,12 @@ export default function NewDestinationPage() {
                               min="0"
                               value={pricing.value}
                               onChange={(e) => setPricing(prev => ({ ...prev, value: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                               placeholder="cth: 75000"
                             />
                           </div>
                           <div className="flex items-end">
-                            <div className="text-sm text-gray-600 bg-white border rounded-md px-3 py-2">Ditampilkan sebagai: Rp X {pricing.unit.replace('_', ' ')}</div>
+                            <div className="text-sm text-gray-600 bg-white border rounded-lg px-3 py-2">Ditampilkan sebagai: Rp X {pricing.unit.replace('_', ' ')}</div>
                           </div>
                         </div>
                       )}
@@ -569,7 +717,7 @@ export default function NewDestinationPage() {
                       {pricing.type === 'packages' && (
                         <div className="space-y-4">
                           {pricing.packages.map((pkg, idx) => (
-                            <div key={idx} className="border rounded-md p-3 bg-white">
+                            <div key={idx} className="border rounded-lg p-3 bg-white">
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div>
                                   <label className="block text-sm font-medium text-gray-700 mb-1">Nama Paket</label>
@@ -580,7 +728,7 @@ export default function NewDestinationPage() {
                                       ...prev,
                                       packages: prev.packages.map((p, i) => i === idx ? { ...p, name: e.target.value } : p)
                                     }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                     placeholder="cth: Paket Family"
                                   />
                                 </div>
@@ -594,7 +742,7 @@ export default function NewDestinationPage() {
                                       ...prev,
                                       packages: prev.packages.map((p, i) => i === idx ? { ...p, price: e.target.value } : p)
                                     }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                     placeholder="cth: 250000"
                                   />
                                 </div>
@@ -606,7 +754,7 @@ export default function NewDestinationPage() {
                                       ...prev,
                                       packages: prev.packages.map((p, i) => i === idx ? { ...p, unit: e.target.value } : p)
                                     }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                   >
                                     <option value="per_paket">/ paket</option>
                                     <option value="per_orang">/ orang</option>
@@ -632,7 +780,7 @@ export default function NewDestinationPage() {
                                       };
                                       reader.readAsDataURL(file);
                                     }}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                   />
                                   {pkg.imagePreview && (
                                     <img src={pkg.imagePreview} alt="preview" className="mt-2 w-24 h-16 object-cover rounded" />
@@ -647,7 +795,7 @@ export default function NewDestinationPage() {
                                       ...prev,
                                       packages: prev.packages.map((p, i) => i === idx ? { ...p, includes: e.target.value } : p)
                                     }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                     placeholder="Guide, Snack, Transport"
                                   />
                                 </div>
@@ -660,7 +808,7 @@ export default function NewDestinationPage() {
                                       ...prev,
                                       packages: prev.packages.map((p, i) => i === idx ? { ...p, terms: e.target.value } : p)
                                     }))}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                     placeholder="Minimal 4 orang\nDP 50%"
                                   />
                                 </div>
@@ -680,7 +828,7 @@ export default function NewDestinationPage() {
                           <button
                             type="button"
                             onClick={() => setPricing(prev => ({ ...prev, packages: [...prev.packages, { name: '', price: '', unit: 'per_paket', imageFile: null, imagePreview: null, includes: '', terms: '' }] }))}
-                            className="px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50"
+                            className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                           >
                             + Tambah Paket
                           </button>
@@ -698,7 +846,7 @@ export default function NewDestinationPage() {
                     <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
                       Gambar Kecil (untuk Card/Thumbnail)
                     </label>
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                       <p className="text-sm text-blue-800 font-medium mb-1">📱 Digunakan untuk:</p>
                       <ul className="text-xs text-blue-700 space-y-1">
                         <li>• Card destinasi di halaman utama</li>
@@ -714,7 +862,7 @@ export default function NewDestinationPage() {
                       name="img_sm"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     />
                     {imagePreviews.img_sm && (
                       <div className="mt-2">
@@ -733,7 +881,7 @@ export default function NewDestinationPage() {
                     <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
                       Gambar Besar (untuk Detail/Hero)
                     </label>
-                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
                       <p className="text-sm text-green-800 font-medium mb-1">🖼️ Digunakan untuk:</p>
                       <ul className="text-xs text-green-700 space-y-1">
                         <li>• Halaman detail destinasi</li>
@@ -749,7 +897,7 @@ export default function NewDestinationPage() {
                       name="img_lg"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     />
                     {imagePreviews.img_lg && (
                       <div className="mt-2">
@@ -768,7 +916,7 @@ export default function NewDestinationPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Galeri Foto (opsional)
                     </label>
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                       <p className="text-sm text-gray-700 mb-2">Tambahkan beberapa foto untuk galeri destinasi.</p>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {galleryPreviews.map((preview, index) => (
@@ -776,8 +924,11 @@ export default function NewDestinationPage() {
                             <img src={preview} alt={`Gallery preview ${index + 1}`} className="w-full h-full object-cover" />
                             <button
                               type="button"
-                              onClick={() => setGalleryPreviews(prev => prev.filter((_, i) => i !== index))}
-                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                              onClick={() => {
+                                setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+                                setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+                              }}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transform transition-transform duration-150 hover:scale-110 active:scale-95"
                               title="Hapus foto"
                             >
                               ×
@@ -791,13 +942,28 @@ export default function NewDestinationPage() {
                             multiple
                             onChange={(e) => {
                               const files = Array.from(e.target.files || []);
-                              const newPreviews = [...galleryPreviews];
+                              
+                              // Validate files
+                              for (const file of files) {
+                                if (!file.type.startsWith('image/')) {
+                                  alert('Semua file harus berupa gambar');
+                                  return;
+                                }
+                                if (file.size > 5 * 1024 * 1024) {
+                                  alert('Ukuran file maksimal 5MB per file');
+                                  return;
+                                }
+                              }
+                              
+                              // Add files to galleryFiles
+                              setGalleryFiles(prev => [...prev, ...files]);
+                              
+                              // Create previews
                               files.forEach(file => {
                                 if (file) {
                                   const reader = new FileReader();
                                   reader.onload = (ev) => {
-                                    newPreviews.push(ev.target?.result);
-                                    setGalleryPreviews(newPreviews);
+                                    setGalleryPreviews(prev => [...prev, ev.target?.result]);
                                   };
                                   reader.readAsDataURL(file);
                                 }
@@ -833,14 +999,14 @@ export default function NewDestinationPage() {
                 <div className="flex justify-end space-x-3 pt-6 border-t">
                   <Link
                     href="/admin/destinations"
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                   >
                     Batal
                   </Link>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-transform duration-150 hover:scale-105 active:scale-95"
                   >
                     {isSubmitting ? 'Menyimpan...' : 'Simpan Destinasi'}
                   </button>

@@ -29,12 +29,32 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    // Check if database file exists
+    if (!fs.existsSync(dbPath)) {
+      console.error('Database file not found:', dbPath);
+      return NextResponse.json({
+        success: false,
+        message: 'Database file not found',
+        error: 'Database file does not exist'
+      }, { status: 500 });
+    }
+
     const formData = await request.formData();
+    
+    // Validate required fields
+    const title = formData.get('title');
+    const location = formData.get('location');
+    
+    if (!title || !location) {
+      return NextResponse.json({
+        success: false,
+        message: 'Title dan location harus diisi',
+        error: 'Missing required fields'
+      }, { status: 400 });
+    }
+    
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
     if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-    
-    // Read existing data
-    const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     
     // Handle images
     const img_sm = formData.get('img_sm');
@@ -66,14 +86,22 @@ export async function POST(request) {
       }
     }
 
+    // Read existing data
+    const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    
+    // Initialize oleh_oleh array if it doesn't exist
+    if (!dbData.oleh_oleh) {
+      dbData.oleh_oleh = [];
+    }
+
     // Create new oleh-oleh object
     const newOlehOleh = {
       id: Date.now().toString(),
       img_sm: img_sm_path,
       img_lg: img_lg_path,
       gallery: galleryPaths,
-      title: formData.get('title') || '',
-      location: formData.get('location') || '',
+      title: title,
+      location: location,
       short_description: formData.get('short_description') || '',
       description: formData.get('description') || '',
       type: formData.get('type') || 'pakaian',
@@ -101,13 +129,12 @@ export async function POST(request) {
     };
     
     // Add to database
-    if (!dbData.oleh_oleh) {
-      dbData.oleh_oleh = [];
-    }
     dbData.oleh_oleh.push(newOlehOleh);
     
     // Write back to file
     fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
+    
+    console.log('Created new oleh-oleh:', newOlehOleh.title);
     
     return NextResponse.json({
       success: true,

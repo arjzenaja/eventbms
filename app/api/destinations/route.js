@@ -79,6 +79,7 @@ export async function POST(request) {
     const short_description = formData.get('short_description');
     const description = formData.get('description');
     const entrance_fee = formData.get('entrance_fee');
+    const manager = formData.get('manager');
     const contact = formData.get('contact');
     const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
@@ -137,9 +138,11 @@ export async function POST(request) {
     // Handle image uploads
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const gallery_images = formData.getAll('gallery_images');
     
     let img_sm_path = '/placeholder.jpg';
     let img_lg_path = '/placeholder.jpg';
+    let gallery_paths = [];
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -167,6 +170,21 @@ export async function POST(request) {
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
       fs.writeFileSync(img_lg_path_full, img_lg_buffer);
       img_lg_path = `/uploads/${img_lg_filename}`;
+    }
+    
+    // Save gallery images
+    if (gallery_images && gallery_images.length > 0) {
+      for (const galleryImage of gallery_images) {
+        if (galleryImage instanceof File) {
+          const gallery_ext = path.extname(galleryImage.name);
+          const gallery_filename = `dest_gallery_${Date.now()}_${Math.random().toString(36).substr(2, 9)}${gallery_ext}`;
+          const gallery_path_full = path.join(uploadsDir, gallery_filename);
+          
+          const gallery_buffer = Buffer.from(await galleryImage.arrayBuffer());
+          fs.writeFileSync(gallery_path_full, gallery_buffer);
+          gallery_paths.push(`/uploads/${gallery_filename}`);
+        }
+      }
     }
     
     // Save package images if provided
@@ -204,6 +222,7 @@ export async function POST(request) {
       id: newId,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      gallery: gallery_paths,
       title: title,
       location: location,
       short_description: short_description || '',
@@ -211,6 +230,7 @@ export async function POST(request) {
       type: type,
       category: category || 'Wisata',
       entrance_fee: entrance_fee || 'Gratis',
+      manager: manager || '',
       contact: contact || '',
       address: address || '',
       coordinates: coordinates,

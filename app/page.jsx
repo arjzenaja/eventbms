@@ -27,68 +27,97 @@ const Home = () => {
       ) : (
         <div className="relative">
           {/* Features Section */}
-          <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                  <BiAward className="text-xl" />
-                  <span className="font-semibold">Fitur Unggulan</span>
+          <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-500 rounded-full blur-3xl"></div>
+            </div>
+            
+            <div className="container mx-auto px-4 relative z-10">
+              <div className="text-center mb-20">
+                <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 text-white px-8 py-4 rounded-2xl mb-8 shadow-2xl backdrop-blur-sm border border-white/20">
+                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                    <BiAward className="text-xl" />
+                  </div>
+                  <span className="font-bold text-lg">Fitur Unggulan</span>
                 </div>
-                <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-                  Mengapa Memilih <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Dolan Banyumas</span>?
+                <h2 className="text-5xl md:text-7xl font-black text-gray-900 dark:text-white mb-8 leading-tight">
+                  Mengapa Memilih <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600">Dolan Banyumas</span>?
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-xl max-w-4xl mx-auto leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 text-xl md:text-2xl max-w-5xl mx-auto leading-relaxed font-light">
                   Platform wisata terdepan yang menghadirkan pengalaman lengkap untuk menjelajahi keindahan alam, 
                   kekayaan budaya, dan cita rasa kuliner yang memukau di jantung Jawa Tengah
                 </p>
               </div>
               
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
                 <div className="group">
-                  <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 hover:-translate-y-4 transition-all duration-500 shadow-xl hover:shadow-2xl border border-gray-100 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
-                      <BiCamera className="text-white text-3xl" />
+                  <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-10 text-center hover:bg-white dark:hover:bg-gray-800 hover:-translate-y-6 transition-all duration-700 shadow-2xl hover:shadow-3xl border border-white/50 dark:border-gray-700/50 overflow-hidden">
+                    {/* Background Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-2xl shadow-blue-500/25">
+                        <BiCamera className="text-white text-4xl" />
+                      </div>
+                      <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">500+ Destinasi</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium">
+                        Jelajahi berbagai objek wisata alam, budaya, dan sejarah yang menarik di Banyumas
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">500+ Destinasi</h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                      Jelajahi berbagai objek wisata alam, budaya, dan sejarah yang menarik di Banyumas
-                    </p>
                   </div>
                 </div>
                 
                 <div className="group">
-                  <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center hover:bg-gradient-to-br hover:from-green-50 hover:to-blue-50 dark:hover:from-green-900/20 dark:hover:to-blue-900/20 hover:-translate-y-4 transition-all duration-500 shadow-xl hover:shadow-2xl border border-gray-100 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
-                      <BiRestaurant className="text-white text-3xl" />
+                  <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-10 text-center hover:bg-white dark:hover:bg-gray-800 hover:-translate-y-6 transition-all duration-700 shadow-2xl hover:shadow-3xl border border-white/50 dark:border-gray-700/50 overflow-hidden">
+                    {/* Background Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="w-24 h-24 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-2xl shadow-green-500/25">
+                        <BiRestaurant className="text-white text-4xl" />
+                      </div>
+                      <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">Kuliner Lokal</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium">
+                        Nikmati cita rasa autentik masakan Jawa dengan sentuhan lokal yang unik dan lezat
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Kuliner Lokal</h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                      Nikmati cita rasa autentik masakan Jawa dengan sentuhan lokal yang unik dan lezat
-                    </p>
                   </div>
                 </div>
                 
                 <div className="group">
-                  <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 dark:hover:from-purple-900/20 dark:hover:to-pink-900/20 hover:-translate-y-4 transition-all duration-500 shadow-xl hover:shadow-2xl border border-gray-100 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
-                      <BiHotel className="text-white text-3xl" />
+                  <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-10 text-center hover:bg-white dark:hover:bg-gray-800 hover:-translate-y-6 transition-all duration-700 shadow-2xl hover:shadow-3xl border border-white/50 dark:border-gray-700/50 overflow-hidden">
+                    {/* Background Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-500 via-violet-600 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-2xl shadow-purple-500/25">
+                        <BiHotel className="text-white text-4xl" />
+                      </div>
+                      <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300">Penginapan</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium">
+                        Temukan hotel, homestay, dan villa dengan fasilitas lengkap untuk kenyamanan Anda
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Penginapan</h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                      Temukan hotel, homestay, dan villa dengan fasilitas lengkap untuk kenyamanan Anda
-                    </p>
                   </div>
                 </div>
                 
                 <div className="group">
-                  <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center hover:bg-gradient-to-br hover:from-orange-50 hover:to-red-50 dark:hover:from-orange-900/20 dark:hover:to-red-900/20 hover:-translate-y-4 transition-all duration-500 shadow-xl hover:shadow-2xl border border-gray-100 dark:border-gray-700">
-                    <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
-                      <BiGift className="text-white text-3xl" />
+                  <div className="relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-10 text-center hover:bg-white dark:hover:bg-gray-800 hover:-translate-y-6 transition-all duration-700 shadow-2xl hover:shadow-3xl border border-white/50 dark:border-gray-700/50 overflow-hidden">
+                    {/* Background Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="w-24 h-24 bg-gradient-to-br from-orange-500 via-red-600 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-2xl shadow-orange-500/25">
+                        <BiGift className="text-white text-4xl" />
+                      </div>
+                      <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-300">Oleh-oleh</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium">
+                        Bawa pulang souvenir dan makanan khas Banyumas sebagai kenangan perjalanan
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Oleh-oleh</h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                      Bawa pulang souvenir dan makanan khas Banyumas sebagai kenangan perjalanan
-                    </p>
                   </div>
                 </div>
               </div>
@@ -152,6 +181,7 @@ const Home = () => {
                       <p className="text-lg font-bold">Bunderan Batur</p>
                       <p className="text-sm opacity-90">Ikon Kota Banyumas</p>
                     </div>
+
                   </div>
                   
                   {/* Floating elements */}
@@ -405,64 +435,88 @@ const Home = () => {
           </section>
 
           {/* Call to Action Section */}
-          <section className="py-20 bg-white dark:bg-gray-800">
-            <div className="container mx-auto px-4">
+          <section className="py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500 rounded-full blur-3xl animate-pulse"></div>
+            </div>
+            
+            {/* Animated Stars */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-10 left-10 w-2 h-2 bg-white rounded-full animate-ping"></div>
+              <div className="absolute top-20 right-20 w-1 h-1 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute bottom-20 left-20 w-2 h-2 bg-white rounded-full animate-ping"></div>
+              <div className="absolute bottom-10 right-10 w-1 h-1 bg-yellow-300 rounded-full animate-ping"></div>
+              <div className="absolute top-1/3 left-1/3 w-1 h-1 bg-white rounded-full animate-ping"></div>
+              <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-yellow-300 rounded-full animate-ping"></div>
+            </div>
+            
+            <div className="container mx-auto px-4 relative z-10">
               <div className="text-center">
-                <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 rounded-3xl p-12 shadow-2xl max-w-6xl mx-auto relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                <div className="bg-gradient-to-r from-blue-600/90 via-purple-600/90 to-cyan-600/90 backdrop-blur-xl rounded-3xl p-16 shadow-2xl max-w-7xl mx-auto relative overflow-hidden group hover:shadow-3xl transition-all duration-700 border border-white/20">
                   {/* Enhanced Background elements */}
                   <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                    <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse floating"></div>
-                    <div className="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full blur-2xl animate-pulse floating-delayed"></div>
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse floating-more-delayed"></div>
-                    <div className="absolute top-1/4 right-1/4 w-20 h-20 bg-white rounded-full blur-xl animate-pulse floating"></div>
-                    <div className="absolute bottom-1/4 left-1/4 w-16 h-16 bg-white rounded-full blur-lg animate-pulse floating-delayed"></div>
+                    <div className="absolute top-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse floating"></div>
+                    <div className="absolute bottom-10 right-10 w-32 h-32 bg-white rounded-full blur-2xl animate-pulse floating-delayed"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white rounded-full blur-3xl animate-pulse floating-more-delayed"></div>
+                    <div className="absolute top-1/4 right-1/4 w-24 h-24 bg-white rounded-full blur-xl animate-pulse floating"></div>
+                    <div className="absolute bottom-1/4 left-1/4 w-20 h-20 bg-white rounded-full blur-lg animate-pulse floating-delayed"></div>
                   </div>
                   
                   {/* Animated border */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-shimmer"></div>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-shimmer"></div>
                   
                   <div className="relative z-10">
-                    <h3 className="text-4xl md:text-6xl font-bold text-white mb-6 group-hover:scale-105 transition-transform duration-500">
-                      Siap Berpetualang di <span className="text-yellow-300 animate-pulse">Banyumas</span>?
+                    <h3 className="text-5xl md:text-7xl font-black text-white mb-8 group-hover:scale-105 transition-transform duration-700 leading-tight">
+                      Siap Berpetualang di <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-400 animate-pulse">Banyumas</span>?
                     </h3>
-                    <p className="text-blue-100 text-xl md:text-2xl mb-10 max-w-5xl mx-auto leading-relaxed">
+                    <p className="text-blue-100 text-xl md:text-2xl mb-12 max-w-6xl mx-auto leading-relaxed font-light">
                       Mulai perjalanan Anda sekarang dan temukan keajaiban yang tersembunyi di setiap sudut Banyumas. 
                       Kami siap membantu Anda merencanakan petualangan yang tak terlupakan.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                    
+                    <div className="flex flex-col lg:flex-row gap-8 justify-center items-center mb-12">
                       <Link
                         href="/dolan-banyumas"
-                        className="bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold hover:bg-gray-100 hover:scale-105 transition-all duration-300 text-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/25 group"
+                        className="group bg-white text-blue-600 px-12 py-6 rounded-2xl font-black hover:bg-gray-50 hover:scale-105 transition-all duration-500 text-xl shadow-2xl hover:shadow-3xl hover:shadow-blue-500/25 border-2 border-transparent hover:border-blue-200"
                       >
-                        <span className="flex items-center gap-3">
-                          🗺️ Jelajahi Semua Wisata Di Banyumas
-                          <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                        <span className="flex items-center gap-4">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                            <BiMap className="text-white text-lg" />
+                          </div>
+                          Jelajahi Semua Wisata Di Banyumas
+                          <span className="group-hover:translate-x-2 transition-transform duration-300 text-2xl">→</span>
                         </span>
                       </Link>
                       <Link
                         href="/about"
-                        className="bg-transparent border-2 border-white text-white px-10 py-5 rounded-2xl font-bold hover:bg-white hover:text-blue-600 transition-all duration-300 text-xl hover:scale-105 group"
+                        className="group bg-transparent border-2 border-white/80 text-white px-12 py-6 rounded-2xl font-black hover:bg-white hover:text-blue-600 transition-all duration-500 text-xl hover:scale-105 backdrop-blur-sm"
                       >
-                        <span className="flex items-center gap-3">
-                          📖 Pelajari Lebih Lanjut
-                          <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                        <span className="flex items-center gap-4">
+                          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
+                            <BiStar className="text-white text-lg group-hover:text-white" />
+                          </div>
+                          Pelajari Lebih Lanjut
+                          <span className="group-hover:translate-x-2 transition-transform duration-300 text-2xl">→</span>
                         </span>
                       </Link>
                     </div>
                     
-                    {/* Additional info */}
-                    <div className="mt-8 flex flex-wrap justify-center gap-4 text-blue-100 text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        Gratis & Terpercaya
+                    {/* Enhanced Additional info */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                      <div className="flex items-center justify-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="text-blue-100 font-semibold">Gratis & Terpercaya</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                        Update Real-time
+                      <div className="flex items-center justify-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                        <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                        <span className="text-blue-100 font-semibold">Update Real-time</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                        Support 24/7
+                      <div className="flex items-center justify-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                        <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                        <span className="text-blue-100 font-semibold">Support 24/7</span>
                       </div>
                     </div>
                   </div>
@@ -506,3 +560,4 @@ const Home = () => {
 };
 
 export default Home;
+

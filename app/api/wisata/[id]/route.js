@@ -56,6 +56,7 @@ export async function PUT(request, { params }) {
     const short_description = formData.get('short_description');
     const description = formData.get('description');
     const entrance_fee = formData.get('entrance_fee');
+    const manager = formData.get('manager');
     const contact = formData.get('contact');
     const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
@@ -158,6 +159,7 @@ export async function PUT(request, { params }) {
       short_description: short_description || currentDestination.short_description,
       description: description || currentDestination.description,
       entrance_fee: entrance_fee || currentDestination.entrance_fee || 'Gratis',
+      manager: manager || currentDestination.manager || '',
       contact: contact || currentDestination.contact || '',
       address: address || currentDestination.address || '',
       coordinates: coordinates || currentDestination.coordinates,

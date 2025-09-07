@@ -102,22 +102,24 @@ export default function ViewDestinationPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Detail Destinasi</h1>
-              <div className="flex space-x-3">
+              <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Detail Destinasi</h1>
+              <div className="flex gap-3">
                 <Link 
                   href={`/admin/destinations/${destinationId}`}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                 >
-                  ✏️ Edit
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  Edit
                 </Link>
                 <Link 
                   href="/admin/destinations"
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                 >
-                  ← Kembali ke Destinasi
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
+                  Kembali
                 </Link>
               </div>
             </div>
@@ -126,7 +128,7 @@ export default function ViewDestinationPage() {
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {/* Header dengan gambar */}
               <div className="relative h-64 bg-gradient-to-r from-blue-600 to-purple-600">
                 {destination.img_lg ? (
@@ -143,7 +145,21 @@ export default function ViewDestinationPage() {
                     </div>
                   </div>
                 )}
-                <div className="absolute top-4 right-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white drop-shadow">{destination.title}</h2>
+                    <p className="text-white/90 text-sm mt-1">{destination.location}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      destination.recommended ? 'bg-yellow-100 text-yellow-800' : 'bg-white/90 text-gray-800'
+                    }`}>
+                      {destination.recommended ? '⭐ Direkomendasikan' : 'Destinasi'}
+                    </span>
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 hidden">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                     destination.recommended 
                       ? 'bg-yellow-100 text-yellow-800' 
@@ -156,10 +172,12 @@ export default function ViewDestinationPage() {
 
               {/* Informasi Destinasi */}
               <div className="p-6">
-                <div className="mb-6">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">{destination.title}</h2>
-                  <p className="text-gray-600 text-lg">{destination.description}</p>
-                </div>
+                {destination.description && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Deskripsi</h3>
+                    <p className="text-gray-700 leading-relaxed">{destination.description}</p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {/* Informasi Dasar */}
@@ -341,13 +359,13 @@ export default function ViewDestinationPage() {
                 <div className="flex justify-end space-x-3 pt-6 border-t">
                   <Link
                     href="/admin/destinations"
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                   >
                     Kembali
                   </Link>
                   <Link
                     href={`/admin/destinations/${destinationId}`}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                   >
                     Edit Destinasi
                   </Link>

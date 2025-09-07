@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Upload, Calendar, MapPin, Users, DollarSign, Info } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -51,6 +51,13 @@ export default function NewEvent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isCategoryShown, setIsCategoryShown] = useState(false);
+  const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const [isTypeShown, setIsTypeShown] = useState(false);
+  const categoryRef = useRef(null);
+  const typeRef = useRef(null);
+
   const eventTypeOptions = [
     'Tradisi budaya',
     'Karnaval',
@@ -68,6 +75,42 @@ export default function NewEvent() {
     'Pertunjukan',
     'Lainnya'
   ];
+
+  const categoryOptions = [
+    { value: 'event-rakyat', label: 'Event Rakyat' },
+    { value: 'event-banyumas', label: 'Event Banyumas' },
+  ];
+
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target)) {
+        setIsCategoryShown(false);
+        setTimeout(() => setIsCategoryOpen(false), 120);
+      }
+      if (typeRef.current && !typeRef.current.contains(e.target)) {
+        setIsTypeShown(false);
+        setTimeout(() => setIsTypeOpen(false), 120);
+      }
+    };
+    const onEsc = (e) => {
+      if (e.key === 'Escape') {
+        setIsCategoryShown(false);
+        setIsTypeShown(false);
+        setTimeout(() => { setIsCategoryOpen(false); setIsTypeOpen(false); }, 120);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    document.addEventListener('keydown', onEsc);
+    return () => {
+      document.removeEventListener('mousedown', onClickOutside);
+      document.removeEventListener('keydown', onEsc);
+    };
+  }, []);
+
+  const openCategoryMenu = () => { setIsCategoryOpen(true); requestAnimationFrame(() => setIsCategoryShown(true)); };
+  const closeCategoryMenu = () => { setIsCategoryShown(false); setTimeout(() => setIsCategoryOpen(false), 120); };
+  const openTypeMenu = () => { setIsTypeOpen(true); requestAnimationFrame(() => setIsTypeShown(true)); };
+  const closeTypeMenu = () => { setIsTypeShown(false); setTimeout(() => setIsTypeOpen(false), 120); };
 
   const highlightOptions = [
     'Kirab budaya',
@@ -278,19 +321,19 @@ export default function NewEvent() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
+        <header className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
                 <Link
-                  href="/admin/dashboard"
+                  href="/admin/events"
                   className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">Tambah Event Baru</h1>
-                  <p className="text-sm text-gray-500">Tambah event baru ke platform</p>
+                  <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">Tambah Event Baru</h1>
+                  <p className="text-sm text-gray-600">Tambah event baru ke platform</p>
                 </div>
               </div>
             </div>
@@ -306,12 +349,12 @@ export default function NewEvent() {
             )}
 
             {/* Basic Information */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Informasi Dasar</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">
                     Nama Event *
                   </label>
                   <input
@@ -320,65 +363,90 @@ export default function NewEvent() {
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     placeholder="Contoh: Festival Kenthongan Banyumas"
                     required
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="relative" ref={categoryRef}>
+                  <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
                     Tipe Event *
                   </label>
-                  <div className="relative">
-                    <select
-                      id="category"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer hover:border-gray-400"
-                      required
-                    >
-                      <option value="">Pilih tipe event</option>
-                      <option value="event-rakyat">Event Rakyat</option>
-                      <option value="event-banyumas">Event Banyumas</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                  <button
+                    type="button"
+                    onClick={() => (isCategoryOpen ? closeCategoryMenu() : openCategoryMenu())}
+                    className={`w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-xl border bg-white shadow-sm ${isCategoryOpen ? 'border-orange-500 ring-2 ring-orange-500' : 'border-gray-300 hover:border-gray-400'} transition-all`}
+                    aria-haspopup="listbox"
+                    aria-expanded={isCategoryOpen}
+                  >
+                    <span className={`text-gray-900 font-medium truncate ${!formData.category ? 'text-gray-500' : ''}`}>{formData.category ? (categoryOptions.find(c => c.value === formData.category)?.label || 'Tipe Event') : 'Pilih Tipe Event'}</span>
+                    <span className={`p-1.5 rounded-md border ${isCategoryOpen ? 'border-orange-300 bg-orange-50 text-orange-600' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+                      <svg className={`w-4 h-4 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                    </span>
+                  </button>
+                  {isCategoryOpen && (
+                    <div className="relative">
+                      <ul className={`absolute z-20 mt-2 w-full max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl origin-top transform transition duration-150 ease-out scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ${isCategoryShown ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1'}`} style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db #f3f4f6' }} role="listbox">
+                        <li>
+                          <button type="button" onClick={() => { setFormData(prev => ({ ...prev, category: '' })); closeCategoryMenu(); }} className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-orange-50 ${!formData.category ? 'bg-orange-50' : ''}`}>
+                            <span className={`${!formData.category ? 'text-orange-700 font-semibold' : 'text-gray-800'} text-sm`}>Pilih Tipe Event</span>
+                            {!formData.category && (<svg className="w-5 h-5 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>)}
+                          </button>
+                        </li>
+                        {categoryOptions.map(opt => (
+                          <li key={opt.value}>
+                            <button type="button" onClick={() => { setFormData(prev => ({ ...prev, category: opt.value })); closeCategoryMenu(); }} className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-orange-50 ${formData.category === opt.value ? 'bg-orange-50' : ''}`}>
+                              <span className={`text-sm ${formData.category === opt.value ? 'text-orange-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</span>
+                              {formData.category === opt.value && (<svg className="w-5 h-5 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>)}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                <div>
-                  <label htmlFor="event_type" className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="relative" ref={typeRef}>
+                  <label htmlFor="event_type" className="block text-sm font-semibold text-gray-700 mb-2">
                     Jenis Event *
                   </label>
-                  <div className="relative">
-                    <select
-                      id="event_type"
-                      name="event_type"
-                      value={formData.event_type}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none bg-white cursor-pointer hover:border-gray-400"
-                      required
-                    >
-                      <option value="">Pilih jenis event</option>
-                      {eventTypeOptions.map((type) => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                  <button
+                    type="button"
+                    onClick={() => (isTypeOpen ? closeTypeMenu() : openTypeMenu())}
+                    className={`w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-xl border bg-white shadow-sm ${isTypeOpen ? 'border-orange-500 ring-2 ring-orange-500' : 'border-gray-300 hover:border-gray-400'} transition-all`}
+                    aria-haspopup="listbox"
+                    aria-expanded={isTypeOpen}
+                  >
+                    <span className={`text-gray-900 font-medium truncate ${!formData.event_type ? 'text-gray-500' : ''}`}>{formData.event_type || 'Pilih jenis event'}</span>
+                    <span className={`p-1.5 rounded-md border ${isTypeOpen ? 'border-orange-300 bg-orange-50 text-orange-600' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+                      <svg className={`w-4 h-4 transition-transform ${isTypeOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+                    </span>
+                  </button>
+                  {isTypeOpen && (
+                    <div className="relative">
+                      <ul className={`absolute z-20 mt-2 w-full max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl origin-top transform transition duration-150 ease-out scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ${isTypeShown ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1'}`} style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db #f3f4f6' }} role="listbox">
+                        <li>
+                          <button type="button" onClick={() => { setFormData(prev => ({ ...prev, event_type: '' })); closeTypeMenu(); }} className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-orange-50 ${!formData.event_type ? 'bg-orange-50' : ''}`}>
+                            <span className={`${!formData.event_type ? 'text-orange-700 font-semibold' : 'text-gray-800'} text-sm`}>Pilih jenis event</span>
+                            {!formData.event_type && (<svg className="w-5 h-5 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>)}
+                          </button>
+                        </li>
+                        {eventTypeOptions.map((type) => (
+                          <li key={type}>
+                            <button type="button" onClick={() => { setFormData(prev => ({ ...prev, event_type: type })); closeTypeMenu(); }} className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-orange-50 ${formData.event_type === type ? 'bg-orange-50' : ''}`}>
+                              <span className={`text-sm ${formData.event_type === type ? 'text-orange-700 font-semibold' : 'text-gray-800'}`}>{type}</span>
+                              {formData.event_type === type && (<svg className="w-5 h-5 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>)}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="short_description" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="short_description" className="block text-sm font-semibold text-gray-700 mb-2">
                     Deskripsi Singkat Event *
                   </label>
                   <textarea
@@ -387,14 +455,14 @@ export default function NewEvent() {
                     value={formData.short_description}
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     placeholder="Jelaskan isi acaranya, sejarah atau latar belakang, tujuan, siapa penyelenggaranya, dan nilai budaya/lokal yang diangkat..."
                     required
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
                     Deskripsi Lengkap
                   </label>
                   <textarea
@@ -403,7 +471,7 @@ export default function NewEvent() {
                     value={formData.description}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     placeholder="Deskripsi lengkap tentang event..."
                   />
                 </div>
@@ -411,7 +479,7 @@ export default function NewEvent() {
             </div>
 
             {/* Date & Time */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
                 <Calendar className="w-5 h-5 mr-2 text-blue-600" />
                 Tanggal & Waktu
@@ -419,7 +487,7 @@ export default function NewEvent() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="date" className="block text-sm font-semibold text-gray-700 mb-2">
                     Tanggal Mulai *
                   </label>
                   <input
@@ -428,13 +496,13 @@ export default function NewEvent() {
                     name="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="time" className="block text-sm font-semibold text-gray-700 mb-2">
                     Waktu Mulai *
                   </label>
                   <input
@@ -443,13 +511,13 @@ export default function NewEvent() {
                     name="time"
                     value={formData.time}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="end_date" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="end_date" className="block text-sm font-semibold text-gray-700 mb-2">
                     Tanggal Selesai
                   </label>
                   <input
@@ -458,12 +526,12 @@ export default function NewEvent() {
                     name="end_date"
                     value={formData.end_date}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="end_time" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="end_time" className="block text-sm font-semibold text-gray-700 mb-2">
                     Waktu Selesai
                   </label>
                   <input
@@ -472,14 +540,14 @@ export default function NewEvent() {
                     name="end_time"
                     value={formData.end_time}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                   />
                 </div>
               </div>
             </div>
 
             {/* Location & Organizer */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
                 <MapPin className="w-5 h-5 mr-2 text-blue-600" />
                 Lokasi & Penyelenggara
@@ -496,14 +564,14 @@ export default function NewEvent() {
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     placeholder="Contoh: Alun-Alun Purwokerto"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="organizer" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="organizer" className="block text-sm font-semibold text-gray-700 mb-2">
                     Penyelenggara / Promotor *
                   </label>
                   <input
@@ -512,7 +580,7 @@ export default function NewEvent() {
                     name="organizer"
                     value={formData.organizer}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                     placeholder="Contoh: Dinas Kebudayaan Banyumas"
                     required
                   />
@@ -521,7 +589,7 @@ export default function NewEvent() {
             </div>
 
             {/* Highlights / Rangkaian Acara */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Rangkaian Acara / Highlight Kegiatan</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -532,7 +600,7 @@ export default function NewEvent() {
                       id={highlight}
                       checked={formData.highlights.includes(highlight)}
                       onChange={() => handleHighlightChange(highlight)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                     />
                     <label htmlFor={highlight} className="ml-2 block text-sm text-gray-700">
                       {highlight}
@@ -543,7 +611,7 @@ export default function NewEvent() {
             </div>
 
             {/* Performers / Pengisi Acara */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Daftar Pengisi Acara / Bintang Tamu</h2>
               
               <div className="space-y-4">
@@ -790,7 +858,7 @@ export default function NewEvent() {
                       id={facility}
                       checked={formData.facilities.includes(facility)}
                       onChange={() => handleFacilityChange(facility)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                     />
                     <label htmlFor={facility} className="ml-2 block text-sm text-gray-700">
                       {facility}
@@ -801,7 +869,7 @@ export default function NewEvent() {
             </div>
 
             {/* Links */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Link & Dokumentasi</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -845,7 +913,7 @@ export default function NewEvent() {
               </h2>
               
               <div>
-                <label htmlFor="additional_info" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="additional_info" className="block text-sm font-semibold text-gray-700 mb-2">
                   Informasi Tambahan
                 </label>
                 <textarea
@@ -854,22 +922,22 @@ export default function NewEvent() {
                   value={formData.additional_info}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 shadow-sm"
                   placeholder="Contoh: Akses transportasi, info stand pendaftaran, live streaming, parkir gratis, dresscode, larangan bawa makanan, akses untuk difabel, live TikTok/IG, dll."
                 />
               </div>
             </div>
 
             {/* Lokasi & Penyelenggara */}
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
                 <MapPin className="w-5 h-5 mr-2 text-blue-600" />
                 Koordinat & Jam Operasional
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" name="latitude" value={formData.latitude} onChange={handleInputChange} placeholder="Latitude" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
-                <input type="text" name="longitude" value={formData.longitude} onChange={handleInputChange} placeholder="Longitude" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
-                <input type="text" name="opening_hours" value={formData.opening_hours} onChange={handleInputChange} placeholder="09:00 - 21:00" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                <input type="text" name="latitude" value={formData.latitude} onChange={handleInputChange} placeholder="Latitude" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm" />
+                <input type="text" name="longitude" value={formData.longitude} onChange={handleInputChange} placeholder="Longitude" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm" />
+                <input type="text" name="opening_hours" value={formData.opening_hours} onChange={handleInputChange} placeholder="09:00 - 21:00" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm" />
               </div>
             </div>
 
@@ -997,7 +1065,7 @@ export default function NewEvent() {
             {/* Submit Buttons */}
             <div className="flex justify-end space-x-4">
               <Link
-                href="/admin/dashboard"
+                href="/admin/events"
                 className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Batal

@@ -41,6 +41,28 @@ export default function EditSouvenir() {
     items: []
   });
 
+  const CustomSelect = ({ label, value, onChange, options }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <div>
+        {label && (<label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>)}
+        <button type="button" onClick={()=>setOpen(o=>!o)} className={`w-full px-4 py-2.5 border rounded-lg bg-white text-gray-900 flex items-center justify-between shadow-sm ${open ? 'border-amber-500 ring-2 ring-amber-500' : 'border-gray-300'}`}>
+          <span className="font-medium truncate">{options.find(o=>o.value===value)?.label || value}</span>
+          <svg className={`w-4 h-4 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        {open && (
+          <ul className="mt-2 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl">
+            {options.map(opt => (
+              <li key={opt.value}>
+                <button type="button" onClick={() => { onChange(opt.value); setOpen(false); }} className={`w-full text-left px-4 py-2.5 hover:bg-amber-50 ${value===opt.value ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
   const souvenirTypes = [
     { value: 'makanan', label: 'Makanan' },
     { value: 'pakaian', label: 'Pakaian' }
@@ -249,22 +271,25 @@ export default function EditSouvenir() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-                             <h1 className="text-3xl font-bold text-gray-900">Edit Oleh-Oleh</h1>
-              <Link 
-                href="/admin/souvenirs" 
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
-              >
-                Kembali
-              </Link>
+            <div className="flex items-center justify-between py-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-sm">
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8l-2 4h4l-2 4"/></svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Edit Oleh-Oleh</h1>
+                  <p className="mt-1 text-sm text-gray-500">Perbarui data toko oleh-oleh, harga, dan galeri.</p>
+                </div>
+              </div>
+              <Link href="/admin/souvenirs" className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">← Kembali</Link>
             </div>
           </div>
         </div>
         
-        <div className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="bg-white shadow rounded-lg p-6">
+        <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -299,40 +324,21 @@ export default function EditSouvenir() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tipe *
-                  </label>
-                  <select
-                    name="type"
+                  <CustomSelect
+                    label="Tipe *"
                     value={formData.type}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {souvenirTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(v)=>handleInputChange({ target:{ name:'type', value:v }})}
+                    options={souvenirTypes}
+                  />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kategori
-                  </label>
-                  <select
-                    name="category"
+                  <CustomSelect
+                    label="Kategori"
                     value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {categories.map(category => (
-                      <option key={category.value} value={category.value}>
-                        {category.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(v)=>handleInputChange({ target:{ name:'category', value:v }})}
+                    options={categories}
+                  />
                 </div>
 
                 <div>

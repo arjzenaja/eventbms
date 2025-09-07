@@ -9,10 +9,38 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [drinkType, setDrinkType] = useState('iced'); // 'iced' or 'hot'
+  const [selectedFlavor, setSelectedFlavor] = useState(''); // for flavor options
+
+  // Define dual pricing categories at component level
+  const dualPricingCategories = [
+    'THE ESPRESSO BASED',
+    'SHAKEN SWEET & CREAMY Series',
+    'SHAKEN FRESH Presso'
+  ];
 
   if (!isOpen || !menu) return null;
 
-  const totalPrice = menu.price * quantity;
+  // Determine price based on category and drink type
+  const getPrice = () => {
+    if (dualPricingCategories.includes(menu.category)) {
+      if (drinkType === 'iced' && menu.priceIced) {
+        return menu.priceIced;
+      } else if (drinkType === 'hot' && menu.priceHot) {
+        return menu.priceHot;
+      } else if (menu.priceIced) {
+        return menu.priceIced; // fallback to iced
+      } else if (menu.priceHot) {
+        return menu.priceHot; // fallback to hot
+      } else if (menu.price) {
+        return menu.price; // fallback to old price field
+      }
+    }
+    return menu.price;
+  };
+
+  const currentPrice = getPrice();
+  const totalPrice = currentPrice * quantity;
   const estimatedTime = menu.cookingTime || '15-20 menit';
 
   const handleQuantityChange = (newQuantity) => {
@@ -22,6 +50,12 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   };
 
   const handleConfirm = async () => {
+    // Validate flavor selection for BUTTER RICE WITH DAUN JERUK
+    if (menu.category === 'BUTTER RICE WITH DAUN JERUK' && menu.flavorOptions && menu.flavorOptions.length > 0 && !selectedFlavor) {
+      alert('Pilih salah satu rasa terlebih dahulu!');
+      return;
+    }
+
     setIsProcessing(true);
     
     try {
@@ -30,11 +64,13 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
           menu,
           quantity,
           specialInstructions,
-          totalPrice
+          totalPrice,
+          selectedFlavor
         });
       } else {
         // Default behavior - show success message
-        alert(`Pesanan berhasil!\n\nMenu: ${menu.name}\nJumlah: ${quantity}\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}\n\nPesanan Anda akan segera diproses.`);
+        const flavorText = selectedFlavor ? `\nRasa: ${selectedFlavor}` : '';
+        alert(`Pesanan berhasil!\n\nMenu: ${menu.name}${flavorText}\nJumlah: ${quantity}\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}\n\nPesanan Anda akan segera diproses.`);
       }
       onClose();
     } catch (error) {
@@ -46,9 +82,14 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   };
 
   const handleWhatsAppOrder = () => {
+    const drinkTypeText = dualPricingCategories.includes(menu.category) ? 
+      (drinkType === 'iced' ? '🧊 Iced' : '☕ Hot') : '';
+    
+    const flavorText = selectedFlavor ? ` (${selectedFlavor})` : '';
+    
     const message = `Halo! Saya ingin memesan:
 
-🍽️ Menu: ${menu.name}
+🍽️ Menu: ${menu.name}${drinkTypeText ? ` (${drinkTypeText})` : ''}${flavorText}
 📦 Jumlah: ${quantity}
 💰 Total: Rp ${totalPrice.toLocaleString('id-ID')}
 ⏰ Estimasi waktu: ${estimatedTime}
@@ -100,7 +141,19 @@ Apakah masih tersedia? Terima kasih!`;
                 <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                   <BiMoney />
                   <span className="font-semibold">
-                    Rp {menu.price.toLocaleString('id-ID')}
+                    {dualPricingCategories.includes(menu.category) ? (
+                      <>
+                        {(menu.priceIced || menu.price) && (
+                          <span>🧊 Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}</span>
+                        )}
+                        {(menu.priceIced || menu.price) && menu.priceHot && <span className="mx-2">|</span>}
+                        {menu.priceHot && (
+                          <span>☕ Rp {(menu.priceHot || 0).toLocaleString('id-ID')}</span>
+                        )}
+                      </>
+                    ) : (
+                      <span>Rp {(menu.price || 0).toLocaleString('id-ID')}</span>
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
@@ -110,6 +163,80 @@ Apakah masih tersedia? Terima kasih!`;
               </div>
             </div>
           </div>
+
+          {/* Drink Type Selection (for beverages only) */}
+          {dualPricingCategories.includes(menu.category) && (menu.priceIced || menu.priceHot || menu.price) && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Pilih Jenis Minuman
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {(menu.priceIced || menu.price) && (
+                  <button
+                    onClick={() => setDrinkType('iced')}
+                    className={`p-3 rounded-xl border-2 transition-all ${
+                      drinkType === 'iced'
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-1">🧊</div>
+                      <div className="font-medium">Iced</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}
+                      </div>
+                    </div>
+                  </button>
+                )}
+                {menu.priceHot && (
+                  <button
+                    onClick={() => setDrinkType('hot')}
+                    className={`p-3 rounded-xl border-2 transition-all ${
+                      drinkType === 'hot'
+                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl mb-1">☕</div>
+                      <div className="font-medium">Hot</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        Rp {(menu.priceHot || 0).toLocaleString('id-ID')}
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Flavor Selection (for BUTTER RICE WITH DAUN JERUK only) */}
+          {menu.category === 'BUTTER RICE WITH DAUN JERUK' && menu.flavorOptions && menu.flavorOptions.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Pilih Rasa <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {menu.flavorOptions.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedFlavor(option)}
+                    className={`p-3 rounded-xl border-2 transition-all text-sm ${
+                      selectedFlavor === option
+                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+              {!selectedFlavor && (
+                <p className="text-red-500 text-xs mt-1">Pilih salah satu rasa</p>
+              )}
+            </div>
+          )}
 
           {/* Quantity Selection */}
           <div className="mb-6">
@@ -163,9 +290,19 @@ Apakah masih tersedia? Terima kasih!`;
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-300">
                   {menu.name} x{quantity}
+                  {dualPricingCategories.includes(menu.category) && (
+                    <span className="text-xs ml-1">
+                      ({drinkType === 'iced' ? '🧊 Iced' : '☕ Hot'})
+                    </span>
+                  )}
+                  {menu.category === 'BUTTER RICE WITH DAUN JERUK' && selectedFlavor && (
+                    <span className="text-xs ml-1 text-red-600">
+                      ({selectedFlavor})
+                    </span>
+                  )}
                 </span>
                 <span className="text-gray-900 dark:text-white">
-                  Rp {(menu.price * quantity).toLocaleString('id-ID')}
+                  Rp {(currentPrice * quantity).toLocaleString('id-ID')}
                 </span>
               </div>
               <div className="border-t border-gray-200 dark:border-gray-600 pt-2">

@@ -4,7 +4,7 @@ const testMenuAPI = async () => {
     console.log('Testing API menu...');
     
     // Test GET menu
-    const response = await fetch('/api/culinary/menu');
+    const response = await fetch('/api/kuliner/menu');
     const data = await response.json();
     
     console.log('API Response:', data);

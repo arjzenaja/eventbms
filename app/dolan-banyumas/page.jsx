@@ -46,6 +46,26 @@ const DestinationsPage = () => {
   const [sortBy, setSortBy] = useState("name"); // name, rating, location
   const [error, setError] = useState(null);
 
+  // Parse features if it's a string JSON
+  const parseFeatures = (features) => {
+    if (!features) return [];
+    if (Array.isArray(features)) {
+      return features.map(feature => {
+        // If feature is a string that looks like JSON array, parse it
+        if (typeof feature === 'string' && feature.startsWith('[') && feature.endsWith(']')) {
+          try {
+            const parsed = JSON.parse(feature);
+            return Array.isArray(parsed) ? parsed : [parsed];
+          } catch {
+            return feature;
+          }
+        }
+        return feature;
+      }).flat();
+    }
+    return features;
+  };
+
   // Type-specific filter states
   const [selectedObjekWisataType, setSelectedObjekWisataType] = useState("semua");
   const [selectedKulinerType, setSelectedKulinerType] = useState("semua");
@@ -1095,25 +1115,28 @@ const DestinationsPage = () => {
                       <p className="text-slate-600 dark:text-gray-300 text-sm mb-3 line-clamp-2 leading-relaxed">
                         {item.short_description || item.description || "Deskripsi tidak tersedia"}
                       </p>
-                      {item.features && item.features.length > 0 && (
-                        <div className="mb-3">
-                          <div className="flex flex-wrap gap-1">
-                            {item.features.slice(0, 3).map((feature, index) => (
-                              <span
-                                key={index}
-                                className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs"
-                              >
-                                {feature}
-                              </span>
-                            ))}
-                            {item.features.length > 3 && (
-                              <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
-                                +{item.features.length - 3} lagi
-                              </span>
-                            )}
+                      {(() => {
+                        const parsedFeatures = parseFeatures(item.features);
+                        return parsedFeatures && parsedFeatures.length > 0 && (
+                          <div className="mb-3">
+                            <div className="flex flex-wrap gap-1">
+                              {parsedFeatures.slice(0, 3).map((feature, index) => (
+                                <span
+                                  key={index}
+                                  className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs"
+                                >
+                                  {feature}
+                                </span>
+                              ))}
+                              {parsedFeatures.length > 3 && (
+                                <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
+                                  +{parsedFeatures.length - 3} lagi
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
                       <div className="flex items-center justify-end">
                         <span className="text-blue-600 dark:text-blue-400 text-sm font-medium group-hover:underline">Lihat detail →</span>
                       </div>
@@ -1153,25 +1176,28 @@ const DestinationsPage = () => {
                         </p>
                         
                         {/* Features & Facilities */}
-                        {item.features && item.features.length > 0 && (
-                          <div className="mb-3">
-                            <div className="flex flex-wrap gap-1">
-                              {item.features.slice(0, 4).map((feature, index) => (
-                                <span
-                                  key={index}
-                                  className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs"
-                                >
-                                  {feature}
-                                </span>
-                              ))}
-                              {item.features.length > 4 && (
-                                <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
-                                  +{item.features.length - 4} lagi
-                                </span>
-                              )}
+                        {(() => {
+                          const parsedFeatures = parseFeatures(item.features);
+                          return parsedFeatures && parsedFeatures.length > 0 && (
+                            <div className="mb-3">
+                              <div className="flex flex-wrap gap-1">
+                                {parsedFeatures.slice(0, 4).map((feature, index) => (
+                                  <span
+                                    key={index}
+                                    className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs"
+                                  >
+                                    {feature}
+                                  </span>
+                                ))}
+                                {parsedFeatures.length > 4 && (
+                                  <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
+                                    +{parsedFeatures.length - 4} lagi
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          );
+                        })()}
                         
                         <div className="flex items-center gap-4 text-slate-500 dark:text-gray-400 text-sm">
                           <div className="flex items-center gap-1">

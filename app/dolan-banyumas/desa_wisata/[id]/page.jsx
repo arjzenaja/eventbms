@@ -97,7 +97,7 @@ const DesaWisataDetail = () => {
 					{/* Back Button */}
 						<button 
 							onClick={() => window.history.back()} 
-						className="group mb-6 inline-flex items-center gap-2 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-12 mb-6 inline-flex items-center gap-2 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
 						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
 						<span className="font-medium">Kembali ke Dolan Banyumas</span>

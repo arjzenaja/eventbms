@@ -47,11 +47,11 @@ export default function EditDestinationPage() {
   const [coordinates, setCoordinates] = useState({ lat: '', lng: '' });
   const [imageFiles, setImageFiles] = useState({
     img_sm: null,
-    img_lg: null
+    gallery_images: []
   });
   const [imagePreviews, setImagePreviews] = useState({
     img_sm: null,
-    img_lg: null
+    gallery_images: []
   });
   const [pricing, setPricing] = useState({
     type: 'free', // 'free' | 'single' | 'packages'
@@ -59,9 +59,31 @@ export default function EditDestinationPage() {
     value: '',
     packages: [] // { name, price, unit, imageFile, imagePreview, includes, terms }
   });
+
+  // Lightweight CustomSelect
+  const CustomSelect = ({ label, value, onChange, options }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <div>
+        {label && (<label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>)}
+        <button type="button" onClick={() => setOpen(o=>!o)} className={`w-full px-4 py-2.5 border rounded-lg bg-white text-gray-900 flex items-center justify-between shadow-sm ${open ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-300'}`}>
+          <span className="font-medium truncate">{options.find(o=>o.value===value)?.label || value}</span>
+          <svg className={`w-4 h-4 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        {open && (
+          <ul className="mt-2 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl">
+            {options.map(opt => (
+              <li key={opt.value}>
+                <button type="button" onClick={() => { onChange(opt.value); setOpen(false); }} className={`w-full text-left px-4 py-2.5 hover:bg-blue-50 ${value===opt.value ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
   const [currentImages, setCurrentImages] = useState({
-    img_sm: '',
-    img_lg: ''
+    img_sm: ''
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -119,8 +141,7 @@ export default function EditDestinationPage() {
             });
           }
           setCurrentImages({
-            img_sm: destination.img_sm || '',
-            img_lg: destination.img_lg || ''
+            img_sm: destination.img_sm || ''
           });
         } else {
           setError(data.message || 'Gagal memuat data destinasi');
@@ -161,35 +182,78 @@ export default function EditDestinationPage() {
 
   const handleImageChange = (e) => {
     const { name, files } = e.target;
-    const file = files[0];
     
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('File harus berupa gambar');
-        return;
-      }
+    if (name === 'gallery_images') {
+      // Handle multiple gallery images
+      const fileList = Array.from(files);
       
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Ukuran file maksimal 5MB');
-        return;
+      // Validate all files
+      for (const file of fileList) {
+        if (!file.type.startsWith('image/')) {
+          alert('Semua file harus berupa gambar');
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Ukuran file maksimal 5MB per file');
+          return;
+        }
       }
       
       setImageFiles(prev => ({
         ...prev,
-        [name]: file
+        [name]: fileList
       }));
       
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreviews(prev => ({
+      // Create previews for all files
+      const previews = [];
+      let loadedCount = 0;
+      
+      fileList.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previews[index] = e.target.result;
+          loadedCount++;
+          if (loadedCount === fileList.length) {
+            setImagePreviews(prev => ({
+              ...prev,
+              [name]: previews
+            }));
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    } else {
+      // Handle single image (img_sm)
+      const file = files[0];
+      
+      if (file) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('File harus berupa gambar');
+          return;
+        }
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Ukuran file maksimal 5MB');
+          return;
+        }
+        
+        setImageFiles(prev => ({
           ...prev,
-          [name]: e.target.result
+          [name]: file
         }));
-      };
-      reader.readAsDataURL(file);
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImagePreviews(prev => ({
+            ...prev,
+            [name]: e.target.result
+          }));
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -221,8 +285,12 @@ export default function EditDestinationPage() {
       if (imageFiles.img_sm) {
         formDataToSend.append('img_sm', imageFiles.img_sm);
       }
-      if (imageFiles.img_lg) {
-        formDataToSend.append('img_lg', imageFiles.img_lg);
+      
+      // Add gallery images
+      if (imageFiles.gallery_images && imageFiles.gallery_images.length > 0) {
+        imageFiles.gallery_images.forEach((file, index) => {
+          formDataToSend.append('gallery_images', file);
+        });
       }
 
       // Attach pricing JSON
@@ -306,23 +374,34 @@ export default function EditDestinationPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Edit Destinasi</h1>
-              <Link 
-                href="/admin/destinations"
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
-              >
-                ← Kembali ke Destinasi
-              </Link>
+            <div className="flex items-center justify-between py-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7l9-4 9 4-9 4-9-4z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 7v10l-9 4-9-4V7"/></svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Edit Destinasi</h1>
+                  <p className="mt-1 text-sm text-gray-500">Perbarui informasi objek wisata, lokasi, gambar, dan harga.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/admin/destinations/${destinationId}/view`} className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  Lihat
+                </Link>
+                <Link href="/admin/destinations" className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                  ← Kembali
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
@@ -394,25 +473,20 @@ export default function EditDestinationPage() {
 
                   {/* Tipe */}
                   <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                      Tipe Destinasi *
-                    </label>
-                    <select
-                      id="type"
-                      name="type"
+                    <CustomSelect
+                      label="Tipe Destinasi *"
                       value={formData.type}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
-                    >
-                      <option value="wisata-alam">Wisata Alam</option>
-                      <option value="wisata-taman">Wisata Taman</option>
-                      <option value="wisata-budaya">Wisata Budaya</option>
-                      <option value="wisata-sejarah">Wisata Sejarah</option>
-                      <option value="wisata-buatan">Wisata Buatan</option>
-                      <option value="wisata-minat-khusus">Wisata Minat Khusus</option>
-                      <option value="wisata-religi">Wisata Religi</option>
-                    </select>
+                      onChange={(v)=>handleInputChange({ target:{ name:'type', value:v }})}
+                      options={[
+                        { value:'wisata-alam', label:'Wisata Alam' },
+                        { value:'wisata-taman', label:'Wisata Taman' },
+                        { value:'wisata-budaya', label:'Wisata Budaya' },
+                        { value:'wisata-sejarah', label:'Wisata Sejarah' },
+                        { value:'wisata-buatan', label:'Wisata Buatan' },
+                        { value:'wisata-minat-khusus', label:'Wisata Minat Khusus' },
+                        { value:'wisata-religi', label:'Wisata Religi' }
+                      ]}
+                    />
                   </div>
 
 
@@ -798,33 +872,52 @@ export default function EditDestinationPage() {
                     <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                   </div>
 
-                  {/* Gambar Besar */}
-                  <div>
-                    <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
-                      Gambar Besar
+                  {/* Gallery Images */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Galeri Foto (opsional)
                     </label>
+                    <p className="text-sm text-gray-500 mb-3">Tambahkan beberapa foto untuk galeri destinasi.</p>
                     <input
                       type="file"
-                      id="img_lg"
-                      name="img_lg"
+                      id="gallery_images"
+                      name="gallery_images"
                       accept="image/*"
+                      multiple
                       onChange={handleImageChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
                     />
-                    {/* Show current image or preview */}
-                    {(imagePreviews.img_lg || currentImages.img_lg) && (
-                      <div className="mt-2">
-                        <img 
-                          src={imagePreviews.img_lg || currentImages.img_lg} 
-                          alt="Preview" 
-                          className="w-32 h-32 object-cover rounded-md border"
-                        />
-                        {currentImages.img_lg && !imagePreviews.img_lg && (
-                          <p className="text-xs text-gray-500 mt-1">Gambar saat ini</p>
-                        )}
+                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB per file. Bisa pilih multiple files.</p>
+                    
+                    {/* Gallery Preview */}
+                    {imagePreviews.gallery_images && imagePreviews.gallery_images.length > 0 && (
+                      <div className="mt-4">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Preview Foto Galeri:</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {imagePreviews.gallery_images.map((preview, index) => (
+                            <div key={index} className="relative">
+                              <img 
+                                src={preview} 
+                                alt={`Gallery preview ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-md border"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newFiles = imageFiles.gallery_images.filter((_, i) => i !== index);
+                                  const newPreviews = imagePreviews.gallery_images.filter((_, i) => i !== index);
+                                  setImageFiles(prev => ({ ...prev, gallery_images: newFiles }));
+                                  setImagePreviews(prev => ({ ...prev, gallery_images: newPreviews }));
+                                }}
+                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
-                    <p className="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
                   </div>
 
                   {/* Recommended */}

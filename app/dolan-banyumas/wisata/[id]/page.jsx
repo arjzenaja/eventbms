@@ -8,9 +8,6 @@ import { FaWhatsapp, FaInstagram, FaGlobe } from "react-icons/fa";
 import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
-import LocationInfo from "../../../../components/LocationInfo";
-import WeatherInfo from "../../../../components/WeatherInfo";
-import TransportInfo from "../../../../components/TransportInfo";
 import TourismManager from "../../../../components/TourismManager";
 import WisataPackages from "../../../../components/WisataPackages";
 
@@ -27,7 +24,7 @@ const WisataDetail = () => {
     const fetchDestination = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/wisata/${id}`);
+        const res = await fetch(`/api/wisata/${id}?t=${Date.now()}` , { cache: 'no-store' });
         if (!res.ok) {
           throw new Error("Failed to fetch destination");
         }
@@ -61,10 +58,16 @@ const WisataDetail = () => {
               value: parsed.phone || contact
             }];
           }
-          return [{ type: 'phone', value: contact }];
+          return [
+            { type: 'phone', value: contact },
+            { type: 'whatsapp', value: contact }
+          ];
         } catch {
-          // If parsing fails, assume it's a phone number
-          return [{ type: 'phone', value: contact }];
+          // If parsing fails, assume it's a phone number and also create WhatsApp entry
+          return [
+            { type: 'phone', value: contact },
+            { type: 'whatsapp', value: contact }
+          ];
         }
       }
       
@@ -94,6 +97,7 @@ const WisataDetail = () => {
   // Validate that destination doesn't contain any objects that could cause rendering issues
   const safeDestination = {
     ...destination,
+    manager: destination?.manager || '',
     contact: typeof destination?.contact === 'string' ? destination.contact : JSON.stringify(destination?.contact || ''),
     features: Array.isArray(destination?.features) ? destination.features : [],
     pricing: typeof destination?.pricing === 'object' ? JSON.stringify(destination.pricing) : destination?.pricing,
@@ -139,7 +143,7 @@ const WisataDetail = () => {
         <div className="relative container mx-auto px-4">
           <button 
             onClick={() => window.history.back()} 
-            className="group mb-6 inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 transform hover:-translate-x-1"
+            className="group mt-12 mb-6 inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 transform hover:-translate-x-1"
           >
             <BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
             <span className="font-medium">Kembali ke Dolan Banyumas</span>
@@ -208,10 +212,10 @@ const WisataDetail = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 pb-12">
+      <div className="container mx-auto px-4 pb-12 pt-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <div className="xl:col-span-2 space-y-8">
               {/* Gallery */}
               <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
                 <ErrorBoundary>
@@ -253,26 +257,6 @@ const WisataDetail = () => {
                 </ErrorBoundary>
               </div>
 
-              {/* Location Info */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
-                <ErrorBoundary>
-                  <LocationInfo destination={safeDestination} mapDistance={mapDistance} />
-                </ErrorBoundary>
-              </div>
-
-              {/* Weather Info */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
-                <ErrorBoundary>
-                  <WeatherInfo destination={safeDestination} />
-                </ErrorBoundary>
-              </div>
-
-              {/* Transport Info */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
-                <ErrorBoundary>
-                  <TransportInfo destination={safeDestination} />
-                </ErrorBoundary>
-              </div>
 
               {/* Paket Wisata */}
               <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
@@ -283,7 +267,7 @@ const WisataDetail = () => {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Info Card */}
               <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Informasi Destinasi</h3>

@@ -5,7 +5,7 @@ const testUpdateMenu = async () => {
     
     // Test 1: Check current menu data
     console.log('1. Checking current menu data...');
-    const menuResponse = await fetch('/api/culinary/menu');
+    const menuResponse = await fetch('/api/kuliner/menu');
     const menuData = await menuResponse.json();
     
     if (menuData.success && menuData.menu_items && menuData.menu_items.length > 0) {
@@ -18,7 +18,7 @@ const testUpdateMenu = async () => {
       formData.append('id', firstMenu.id);
       formData.append('available', 'false'); // Toggle status
       
-      const updateResponse = await fetch('/api/culinary/menu', {
+      const updateResponse = await fetch('/api/kuliner/menu', {
         method: 'PUT',
         body: formData,
       });
@@ -31,7 +31,7 @@ const testUpdateMenu = async () => {
         
         // Test 3: Verify the update
         console.log('3. Verifying the update...');
-        const verifyResponse = await fetch('/api/culinary/menu');
+        const verifyResponse = await fetch('/api/kuliner/menu');
         const verifyData = await verifyResponse.json();
         
         const updatedMenu = verifyData.menu_items.find(item => item.id === firstMenu.id);
@@ -43,7 +43,7 @@ const testUpdateMenu = async () => {
         formData2.append('id', firstMenu.id);
         formData2.append('available', 'true');
         
-        const updateResponse2 = await fetch('/api/culinary/menu', {
+        const updateResponse2 = await fetch('/api/kuliner/menu', {
           method: 'PUT',
           body: formData2,
         });

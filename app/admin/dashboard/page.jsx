@@ -3,7 +3,7 @@
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAdmin } from '@/context/AdminContext';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 
 // Client-side only date display component
 function ClientDateDisplay() {
@@ -86,19 +86,36 @@ function ClientLastUpdatedFormatter({ date }) {
   return <span>Terakhir diperbarui: {formattedDate}</span>;
 }
 
+// Lazy-loaded components for better performance
+const StatsCards = lazy(() => import('./components/StatsCards'));
+const ChartsSection = lazy(() => import('./components/ChartsSection'));
+const RecentDataTable = lazy(() => import('./components/RecentDataTable'));
+const QuickActions = lazy(() => import('./components/QuickActions'));
+
+// Loading fallback component
+const LoadingFallback = ({ children }) => (
+  <Suspense fallback={
+    <div className="animate-pulse">
+      <div className="bg-slate-200 rounded-2xl h-32 mb-6"></div> 
+    </div>
+  }>
+    {children}
+  </Suspense>
+);
+
 export default function AdminDashboard() {
   const { adminUser } = useAdmin();
-        const [stats, setStats] = useState({
-        totalEvents: 0,
-        totalDestinations: 0,
-        totalAccommodations: 0,
-        totalCulinary: 0,
-        totalSouvenirs: 0,
-        totalVillages: 0,
-        totalTravelAgencies: 0,
-        totalWisataAlam: 0,
-        totalUsers: 0
-      });
+  const [stats, setStats] = useState({
+    totalEvents: 0,
+    totalDestinations: 0,
+    totalAccommodations: 0,
+    totalCulinary: 0,
+    totalSouvenirs: 0,
+    totalVillages: 0,
+    totalTravelAgencies: 0,
+    totalWisataAlam: 0,
+    totalUsers: 0
+  });
   const [recentEvents, setRecentEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -106,6 +123,8 @@ export default function AdminDashboard() {
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [chartData, setChartData] = useState({
     eventTypes: [],
     monthlyEvents: []
@@ -130,178 +149,42 @@ export default function AdminDashboard() {
     }
   }, [searchTerm, allRecentData]);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (isRetry = false) => {
     try {
-      setIsLoading(true);
+      if (isRetry) {
+        setIsRetrying(true);
+      } else {
+        setIsLoading(true);
+      }
       setError(null);
       
-      // Fetch data from all available APIs
-      const [
-        eventsResponse,
-        destinationsResponse,
-        culinaryResponse,
-        accommodationResponse,
-        souvenirsResponse,
-        villagesResponse,
-        travelAgenciesResponse,
-        usersResponse
-      ] = await Promise.all([
-        fetch('/api/events'),
-        fetch('/api/wisata'),
-        fetch('/api/kuliner'),
-        fetch('/api/penginapan'),
-        fetch('/api/oleh_oleh'),
-        fetch('/api/desa_wisata'),
-        fetch('/api/biro_perjalanan'),
-        fetch('/api/users')
-      ]);
+      // Use optimized single API call for dashboard data
+      const response = await fetch('/api/dashboard/stats', {
+        headers: { 'Cache-Control': 'max-age=300' },
+        next: { revalidate: 300 }
+      });
 
-      // Parse all responses
-      const eventsData = await eventsResponse.json();
-      const destinationsData = await destinationsResponse.json();
-      const culinaryData = await culinaryResponse.json();
-      const accommodationData = await accommodationResponse.json();
-      const souvenirsData = await souvenirsResponse.json();
-      const villagesData = await villagesResponse.json();
-      const travelAgenciesData = await travelAgenciesResponse.json();
-      const usersData = await usersResponse.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      // Extract data arrays, handle potential errors gracefully
-      const events = eventsData.success ? (eventsData.events || []) : [];
-      const destinations = destinationsData.success ? (destinationsData.wisata || []) : [];
-      const culinary = culinaryData.success ? (culinaryData.kuliner || []) : [];
-      const accommodations = accommodationData.success ? (accommodationData.penginapan || []) : [];
-      const souvenirs = souvenirsData.success ? (souvenirsData.oleh_oleh || []) : [];
-      const villages = villagesData.success ? (villagesData.desa_wisata || []) : [];
-      const travelAgencies = travelAgenciesData.success ? (travelAgenciesData.biro_perjalanan || []) : [];
-      const users = usersData.success ? (usersData.users || []) : [];
+      const data = await response.json();
 
-      // Calculate statistics from actual API data
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch dashboard data');
+      }
+
+      // Set all data from the optimized response
       setStats({
-        totalEvents: events.length,
-        totalDestinations: destinations.length,
-        totalAccommodations: accommodations.length,
-        totalCulinary: culinary.length,
-        totalSouvenirs: souvenirs.length,
-        totalVillages: villages.length,
-        totalTravelAgencies: travelAgencies.length,
-        totalWisataAlam: destinations.length, // Destinations are the main tourist objects
-        totalUsers: users.length
+        ...data.stats,
+        totalWisataAlam: data.stats.totalDestinations // Destinations are the main tourist objects
       });
 
-      // Get recent events for display
-      const recent = events
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 5);
-      setRecentEvents(recent);
-      setFilteredEvents(recent);
-
-      // Collect recent data from all categories
-      const allData = [];
-      
-      // Add events with category info
-      events.slice(0, 3).forEach(event => {
-        allData.push({
-          ...event,
-          category: 'Event',
-          categoryIcon: '🎉',
-          source: 'events'
-        });
-      });
-      
-      // Add destinations with category info
-      destinations.slice(0, 2).forEach(dest => {
-        allData.push({
-          ...dest,
-          category: 'Objek Wisata',
-          categoryIcon: '🏔️',
-          source: 'destinations'
-        });
-      });
-      
-      // Add culinary with category info
-      culinary.slice(0, 2).forEach(cul => {
-        allData.push({
-          ...cul,
-          category: 'Kuliner',
-          categoryIcon: '🍽️',
-          source: 'culinary'
-        });
-      });
-      
-      // Add accommodations with category info
-      accommodations.slice(0, 2).forEach(acc => {
-        allData.push({
-          ...acc,
-          category: 'Penginapan',
-          categoryIcon: '🏨',
-          source: 'accommodation'
-        });
-      });
-      
-      // Add souvenirs with category info
-      souvenirs.slice(0, 2).forEach(sou => {
-        allData.push({
-          ...sou,
-          category: 'Souvenir',
-          categoryIcon: '🛍️',
-          source: 'souvenirs'
-        });
-      });
-      
-      // Add villages with category info
-      villages.slice(0, 2).forEach(vill => {
-        allData.push({
-          ...vill,
-          category: 'Desa Wisata',
-          categoryIcon: '🏘️',
-          source: 'villages'
-        });
-      });
-      
-      // Add travel agencies with category info
-      travelAgencies.slice(0, 2).forEach(ta => {
-        allData.push({
-          ...ta,
-          category: 'Biro Perjalanan',
-          categoryIcon: '🚌',
-          source: 'travel-agencies'
-        });
-      });
-      
-      // Sort all data by creation date (if available) or use current date
-      const sortedAllData = allData.sort((a, b) => {
-        const dateA = getEventCreatedAt(a) ? new Date(getEventCreatedAt(a)) : new Date();
-        const dateB = getEventCreatedAt(b) ? new Date(getEventCreatedAt(b)) : new Date();
-        return dateB - dateA;
-      }).slice(0, 5); // Show top 5 most recent items
-      
-      setAllRecentData(sortedAllData);
-      setFilteredRecentData(sortedAllData);
-
-      // Prepare chart data from events
-      const eventTypes = {};
-      const monthlyData = {};
-      
-      events.forEach(event => {
-        // Count by type
-        const normalized = (typeof event.type === 'string' && (event.type === 'objek-wisata' || event.type.startsWith('wisata-')))
-          ? 'objek-wisata'
-          : event.type;
-        eventTypes[normalized] = (eventTypes[normalized] || 0) + 1;
-        
-        // Count by month
-        if (event.date) {
-          const date = new Date(event.date);
-          const month = date.toLocaleString('id-ID', { month: 'long' });
-          monthlyData[month] = (monthlyData[month] || 0) + 1;
-        }
-      });
-
-      setChartData({
-        eventTypes: Object.entries(eventTypes).map(([type, count]) => ({ type, count })),
-        monthlyEvents: Object.entries(monthlyData).map(([month, count]) => ({ month, count }))
-      });
+      setRecentEvents(data.recentEvents);
+      setFilteredEvents(data.recentEvents);
+      setAllRecentData(data.recentData);
+      setFilteredRecentData(data.recentData);
+      setChartData(data.chartData);
 
       // Show success notification
       setNotification({
@@ -318,166 +201,150 @@ export default function AdminDashboard() {
 
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      setError('Terjadi kesalahan saat mengambil data dashboard. Silakan coba lagi.');
+      
+      // More specific error messages
+      let errorMessage = 'Terjadi kesalahan saat mengambil data dashboard.';
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+      } else if (error.message.includes('timeout')) {
+        errorMessage = 'Permintaan timeout. Server mungkin sedang sibuk.';
+      } else if (error.message.includes('500')) {
+        errorMessage = 'Terjadi kesalahan server. Silakan coba lagi nanti.';
+      }
+      
+      setError(errorMessage);
+      
+      // Auto-retry logic (max 3 retries)
+      if (retryCount < 3 && !isRetry) {
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          fetchDashboardData(true);
+        }, 2000 * (retryCount + 1)); // Exponential backoff
+      }
     } finally {
       setIsLoading(false);
+      setIsRetrying(false);
     }
   };
 
-  const getEventTypeIcon = (type) => {
-    if (!type) return '📍';
-    
-    const icons = {
-      'wisata-alam': '🏔️',
-      'wisata-taman': '🌳',
-      'wisata-budaya': '🏛️',
-      'wisata-sejarah': '🏺',
-      'wisata-buatan': '🎡',
-      'wisata-minat-khusus': '🎯',
-      'wisata-religi': '⛪',
-      'objek-wisata': '🏔️',
-      'desa-wisata': '🏘️',
-      'biro-perjalanan': '🚌',
-      'kuliner': '🍽️',
-      'penginapan': '🏨',
-      'oleh-oleh': '🛍️',
-      'event': '🎉',
-      'event-rakyat': '👥',
-      'event-banyumas': '🎊'
-    };
-    return icons[type] || '📍';
-  };
+  // Enhanced skeleton loading component
+  const SkeletonCard = () => (
+    <div className="bg-white rounded-2xl p-6 shadow-lg animate-pulse border border-gray-100">
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-10 h-10 bg-slate-200 rounded-xl"></div>
+        <div className="w-16 h-4 bg-slate-200 rounded"></div>
+      </div>
+      <div className="w-28 h-7 bg-slate-200 rounded mb-3"></div>
+      <div className="w-20 h-10 bg-slate-200 rounded mb-3"></div>
+      <div className="w-36 h-4 bg-slate-200 rounded"></div>
+    </div>
+  );
 
-  const getEventTypeLabel = (type) => {
-    if (!type) return 'Lainnya';
-    
-    const labels = {
-      'wisata-alam': 'Objek Wisata',
-      'wisata-taman': 'Objek Wisata',
-      'wisata-budaya': 'Objek Wisata',
-      'wisata-sejarah': 'Objek Wisata',
-      'wisata-buatan': 'Objek Wisata',
-      'wisata-minat-khusus': 'Objek Wisata',
-      'wisata-religi': 'Objek Wisata',
-      'objek-wisata': 'Objek Wisata',
-      'desa-wisata': 'Desa Wisata',
-      'biro-perjalanan': 'Biro Perjalanan',
-      'kuliner': 'Kuliner',
-      'penginapan': 'Penginapan',
-      'oleh-oleh': 'Oleh-oleh',
-      'event': 'Event',
-      'event-rakyat': 'Event Rakyat',
-      'event-banyumas': 'Event Banyumas'
-    };
-    return labels[type] || 'Lainnya';
-  };
-
-  // Prefer created/added timestamp when available for "tanggal masuk data"
-  const getEventCreatedAt = (event) => {
-    if (!event) return null;
-    const candidate =
-      event.createdAt ||
-      event.created_at ||
-      event.addedAt ||
-      event.added_at ||
-      event.dateAdded ||
-      event.date_added ||
-      event.timestamp ||
-      event.ts;
-    return candidate || event.date || null;
-  };
-
-  const statsCards = [
-    {
-      title: "Total Data Masuk",
-      count: stats.totalEvents + stats.totalDestinations + stats.totalAccommodations + stats.totalCulinary + stats.totalSouvenirs + stats.totalVillages + stats.totalTravelAgencies,
-      subtitle: "Seluruh event & destinasi",
-      icon: "👁",
-      color: "bg-gradient-to-r from-blue-600 to-blue-700",
-      change: "+12%",
-      changeType: "positive"
-    },
-    {
-      title: "Users",
-      count: stats.totalUsers || 0,
-      subtitle: "Pengguna terdaftar",
-      icon: "👥",
-      color: "bg-gradient-to-r from-purple-600 to-purple-700",
-      change: "+8%",
-      changeType: "positive"
-    },
-    {
-      title: "Event",
-      count: stats.totalEvents,
-      subtitle: "Event & kegiatan",
-      icon: "🎉",
-      color: "bg-gradient-to-r from-green-600 to-green-700",
-      change: "+12%",
-      changeType: "positive"
-    },
-    {
-      title: "Objek Wisata",
-      count: stats.totalDestinations,
-      subtitle: "Objek wisata",
-      icon: "🏔️",
-      color: "bg-gradient-to-r from-blue-600 to-blue-700",
-      change: "+8%",
-      changeType: "positive"
-    },
-    {
-      title: "Desa Wisata",
-      count: stats.totalVillages,
-      subtitle: "Desa wisata aktif",
-      icon: "🏘️",
-      color: "bg-gradient-to-r from-teal-600 to-teal-700",
-      change: "+15%",
-      changeType: "positive"
-    },
-    {
-      title: "Kuliner",
-      count: stats.totalCulinary,
-      subtitle: "Makanan khas daerah",
-      icon: "🍽️",
-      color: "bg-gradient-to-r from-orange-600 to-orange-700",
-      change: "+5%",
-      changeType: "positive"
-    },
-    {
-      title: "Penginapan",
-      count: stats.totalAccommodations,
-      subtitle: "Tempat menginap",
-      icon: "🏨",
-      color: "bg-gradient-to-r from-purple-600 to-purple-700",
-      change: "+10%",
-      changeType: "positive"
-    },
-    {
-      title: "Biro Perjalanan",
-      count: stats.totalTravelAgencies,
-      subtitle: "Agen perjalanan",
-      icon: "🚌",
-      color: "bg-gradient-to-r from-indigo-600 to-indigo-700",
-      change: "+7%",
-      changeType: "positive"
-    },
-    {
-      title: "Souvenir",
-      count: stats.totalSouvenirs,
-      subtitle: "Toko oleh-oleh",
-      icon: "🛍️",
-      color: "bg-gradient-to-r from-rose-600 to-rose-700",
-      change: "+3%",
-      changeType: "positive"
-    }
-  ];
+  const SkeletonTable = () => (
+    <div className="bg-white rounded-2xl shadow-lg animate-pulse border border-gray-100">
+      <div className="px-6 py-6 border-b border-gray-100">
+        <div className="w-40 h-7 bg-slate-200 rounded mb-4"></div>
+        <div className="w-72 h-12 bg-slate-200 rounded"></div>
+      </div>
+      <div className="p-6 space-y-4">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-slate-200 rounded-xl"></div>
+            <div className="flex-1 space-y-2">
+              <div className="w-56 h-5 bg-slate-200 rounded"></div>
+              <div className="w-40 h-4 bg-slate-200 rounded"></div>
+            </div>
+            <div className="w-24 h-4 bg-slate-200 rounded"></div>
+            <div className="w-20 h-4 bg-slate-200 rounded"></div>
+            <div className="w-16 h-6 bg-slate-200 rounded-full"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   if (isLoading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Memuat data dashboard...</p>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 lg:p-8 space-y-8">
+          {/* Welcome Section Skeleton */}
+          <div className="bg-gradient-to-r from-slate-200 to-slate-300 rounded-3xl p-8 animate-pulse">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+              <div className="space-y-4">
+                <div className="w-96 h-12 bg-slate-300 rounded-2xl"></div>
+                <div className="w-80 h-7 bg-slate-300 rounded-xl"></div>
+                <div className="w-56 h-5 bg-slate-300 rounded-lg"></div>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <div className="w-36 h-14 bg-slate-300 rounded-2xl"></div>
+                <div className="w-28 h-20 bg-slate-300 rounded-2xl"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary Stats Skeleton */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="w-40 h-7 bg-slate-200 rounded-xl mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div key={i} className="text-center p-4 bg-slate-50 rounded-xl animate-pulse border border-gray-100">
+                  <div className="w-16 h-10 bg-slate-200 rounded-lg mx-auto mb-3"></div>
+                  <div className="w-24 h-5 bg-slate-200 rounded mx-auto"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+
+          {/* Charts Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 animate-pulse border border-gray-100">
+              <div className="w-56 h-7 bg-slate-200 rounded-xl mb-6"></div>
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-8 h-8 bg-slate-200 rounded-lg"></div>
+                      <div className="w-32 h-5 bg-slate-200 rounded"></div>
+                    </div>
+                    <div className="w-32 h-3 bg-slate-200 rounded-full"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg p-6 animate-pulse border border-gray-100">
+              <div className="w-40 h-7 bg-slate-200 rounded-xl mb-6"></div>
+              <div className="space-y-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="w-28 h-5 bg-slate-200 rounded"></div>
+                    <div className="w-32 h-3 bg-slate-200 rounded-full"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Data Table Skeleton */}
+          <SkeletonTable />
+
+          {/* Quick Actions Skeleton */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="w-32 h-7 bg-slate-200 rounded-xl mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="bg-slate-100 rounded-xl p-4 text-center animate-pulse border border-gray-200">
+                  <div className="w-12 h-12 bg-slate-200 rounded-xl mx-auto mb-3"></div>
+                  <div className="w-24 h-5 bg-slate-200 rounded mx-auto"></div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </ProtectedRoute>
@@ -487,21 +354,45 @@ export default function AdminDashboard() {
   if (error) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Terjadi Kesalahan</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <button 
-              onClick={() => {
-                setError(null);
-                setIsLoading(true);
-                fetchDashboardData();
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
-            >
-              Coba Lagi
-            </button>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
+          <div className="text-center max-w-md mx-auto p-8 bg-white rounded-3xl shadow-2xl border border-gray-100">
+            <div className="text-6xl mb-6">⚠️</div>
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Terjadi Kesalahan</h2>
+            <p className="text-slate-600 mb-6 leading-relaxed">{error}</p>
+            
+            {isRetrying && (
+              <div className="mb-6">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+                <p className="text-sm text-slate-500">Mencoba lagi... ({retryCount}/3)</p>
+              </div>
+            )}
+            
+            {retryCount > 0 && retryCount < 3 && !isRetrying && (
+              <p className="text-sm text-slate-500 mb-6">
+                Mencoba lagi dalam beberapa detik... ({retryCount}/3)
+              </p>
+            )}
+            
+            <div className="space-y-3">
+              <button 
+                onClick={() => {
+                  setError(null);
+                  setRetryCount(0);
+                  setIsLoading(true);
+                  fetchDashboardData();
+                }}
+                disabled={isRetrying}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white px-8 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 disabled:transform-none shadow-lg"
+              >
+                {isRetrying ? 'Mencoba...' : 'Coba Lagi'}
+              </button>
+              
+              {retryCount >= 3 && (
+                <p className="text-xs text-slate-500 mt-3">
+                  Sudah mencoba 3 kali. Silakan refresh halaman atau hubungi administrator.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </ProtectedRoute>
@@ -510,20 +401,20 @@ export default function AdminDashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 space-y-8">
-        {/* Notification */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 lg:p-8 space-y-8">
+        {/* Enhanced Notification */}
         {notification && (
-          <div className={`fixed top-6 right-6 z-50 p-4 rounded-xl shadow-2xl transition-all duration-300 transform ${
+          <div className={`fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-2xl transition-all duration-500 transform ${
             notification.type === 'success' 
-              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
-              : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
+              ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white border border-emerald-400' 
+              : 'bg-gradient-to-r from-red-500 to-rose-600 text-white border border-red-400'
           }`}>
-            <div className="flex items-center space-x-3">
-              <span className="text-xl">{notification.type === 'success' ? '✅' : '❌'}</span>
+            <div className="flex items-center space-x-4">
+              <span className="text-2xl">{notification.type === 'success' ? '✅' : '❌'}</span>
               <span className="font-medium">{notification.message}</span>
               <button 
                 onClick={() => setNotification(null)}
-                className="ml-4 text-white hover:text-gray-200 transition-colors"
+                className="ml-4 text-white hover:text-gray-200 transition-colors text-xl"
               >
                 ×
               </button>
@@ -531,34 +422,39 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-2xl">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
-            <div className="space-y-3">
-              <h1 className="text-4xl font-bold">Selamat Datang, {adminUser?.name || 'Admin'}! 👋</h1>
-              <p className="text-xl text-blue-100">Kelola semua data wisata dan event dari dashboard ini</p>
+        {/* Enhanced Welcome Section */}
+        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 lg:p-12 text-white shadow-2xl border border-blue-500/20">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-8 lg:space-y-0">
+            <div className="space-y-4">
+              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                Selamat Datang, {adminUser?.name || 'Admin'}! 👋
+              </h1>
+              <p className="text-xl lg:text-2xl text-blue-100 leading-relaxed">
+                Kelola semua data wisata dan event dari dashboard yang modern ini
+              </p>
               {lastUpdated && (
-                <p className="text-sm text-blue-200 bg-white bg-opacity-10 px-3 py-2 rounded-lg inline-block">
+                <p className="text-sm text-blue-200 bg-white bg-opacity-10 px-4 py-3 rounded-xl inline-block backdrop-blur-sm border border-white border-opacity-20">
                   <ClientLastUpdatedFormatter date={lastUpdated} />
                 </p>
               )}
             </div>
-            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <div className="flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-6">
               <button
                 onClick={() => {
                   setIsLoading(true);
                   setError(null);
+                  setRetryCount(0);
                   fetchDashboardData();
                 }}
                 disabled={isLoading}
-                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-white border-opacity-30"
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm border border-white border-opacity-30 transform hover:scale-105"
               >
-                <span className="text-xl">{isLoading ? '⏳' : '🔄'}</span>
-                <span>{isLoading ? 'Memuat...' : 'Refresh Data'}</span>
+                <span className="text-2xl">{isLoading ? '⏳' : '🔄'}</span>
+                <span className="text-lg">{isLoading ? 'Memuat...' : 'Refresh Data'}</span>
               </button>
-              <div className="text-center sm:text-right bg-white bg-opacity-10 px-4 py-3 rounded-xl backdrop-blur-sm">
-                <p className="text-sm text-blue-200">Hari ini</p>
-                <p className="text-2xl font-semibold">
+              <div className="text-center sm:text-right bg-white bg-opacity-10 px-6 py-4 rounded-2xl backdrop-blur-sm border border-white border-opacity-20">
+                <p className="text-sm text-blue-200 mb-1">Hari ini</p>
+                <p className="text-2xl lg:text-3xl font-semibold">
                   <ClientDateDisplay />
                 </p>
               </div>
@@ -566,360 +462,90 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Summary Stats */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Ringkasan Data</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalEvents + stats.totalDestinations + stats.totalAccommodations + stats.totalCulinary + stats.totalSouvenirs + stats.totalVillages + stats.totalTravelAgencies}</div>
-              <div className="text-sm text-gray-600">Total Data Masuk</div>
+        {/* Enhanced Summary Stats */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100">
+          <h3 className="text-xl lg:text-2xl font-bold text-slate-700 mb-6">📊 Ringkasan Data</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
+              <div className="text-2xl lg:text-3xl font-bold text-blue-700 mb-2">{stats.totalEvents + stats.totalDestinations + stats.totalAccommodations + stats.totalCulinary + stats.totalSouvenirs + stats.totalVillages + stats.totalTravelAgencies}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Total Data Masuk</div>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{stats.totalDestinations}</div>
-              <div className="text-sm text-gray-600">Objek Wisata</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
+              <div className="text-2xl lg:text-3xl font-bold text-blue-700 mb-2">{stats.totalDestinations}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Objek Wisata</div>
             </div>
-            <div className="text-center p-4 bg-orange-50 rounded-lg">
-              <div className="text-2xl font-bold text-orange-600">{stats.totalCulinary}</div>
-              <div className="text-sm text-gray-600">Kuliner</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl border border-orange-200">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-700 mb-2">{stats.totalCulinary}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Kuliner</div>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{stats.totalAccommodations}</div>
-              <div className="text-sm text-gray-600">Penginapan</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl border border-purple-200">
+              <div className="text-2xl lg:text-3xl font-bold text-purple-700 mb-2">{stats.totalAccommodations}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Penginapan</div>
             </div>
-            <div className="text-center p-4 bg-teal-50 rounded-lg">
-              <div className="text-2xl font-bold text-teal-600">{stats.totalVillages}</div>
-              <div className="text-sm text-gray-600">Desa Wisata</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl border border-teal-200">
+              <div className="text-2xl lg:text-3xl font-bold text-teal-700 mb-2">{stats.totalVillages}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Desa Wisata</div>
             </div>
-            <div className="text-center p-4 bg-indigo-50 rounded-lg">
-              <div className="text-2xl font-bold text-indigo-600">{stats.totalTravelAgencies}</div>
-              <div className="text-sm text-gray-600">Biro Perjalanan</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl border border-indigo-200">
+              <div className="text-2xl lg:text-3xl font-bold text-indigo-700 mb-2">{stats.totalTravelAgencies}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Biro Perjalanan</div>
             </div>
-            <div className="text-center p-4 bg-rose-50 rounded-lg">
-              <div className="text-2xl font-bold text-rose-600">{stats.totalSouvenirs}</div>
-              <div className="text-sm text-gray-600">Souvenir</div>
+            <div className="text-center p-4 lg:p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-2xl border border-rose-200">
+              <div className="text-2xl lg:text-3xl font-bold text-rose-700 mb-2">{stats.totalSouvenirs}</div>
+              <div className="text-sm lg:text-base text-slate-600 font-medium">Souvenir</div>
             </div>
           </div>
         </div>
 
         {/* Dashboard Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {statsCards.map((stat, index) => {
-            // Define navigation paths for each card
-            const getNavigationPath = (title) => {
-              switch (title) {
-                case "Total Data Masuk":
-                  return "/admin/data";
-                case "Event":
-                  return "/admin/events";
-                case "Objek Wisata":
-                  return "/admin/destinations";
-                case "Desa Wisata":
-                  return "/admin/villages";
-                case "Kuliner":
-                  return "/admin/culinary";
-                case "Penginapan":
-                  return "/admin/accommodation";
-                case "Biro Perjalanan":
-                  return "/admin/travel-agencies";
-                case "Souvenir":
-                  return "/admin/souvenirs";
-                case "Users":
-                  return "/admin/users";
-                default:
-                  return "/admin/events";
-              }
-            };
-
-            return (
-              <Link key={index} href={getNavigationPath(stat.title)} className="block">
-                <div className={`${stat.color} text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`text-3xl opacity-80 ${stat.title === "Total Data Masuk" ? "text-gray-700" : ""}`}>{stat.icon}</div>
-                    <div className={`text-xs px-2 py-1 rounded-full ${
-                      stat.changeType === 'positive' ? 'bg-blue-500 bg-opacity-20' : 'bg-red-500 bg-opacity-20'
-                    }`}>
-                      {stat.change}
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold mb-1">{stat.title}</h3>
-                  <p className="text-3xl font-bold mb-2">{stat.count}</p>
-                  <p className="text-sm opacity-90">{stat.subtitle}</p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <LoadingFallback>
+          <StatsCards stats={stats} />
+        </LoadingFallback>
 
         {/* Charts and Analytics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Event Types Chart */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribusi Jenis Event</h3>
-            <div className="space-y-3">
-              {chartData.eventTypes.length > 0 ? (
-                chartData.eventTypes.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-2xl">{getEventTypeIcon(item.type)}</span>
-                      <span className="text-gray-700">{getEventTypeLabel(item.type)}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
-                          style={{ width: `${(item.count / stats.totalEvents) * 100}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm font-medium text-gray-900 w-8 text-right">{item.count}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <div className="text-4xl mb-2">📊</div>
-                  <p>Tidak ada data untuk ditampilkan</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Monthly Events Chart */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Event per Bulan</h3>
-            <div className="space-y-3">
-              {chartData.monthlyEvents.length > 0 ? (
-                chartData.monthlyEvents.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <span className="text-gray-700 capitalize">{item.month}</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
-                          style={{ width: `${(item.count / Math.max(...chartData.monthlyEvents.map(m => m.count))) * 100}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm font-medium text-gray-900 w-8 text-right">{item.count}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <div className="text-4xl mb-2">📅</div>
-                  <p>Tidak ada data untuk ditampilkan</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <LoadingFallback>
+          <ChartsSection chartData={chartData} stats={stats} />
+        </LoadingFallback>
 
         {/* Recent Events Table */}
-        <div className="bg-white rounded-xl shadow-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Data Terbaru</h2>
-                             <Link 
-                 href="/admin/data" 
-                 className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center space-x-1"
-               >
-                <span>Lihat Semua</span>
-                <span>→</span>
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative flex-1 max-w-md">
-                <input
-                  type="text"
-                  placeholder="Cari data..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
-              </div>
-              <span className="text-sm text-gray-500">
-                {filteredRecentData.length} dari {allRecentData.length} data
-              </span>
-            </div>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Masuk</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredRecentData.length > 0 ? (
-                  filteredRecentData.map((item) => (
-                    <tr key={`${item.source}-${item.id}`} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <img 
-                            className="h-10 w-10 rounded-lg object-cover" 
-                            src={item.img_sm || '/placeholder.jpg'} 
-                            alt={item.title}
-                          />
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{item.title}</div>
-                            <div className="text-sm text-gray-500">{item.short_description?.substring(0, 50)}...</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xl">{item.categoryIcon}</span>
-                          <span className="text-sm text-gray-900">{item.category}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.location}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <ClientEventDateFormatter date={getEventCreatedAt(item)} />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          item.recommended 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {item.recommended ? 'Direkomendasikan' : 'Aktif'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : searchTerm.trim() !== '' ? (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                      <div className="flex flex-col items-center">
-                        <div className="text-4xl mb-2">🔍</div>
-                        <p className="text-lg font-medium">Tidak ada hasil</p>
-                        <p className="text-sm">Coba ubah kata kunci pencarian</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : allRecentData.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                      <div className="flex flex-col items-center">
-                        <div className="text-4xl mb-2">📊</div>
-                        <p className="text-lg font-medium">Belum ada data</p>
-                        <p className="text-sm">Data akan muncul di sini setelah Anda menambahkan item</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                      <div className="flex flex-col items-center">
-                        <div className="text-4xl mb-2">🔍</div>
-                        <p className="text-lg font-medium">Tidak ada data yang cocok</p>
-                        <p className="text-sm">Coba ubah kata kunci pencarian</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <LoadingFallback>
+          <RecentDataTable 
+            filteredRecentData={filteredRecentData}
+            allRecentData={allRecentData}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
+        </LoadingFallback>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Aksi Cepat</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link
-              href="/admin/events/new"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Event"
-            >
-              <div className="text-2xl mb-2">🎉</div>
-              <div>Tambah Event</div>
-            </Link>
+        <LoadingFallback>
+          <QuickActions />
+        </LoadingFallback>
 
-            <Link
-              href="/admin/destinations/new"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Objek Wisata"
-            >
-              <div className="text-2xl mb-2">🏔️</div>
-              <div>Tambah Objek Wisata</div>
-            </Link>
-
-            <Link
-              href="/admin/culinary/new"
-              className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Kuliner"
-            >
-              <div className="text-2xl mb-2">🍽️</div>
-              <div>Tambah Kuliner</div>
-            </Link>
-
-            <Link
-              href="/admin/accommodation/new"
-              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Penginapan"
-            >
-              <div className="text-2xl mb-2">🏨</div>
-              <div>Tambah Penginapan</div>
-            </Link>
-
-            <Link
-              href="/admin/souvenirs/new"
-              className="bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Souvenir"
-            >
-              <div className="text-2xl mb-2">🛍️</div>
-              <div>Tambah Souvenir</div>
-            </Link>
-
-            <Link
-              href="/admin/travel-agencies/new"
-              className="bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Biro Perjalanan"
-            >
-              <div className="text-2xl mb-2">🚌</div>
-              <div>Tambah Biro Perjalanan</div>
-            </Link>
-
-            <Link
-              href="/admin/villages/new"
-              className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Tambah Desa Wisata"
-            >
-              <div className="text-2xl mb-2">🏘️</div>
-              <div>Tambah Desa Wisata</div>
-            </Link>
-
-            <Link
-              href="/admin/data"
-              className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-4 py-3 rounded-lg text-center font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-              aria-label="Kelola Data"
-            >
-              <div className="text-2xl mb-2">📊</div>
-              <div>Kelola Data</div>
-            </Link>
-          </div>
-        </div>
-
-        {/* System Status */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Sistem</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-sm text-gray-700">Database: Online</span>
+        {/* Enhanced System Status */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100">
+          <h3 className="text-xl lg:text-2xl font-bold text-slate-700 mb-6">🔧 Status Sistem</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            <div className="flex items-center space-x-4 p-4 lg:p-6 bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl border border-emerald-200">
+              <div className="w-4 h-4 bg-emerald-500 rounded-full animate-pulse"></div>
+              <div>
+                <span className="text-sm lg:text-base text-slate-600 font-medium">Database</span>
+                <p className="text-xs text-emerald-600 font-medium">Online</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-sm text-gray-700">API: Berfungsi</span>
+            <div className="flex items-center space-x-4 p-4 lg:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
+              <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+              <div>
+                <span className="text-sm lg:text-base text-slate-600 font-medium">API</span>
+                <p className="text-xs text-blue-600 font-medium">Berfungsi</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-sm text-gray-700">Storage: Tersedia</span>
+            <div className="flex items-center space-x-4 p-4 lg:p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl border border-purple-200">
+              <div className="w-4 h-4 bg-purple-500 rounded-full animate-pulse"></div>
+              <div>
+                <span className="text-sm lg:text-base text-slate-600 font-medium">Storage</span>
+                <p className="text-xs text-purple-600 font-medium">Tersedia</p>
+              </div>
             </div>
           </div>
         </div>

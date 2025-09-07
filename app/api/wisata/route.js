@@ -37,6 +37,7 @@ export async function POST(request) {
     const short_description = formData.get('short_description');
     const description = formData.get('description');
     const entrance_fee = formData.get('entrance_fee');
+    const manager = formData.get('manager');
     const contact = formData.get('contact');
     const address = formData.get('address');
     const recommended = formData.get('recommended') === 'true';
@@ -109,6 +110,7 @@ export async function POST(request) {
       type: type,
       category: category || 'Wisata',
       entrance_fee: entrance_fee || 'Gratis',
+      manager: manager || '',
       contact: contact || '',
       address: address || '',
       features: ['Fasilitas Dasar'],

@@ -92,7 +92,7 @@ const MapFallback = ({ destination }) => {
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Koordinat GPS</p>
             <p className="font-mono text-sm text-gray-800 dark:text-white">
-              {Number(destinationCoords.lat || 0).toFixed(6)}, {Number(destinationCoords.lng || 0).toFixed(6)}
+              {destinationCoords.lat}, {destinationCoords.lng}
             </p>
           </div>
           <button

@@ -106,7 +106,7 @@ const BiroPerjalananDetail = () => {
 					{/* Back Button */}
 					<button 
 						onClick={() => window.history.back()} 
-						className="group mb-6 inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-12 mb-6 inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
 						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
 						<span className="font-medium">Kembali ke Dolan Banyumas</span>

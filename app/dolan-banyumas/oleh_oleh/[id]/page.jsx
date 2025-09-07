@@ -96,7 +96,7 @@ const OlehOlehDetail = () => {
 					{/* Back Button */}
 					<button 
 						onClick={() => window.history.back()} 
-						className="group mb-6 inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-12 mb-6 inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
 						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
 						<span className="font-medium">Kembali ke Dolan Banyumas</span>

@@ -21,6 +21,8 @@ export default function EditMenuItem() {
     name: '',
     description: '',
     price: '',
+    priceIced: '',
+    priceHot: '',
     cookingTime: '',
     category: 'Makanan Utama',
     destinationId: '',
@@ -31,37 +33,69 @@ export default function EditMenuItem() {
     isSpicy: false,
     halal: true,
     available: true,
-    additionalInfo: []
+    additionalInfo: [],
+    flavorOptions: []
   });
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [currentImage, setCurrentImage] = useState('');
   const [newAdditionalInfo, setNewAdditionalInfo] = useState('');
+  const [newFlavorOption, setNewFlavorOption] = useState('');
 
-  // Predefined categories
-  const categories = [
-    'Makanan Utama',
-    'Makanan Ringan',
-    'Minuman',
-    'Dessert',
-    'Sate',
-    'Soto',
-    'Nasi',
-    'Mie',
-    'Seafood',
-    'Ayam',
-    'Daging',
-    'Sayuran',
-    'Sup',
-    'Gorengan',
-    'Bakso',
-    'Es',
-    'Kopi',
-    'Teh',
-    'Jus',
-    'Lainnya'
-  ];
+  // Dynamic categories based on selected culinary destination
+  const getCategories = () => {
+    const baseCategories = [
+      'Makanan Utama',
+      'Makanan Ringan',
+      'Minuman',
+      'Dessert',
+      'Sate',
+      'Soto',
+      'Nasi',
+      'Mie',
+      'Seafood',
+      'Ayam',
+      'Daging',
+      'Sayuran',
+      'Sup',
+      'Gorengan',
+      'Bakso',
+      'Es',
+      'Kopi',
+      'Teh',
+      'Jus',
+      'Lainnya'
+    ];
+
+    // Add specific categories for The Soeds
+    if (formData.destinationTitle === 'The Soeds') {
+      return [
+        'THE BMS Fizz n Breeze',
+        'SMOOTHIES the nature is calling',
+        'SINGLE ORIGIN',
+        'SOED\'S Signature',
+        'THE ESPRESSO BASED',
+        'ARTISAN TEA',
+        'BUTTER RICE WITH DAUN JERUK',
+        'SNACKS',
+        'MAGICAL INSIDE & HAPPIER Oatside',
+        'SOEDS Signature PLATTER',
+        'SHAKEN SWEET & CREAMY Series',
+        'SUPREMO PIZZARIO SERIES',
+        'DELIGHTFUL & COMFORTING Sweet Treats',
+        'TRULY FANTASTEAK',
+        'Wafflicious',
+        'SHAKEN FRESH Presso',
+        'Crawfflicious',
+        ...baseCategories
+      ];
+    }
+
+    return baseCategories;
+  };
+
+  const categories = getCategories();
 
   // Predefined additional info options
   const additionalInfoOptions = [
@@ -109,7 +143,7 @@ export default function EditMenuItem() {
       }
 
       // Fetch menu item data
-      const menuResponse = await fetch(`/api/culinary/menu?id=${id}`);
+      const menuResponse = await fetch(`/api/kuliner/menu?id=${id}`);
       const menuData = await menuResponse.json();
 
       if (menuData.success && menuData.menu_items && menuData.menu_items.length > 0) {
@@ -118,6 +152,8 @@ export default function EditMenuItem() {
           name: menuItem.name || '',
           description: menuItem.description || '',
           price: menuItem.price || '',
+          priceIced: menuItem.priceIced || '',
+          priceHot: menuItem.priceHot || '',
           cookingTime: menuItem.cookingTime || '',
           category: menuItem.category || 'Makanan Utama',
           destinationId: menuItem.destinationId || '',
@@ -128,7 +164,8 @@ export default function EditMenuItem() {
           isSpicy: menuItem.isSpicy || false,
           halal: menuItem.halal !== undefined ? menuItem.halal : true,
           available: menuItem.available !== undefined ? menuItem.available : true,
-          additionalInfo: menuItem.additionalInfo || []
+          additionalInfo: menuItem.additionalInfo || [],
+          flavorOptions: menuItem.flavorOptions || []
         });
         setCurrentImage(menuItem.image || '');
         setImagePreview(menuItem.image || null);
@@ -222,16 +259,61 @@ export default function EditMenuItem() {
     }
   };
 
+  const handleAddFlavorOption = () => {
+    if (newFlavorOption.trim() && !formData.flavorOptions.includes(newFlavorOption.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        flavorOptions: [...prev.flavorOptions, newFlavorOption.trim()]
+      }));
+      setNewFlavorOption('');
+    }
+  };
+
+  const handleRemoveFlavorOption = (option) => {
+    setFormData(prev => ({
+      ...prev,
+      flavorOptions: prev.flavorOptions.filter(item => item !== option)
+    }));
+  };
+
+  const handleAddPredefinedFlavor = (option) => {
+    if (!formData.flavorOptions.includes(option)) {
+      setFormData(prev => ({
+        ...prev,
+        flavorOptions: [...prev.flavorOptions, option]
+      }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
       // Validate required fields
-      if (!formData.name || !formData.description || !formData.price || 
-          !formData.cookingTime || !formData.category || !formData.destinationId) {
-        alert('Semua field wajib diisi (nama, deskripsi, harga, waktu memasak, kategori, destinasi)');
+      if (!formData.name || !formData.description || !formData.cookingTime || 
+          !formData.category || !formData.destinationId) {
+        alert('Semua field wajib diisi (nama, deskripsi, waktu memasak, kategori, destinasi)');
         return;
+      }
+
+      // Validate pricing based on category
+      const dualPricingCategories = [
+        'THE ESPRESSO BASED',
+        'SHAKEN SWEET & CREAMY Series',
+        'SHAKEN FRESH Presso'
+      ];
+      
+      if (dualPricingCategories.includes(formData.category)) {
+        if (!formData.priceIced && !formData.priceHot) {
+          alert('Untuk minuman dengan dual pricing, minimal salah satu harga (Iced atau Hot) harus diisi');
+          return;
+        }
+      } else {
+        if (!formData.price) {
+          alert('Harga wajib diisi');
+          return;
+        }
       }
 
       // Create FormData for file upload
@@ -240,7 +322,7 @@ export default function EditMenuItem() {
       // Add form data
       formDataToSend.append('id', id);
       Object.keys(formData).forEach(key => {
-        if (key === 'additionalInfo') {
+        if (key === 'additionalInfo' || key === 'flavorOptions') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
         } else {
           formDataToSend.append(key, formData[key]);
@@ -252,7 +334,7 @@ export default function EditMenuItem() {
         formDataToSend.append('image', imageFile);
       }
 
-      const response = await fetch('/api/culinary/menu', {
+      const response = await fetch('/api/kuliner/menu', {
         method: 'PUT',
         body: formDataToSend,
       });
@@ -378,22 +460,57 @@ export default function EditMenuItem() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Waktu</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                        Harga (Rp) *
-                      </label>
-                      <input
-                        type="number"
-                        id="price"
-                        name="price"
-                        required
-                        min="0"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="25000"
-                      />
-                    </div>
+                    {(formData.category === 'THE ESPRESSO BASED' || formData.category === 'SHAKEN SWEET & CREAMY Series' || formData.category === 'SHAKEN FRESH Presso') ? (
+                      <>
+                        <div>
+                          <label htmlFor="priceIced" className="block text-sm font-medium text-gray-700">
+                            Harga Iced (Rp) *
+                          </label>
+                          <input
+                            type="number"
+                            id="priceIced"
+                            name="priceIced"
+                            min="0"
+                            value={formData.priceIced}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="26000"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="priceHot" className="block text-sm font-medium text-gray-700">
+                            Harga Hot (Rp) *
+                          </label>
+                          <input
+                            type="number"
+                            id="priceHot"
+                            name="priceHot"
+                            min="0"
+                            value={formData.priceHot}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="24000"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                          Harga (Rp) *
+                        </label>
+                        <input
+                          type="number"
+                          id="price"
+                          name="price"
+                          required
+                          min="0"
+                          value={formData.price}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="25000"
+                        />
+                      </div>
+                    )}
 
                     <div>
                       <label htmlFor="cookingTime" className="block text-sm font-medium text-gray-700">
@@ -567,13 +684,13 @@ export default function EditMenuItem() {
                       </div>
                     </div>
 
-                    {formData.additionalInfo.length > 0 && (
+                    {formData.additionalInfo && formData.additionalInfo.length > 0 && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Informasi yang Dipilih
                         </label>
                         <div className="flex flex-wrap gap-2">
-                          {formData.additionalInfo.map((info, index) => (
+                          {formData.additionalInfo && formData.additionalInfo.map((info, index) => (
                             <span
                               key={index}
                               className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
@@ -593,6 +710,80 @@ export default function EditMenuItem() {
                     )}
                   </div>
                 </div>
+
+                {/* Flavor Options - Only show for BUTTER RICE WITH DAUN JERUK */}
+                {formData.category === 'BUTTER RICE WITH DAUN JERUK' && (
+                  <div className="border-b border-gray-200 pb-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Pilihan Rasa (Flavor Options)</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tambah Pilihan Rasa Kustom
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={newFlavorOption}
+                            onChange={(e) => setNewFlavorOption(e.target.value)}
+                            placeholder="Contoh: Sambal Geprek, Lada Hitam, dll"
+                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAddFlavorOption}
+                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+                          >
+                            Tambah
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Pilih dari Opsi yang Tersedia
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {['Sambal Geprek', 'Lada Hitam', 'Honey Sauce', 'Sambal Matah', 'Sambal Terasi', 'Sambal Ijo'].map((option) => (
+                            <button
+                              key={option}
+                              type="button"
+                              onClick={() => handleAddPredefinedFlavor(option)}
+                              className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full"
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {formData.flavorOptions && formData.flavorOptions.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Pilihan Rasa yang Dipilih
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {formData.flavorOptions && formData.flavorOptions.map((option, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"
+                              >
+                                {option}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFlavorOption(option)}
+                                  className="ml-2 text-red-600 hover:text-red-800"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Image Upload */}
                 <div className="border-b border-gray-200 pb-6">

@@ -18,17 +18,68 @@ const SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug })
   const dynamicCategories = [
     { id: 'all', name: 'Semua Menu', count: menus.length },
     { id: 'popular', name: 'Menu Populer', count: menus.filter(menu => menu.isPopular).length },
-    { id: 'main', name: 'Menu Utama', count: menus.filter(menu => !menu.name.toLowerCase().includes('es') && !menu.name.toLowerCase().includes('wedang')).length },
-    { id: 'drinks', name: 'Minuman', count: menus.filter(menu => menu.name.toLowerCase().includes('es') || menu.name.toLowerCase().includes('wedang')).length }
+    { id: 'fizz', name: 'THE BMS Fizz n Breeze', count: menus.filter(menu => menu.category === 'THE BMS Fizz n Breeze').length },
+    { id: 'smoothies', name: 'SMOOTHIES', count: menus.filter(menu => menu.category === 'SMOOTHIES the nature is calling').length },
+    { id: 'coffee', name: 'SINGLE ORIGIN', count: menus.filter(menu => menu.category === 'SINGLE ORIGIN').length },
+    { id: 'signature', name: 'SOED\'S Signature', count: menus.filter(menu => menu.category === 'SOED\'S Signature').length },
+    { id: 'espresso', name: 'THE ESPRESSO BASED', count: menus.filter(menu => menu.category === 'THE ESPRESSO BASED').length },
+    { id: 'tea', name: 'ARTISAN TEA', count: menus.filter(menu => menu.category === 'ARTISAN TEA').length },
+    { id: 'rice', name: 'BUTTER RICE', count: menus.filter(menu => menu.category === 'BUTTER RICE WITH DAUN JERUK').length },
+    { id: 'snacks', name: 'SNACKS', count: menus.filter(menu => menu.category === 'SNACKS').length },
+    { id: 'oatside', name: 'MAGICAL INSIDE', count: menus.filter(menu => menu.category === 'MAGICAL INSIDE & HAPPIER Oatside').length },
+    { id: 'platter', name: 'SOEDS PLATTER', count: menus.filter(menu => menu.category === 'SOEDS Signature PLATTER').length },
+    { id: 'shaken', name: 'SHAKEN SWEET', count: menus.filter(menu => menu.category === 'SHAKEN SWEET & CREAMY Series').length },
+    { id: 'pizzario', name: 'SUPREMO PIZZARIO', count: menus.filter(menu => menu.category === 'SUPREMO PIZZARIO SERIES').length },
+    { id: 'sweet', name: 'SWEET TREATS', count: menus.filter(menu => menu.category === 'DELIGHTFUL & COMFORTING Sweet Treats').length },
+    { id: 'fantasteak', name: 'FANTASTEAK', count: menus.filter(menu => menu.category === 'TRULY FANTASTEAK').length },
+    { id: 'wafflicious', name: 'Wafflicious', count: menus.filter(menu => menu.category === 'Wafflicious').length },
+    { id: 'presso', name: 'SHAKEN FRESH', count: menus.filter(menu => menu.category === 'SHAKEN FRESH Presso').length },
+    { id: 'crawfflicious', name: 'Crawfflicious', count: menus.filter(menu => menu.category === 'Crawfflicious').length },
+    { id: 'main', name: 'Menu Utama', count: menus.filter(menu => !['THE BMS Fizz n Breeze', 'SMOOTHIES the nature is calling', 'SINGLE ORIGIN', 'SOED\'S Signature', 'THE ESPRESSO BASED', 'ARTISAN TEA', 'BUTTER RICE WITH DAUN JERUK', 'SNACKS', 'MAGICAL INSIDE & HAPPIER Oatside', 'SOEDS Signature PLATTER', 'SHAKEN SWEET & CREAMY Series', 'SUPREMO PIZZARIO SERIES', 'DELIGHTFUL & COMFORTING Sweet Treats', 'TRULY FANTASTEAK', 'Wafflicious', 'SHAKEN FRESH Presso', 'Crawfflicious', 'Minuman'].includes(menu.category)).length },
+    { id: 'drinks', name: 'Minuman Lain', count: menus.filter(menu => menu.category === 'Minuman').length }
   ];
 
   const filteredMenus = activeCategory === 'all' 
     ? menus 
     : activeCategory === 'popular'
     ? menus.filter(menu => menu.isPopular)
+    : activeCategory === 'fizz'
+    ? menus.filter(menu => menu.category === 'THE BMS Fizz n Breeze')
+    : activeCategory === 'smoothies'
+    ? menus.filter(menu => menu.category === 'SMOOTHIES the nature is calling')
+    : activeCategory === 'coffee'
+    ? menus.filter(menu => menu.category === 'SINGLE ORIGIN')
+    : activeCategory === 'signature'
+    ? menus.filter(menu => menu.category === 'SOED\'S Signature')
+    : activeCategory === 'espresso'
+    ? menus.filter(menu => menu.category === 'THE ESPRESSO BASED')
+    : activeCategory === 'tea'
+    ? menus.filter(menu => menu.category === 'ARTISAN TEA')
+    : activeCategory === 'rice'
+    ? menus.filter(menu => menu.category === 'BUTTER RICE WITH DAUN JERUK')
+    : activeCategory === 'snacks'
+    ? menus.filter(menu => menu.category === 'SNACKS')
+    : activeCategory === 'oatside'
+    ? menus.filter(menu => menu.category === 'MAGICAL INSIDE & HAPPIER Oatside')
+    : activeCategory === 'platter'
+    ? menus.filter(menu => menu.category === 'SOEDS Signature PLATTER')
+    : activeCategory === 'shaken'
+    ? menus.filter(menu => menu.category === 'SHAKEN SWEET & CREAMY Series')
+    : activeCategory === 'pizzario'
+    ? menus.filter(menu => menu.category === 'SUPREMO PIZZARIO SERIES')
+    : activeCategory === 'sweet'
+    ? menus.filter(menu => menu.category === 'DELIGHTFUL & COMFORTING Sweet Treats')
+    : activeCategory === 'fantasteak'
+    ? menus.filter(menu => menu.category === 'TRULY FANTASTEAK')
+    : activeCategory === 'wafflicious'
+    ? menus.filter(menu => menu.category === 'Wafflicious')
+    : activeCategory === 'presso'
+    ? menus.filter(menu => menu.category === 'SHAKEN FRESH Presso')
+    : activeCategory === 'crawfflicious'
+    ? menus.filter(menu => menu.category === 'Crawfflicious')
     : activeCategory === 'main'
-    ? menus.filter(menu => !menu.name.toLowerCase().includes('es') && !menu.name.toLowerCase().includes('wedang'))
-    : menus.filter(menu => menu.name.toLowerCase().includes('es') || menu.name.toLowerCase().includes('wedang'));
+    ? menus.filter(menu => !['THE BMS Fizz n Breeze', 'SMOOTHIES the nature is calling', 'SINGLE ORIGIN', 'SOED\'S Signature', 'THE ESPRESSO BASED', 'ARTISAN TEA', 'BUTTER RICE WITH DAUN JERUK', 'SNACKS', 'MAGICAL INSIDE & HAPPIER Oatside', 'SOEDS Signature PLATTER', 'SHAKEN SWEET & CREAMY Series', 'SUPREMO PIZZARIO SERIES', 'DELIGHTFUL & COMFORTING Sweet Treats', 'TRULY FANTASTEAK', 'Wafflicious', 'SHAKEN FRESH Presso', 'Crawfflicious', 'Minuman'].includes(menu.category))
+    : menus.filter(menu => menu.category === 'Minuman');
 
   const handleBuyClick = (menu) => {
     setSelectedMenu(menu);

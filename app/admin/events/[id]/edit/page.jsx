@@ -44,6 +44,28 @@ export default function EditEvent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const CustomSelect = ({ label, value, onChange, options }) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <div>
+        {label && (<label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>)}
+        <button type="button" onClick={()=>setOpen(o=>!o)} className={`w-full px-4 py-2.5 border rounded-lg bg-white text-gray-900 flex items-center justify-between shadow-sm ${open ? 'border-orange-500 ring-2 ring-orange-500' : 'border-gray-300'}`}>
+          <span className="font-medium truncate">{options.find(o=>o.value===value)?.label || value}</span>
+          <svg className={`w-4 h-4 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        {open && (
+          <ul className="mt-2 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl">
+            {options.map(opt => (
+              <li key={opt.value}>
+                <button type="button" onClick={() => { onChange(opt.value); setOpen(false); }} className={`w-full text-left px-4 py-2.5 hover:bg-orange-50 ${value===opt.value ? 'bg-orange-50 text-orange-700 font-semibold' : 'text-gray-800'}`}>{opt.label}</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -245,23 +267,21 @@ export default function EditEvent() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Edit Event</h1>
-              <div className="flex space-x-3">
-                <Link 
-                  href={`/admin/events/${id}/view`}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                  👁️ Lihat
-                </Link>
-                <Link 
-                  href="/admin/events"
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                  ← Kembali ke Events
-                </Link>
+            <div className="flex items-center justify-between py-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center shadow-sm">
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3M5 11h14M5 19h14M7 11v8m10-8v8"/></svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Edit Event</h1>
+                  <p className="mt-1 text-sm text-gray-500">Perbarui data event, jadwal, venue, dan paket seats.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={`/admin/events/${id}/view`} className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Lihat</Link>
+                <Link href="/admin/events" className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">← Kembali</Link>
               </div>
             </div>
           </div>
@@ -269,7 +289,7 @@ export default function EditEvent() {
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               {/* Basic Information */}
               <div className="mb-8">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Informasi Dasar</h2>
@@ -305,22 +325,19 @@ export default function EditEvent() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Tipe Event
-                    </label>
-                    <select
-                      name="type"
+                    <CustomSelect
+                      label="Tipe Event"
                       value={formData.type}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="festival">Festival</option>
-                      <option value="konser">Konser</option>
-                      <option value="workshop">Workshop</option>
-                      <option value="seminar">Seminar</option>
-                      <option value="exhibition">Pameran</option>
-                      <option value="event">Event Lainnya</option>
-                    </select>
+                      onChange={(v)=>handleInputChange({ target:{ name:'type', value:v }})}
+                      options={[
+                        { value:'festival', label:'Festival' },
+                        { value:'konser', label:'Konser' },
+                        { value:'workshop', label:'Workshop' },
+                        { value:'seminar', label:'Seminar' },
+                        { value:'exhibition', label:'Pameran' },
+                        { value:'event', label:'Event Lainnya' }
+                      ]}
+                    />
                   </div>
 
                   <div>

@@ -8,7 +8,6 @@ import { FaWhatsapp, FaInstagram, FaGlobe } from "react-icons/fa";
 import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
-import LocationInfo from "../../../../components/LocationInfo";
 
 import SimpleMenuSection from "../../../../components/SimpleMenuSection";
 
@@ -86,6 +85,36 @@ const KulinerDetail = () => {
 	};
 
 	const contactInfo = parseContact(destination.contact);
+	
+	// Prioritize individual fields over contact field
+	const finalContactInfo = {
+		phone: destination.phone || contactInfo.phone,
+		whatsapp: destination.whatsapp || contactInfo.whatsapp,
+		email: destination.email || contactInfo.email,
+		website: destination.website || contactInfo.website
+	};
+
+	// Parse features if it's a string JSON
+	const parseFeatures = (features) => {
+		if (!features) return [];
+		if (Array.isArray(features)) {
+			return features.map(feature => {
+				// If feature is a string that looks like JSON array, parse it
+				if (typeof feature === 'string' && feature.startsWith('[') && feature.endsWith(']')) {
+					try {
+						const parsed = JSON.parse(feature);
+						return Array.isArray(parsed) ? parsed : [parsed];
+					} catch {
+						return feature;
+					}
+				}
+				return feature;
+			}).flat();
+		}
+		return features;
+	};
+
+	const parsedFeatures = parseFeatures(destination.features);
 
 			return (
 		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -96,7 +125,7 @@ const KulinerDetail = () => {
 					{/* Back Button */}
 					<button 
 						onClick={() => window.history.back()} 
-						className="group mb-6 inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-12 mb-6 inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
 						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
 						<span className="font-medium">Kembali ke Dolan Banyumas</span>
@@ -111,6 +140,35 @@ const KulinerDetail = () => {
 						<h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
 							{destination.title}
 						</h1>
+						
+						{/* Rating Display */}
+						{destination.rating && (
+							<div className="flex items-center justify-center gap-3 mb-6">
+								<div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 px-4 py-2 rounded-full border border-yellow-200 dark:border-yellow-700">
+									<div className="flex items-center gap-1">
+										{[1, 2, 3, 4, 5].map((star) => (
+											<BiStar
+												key={star}
+												className={`text-lg ${
+													star <= Math.floor(parseFloat(destination.rating))
+														? 'text-yellow-400 fill-current'
+														: star === Math.ceil(parseFloat(destination.rating)) && parseFloat(destination.rating) % 1 !== 0
+														? 'text-yellow-400 fill-current opacity-50'
+														: 'text-gray-300 dark:text-gray-600'
+												}`}
+											/>
+										))}
+									</div>
+									<span className="text-yellow-800 dark:text-yellow-200 font-bold text-lg">
+										{parseFloat(destination.rating).toFixed(1)}
+									</span>
+								</div>
+								<div className="text-sm text-gray-600 dark:text-gray-400">
+									<span className="font-medium">Rating</span>
+								</div>
+							</div>
+						)}
+						
 						<p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
 							{destination.short_description || destination.description || "Temukan kelezatan kuliner khas Banyumas"}
 						</p>
@@ -119,20 +177,28 @@ const KulinerDetail = () => {
 					{/* Quick Stats */}
 					<div className="flex justify-center">
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">4.8</div>
-								<div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
-							</div>
+							{destination.rating && (
+								<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
+									<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+										{parseFloat(destination.rating).toFixed(1)}
+									</div>
+									<div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
+								</div>
+							)}
 							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
 								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">500+</div>
 								<div className="text-sm text-gray-600 dark:text-gray-400">Pengunjung</div>
 							</div>
 							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">15</div>
+								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+									{destination.menu ? destination.menu.length : 0}
+								</div>
 								<div className="text-sm text-gray-600 dark:text-gray-400">Menu</div>
 							</div>
 							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">24/7</div>
+								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+									{destination.opening_hours ? 'Buka' : '24/7'}
+								</div>
 								<div className="text-sm text-gray-600 dark:text-gray-400">Jam Buka</div>
 							</div>
 						</div>
@@ -199,7 +265,7 @@ const KulinerDetail = () => {
 												</svg>
 											</div>
 											<div>
-												<h3 className="text-xl font-bold text-gray-800 dark:text-white">Tim Pengelola Kuliner</h3>
+												<h3 className="text-xl font-bold text-gray-800 dark:text-white">{destination.manager || 'Tim Pengelola Kuliner'}</h3>
 												<p className="text-gray-600 dark:text-gray-300">Pengelola Destinasi</p>
 												<div className="flex items-center gap-2 mt-2">
 													<div className="flex gap-1">
@@ -221,63 +287,44 @@ const KulinerDetail = () => {
 									</div>
 								</div>
 
-								{/* Informasi Kontak */}
-								<div className="mb-8">
-									<h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Informasi Kontak</h3>
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-										{/* Telepon Card */}
-										<div className="bg-blue-900/20 dark:bg-blue-800/30 rounded-xl p-4">
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3">
-													<div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-														<BiPhone className="text-white text-lg" />
-													</div>
-													<div>
-														<p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
-														<p className="font-semibold text-gray-900 dark:text-white">+62 812-3456-7890</p>
-													</div>
-												</div>
-												<button className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
-													<BiPhone className="text-white text-sm" />
-												</button>
-											</div>
-										</div>
-
-										{/* WhatsApp Card */}
-										<div className="bg-green-900/20 dark:bg-green-800/30 rounded-xl p-4">
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3">
-													<div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-														<FaWhatsapp className="text-white text-lg" />
-													</div>
-													<div>
-														<p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
-														<p className="font-semibold text-gray-900 dark:text-white">+62 812-3456-7890</p>
-													</div>
-												</div>
-												<button className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
-													<FaWhatsapp className="text-white text-sm" />
-												</button>
-											</div>
-										</div>
-									</div>
-								</div>
 
 								{/* Aksi Cepat */}
 								<div className="mb-8">
 									<h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Aksi Cepat</h3>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 										{/* Telepon Button */}
-										<button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3">
-											<BiPhone className="text-xl" />
-											<span>Telepon</span>
-										</button>
+										{finalContactInfo.phone ? (
+											<a 
+												href={`tel:${finalContactInfo.phone}`}
+												className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3"
+											>
+												<BiPhone className="text-xl" />
+												<span>Telepon</span>
+											</a>
+										) : (
+											<button className="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-3 cursor-not-allowed">
+												<BiPhone className="text-xl" />
+												<span>Telepon</span>
+											</button>
+										)}
 
 										{/* WhatsApp Button */}
-										<button className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3">
-											<FaWhatsapp className="text-xl" />
-											<span>WhatsApp</span>
-										</button>
+										{finalContactInfo.whatsapp ? (
+											<a 
+												href={`https://wa.me/${finalContactInfo.whatsapp.replace(/\D/g, '')}?text=Halo, saya tertarik dengan kuliner ${destination.title}`}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3"
+											>
+												<FaWhatsapp className="text-xl" />
+												<span>WhatsApp</span>
+											</a>
+										) : (
+											<button className="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-3 cursor-not-allowed">
+												<FaWhatsapp className="text-xl" />
+												<span>WhatsApp</span>
+											</button>
+										)}
 									</div>
 								</div>
 
@@ -336,7 +383,7 @@ const KulinerDetail = () => {
 										</div>
 										<div>
 											<h4 className="font-semibold text-gray-800 dark:text-white">Jam Operasional</h4>
-											<p className="text-gray-600 dark:text-gray-300">Senin - Minggu: 08:00 - 17:00 WIB</p>
+											<p className="text-gray-600 dark:text-gray-300">{destination.opening_hours || 'Senin - Minggu: 08:00 - 17:00 WIB'}</p>
 											<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">*Jam operasional dapat berubah sesuai kondisi</p>
 										</div>
 									</div>
@@ -359,6 +406,68 @@ const KulinerDetail = () => {
 								</div>
 							</div>
 
+							{/* Informasi Kontak Section */}
+							<div className="mt-32 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
+								<h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Informasi Kontak</h3>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									{/* Telepon Card */}
+									<div className="bg-blue-900/20 dark:bg-blue-800/30 rounded-xl p-4">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center gap-3">
+												<div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+													<BiPhone className="text-white text-lg" />
+												</div>
+												<div>
+													<p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
+													<p className="font-semibold text-gray-900 dark:text-white">{finalContactInfo.phone || '+62 812-3456-7890'}</p>
+												</div>
+											</div>
+											{finalContactInfo.phone ? (
+												<a 
+													href={`tel:${finalContactInfo.phone}`}
+													className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+												>
+													<BiPhone className="text-white text-sm" />
+												</a>
+											) : (
+												<button className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed">
+													<BiPhone className="text-white text-sm" />
+												</button>
+											)}
+										</div>
+									</div>
+
+									{/* WhatsApp Card */}
+									<div className="bg-green-900/20 dark:bg-green-800/30 rounded-xl p-4">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center gap-3">
+												<div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+													<FaWhatsapp className="text-white text-lg" />
+												</div>
+												<div>
+													<p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
+													<p className="font-semibold text-gray-900 dark:text-white">{finalContactInfo.whatsapp || '+62 812-3456-7890'}</p>
+												</div>
+											</div>
+											{finalContactInfo.whatsapp ? (
+												<a 
+													href={`https://wa.me/${finalContactInfo.whatsapp.replace(/\D/g, '')}?text=Halo, saya tertarik dengan kuliner ${destination.title}`}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
+												>
+													<FaWhatsapp className="text-white text-sm" />
+												</a>
+											) : (
+												<button className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed">
+													<FaWhatsapp className="text-white text-sm" />
+												</button>
+											)}
+										</div>
+									</div>
+								</div>
+							</div>
+
 							{/* Smart Map */}
 							<ErrorBoundary>
 								<SmartMap
@@ -367,8 +476,6 @@ const KulinerDetail = () => {
 								/>
 							</ErrorBoundary>
 
-							{/* Location Info */}
-							<LocationInfo destination={destination} />
 
 
 						</div>
@@ -381,27 +488,62 @@ const KulinerDetail = () => {
 								
 								<div className="space-y-4">
 									{/* Phone */}
-									{contactInfo.phone && (
+									{finalContactInfo.phone && (
 										<div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
 											<div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
 												<BiPhone className="text-white text-lg" />
 											</div>
 											<div>
 												<p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
-												<p className="font-semibold text-gray-900 dark:text-white">{contactInfo.phone}</p>
+												<p className="font-semibold text-gray-900 dark:text-white">{finalContactInfo.phone}</p>
 											</div>
 										</div>
 									)}
 
 									{/* WhatsApp */}
-									{contactInfo.whatsapp && (
+									{finalContactInfo.whatsapp && (
 										<div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
 											<div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
 												<FaWhatsapp className="text-white text-lg" />
 											</div>
 											<div>
 												<p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
-												<p className="font-semibold text-gray-900 dark:text-white">{contactInfo.whatsapp}</p>
+												<p className="font-semibold text-gray-900 dark:text-white">{finalContactInfo.whatsapp}</p>
+											</div>
+										</div>
+									)}
+
+									{/* Website */}
+									{finalContactInfo.website && (
+										<div className="flex items-center gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
+											<div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
+												<FaGlobe className="text-white text-lg" />
+											</div>
+											<div>
+												<p className="text-sm text-gray-600 dark:text-gray-400">Website</p>
+												<a 
+													href={finalContactInfo.website} 
+													target="_blank" 
+													rel="noopener noreferrer"
+													className="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+												>
+													{finalContactInfo.website}
+												</a>
+											</div>
+										</div>
+									)}
+
+									{/* Cuisine Type */}
+									{destination.cuisine && (
+										<div className="flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/20 rounded-xl">
+											<div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
+												<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+												</svg>
+											</div>
+											<div>
+												<p className="text-sm text-gray-600 dark:text-gray-400">Jenis Masakan</p>
+												<p className="font-semibold text-gray-900 dark:text-white">{destination.cuisine}</p>
 											</div>
 										</div>
 									)}
@@ -448,7 +590,7 @@ const KulinerDetail = () => {
 							</div>
 
 							{/* Features Section */}
-							{destination.features && destination.features.length > 0 && (
+							{parsedFeatures && parsedFeatures.length > 0 && (
 								<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
 									<div className="flex items-center gap-3 mb-4">
 										<div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
@@ -460,7 +602,7 @@ const KulinerDetail = () => {
 									</div>
 									
 									<div className="space-y-3">
-										{destination.features.map((feature, index) => (
+										{parsedFeatures.map((feature, index) => (
 											<div key={index} className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700">
 												<div className="w-2 h-2 bg-purple-500 rounded-full"></div>
 												<span className="text-sm text-purple-700 dark:text-purple-300">{feature}</span>
@@ -474,12 +616,12 @@ const KulinerDetail = () => {
 							<div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-3xl p-6 text-white text-center">
 								<h3 className="text-xl font-bold mb-4">Aksi Cepat</h3>
 								
-								{/* Main Action Buttons - Horizontal Layout */}
-								<div className="grid grid-cols-4 gap-3 mb-4">
+								{/* Main Action Buttons - 2x2 Grid Layout */}
+								<div className="grid grid-cols-2 gap-3 mb-4">
 									{/* Telepon Button */}
-									{contactInfo.phone ? (
+									{finalContactInfo.phone ? (
 										<a 
-											href={`tel:${contactInfo.phone}`}
+											href={`tel:${finalContactInfo.phone}`}
 											className="flex flex-col items-center justify-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
 										>
 											<BiPhone className="text-2xl" />
@@ -493,9 +635,9 @@ const KulinerDetail = () => {
 									)}
 									
 									{/* WhatsApp Button */}
-									{contactInfo.whatsapp ? (
+									{finalContactInfo.whatsapp ? (
 										<a 
-											href={`https://wa.me/${contactInfo.whatsapp.replace(/\D/g, '')}?text=Halo, saya tertarik dengan kuliner ${destination.title}`}
+											href={`https://wa.me/${finalContactInfo.whatsapp.replace(/\D/g, '')}?text=Halo, saya tertarik dengan kuliner ${destination.title}`}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -507,6 +649,24 @@ const KulinerDetail = () => {
 										<button className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
 											<FaWhatsapp className="text-2xl" />
 											<span className="text-xs">WhatsApp</span>
+										</button>
+									)}
+									
+									{/* Website Button */}
+									{finalContactInfo.website ? (
+										<a 
+											href={finalContactInfo.website}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="flex flex-col items-center justify-center gap-2 bg-indigo-600/80 hover:bg-indigo-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+										>
+											<FaGlobe className="text-2xl" />
+											<span className="text-xs">Website</span>
+										</a>
+									) : (
+										<button className="flex flex-col items-center justify-center gap-2 bg-gray-400/80 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 shadow-lg cursor-not-allowed">
+											<FaGlobe className="text-2xl" />
+											<span className="text-xs">Website</span>
 										</button>
 									)}
 									

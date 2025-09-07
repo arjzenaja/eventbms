@@ -229,11 +229,34 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const destinationId = searchParams.get('destinationId');
     const destinationSlug = searchParams.get('slug');
+    const id = searchParams.get('id');
     
     // Try to get menu items from database first
     try {
       const dbData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'db.json'), 'utf8'));
       let menuItems = dbData.menu_items || [];
+      
+      // If specific ID is requested, return that menu item
+      if (id) {
+        const menuItem = menuItems.find(item => 
+          item.id === parseInt(id) || item.id === id || item.id === id.toString()
+        );
+        if (menuItem) {
+          return NextResponse.json({
+            success: true,
+            menu_items: [menuItem],
+            menus: [menuItem], // Keep for backward compatibility
+            total: 1
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            error: 'Menu item not found',
+            menu_items: [],
+            menus: []
+          }, { status: 404 });
+        }
+      }
       
       // Filter by destination if specified
       if (destinationId) {
@@ -255,7 +278,8 @@ export async function GET(request) {
         
         return NextResponse.json({
           success: true,
-          menus: menuItems,
+          menu_items: menuItems,
+          menus: menuItems, // Keep for backward compatibility
           total: menuItems.length,
           categories: categories,
           priceRange: priceRange
@@ -265,25 +289,14 @@ export async function GET(request) {
       console.log('Database not available, using fallback data');
     }
     
-    // Fallback to static data if no database items found
-    let menus = menuData.default;
-    
-    if (destinationSlug && menuData[destinationSlug]) {
-      menus = menuData[destinationSlug];
-    } else if (destinationId) {
-      // You can add logic here to fetch menus from database based on destinationId
-      menus = menuData.default;
-    }
-    
+    // Return empty array if no database items found
     return NextResponse.json({
       success: true,
-      menus: menus,
-      total: menus.length,
-      categories: [...new Set(menus.map(menu => menu.category))],
-      priceRange: {
-        min: Math.min(...menus.map(menu => menu.price)),
-        max: Math.max(...menus.map(menu => menu.price))
-      }
+      menu_items: [],
+      menus: [], // Keep for backward compatibility
+      total: 0,
+      categories: [],
+      priceRange: { min: 0, max: 0 }
     });
     
   } catch (error) {
@@ -292,7 +305,8 @@ export async function GET(request) {
       { 
         success: false, 
         error: 'Failed to fetch menu data',
-        menus: menuData.default 
+        menu_items: [],
+        menus: [] // Don't return static data on error
       },
       { status: 500 }
     );
@@ -301,29 +315,320 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { destinationId, menuId, quantity, specialInstructions } = body;
+    const formData = await request.formData();
     
-    // Here you would typically save the order to your database
-    console.log('New order received:', {
+    // Extract form data
+    const name = formData.get('name');
+    const description = formData.get('description');
+    const price = parseFloat(formData.get('price')) || null;
+    const priceIced = parseFloat(formData.get('priceIced')) || null;
+    const priceHot = parseFloat(formData.get('priceHot')) || null;
+    const cookingTime = formData.get('cookingTime');
+    const category = formData.get('category');
+    const destinationId = formData.get('destinationId');
+    const destinationSlug = formData.get('destinationSlug');
+    const destinationTitle = formData.get('destinationTitle');
+    const rating = parseFloat(formData.get('rating')) || 0;
+    const isPopular = formData.get('isPopular') === 'true';
+    const isSpicy = formData.get('isSpicy') === 'true';
+    const halal = formData.get('halal') === 'true';
+    const available = formData.get('available') === 'true';
+    let additionalInfo = [];
+    let flavorOptions = [];
+    
+    try {
+      additionalInfo = JSON.parse(formData.get('additionalInfo') || '[]');
+    } catch (error) {
+      console.error('Error parsing additionalInfo:', error);
+      additionalInfo = [];
+    }
+    
+    try {
+      flavorOptions = JSON.parse(formData.get('flavorOptions') || '[]');
+    } catch (error) {
+      console.error('Error parsing flavorOptions:', error);
+      flavorOptions = [];
+    }
+    const image = formData.get('image');
+    
+    // Validate required fields
+    if (!name || !description || !cookingTime || !category || !destinationId) {
+      return NextResponse.json(
+        { success: false, message: 'Semua field wajib diisi' },
+        { status: 400 }
+      );
+    }
+
+    // Validate pricing based on category
+    const dualPricingCategories = [
+      'THE ESPRESSO BASED',
+      'SHAKEN SWEET & CREAMY Series',
+      'SHAKEN FRESH Presso'
+    ];
+    
+    if (dualPricingCategories.includes(category)) {
+      if (!priceIced && !priceHot) {
+        return NextResponse.json(
+          { success: false, message: 'Untuk minuman dengan dual pricing, minimal salah satu harga (Iced atau Hot) harus diisi' },
+          { status: 400 }
+        );
+      }
+    } else {
+      if (!price) {
+        return NextResponse.json(
+          { success: false, message: 'Harga wajib diisi' },
+          { status: 400 }
+        );
+      }
+    }
+    
+    // Read database
+    const dbPath = path.join(process.cwd(), 'db.json');
+    const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    
+    // Generate new ID
+    const newId = Math.max(...(dbData.menu_items || []).map(item => parseInt(item.id) || 0)) + 1;
+    
+    // Handle image upload
+    let imagePath = '/placeholder.jpg';
+    if (image && image.size > 0) {
+      const timestamp = Date.now();
+      const fileName = `menu_${timestamp}.${image.name.split('.').pop()}`;
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'menu');
+      
+      // Ensure upload directory exists
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      
+      const filePath = path.join(uploadDir, fileName);
+      const buffer = await image.arrayBuffer();
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      imagePath = `/uploads/menu/${fileName}`;
+    }
+    
+    // Create new menu item
+    const newMenuItem = {
+      id: newId.toString(),
+      name,
+      description,
+      price: dualPricingCategories.includes(category) ? null : price,
+      priceIced: dualPricingCategories.includes(category) ? priceIced : null,
+      priceHot: dualPricingCategories.includes(category) ? priceHot : null,
+      cookingTime,
+      category,
       destinationId,
-      menuId,
-      quantity,
-      specialInstructions,
-      timestamp: new Date().toISOString()
-    });
+      destinationSlug: destinationSlug || '',
+      destinationTitle: destinationTitle || '',
+      rating,
+      isPopular,
+      isSpicy,
+      halal,
+      available,
+      additionalInfo,
+      flavorOptions,
+      image: imagePath,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    // Add to database
+    if (!dbData.menu_items) {
+      dbData.menu_items = [];
+    }
+    dbData.menu_items.push(newMenuItem);
+    
+    // Save to database
+    fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
     
     return NextResponse.json({
       success: true,
-      message: 'Order received successfully',
-      orderId: `ORD-${Date.now()}`,
-      estimatedTime: '15-20 menit'
+      message: 'Menu berhasil ditambahkan',
+      menu_item: newMenuItem
     });
     
   } catch (error) {
-    console.error('Error processing order:', error);
+    console.error('Error creating menu item:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
     return NextResponse.json(
-      { success: false, error: 'Failed to process order' },
+      { success: false, message: `Gagal menambahkan menu: ${error.message}` },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request) {
+  try {
+    const formData = await request.formData();
+    const id = formData.get('id');
+    
+    console.log('PUT request - ID:', id, 'Type:', typeof id);
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: 'ID menu diperlukan' },
+        { status: 400 }
+      );
+    }
+    
+    // Read database
+    const dbPath = path.join(process.cwd(), 'db.json');
+    const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    
+    // Find menu item - handle both string and integer IDs
+    const menuIndex = dbData.menu_items?.findIndex(item => {
+      const itemId = item.id;
+      const searchId = id;
+      
+      // Try exact match first
+      if (itemId === searchId) return true;
+      
+      // Try integer comparison
+      if (parseInt(itemId) === parseInt(searchId)) return true;
+      
+      // Try string comparison
+      if (itemId.toString() === searchId.toString()) return true;
+      
+      return false;
+    });
+    
+    console.log('Menu index found:', menuIndex);
+    console.log('Available menu IDs:', dbData.menu_items?.map(item => ({ id: item.id, type: typeof item.id })));
+    
+    if (menuIndex === -1 || !dbData.menu_items) {
+      return NextResponse.json(
+        { success: false, message: 'Menu tidak ditemukan' },
+        { status: 404 }
+      );
+    }
+    
+    // Update fields
+    const updateFields = {};
+    const fields = ['name', 'description', 'price', 'priceIced', 'priceHot', 'cookingTime', 'category', 'destinationId', 'destinationSlug', 'destinationTitle', 'rating', 'isPopular', 'isSpicy', 'halal', 'available', 'additionalInfo', 'flavorOptions'];
+    
+    fields.forEach(field => {
+      const value = formData.get(field);
+      if (value !== null) {
+        if (field === 'price' || field === 'priceIced' || field === 'priceHot' || field === 'rating') {
+          updateFields[field] = parseFloat(value) || null;
+        } else if (field === 'isPopular' || field === 'isSpicy' || field === 'halal' || field === 'available') {
+          updateFields[field] = value === 'true';
+        } else if (field === 'additionalInfo' || field === 'flavorOptions') {
+          try {
+            updateFields[field] = JSON.parse(value || '[]');
+          } catch (error) {
+            console.error(`Error parsing ${field}:`, error);
+            console.error(`Value:`, value);
+            // If it's not valid JSON, treat it as a single item array
+            updateFields[field] = value ? [value] : [];
+          }
+        } else {
+          updateFields[field] = value;
+        }
+      }
+    });
+    
+    // Handle image upload if provided
+    const image = formData.get('image');
+    if (image && image.size > 0) {
+      const timestamp = Date.now();
+      const fileName = `menu_${timestamp}.${image.name.split('.').pop()}`;
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'menu');
+      
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      
+      const filePath = path.join(uploadDir, fileName);
+      const buffer = await image.arrayBuffer();
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      updateFields.image = `/uploads/menu/${fileName}`;
+    }
+    
+    // Update menu item
+    updateFields.updated_at = new Date().toISOString();
+    dbData.menu_items[menuIndex] = { ...dbData.menu_items[menuIndex], ...updateFields };
+    
+    // Save to database
+    fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Menu berhasil diperbarui',
+      menu_item: dbData.menu_items[menuIndex]
+    });
+    
+  } catch (error) {
+    console.error('Error updating menu item:', error);
+    return NextResponse.json(
+      { success: false, message: 'Gagal memperbarui menu' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: 'ID menu diperlukan' },
+        { status: 400 }
+      );
+    }
+    
+    // Read database
+    const dbPath = path.join(process.cwd(), 'db.json');
+    const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    
+    // Find and remove menu item
+    if (!dbData.menu_items) {
+      return NextResponse.json(
+        { success: false, message: 'Menu tidak ditemukan' },
+        { status: 404 }
+      );
+    }
+    
+    const menuIndex = dbData.menu_items.findIndex(item => {
+      const itemId = item.id;
+      const searchId = id;
+      
+      // Try exact match first
+      if (itemId === searchId) return true;
+      
+      // Try integer comparison
+      if (parseInt(itemId) === parseInt(searchId)) return true;
+      
+      // Try string comparison
+      if (itemId.toString() === searchId.toString()) return true;
+      
+      return false;
+    });
+    if (menuIndex === -1) {
+      return NextResponse.json(
+        { success: false, message: 'Menu tidak ditemukan' },
+        { status: 404 }
+      );
+    }
+    
+    // Remove menu item
+    dbData.menu_items.splice(menuIndex, 1);
+    
+    // Save to database
+    fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Menu berhasil dihapus'
+    });
+    
+  } catch (error) {
+    console.error('Error deleting menu item:', error);
+    return NextResponse.json(
+      { success: false, message: 'Gagal menghapus menu' },
       { status: 500 }
     );
   }

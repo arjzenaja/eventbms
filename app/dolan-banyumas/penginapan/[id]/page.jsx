@@ -245,7 +245,7 @@ const PenginapanDetail = () => {
         <div className="relative z-10 container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             {/* Back Button & Actions */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mt-12 mb-8">
             <button 
               onClick={() => window.history.back()} 
                 className="group inline-flex items-center gap-3 text-gray-200 hover:text-gray-100 transition-all duration-300 transform hover:scale-105"

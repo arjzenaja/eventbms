@@ -28,83 +28,13 @@ const WisataPackages = ({ destination }) => {
           }));
           setPackages(packagesWithFacilities);
         } else {
-          // Use demo data if no packages found
-          const demoPackages = [
-            {
-              id: 1,
-              name: "Paket Standar",
-              duration: "1 hari",
-              capacity: "2-4 orang",
-              description: "Paket wisata standar dengan fasilitas lengkap dan pemandu lokal",
-              price: 150000,
-              facilities: ["Tiket masuk", "Pemandu lokal", "Makan siang", "Transportasi"],
-              popular: false,
-              category: "Paket Standar"
-            },
-            {
-              id: 2,
-              name: "Paket Deluxe",
-              duration: "2 hari 1 malam",
-              capacity: "2-6 orang",
-              description: "Paket wisata premium dengan akomodasi dan fasilitas lengkap",
-              price: 450000,
-              facilities: ["Tiket masuk", "Pemandu profesional", "Akomodasi", "Makan 3x", "Transportasi", "+1 fasilitas lainnya"],
-              popular: true,
-              category: "Paket Deluxe"
-            },
-            {
-              id: 3,
-              name: "Paket Keluarga",
-              duration: "3 hari 2 malam",
-              capacity: "4-8 orang",
-              description: "Paket wisata keluarga dengan aktivitas khusus anak-anak",
-              price: 750000,
-              facilities: ["Tiket masuk", "Pemandu keluarga", "Akomodasi", "Makan 3x", "Aktivitas anak", "Transportasi", "+1 fasilitas lainnya"],
-              popular: false,
-              category: "Paket Keluarga"
-            }
-          ];
-          setPackages(demoPackages);
+          // No packages found - will show "Belum Tersedia untuk Paket" message
+          setPackages([]);
         }
       } catch (error) {
         console.error('Error fetching packages:', error);
-        // Use demo data on error
-        const demoPackages = [
-          {
-            id: 1,
-            name: "Paket Standar",
-            duration: "1 hari",
-            capacity: "2-4 orang",
-            description: "Paket wisata standar dengan fasilitas lengkap dan pemandu lokal",
-            price: 150000,
-            facilities: ["Tiket masuk", "Pemandu lokal", "Makan siang", "Transportasi"],
-            popular: false,
-            category: "Paket Standar"
-          },
-          {
-            id: 2,
-            name: "Paket Deluxe",
-            duration: "2 hari 1 malam",
-            capacity: "2-6 orang",
-            description: "Paket wisata premium dengan akomodasi dan fasilitas lengkap",
-            price: 450000,
-            facilities: ["Tiket masuk", "Pemandu profesional", "Akomodasi", "Makan 3x", "Transportasi", "+1 fasilitas lainnya"],
-            popular: true,
-            category: "Paket Deluxe"
-          },
-          {
-            id: 3,
-            name: "Paket Keluarga",
-            duration: "3 hari 2 malam",
-            capacity: "4-8 orang",
-            description: "Paket wisata keluarga dengan aktivitas khusus anak-anak",
-            price: 750000,
-            facilities: ["Tiket masuk", "Pemandu keluarga", "Akomodasi", "Makan 3x", "Aktivitas anak", "Transportasi", "+1 fasilitas lainnya"],
-            popular: false,
-            category: "Paket Keluarga"
-          }
-        ];
-        setPackages(demoPackages);
+        // No packages found on error - will show "Belum Tersedia untuk Paket" message
+        setPackages([]);
       } finally {
         setIsLoading(false);
       }
@@ -159,7 +89,7 @@ const WisataPackages = ({ destination }) => {
             <FaMapMarkedAlt className="text-gray-400 text-2xl" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Belum Ada Paket Wisata
+            Belum Tersedia untuk Paket
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
             Paket wisata untuk destinasi ini belum tersedia. Silakan hubungi admin untuk informasi lebih lanjut.

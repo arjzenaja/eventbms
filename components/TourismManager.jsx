@@ -5,6 +5,13 @@ import { FaWhatsapp, FaInstagram, FaGlobe } from 'react-icons/fa';
 const TourismManager = ({ destination, contactInfo }) => {
   console.log('TourismManager rendering with:', { destination, contactInfo });
   
+  // Extract contact information
+  const phoneContact = Array.isArray(contactInfo) ? contactInfo.find(c => c.type === 'phone') : null;
+  const whatsappContact = Array.isArray(contactInfo) ? contactInfo.find(c => c.type === 'whatsapp') : null;
+  const phoneNumberDisplay = phoneContact?.value || whatsappContact?.value || '';
+  const phoneNumberDigits = (phoneContact?.value || '').replace(/\D/g, '');
+  const whatsappDigits = (whatsappContact?.value || '').replace(/\D/g, '');
+  
   return (
     <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
       {/* Header */}
@@ -66,44 +73,48 @@ const TourismManager = ({ destination, contactInfo }) => {
         {/* Contact Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Phone */}
-          <div className="bg-white/60 dark:bg-gray-800/60 rounded-xl p-4 border border-blue-100 dark:border-blue-800">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                <BiPhone className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          {phoneNumberDisplay ? (
+            <div className="bg-white/60 dark:bg-gray-800/60 rounded-xl p-4 border border-blue-100 dark:border-blue-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                  <BiPhone className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
+                  <p className="font-medium text-gray-800 dark:text-white">{phoneNumberDisplay}</p>
+                </div>
+                <a 
+                  href={`tel:${phoneNumberDigits || phoneNumberDisplay}`}
+                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-colors"
+                >
+                  <BiPhone className="w-4 h-4" />
+                </a>
               </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
-                <p className="font-medium text-gray-800 dark:text-white">+62 812-3456-7890</p>
-              </div>
-              <a 
-                href="tel:+6281234567890"
-                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-colors"
-              >
-                <BiPhone className="w-4 h-4" />
-              </a>
             </div>
-          </div>
+          ) : null}
 
           {/* WhatsApp */}
-          <div className="bg-white/60 dark:bg-gray-800/60 rounded-xl p-4 border border-green-100 dark:border-green-800">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                <FaWhatsapp className="w-5 h-5 text-green-600 dark:text-green-400" />
+          {whatsappDigits ? (
+            <div className="bg-white/60 dark:bg-gray-800/60 rounded-xl p-4 border border-green-100 dark:border-green-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                  <FaWhatsapp className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
+                  <p className="font-medium text-gray-800 dark:text-white">{whatsappContact?.value}</p>
+                </div>
+                <a 
+                  href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent('Halo, saya tertarik dengan destinasi wisata')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
+                >
+                  <FaWhatsapp className="w-4 h-4" />
+                </a>
               </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
-                <p className="font-medium text-gray-800 dark:text-white">+62 812-3456-7890</p>
-              </div>
-              <a 
-                href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan destinasi wisata"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
-              >
-                <FaWhatsapp className="w-4 h-4" />
-              </a>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
 
@@ -114,7 +125,7 @@ const TourismManager = ({ destination, contactInfo }) => {
         <div className="grid grid-cols-2 gap-3">
           {/* Call Button */}
           <a 
-            href="tel:+6281234567890"
+            href={phoneNumberDigits ? `tel:${phoneNumberDigits}` : '#'}
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             <BiPhone className="w-5 h-5" />
@@ -123,7 +134,7 @@ const TourismManager = ({ destination, contactInfo }) => {
 
           {/* WhatsApp Button */}
           <a 
-            href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan destinasi wisata"
+            href={whatsappDigits ? `https://wa.me/${whatsappDigits}?text=${encodeURIComponent('Halo, saya tertarik dengan destinasi wisata')}` : '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"

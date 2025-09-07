@@ -1,11 +1,51 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorHandler from '@/components/ErrorHandler';
+
+function CustomSelect({ label, value, onChange, options, className = '' }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const close = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, []);
+  const current = options.find(o => o.value === value) || options[0];
+  return (
+    <div className={className} ref={ref}>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <button type="button" onClick={() => setOpen(o => !o)} className={`w-full px-4 py-3 border rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 flex items-center justify-between shadow-sm ${open ? 'border-indigo-500' : 'border-gray-300'}`}>
+        <span className="flex items-center gap-3">
+          <span className="text-xl leading-none">{current?.icon}</span>
+          <span className="font-medium truncate">{current?.label}</span>
+        </span>
+        <svg className={`w-5 h-5 text-gray-500 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.25 8.29a.75.75 0 01-.02-1.08z" clipRule="evenodd"/></svg>
+      </button>
+      {open && (
+        <div className="relative">
+          <div className="absolute z-20 mt-2 w-full bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+            <div className="max-h-72 overflow-y-auto">
+              {options.map(opt => (
+                <button key={opt.value} type="button" onClick={() => { onChange(opt.value); setOpen(false); }} className={`w-full px-4 py-3 flex items-center justify-between text-left hover:bg-indigo-50 ${value === opt.value ? 'bg-indigo-50' : ''}`}>
+                  <span className="flex items-center gap-3">
+                    <span className="text-xl leading-none">{opt.icon}</span>
+                    <span className={`font-medium ${value === opt.value ? 'text-indigo-700' : 'text-gray-900'}`}>{opt.label}</span>
+                  </span>
+                  {value === opt.value && <svg className="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function CulinaryMenuManagement() {
   const router = useRouter();
@@ -16,6 +56,7 @@ export default function CulinaryMenuManagement() {
   const [selectedDestination, setSelectedDestination] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -35,7 +76,7 @@ export default function CulinaryMenuManagement() {
       }
 
       // Fetch menu items
-      const menuResponse = await fetch('/api/culinary/menu');
+      const menuResponse = await fetch('/api/kuliner/menu');
       const menuData = await menuResponse.json();
 
       if (menuData.success) {
@@ -57,7 +98,7 @@ export default function CulinaryMenuManagement() {
     }
 
     try {
-      const response = await fetch(`/api/culinary/menu?id=${id}`, {
+      const response = await fetch(`/api/kuliner/menu?id=${id}`, {
         method: 'DELETE',
       });
 
@@ -81,7 +122,7 @@ export default function CulinaryMenuManagement() {
       formData.append('id', id);
       formData.append('available', (!currentStatus).toString());
 
-      const response = await fetch('/api/culinary/menu', {
+      const response = await fetch('/api/kuliner/menu', {
         method: 'PUT',
         body: formData,
       });
@@ -115,6 +156,48 @@ export default function CulinaryMenuManagement() {
   // Get unique categories
   const categories = [...new Set(menuItems.map(item => item.category))];
 
+  // Stats
+  const totalCount = filteredMenuItems.length;
+  const availableCount = filteredMenuItems.filter(i => i.available).length;
+  const popularCount = filteredMenuItems.filter(i => i.isPopular).length;
+  const destinationCount = new Set(filteredMenuItems.map(i => i.destinationId)).size;
+
+  const handleExport = async () => {
+    try {
+      setExporting(true);
+      const header = [
+        'ID','Nama','Deskripsi','Kategori','Harga','WaktuMasak','Rating','Populer','Pedas','Halal','Tersedia','DestinasiId','Destinasi'
+      ];
+      const rows = filteredMenuItems.map(i => [
+        i.id,
+        `"${(i.name || '').replace(/"/g,'""')}"`,
+        `"${(i.description || '').replace(/"/g,'""')}"`,
+        i.category || '',
+        (i.category === 'THE ESPRESSO BASED' || i.category === 'SHAKEN SWEET & CREAMY Series' || i.category === 'SHAKEN FRESH Presso') ? 
+          `${i.priceIced || i.price || ''}${i.priceHot ? ` / ${i.priceHot}` : ''}` : 
+          (i.price ?? ''),
+        i.cookingTime || '',
+        i.rating ?? '',
+        i.isPopular ? 'Ya' : 'Tidak',
+        i.isSpicy ? 'Ya' : 'Tidak',
+        i.halal ? 'Ya' : 'Tidak',
+        i.available ? 'Ya' : 'Tidak',
+        i.destinationId || '',
+        `"${(i.destinationTitle || '').replace(/"/g,'""')}"`,
+      ].join(','));
+      const csv = [header.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'menu_kuliner.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <ProtectedRoute>
@@ -138,20 +221,20 @@ export default function CulinaryMenuManagement() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Manajemen Menu Kuliner</h1>
+              <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Manajemen Menu Kuliner</h1>
               <div className="flex gap-3">
                 <Link 
                   href="/admin/culinary" 
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+                  className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                 >
                   Kembali ke Kuliner
                 </Link>
                 <Link 
                   href="/admin/culinary/menu/new" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2"
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                 >
                   <span>+</span>
                   Tambah Menu
@@ -163,65 +246,76 @@ export default function CulinaryMenuManagement() {
         
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            {/* Filters */}
-            <div className="bg-white shadow rounded-lg p-6 mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kuliner
-                  </label>
-                  <select
-                    value={selectedDestination}
-                    onChange={(e) => setSelectedDestination(e.target.value)}
-                    className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="all">Semua Destinasi</option>
-                    {culinaryDestinations.map((dest) => (
-                      <option key={dest.id} value={dest.id}>
-                        {dest.title}
-                      </option>
-                    ))}
-                  </select>
+            {/* Toolbar */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+                <div className="lg:col-span-5">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Cari Menu</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">🔍</div>
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Cari berdasarkan nama menu atau deskripsi..."
+                      className="block w-full border border-gray-300 rounded-lg pl-10 pr-3 py-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kategori
-                  </label>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="all">Semua Kategori</option>
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cari Menu
-                  </label>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Cari nama atau deskripsi menu..."
-                    className="block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex items-end">
+                <CustomSelect
+                  className="lg:col-span-3"
+                  label="Filter Destinasi"
+                  value={selectedDestination}
+                  onChange={setSelectedDestination}
+                  options={[{ value: 'all', label: 'Semua Destinasi', icon: '🔎' }, ...culinaryDestinations.map(d => ({ value: d.id, label: d.title, icon: '📍' }))]}
+                />
+                <CustomSelect
+                  className="lg:col-span-3"
+                  label="Filter Kategori"
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  options={[{ value: 'all', label: 'Semua Kategori', icon: '🔎' }, ...categories.map(c => ({ value: c, label: c, icon: '🍽️' }))]}
+                />
+                <div className="lg:col-span-1 flex justify-end">
                   <button
-                    onClick={fetchData}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+                    onClick={handleExport}
+                    disabled={exporting}
+                    className="w-full px-4 py-3 bg-purple-600 text-white rounded-lg shadow-sm hover:bg-purple-700 disabled:opacity-60 transform transition-transform duration-150 hover:scale-105 active:scale-95"
                   >
-                    Refresh
+                    {exporting ? 'Export…' : 'Export'}
                   </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Stat Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="bg-white rounded-lg shadow p-5 flex items-center">
+                <div className="h-14 w-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mr-4 text-2xl">📦</div>
+                <div>
+                  <div className="text-sm text-gray-600">Total Menu</div>
+                  <div className="text-2xl font-semibold">{totalCount}</div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-5 flex items-center">
+                <div className="h-14 w-14 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center mr-4 text-2xl">✔️</div>
+                <div>
+                  <div className="text-sm text-gray-600">Available</div>
+                  <div className="text-2xl font-semibold">{availableCount}</div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-5 flex items-center">
+                <div className="h-14 w-14 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mr-4 text-2xl">⭐</div>
+                <div>
+                  <div className="text-sm text-gray-600">Popular</div>
+                  <div className="text-2xl font-semibold">{popularCount}</div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-5 flex items-center">
+                <div className="h-14 w-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mr-4 text-2xl">📈</div>
+                <div>
+                  <div className="text-sm text-gray-600">Destinasi</div>
+                  <div className="text-2xl font-semibold">{destinationCount}</div>
                 </div>
               </div>
             </div>
@@ -320,7 +414,18 @@ export default function CulinaryMenuManagement() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">
-                              Rp {item.price.toLocaleString()}
+                              {(item.category === 'THE ESPRESSO BASED' || item.category === 'SHAKEN SWEET & CREAMY Series' || item.category === 'SHAKEN FRESH Presso') ? (
+                                <div className="space-y-1">
+                                  {(item.priceIced || item.price) && (
+                                    <div>🧊 Rp {(item.priceIced || item.price || 0).toLocaleString('id-ID')}</div>
+                                  )}
+                                  {item.priceHot && (
+                                    <div>☕ Rp {(item.priceHot || 0).toLocaleString('id-ID')}</div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div>Rp {item.price?.toLocaleString('id-ID') || '0'}</div>
+                              )}
                             </div>
                             <div className="text-sm text-gray-500">
                               {item.cookingTime}

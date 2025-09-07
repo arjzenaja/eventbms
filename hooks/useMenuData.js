@@ -35,61 +35,8 @@ const useMenuData = (destinationId, destinationSlug) => {
       } catch (err) {
         console.error('Error fetching menu data:', err);
         setError(err.message);
-        // Fallback to default menu data
-        setMenus([
-          {
-            id: 1,
-            name: "Nasi Goreng Spesial",
-            description: "Nasi goreng dengan telur, ayam, dan sayuran segar khas Banyumas",
-            price: 25000,
-            image: "/placeholder.jpg",
-            rating: 4.8,
-            cookingTime: "10-15 menit",
-            isPopular: true,
-            isSpicy: false,
-            category: "Nasi",
-            additionalInfo: ["Halal", "Fresh"]
-          },
-          {
-            id: 2,
-            name: "Sate Banyumas",
-            description: "Sate ayam dengan bumbu kacang khas Banyumas yang lezat",
-            price: 35000,
-            image: "/placeholder.jpg",
-            rating: 4.9,
-            cookingTime: "15-20 menit",
-            isPopular: true,
-            isSpicy: true,
-            category: "Sate",
-            additionalInfo: ["Halal", "Signature"]
-          },
-          {
-            id: 3,
-            name: "Soto Sokaraja",
-            description: "Soto ayam dengan kuah bening dan pelengkap lengkap",
-            price: 28000,
-            image: "/placeholder.jpg",
-            rating: 4.7,
-            cookingTime: "12-18 menit",
-            isPopular: false,
-            isSpicy: false,
-            category: "Soto",
-            additionalInfo: ["Halal", "Traditional"]
-          },
-          {
-            id: 4,
-            name: "Es Cendol Banyumas",
-            description: "Es cendol dengan santan dan gula merah khas Banyumas",
-            price: 8000,
-            image: "/placeholder.jpg",
-            rating: 4.8,
-            cookingTime: "5-8 menit",
-            isPopular: true,
-            isSpicy: false,
-            category: "Minuman",
-            additionalInfo: ["Halal", "Dessert"]
-          }
-        ]);
+        // Don't use fallback data - show empty state instead
+        setMenus([]);
       } finally {
         setIsLoading(false);
       }

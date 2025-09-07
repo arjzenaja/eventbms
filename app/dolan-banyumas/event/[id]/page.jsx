@@ -99,7 +99,7 @@ const EventDetails = () => {
         <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             {/* Back Button */}
-            <div className="flex justify-start mb-6">
+            <div className="flex justify-start mt-12 mb-6">
               <a 
                 href="/dolan-banyumas" 
                 className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-medium text-purple-700 dark:text-purple-300 hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 border border-purple-200 dark:border-purple-700"

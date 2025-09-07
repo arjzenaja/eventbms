@@ -8,6 +8,13 @@ import { FaWhatsapp } from 'react-icons/fa';
 const MenuCard = ({ menu, onBuyClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  // Define dual pricing categories at component level
+  const dualPricingCategories = [
+    'THE ESPRESSO BASED',
+    'SHAKEN SWEET & CREAMY Series',
+    'SHAKEN FRESH Presso'
+  ];
+
   const handleBuyClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -19,7 +26,25 @@ const MenuCard = ({ menu, onBuyClick }) => {
   const handleWhatsAppClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const message = `Halo! Saya ingin memesan ${menu.name} seharga Rp ${menu.price.toLocaleString('id-ID')}. Apakah masih tersedia?`;
+    
+    // Determine price for WhatsApp message
+    let priceText = '';
+    
+    if (dualPricingCategories.includes(menu.category)) {
+      if (menu.priceIced && menu.priceHot) {
+        priceText = `Iced: Rp ${(menu.priceIced || 0).toLocaleString('id-ID')}, Hot: Rp ${(menu.priceHot || 0).toLocaleString('id-ID')}`;
+      } else if (menu.priceIced) {
+        priceText = `Rp ${(menu.priceIced || 0).toLocaleString('id-ID')} (Iced)`;
+      } else if (menu.priceHot) {
+        priceText = `Rp ${(menu.priceHot || 0).toLocaleString('id-ID')} (Hot)`;
+      } else if (menu.price) {
+        priceText = `Rp ${(menu.price || 0).toLocaleString('id-ID')}`;
+      }
+    } else {
+      priceText = `Rp ${(menu.price || 0).toLocaleString('id-ID')}`;
+    }
+    
+    const message = `Halo! Saya ingin memesan ${menu.name} seharga ${priceText}. Apakah masih tersedia?`;
     const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -77,13 +102,45 @@ const MenuCard = ({ menu, onBuyClick }) => {
           </p>
         )}
 
+        {/* Flavor Options - Only show for BUTTER RICE WITH DAUN JERUK */}
+        {menu.category === 'BUTTER RICE WITH DAUN JERUK' && menu.flavorOptions && menu.flavorOptions.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Pilihan Rasa:</p>
+            <div className="flex flex-wrap gap-1">
+              {menu.flavorOptions.map((option, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300"
+                >
+                  {option}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Price & Time */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <BiMoney className="text-green-600 dark:text-green-400" />
-            <span className="font-bold text-lg text-green-600 dark:text-green-400">
-              Rp {menu.price.toLocaleString('id-ID')}
-            </span>
+            {dualPricingCategories.includes(menu.category) ? (
+              <div className="flex flex-col">
+                {(menu.priceIced || menu.price) && (
+                  <span className="font-bold text-sm text-green-600 dark:text-green-400">
+                    🧊 Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}
+                  </span>
+                )}
+                {menu.priceHot && (
+                  <span className="font-bold text-sm text-green-600 dark:text-green-400">
+                    ☕ Rp {(menu.priceHot || 0).toLocaleString('id-ID')}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <span className="font-bold text-lg text-green-600 dark:text-green-400">
+                Rp {menu.price ? menu.price.toLocaleString('id-ID') : '0'}
+              </span>
+            )}
           </div>
           {menu.cookingTime && (
             <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm">

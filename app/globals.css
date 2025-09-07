@@ -12,6 +12,31 @@
   display: none;  /* Safari and Chrome */
 }
 
+/* Dropdown scrollbar styles */
+select::-webkit-scrollbar {
+  width: 8px;
+}
+
+select::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+select::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+select {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+}
+
 /* Thumbnail carousel scrollbar styles */
 .thumbnail-scroll {
   scrollbar-width: thin;

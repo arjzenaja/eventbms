@@ -45,7 +45,7 @@ export async function POST(request) {
     const opening_hours = formData.get('opening_hours') || '10:00 - 22:00';
     const contact = formData.get('contact') || '';
     const address = formData.get('address') || location;
-    const features = formData.get('features') || ['Masakan Indonesia', 'Suasana Nyaman'];
+    const features = formData.get('features');
     const recommended = formData.get('recommended') === 'true';
     
     // Field tambahan
@@ -56,13 +56,13 @@ export async function POST(request) {
     const website = formData.get('website') || '';
     const menu = formData.get('menu') || [];
     const category = formData.get('category') || 'Kuliner';
+    const lat = formData.get('lat') || '';
+    const lng = formData.get('lng') || '';
     
     // Field baru yang perlu ditambahkan
     const rating = formData.get('rating') || '';
     const instagram = formData.get('instagram') || '';
     const slug = formData.get('slug') || '';
-    const lat = formData.get('lat') || '';
-    const lng = formData.get('lng') || '';
     const halal_status = formData.get('halal_status') === 'true';
     const delivery_available = formData.get('delivery_available') === 'true';
     const reservation_available = formData.get('reservation_available') === 'true';
@@ -150,7 +150,7 @@ export async function POST(request) {
       opening_hours: opening_hours,
       contact: contact,
       address: address,
-      features: Array.isArray(features) ? features : [features],
+      features: features ? (Array.isArray(features) ? features : [features]) : ['Masakan Indonesia', 'Suasana Nyaman'],
       recommended: recommended,
       // Field tambahan
       manager: manager,

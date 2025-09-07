@@ -5,7 +5,7 @@ console.log('🔍 Debugging Admin Panel...');
 const debugAdminPanel = async () => {
   try {
     console.log('1. Testing menu API...');
-    const menuResponse = await fetch('/api/culinary/menu');
+    const menuResponse = await fetch('/api/kuliner/menu');
     const menuData = await menuResponse.json();
     console.log('Menu API Response:', menuData);
     console.log('Menu items count:', menuData.menu_items?.length || 0);

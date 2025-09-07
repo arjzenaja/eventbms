@@ -189,15 +189,24 @@ export default function NewTravelAgency() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Tambah Biro Perjalanan Baru</h1>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-indigo-100 rounded-xl">
+                  <svg className="w-7 h-7 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.5 3a1 1 0 00-.894.553L8.382 6H5a1 1 0 000 2h2.382l1.224 2.447A1 1 0 009.5 11h5a1 1 0 00.894-.553L16.618 8H19a1 1 0 100-2h-2.382l-1.224-2.447A1 1 0 0014.5 3h-4z"/></svg>
+                </div>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Tambah Biro Perjalanan Baru</h1>
+                  <p className="text-gray-600 mt-1">Lengkapi informasi usaha, kontak, harga, dan gambar.</p>
+                </div>
+              </div>
               <Link 
                 href="/admin/travel-agencies"
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
               >
-                ← Kembali ke Biro Perjalanan
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Kembali
               </Link>
             </div>
           </div>
@@ -205,8 +214,8 @@ export default function NewTravelAgency() {
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                     {error}
@@ -216,7 +225,7 @@ export default function NewTravelAgency() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Nama Biro Perjalanan */}
                   <div className="md:col-span-2">
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">
                       Nama Biro Perjalanan *
                     </label>
                     <input
@@ -226,14 +235,14 @@ export default function NewTravelAgency() {
                       value={formData.title}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-400 shadow-sm"
                       placeholder="Contoh: Banyumas Tour & Travel"
                     />
                   </div>
 
                   {/* Penjelasan Singkat */}
                   <div className="md:col-span-2">
-                    <label htmlFor="short_description" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="short_description" className="block text-sm font-semibold text-gray-700 mb-2">
                       Penjelasan Singkat Usaha *
                     </label>
                     <textarea
@@ -243,14 +252,14 @@ export default function NewTravelAgency() {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-400 shadow-sm"
                       placeholder="Contoh: Cahaya Wisata Banyumas adalah agen perjalanan berpengalaman sejak 2015, spesialis tur edukasi dan alam di wilayah Barlingmascakeb..."
                     />
                   </div>
 
                   {/* Deskripsi Lengkap */}
                   <div className="md:col-span-2">
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
                       Deskripsi Lengkap
                     </label>
                     <textarea
@@ -259,7 +268,7 @@ export default function NewTravelAgency() {
                       value={formData.description}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-400 shadow-sm"
                       placeholder="Deskripsi lengkap tentang biro perjalanan..."
                     />
                   </div>
@@ -443,7 +452,7 @@ export default function NewTravelAgency() {
 
                   {/* Info Tambahan */}
                   <div className="md:col-span-2">
-                    <label htmlFor="additional_info" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="additional_info" className="block text-sm font-semibold text-gray-700 mb-2">
                       Info Tambahan
                     </label>
                     <textarea
@@ -452,7 +461,7 @@ export default function NewTravelAgency() {
                       value={formData.additional_info}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 placeholder-gray-400 shadow-sm"
                       placeholder="Contoh:&#10;• Terdaftar resmi di ASITA atau Disbudpar&#10;• Melayani rombongan sekolah / kantor&#10;• Bisa booking via Traveloka / Tiket.com&#10;• Diskon khusus hari tertentu"
                     />
                   </div>
@@ -466,7 +475,7 @@ export default function NewTravelAgency() {
                         name="latitude"
                         value={formData.latitude}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                         placeholder="-7.4268"
                       />
                     </div>
@@ -477,7 +486,7 @@ export default function NewTravelAgency() {
                         name="longitude"
                         value={formData.longitude}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                         placeholder="109.2333"
                       />
                     </div>
@@ -488,7 +497,7 @@ export default function NewTravelAgency() {
                         name="opening_hours"
                         value={formData.opening_hours}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                         placeholder="09:00 - 17:00"
                       />
                     </div>
@@ -498,7 +507,7 @@ export default function NewTravelAgency() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Gambar Kecil */}
                     <div>
-                      <label htmlFor="img_sm" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="img_sm" className="block text-sm font-semibold text-gray-700 mb-2">
                         Gambar Kecil (untuk Card/Thumbnail)
                       </label>
                       <input
@@ -507,7 +516,7 @@ export default function NewTravelAgency() {
                         name="img_sm"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 shadow-sm"
                       />
                       {imagePreviews.img_sm && (
                         <div className="mt-2">
@@ -518,7 +527,7 @@ export default function NewTravelAgency() {
 
                     {/* Gambar Besar */}
                     <div>
-                      <label htmlFor="img_lg" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="img_lg" className="block text-sm font-semibold text-gray-700 mb-2">
                         Gambar Besar (untuk Detail/Hero)
                       </label>
                       <input
@@ -527,7 +536,7 @@ export default function NewTravelAgency() {
                         name="img_lg"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white text-gray-900 shadow-sm"
                       />
                       {imagePreviews.img_lg && (
                         <div className="mt-2">
@@ -540,7 +549,7 @@ export default function NewTravelAgency() {
                   <GalleryUploader files={galleryFiles} setFiles={setGalleryFiles} />
 
                   {/* Recommended & Submit */}
-                  <div className="flex items-center">
+                  <div className="pt-4 border-t border-gray-200 flex items-center">
                     <input
                       type="checkbox"
                       id="recommended"
@@ -554,19 +563,20 @@ export default function NewTravelAgency() {
                     </label>
                   </div>
 
-                  <div className="flex justify-end space-x-3 pt-6 border-t">
+                  <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
                     <Link
                       href="/admin/travel-agencies"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-xl shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transform transition-all duration-200 hover:scale-105 active:scale-95"
                     >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
                       Batal
                     </Link>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className={`inline-flex items-center gap-2 px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      {isSubmitting ? 'Menyimpan...' : 'Simpan Biro Perjalanan'}
+                      {isSubmitting ? (<><svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Menyimpan...</>) : (<>Simpan Biro Perjalanan</>)}
                     </button>
                   </div>
                 </div>

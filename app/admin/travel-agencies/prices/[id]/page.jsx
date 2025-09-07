@@ -167,15 +167,16 @@ export default function EditTravelAgencyPrice() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-gray-900">Edit Harga Biro Perjalanan</h1>
+              <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Edit Harga Biro Perjalanan</h1>
               <Link 
                 href="/admin/travel-agencies/prices"
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2.5 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transform transition-transform duration-150 hover:scale-105 active:scale-95"
               >
-                ← Kembali ke Harga
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Kembali
               </Link>
             </div>
           </div>
@@ -183,13 +184,13 @@ export default function EditTravelAgencyPrice() {
 
         <div className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
               {/* Basic Information */}
               <div className="mb-8">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Informasi Dasar</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Nama Paket *
                     </label>
                     <input
@@ -198,13 +199,13 @@ export default function EditTravelAgencyPrice() {
                       value={form.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                       placeholder="Contoh: Paket Wisata Banyumas 1 Hari"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Biro Perjalanan *
                     </label>
                     <select
@@ -212,7 +213,7 @@ export default function EditTravelAgencyPrice() {
                       value={form.agencyId}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                     >
                       <option value="">Pilih Biro Perjalanan</option>
                       {agencies.map(agency => (
@@ -224,7 +225,7 @@ export default function EditTravelAgencyPrice() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Kategori *
                     </label>
                     <select
@@ -232,7 +233,7 @@ export default function EditTravelAgencyPrice() {
                       value={form.category}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                     >
                       <option value="domestik">Domestik</option>
                       <option value="internasional">Internasional</option>
@@ -242,7 +243,7 @@ export default function EditTravelAgencyPrice() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Harga (Rp) *
                     </label>
                     <input
@@ -251,13 +252,13 @@ export default function EditTravelAgencyPrice() {
                       value={form.price}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                       placeholder="Contoh: Rp 350.000"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Harga Asli
                     </label>
                     <input
@@ -265,13 +266,13 @@ export default function EditTravelAgencyPrice() {
                       name="originalPrice"
                       value={form.originalPrice}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                       placeholder="Contoh: Rp 400.000"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Durasi
                     </label>
                     <input
@@ -279,7 +280,7 @@ export default function EditTravelAgencyPrice() {
                       name="duration"
                       value={form.duration}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
                       placeholder="Contoh: 1 hari, 2 hari 1 malam"
                     />
                   </div>

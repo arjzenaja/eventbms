@@ -11,8 +11,8 @@ console.log('Current culinaryDestinations:', window.culinaryDestinations || 'Not
 const testAPIs = async () => {
   try {
     // Test menu API
-    console.log('Testing /api/culinary/menu...');
-    const menuResponse = await fetch('/api/culinary/menu');
+    console.log('Testing /api/kuliner/menu...');
+    const menuResponse = await fetch('/api/kuliner/menu');
     const menuData = await menuResponse.json();
     console.log('Menu API Result:', menuData);
     
