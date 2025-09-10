@@ -38,7 +38,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const { id } = params;
-    const updateData = await request.json();
+    const contentType = request.headers.get('content-type') || '';
     
     // Read existing data
     const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
@@ -54,12 +54,43 @@ export async function PUT(request, { params }) {
       }, { status: 404 });
     }
 
-    // Update package
-    const updatedPackage = {
-      ...packages[packageIndex],
-      ...updateData,
-      updatedAt: new Date().toISOString()
-    };
+    let updatedPackage = packages[packageIndex];
+    if (contentType.includes('multipart/form-data')) {
+      const form = await request.formData();
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+      // Optional image upload
+      let imagePath = updatedPackage.image || '';
+      const image = form.get('image');
+      if (image && image instanceof File) {
+        const ext = path.extname(image.name) || '.jpg';
+        const filename = `souvenir_package_${Date.now()}${ext}`;
+        fs.writeFileSync(path.join(uploadsDir, filename), Buffer.from(await image.arrayBuffer()));
+        imagePath = `/uploads/${filename}`;
+      }
+
+      updatedPackage = {
+        ...updatedPackage,
+        name: form.get('name') ?? updatedPackage.name,
+        description: form.get('description') ?? updatedPackage.description,
+        price: form.get('price') ? parseInt(form.get('price')) : updatedPackage.price,
+        souvenirId: form.get('souvenirId') ?? updatedPackage.souvenirId,
+        souvenirTitle: form.get('souvenirTitle') ?? updatedPackage.souvenirTitle,
+        available: form.has('available') ? String(form.get('available')) === 'true' : updatedPackage.available,
+        category: form.get('category') ?? updatedPackage.category,
+        type: form.get('type') ?? updatedPackage.type,
+        image: imagePath,
+        updatedAt: new Date().toISOString()
+      };
+    } else {
+      const updateData = await request.json();
+      updatedPackage = {
+        ...updatedPackage,
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
+    }
 
     packages[packageIndex] = updatedPackage;
     dbData.souvenir_packages = packages;

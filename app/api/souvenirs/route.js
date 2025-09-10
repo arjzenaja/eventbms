@@ -15,7 +15,10 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
-      oleh_oleh: olehOlehItems
+      // Keep backward compatibility
+      oleh_oleh: olehOlehItems,
+      // New key used by admin packages/new page
+      souvenirs: olehOlehItems
     });
   } catch (error) {
     console.error('Error fetching oleh_oleh data:', error);

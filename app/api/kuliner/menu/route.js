@@ -263,7 +263,7 @@ export async function GET(request) {
         menuItems = menuItems.filter(item => item.destinationId === destinationId);
       }
       
-      if (destinationSlug) {
+      if (destinationSlug && destinationSlug.trim() !== '') {
         menuItems = menuItems.filter(item => item.destinationSlug === destinationSlug);
       }
       
@@ -360,11 +360,21 @@ export async function POST(request) {
     }
 
     // Validate pricing based on category
-    const dualPricingCategories = [
-      'THE ESPRESSO BASED',
-      'SHAKEN SWEET & CREAMY Series',
-      'SHAKEN FRESH Presso'
-    ];
+      const dualPricingCategories = [
+        'THE ESPRESSO BASED',
+        'Senja Espresso Based',
+        'Tea Series',
+        'Coffee Series',
+        'Milk Series',
+        'Fruits Series',
+        'Non Coffee',
+        'Tea',
+        'Classic Coffee',
+        'Milk Base',
+        'Non Coffe+',
+        'Minuman',
+        'Kopi'
+      ];
     
     if (dualPricingCategories.includes(category)) {
       if (!priceIced && !priceHot) {

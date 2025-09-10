@@ -15,8 +15,16 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   // Define dual pricing categories at component level
   const dualPricingCategories = [
     'THE ESPRESSO BASED',
-    'SHAKEN SWEET & CREAMY Series',
-    'SHAKEN FRESH Presso'
+    'Senja Espresso Based',
+    'Tea Series',
+    'Coffee Series',
+    'Milk Series',
+    'Fruits Series',
+    'Non Coffee',
+    'Tea',
+    'Classic Coffee',
+    'Milk Base',
+    'Non Coffe+'
   ];
 
   if (!isOpen || !menu) return null;
@@ -24,19 +32,14 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   // Determine price based on category and drink type
   const getPrice = () => {
     if (dualPricingCategories.includes(menu.category)) {
-      if (drinkType === 'iced' && menu.priceIced) {
-        return menu.priceIced;
-      } else if (drinkType === 'hot' && menu.priceHot) {
-        return menu.priceHot;
-      } else if (menu.priceIced) {
-        return menu.priceIced; // fallback to iced
-      } else if (menu.priceHot) {
-        return menu.priceHot; // fallback to hot
-      } else if (menu.price) {
-        return menu.price; // fallback to old price field
-      }
+      if (drinkType === 'iced' && menu.priceIced != null) return menu.priceIced;
+      if (drinkType === 'hot' && menu.priceHot != null) return menu.priceHot;
+      if (menu.priceIced != null) return menu.priceIced;
+      if (menu.priceHot != null) return menu.priceHot;
+      if (menu.price != null) return menu.price;
+      return 0;
     }
-    return menu.price;
+    return menu.price ?? 0;
   };
 
   const currentPrice = getPrice();
@@ -143,11 +146,11 @@ Apakah masih tersedia? Terima kasih!`;
                   <span className="font-semibold">
                     {dualPricingCategories.includes(menu.category) ? (
                       <>
-                        {(menu.priceIced || menu.price) && (
-                          <span>🧊 Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}</span>
+                        {menu.priceIced != null && (
+                          <span>🧊 Rp {(menu.priceIced || 0).toLocaleString('id-ID')}</span>
                         )}
-                        {(menu.priceIced || menu.price) && menu.priceHot && <span className="mx-2">|</span>}
-                        {menu.priceHot && (
+                        {menu.priceIced != null && menu.priceHot != null && <span className="mx-2">|</span>}
+                        {menu.priceHot != null && (
                           <span>☕ Rp {(menu.priceHot || 0).toLocaleString('id-ID')}</span>
                         )}
                       </>
@@ -165,13 +168,13 @@ Apakah masih tersedia? Terima kasih!`;
           </div>
 
           {/* Drink Type Selection (for beverages only) */}
-          {dualPricingCategories.includes(menu.category) && (menu.priceIced || menu.priceHot || menu.price) && (
+          {dualPricingCategories.includes(menu.category) && (menu.priceIced != null || menu.priceHot != null || menu.price != null) && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Pilih Jenis Minuman
               </label>
               <div className="grid grid-cols-2 gap-3">
-                {(menu.priceIced || menu.price) && (
+                {menu.priceIced != null && (
                   <button
                     onClick={() => setDrinkType('iced')}
                     className={`p-3 rounded-xl border-2 transition-all ${
@@ -183,13 +186,11 @@ Apakah masih tersedia? Terima kasih!`;
                     <div className="text-center">
                       <div className="text-2xl mb-1">🧊</div>
                       <div className="font-medium">Iced</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}
-                      </div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Rp {(menu.priceIced || 0).toLocaleString('id-ID')}</div>
                     </div>
                   </button>
                 )}
-                {menu.priceHot && (
+                {menu.priceHot != null && (
                   <button
                     onClick={() => setDrinkType('hot')}
                     className={`p-3 rounded-xl border-2 transition-all ${

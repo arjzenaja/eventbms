@@ -92,6 +92,47 @@ export default function EditMenuItem() {
       ];
     }
 
+    // Add specific categories for Loma Cafe
+    if (formData.destinationTitle === 'Loma Cafe') {
+      return [
+        'Makanan Utama',
+        'Nasi & Mie',
+        'Tea Series',
+        'Coffee Series',
+        'Milk Series',
+        'Fruits Series',
+        'Pastry',
+        'Snack',
+        'Minuman',
+        // Filter out duplicates from baseCategories
+        ...baseCategories.filter(cat => 
+          !['Makanan Utama', 'Minuman'].includes(cat)
+        )
+      ];
+    }
+
+    // Add specific categories for Hourts/Houtrs
+    if (formData.destinationTitle === 'Hourts' || formData.destinationTitle === 'Houtrs') {
+      return [
+        'Main Course',
+        'Finger',
+        'Coffee',
+        'Milk Base',
+        'Mocktail',
+        'Artisan Tea',
+        ...baseCategories
+      ];
+    }
+
+    // Add specific categories for Els Koffie
+    if (formData.destinationTitle === 'Els Koffie') {
+      return [
+        'Non Coffe+',
+        'Kopi susu',
+        ...baseCategories
+      ];
+    }
+
     return baseCategories;
   };
 
@@ -293,15 +334,23 @@ export default function EditMenuItem() {
       // Validate required fields
       if (!formData.name || !formData.description || !formData.cookingTime || 
           !formData.category || !formData.destinationId) {
-        alert('Semua field wajib diisi (nama, deskripsi, waktu memasak, kategori, destinasi)');
+        alert('Semua field wajib diisi (nama, deskripsi, waktu memasak, kategori, kuliner)');
         return;
       }
 
       // Validate pricing based on category
       const dualPricingCategories = [
         'THE ESPRESSO BASED',
-        'SHAKEN SWEET & CREAMY Series',
-        'SHAKEN FRESH Presso'
+        'Senja Espresso Based',
+        'Tea Series',
+        'Coffee Series',
+        'Milk Series',
+        'Fruits Series',
+        'Non Coffee',
+        'Tea',
+        'Classic Coffee',
+        'Milk Base',
+        'Non Coffe+'
       ];
       
       if (dualPricingCategories.includes(formData.category)) {
@@ -343,7 +392,10 @@ export default function EditMenuItem() {
 
       if (data.success) {
         alert('Menu berhasil diperbarui!');
-        router.push('/admin/culinary/menu');
+        // Option to go back to list or stay on edit page
+        if (confirm('Menu berhasil diperbarui! Apakah Anda ingin kembali ke halaman list menu?')) {
+          router.push('/admin/culinary/menu');
+        }
       } else {
         alert('Gagal memperbarui menu: ' + data.message);
       }
@@ -460,7 +512,7 @@ export default function EditMenuItem() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Waktu</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {(formData.category === 'THE ESPRESSO BASED' || formData.category === 'SHAKEN SWEET & CREAMY Series' || formData.category === 'SHAKEN FRESH Presso') ? (
+                    {(formData.category === 'THE ESPRESSO BASED' || formData.category === 'Senja Espresso Based' || formData.category === 'SHAKEN SWEET & CREAMY Series' || formData.category === 'SHAKEN FRESH Presso' || formData.category === 'Tea Series' || formData.category === 'Coffee Series' || formData.category === 'Milk Series' || formData.category === 'Fruits Series' || formData.category === 'Non Coffee' || formData.category === 'Tea' || formData.category === 'Classic Coffee' || formData.category === 'Milk Base' || formData.category === 'Non Coffe+') ? (
                       <>
                         <div>
                           <label htmlFor="priceIced" className="block text-sm font-medium text-gray-700">

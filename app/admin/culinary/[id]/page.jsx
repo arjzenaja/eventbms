@@ -127,12 +127,20 @@ export default function EditCulinaryItem() {
     setIsSubmitting(true);
 
     try {
+      // Prepare data with proper coordinate format
+      const submitData = {
+        ...formData,
+        latitude: formData.coordinates?.lat || '',
+        longitude: formData.coordinates?.lng || '',
+        coordinates: formData.coordinates // Keep both formats for compatibility
+      };
+
       const response = await fetch(`/api/kuliner/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       const data = await response.json();
@@ -477,7 +485,7 @@ export default function EditCulinaryItem() {
 
                      <div className="md:col-span-2">
                        <label htmlFor="website" className="block text-sm font-medium text-gray-700">
-                         Website
+                         Website <span className="text-gray-500 text-sm font-normal">(opsional)</span>
                        </label>
                        <input
                          type="url"
@@ -486,8 +494,11 @@ export default function EditCulinaryItem() {
                          value={formData.website}
                          onChange={handleInputChange}
                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                         placeholder="https://website.com"
+                         placeholder="https://website.com (kosongkan jika tidak ada)"
                        />
+                       <p className="mt-1 text-sm text-gray-500">
+                         Kosongkan jika kuliner tidak memiliki website
+                       </p>
                      </div>
                    </div>
                  </div>

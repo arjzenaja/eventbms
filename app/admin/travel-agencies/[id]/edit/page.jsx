@@ -51,6 +51,8 @@ export default function EditTravelAgency() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [imageFiles, setImageFiles] = useState({ img_sm: null, img_lg: null });
+  const [galleryFiles, setGalleryFiles] = useState([]);
 
   const CustomSelect = ({ label, value, onChange, options }) => {
     const [open, setOpen] = useState(false);
@@ -213,19 +215,34 @@ export default function EditTravelAgency() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const { name, files } = e.target;
+    const file = files?.[0];
+    if (!file) return;
+    setImageFiles(prev => ({ ...prev, [name]: file }));
+  };
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    setGalleryFiles(prev => [...prev, ...files]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/biro_perjalanan/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const form = new FormData();
+      Object.entries(formData).forEach(([k,v])=>{
+        if (k === 'coordinates') { form.append('lat', formData.coordinates.lat || ''); form.append('lng', formData.coordinates.lng || ''); }
+        else if (Array.isArray(v)) { form.append(k, JSON.stringify(v)); }
+        else if (typeof v === 'object' && v !== null) { form.append(k, JSON.stringify(v)); }
+        else { form.append(k, v ?? ''); }
       });
+      if (imageFiles.img_sm) form.append('img_sm', imageFiles.img_sm);
+      if (imageFiles.img_lg) form.append('img_lg', imageFiles.img_lg);
+      galleryFiles.forEach((f,i)=> form.append('gallery[]', f));
 
+      const response = await fetch(`/api/biro_perjalanan/${id}`, { method: 'PUT', body: form });
       const data = await response.json();
 
       if (data.success) {
@@ -677,6 +694,25 @@ export default function EditTravelAgency() {
                   <label htmlFor="recommended" className="ml-2 block text-sm text-gray-900">
                     Rekomendasikan biro perjalanan ini
                   </label>
+                </div>
+
+                {/* Image Uploads */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Gambar</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Gambar Kecil (Thumbnail)</label>
+                      <input type="file" name="img_sm" accept="image/*" onChange={handleImageChange} className="mt-1 block w-full" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Gambar Besar (Header)</label>
+                      <input type="file" name="img_lg" accept="image/*" onChange={handleImageChange} className="mt-1 block w-full" />
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700">Galeri</label>
+                    <input type="file" multiple accept="image/*" onChange={handleGalleryChange} className="mt-1 block w-full" />
+                  </div>
                 </div>
 
                 <div className="flex justify-end space-x-3">

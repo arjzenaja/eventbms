@@ -121,6 +121,20 @@ const Header = () => {
                       </Link>
                     </div>
                     
+                    {/* Payment History - Desktop Only */}
+                    <div className="hidden md:block">
+                      <Link href="/payment-history">
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-300 cursor-pointer group">
+                          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm">
+                            💳
+                          </div>
+                          <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                            Riwayat Pembayaran
+                          </span>
+                        </div>
+                      </Link>
+                    </div>
+                    
                     {/* Logout Button - Desktop Only */}
                     <div className="hidden md:block">
                       <button 
@@ -201,6 +215,19 @@ const Header = () => {
                     <div>
                       <p className="font-medium text-white">Halo, {user?.name}</p>
                       <p className="text-sm text-gray-400">Klik untuk lihat profil</p>
+                    </div>
+                  </div>
+                </Link>
+                
+                {/* Mobile Payment History */}
+                <Link href="/payment-history" onClick={() => setIsMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-4 p-4 rounded-lg bg-gray-800/50">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-lg">
+                      💳
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">Riwayat Pembayaran</p>
+                      <p className="text-sm text-gray-400">Lihat semua transaksi</p>
                     </div>
                   </div>
                 </Link>

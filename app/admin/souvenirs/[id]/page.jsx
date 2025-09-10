@@ -385,6 +385,36 @@ export default function EditSouvenir() {
                 />
               </div>
 
+              {/* Coordinates */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Latitude
+                  </label>
+                  <input
+                    type="text"
+                    name="lat"
+                    value={formData.coordinates.lat}
+                    onChange={(e)=>handleCoordinateChange('lat', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="-7.123456"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Longitude
+                  </label>
+                  <input
+                    type="text"
+                    name="lng"
+                    value={formData.coordinates.lng}
+                    onChange={(e)=>handleCoordinateChange('lng', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="109.123456"
+                  />
+                </div>
+              </div>
+
               {/* Descriptions */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -415,6 +445,36 @@ export default function EditSouvenir() {
                                          placeholder="Deskripsi lengkap tentang oleh-oleh"
                   />
                 </div>
+              </div>
+
+              {/* Gallery */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Galeri Gambar
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryChange}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                />
+                {galleryPreviews.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {galleryPreviews.map((src, idx) => (
+                      <div key={idx} className="relative group">
+                        <img src={src} alt={`preview-${idx}`} className="w-full h-32 object-cover rounded-lg border" />
+                        <button
+                          type="button"
+                          onClick={() => removeGalleryImage(idx)}
+                          className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                        >
+                          Hapus
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Recommended */}

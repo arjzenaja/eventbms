@@ -45,7 +45,12 @@ const BuyTicket = ({ event }) => {
   const handleBuyNow = () => {
     setIsLoading(true);
     buyNow(event);
-    setTimeout(() => setIsLoading(false), 1000);
+    
+    // Navigate to checkout page after a short delay
+    setTimeout(() => {
+      setIsLoading(false);
+      window.location.href = '/checkout';
+    }, 1000);
   };
 
   const formatPrice = (value) => `Rp ${Number(value || 0).toLocaleString("id-ID")}`;

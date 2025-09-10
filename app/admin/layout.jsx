@@ -93,12 +93,13 @@ function AdminSidebar() {
       ]
     },
     {
-      section: 'SETTING',
+      section: 'TRANSAKSI',
       items: [
-        { name: 'Settings', href: '/admin/settings', icon: '⚙️' },
-        { name: 'Sign-Out', href: '#', icon: '🚪', onClick: handleLogout }
+        { name: 'Pembayaran', href: '/admin/payments', icon: '💳' },
+        { name: 'Users', href: '/admin/users', icon: '👥' }
       ]
-    }
+    },
+    // Removed SETTING section as requested
   ];
 
   const toggleDropdown = (section) => {

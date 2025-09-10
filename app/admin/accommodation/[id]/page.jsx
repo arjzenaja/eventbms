@@ -23,6 +23,7 @@ export default function EditAccommodation() {
     img_sm: '',
     img_lg: '',
     amenities: [],
+    rooms: [],
     recommended: false,
     // Management team fields
     manager: '',
@@ -120,6 +121,7 @@ export default function EditAccommodation() {
             img_sm: data.penginapan.img_sm || '',
             img_lg: data.penginapan.img_lg || '',
             amenities: data.penginapan.amenities || [],
+            rooms: data.penginapan.rooms || [],
             recommended: data.penginapan.recommended || false,
             // Management team fields
             manager: data.penginapan.manager || '',
@@ -415,31 +417,31 @@ export default function EditAccommodation() {
 
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
+                        Email (opsional)
                       </label>
                       <input
-                        type="email"
+                        type="text"
                         id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="manager@penginapan.com"
+                        placeholder="opsional: manager@penginapan.com"
                       />
                     </div>
 
                     <div className="md:col-span-2">
                       <label htmlFor="website" className="block text-sm font-medium text-gray-700">
-                        Website
+                        Website (opsional)
                       </label>
                       <input
-                        type="url"
+                        type="text"
                         id="website"
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="https://www.penginapan.com"
+                        placeholder="opsional: https://www.penginapan.com"
                       />
                     </div>
                   </div>
@@ -672,10 +674,10 @@ export default function EditAccommodation() {
                                   <div>Tipe Bed: {room.bedType}</div>
                                   <div>Harga: Rp {room.price?.toLocaleString()}</div>
                                 </div>
-                                {room.facilities.length > 0 && (
+                                {Array.isArray(room.facilities) && room.facilities.length > 0 && (
                                   <div className="mt-2">
                                     <span className="text-sm text-gray-500">Fasilitas: </span>
-                                    <span className="text-sm text-gray-700">{room.facilities.join(', ')}</span>
+                                    <span className="text-sm text-gray-700">{(room.facilities || []).join(', ')}</span>
                                   </div>
                                 )}
                               </div>

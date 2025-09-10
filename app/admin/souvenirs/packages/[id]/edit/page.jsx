@@ -26,6 +26,7 @@ export default function EditSouvenirPackage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     fetchPackageData();
@@ -77,21 +78,21 @@ export default function EditSouvenirPackage() {
     setIsSaving(true);
 
     try {
+      // Support image upload via multipart
+      const form = new FormData();
+      form.append('name', packageData.name);
+      form.append('description', packageData.description);
+      form.append('price', String(parseInt(packageData.price||0)));
+      form.append('souvenirId', packageData.souvenirId);
+      form.append('souvenirTitle', packageData.souvenirTitle);
+      form.append('available', String(packageData.available));
+      form.append('category', packageData.category);
+      form.append('type', packageData.type);
+      if (imageFile) form.append('image', imageFile);
+
       const response = await fetch(`/api/souvenirs/packages/${packageId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: packageData.name,
-          description: packageData.description,
-          price: parseInt(packageData.price),
-          souvenirId: packageData.souvenirId,
-          souvenirTitle: packageData.souvenirTitle,
-          available: packageData.available,
-          category: packageData.category,
-          type: packageData.type
-        }),
+        body: form,
       });
 
       const data = await response.json();
@@ -238,6 +239,18 @@ export default function EditSouvenirPackage() {
                     placeholder="Contoh: Paket hemat berisi batik, keripik, dan oleh-oleh lainnya dari toko ini"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
+                </div>
+
+                {/* Image Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Gambar Paket (opsional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e)=>setImageFile(e.target.files?.[0]||null)}
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">PNG, JPG hingga 5MB.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

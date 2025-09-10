@@ -4,6 +4,16 @@ import { BiMap, BiNavigation, BiTime, BiCar, BiWalk } from 'react-icons/bi';
 const MapFallback = ({ destination }) => {
   // Get destination coordinates for fallback
   const getDestinationCoords = () => {
+    // First try to get from separate latitude/longitude fields
+    if (destination?.latitude && destination?.longitude) {
+      const lat = parseFloat(destination.latitude);
+      const lng = parseFloat(destination.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        return { lat, lng };
+      }
+    }
+    
+    // Then try coordinates object
     if (destination?.coordinates) {
       // Handle case where coordinates might be a JSON string
       let coords = destination.coordinates;

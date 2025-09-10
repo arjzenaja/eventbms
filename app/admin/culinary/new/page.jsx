@@ -156,6 +156,13 @@ export default function NewCulinaryItem() {
       Object.keys(formData).forEach(key => {
         if (key === 'features') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else if (key === 'coordinates') {
+          // Handle coordinates specially
+          if (formData[key] && typeof formData[key] === 'object') {
+            formDataToSend.append('latitude', formData[key].lat || '');
+            formDataToSend.append('longitude', formData[key].lng || '');
+            formDataToSend.append('coordinates', JSON.stringify(formData[key]));
+          }
         } else {
           formDataToSend.append(key, formData[key]);
         }
@@ -793,7 +800,7 @@ export default function NewCulinaryItem() {
 
                       <div className="md:col-span-2">
                         <label htmlFor="website" className="block text-sm font-semibold text-gray-700 mb-2">
-                          Website
+                          Website <span className="text-gray-500 text-sm font-normal">(opsional)</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -808,9 +815,12 @@ export default function NewCulinaryItem() {
                             value={formData.website}
                             onChange={handleInputChange}
                             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm transition-all duration-200"
-                            placeholder="https://website.com"
+                            placeholder="https://website.com (kosongkan jika tidak ada)"
                           />
                         </div>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Kosongkan jika kuliner tidak memiliki website
+                        </p>
                       </div>
                     </div>
                   </div>

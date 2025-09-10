@@ -203,6 +203,7 @@ export default function NewVillage() {
           packages: "",
           price: "",
           info: "",
+          coordinates: { lat: "", lng: "" },
           features: ["Budaya Lokal", "Akomodasi Homestay"],
           recommended: false,
         });

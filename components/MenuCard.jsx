@@ -11,8 +11,16 @@ const MenuCard = ({ menu, onBuyClick }) => {
   // Define dual pricing categories at component level
   const dualPricingCategories = [
     'THE ESPRESSO BASED',
-    'SHAKEN SWEET & CREAMY Series',
-    'SHAKEN FRESH Presso'
+    'Senja Espresso Based',
+    'Tea Series',
+    'Coffee Series',
+    'Milk Series',
+    'Fruits Series',
+    'Non Coffee',
+    'Tea',
+    'Classic Coffee',
+    'Milk Base',
+    'Non Coffe+'
   ];
 
   const handleBuyClick = (e) => {
@@ -58,7 +66,7 @@ const MenuCard = ({ menu, onBuyClick }) => {
       {/* Menu Image */}
       <div className="relative h-48 overflow-hidden">
         <Image
-          src={menu.image || '/placeholder.jpg'}
+          src={(menu.image ? `${menu.image}?v=${encodeURIComponent(menu.updated_at || '')}` : '/placeholder.jpg')}
           alt={menu.name}
           fill
           className={`object-cover transition-transform duration-300 ${
@@ -124,18 +132,24 @@ const MenuCard = ({ menu, onBuyClick }) => {
           <div className="flex items-center gap-2">
             <BiMoney className="text-green-600 dark:text-green-400" />
             {dualPricingCategories.includes(menu.category) ? (
-              <div className="flex flex-col">
-                {(menu.priceIced || menu.price) && (
-                  <span className="font-bold text-sm text-green-600 dark:text-green-400">
-                    🧊 Rp {(menu.priceIced || menu.price || 0).toLocaleString('id-ID')}
-                  </span>
-                )}
-                {menu.priceHot && (
-                  <span className="font-bold text-sm text-green-600 dark:text-green-400">
-                    ☕ Rp {(menu.priceHot || 0).toLocaleString('id-ID')}
-                  </span>
-                )}
-              </div>
+              (menu.priceIced != null || menu.priceHot != null) ? (
+                <div className="flex flex-col">
+                  {menu.priceIced != null && (
+                    <span className="font-bold text-sm text-green-600 dark:text-green-400">
+                      🧊 Rp {(menu.priceIced || 0).toLocaleString('id-ID')}
+                    </span>
+                  )}
+                  {menu.priceHot != null && (
+                    <span className="font-bold text-sm text-green-600 dark:text-green-400">
+                      ☕ Rp {(menu.priceHot || 0).toLocaleString('id-ID')}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <span className="font-bold text-lg text-green-600 dark:text-green-400">
+                  Rp {menu.price ? menu.price.toLocaleString('id-ID') : '0'}
+                </span>
+              )
             ) : (
               <span className="font-bold text-lg text-green-600 dark:text-green-400">
                 Rp {menu.price ? menu.price.toLocaleString('id-ID') : '0'}

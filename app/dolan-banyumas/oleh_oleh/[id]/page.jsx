@@ -207,7 +207,7 @@ const OlehOlehDetail = () => {
 															<BiStar key={i} className="text-yellow-400 text-lg" />
 														))}
 													</div>
-													<span className="text-sm text-gray-600 dark:text-gray-400">5.0 (Terpercaya)</span>
+													<span className="text-sm text-gray-600 dark:text-gray-400">{destination.rating ? `${destination.rating} (Terpercaya)` : 'Terpercaya'}</span>
 												</div>
 											</div>
 										</div>
@@ -234,7 +234,7 @@ const OlehOlehDetail = () => {
 													</div>
 													<div>
 														<p className="text-sm text-gray-600 dark:text-gray-400">Telepon</p>
-														<p className="font-semibold text-gray-900 dark:text-white">+62 812-3456-7890</p>
+														<p className="font-semibold text-gray-900 dark:text-white">{contactInfo.phone || '-'}</p>
 													</div>
 												</div>
 												<button className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
@@ -252,7 +252,7 @@ const OlehOlehDetail = () => {
 													</div>
 													<div>
 														<p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
-														<p className="font-semibold text-gray-900 dark:text-white">+62 812-3456-7890</p>
+														<p className="font-semibold text-gray-900 dark:text-white">{contactInfo.whatsapp || '-'}</p>
 													</div>
 												</div>
 												<button className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
@@ -336,7 +336,7 @@ const OlehOlehDetail = () => {
 										</div>
 										<div>
 											<h4 className="font-semibold text-gray-800 dark:text-white">Jam Operasional</h4>
-											<p className="text-gray-600 dark:text-gray-300">Senin - Minggu: 08:00 - 17:00 WIB</p>
+											<p className="text-gray-600 dark:text-gray-300">{destination.opening_hours || 'Tidak tersedia'}</p>
 											<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">*Jam operasional dapat berubah sesuai kondisi</p>
 										</div>
 									</div>

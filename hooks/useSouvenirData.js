@@ -29,17 +29,19 @@ const useSouvenirData = (destinationId, destinationSlug) => {
         const data = await response.json();
         const list = data.packages || data.oleh_oleh || data.destinations || data.souvenirs || [];
 
-        if (list.length === 0) {
-          throw new Error('Data kosong dari API');
+        // Jika kosong, jangan lempar error. Tetap tampilkan state kosong di UI.
+        if (!Array.isArray(list) || list.length === 0) {
+          setSouvenirs([]);
+          return;
         }
 
         // Ubah format data agar cocok dengan komponen UI
-        const normalized = list.map((item, index) => ({
+        let normalized = list.map((item, index) => ({
           id: item.id || index + 1,
           name: item.name || item.title || 'Oleh-oleh',
           description: item.description || item.short_description || '',
           price: item.price || 0,
-          image: item.img_sm || item.img_lg || '/placeholder.jpg',
+          image: item.image || item.img_sm || item.img_lg || '/placeholder.jpg',
           rating: item.rating ? Number(item.rating) : undefined,
           isPopular: Boolean(item.recommended || item.available),
           isSpicy: false,
@@ -47,6 +49,15 @@ const useSouvenirData = (destinationId, destinationSlug) => {
           additionalInfo: item.features || [],
           raw: item,
         }));
+
+        // Filter by specific destination/store if provided
+        if (destinationId) {
+          const targetId = String(destinationId);
+          normalized = normalized.filter(n => {
+            const raw = n.raw || {};
+            return String(raw.souvenirId || raw.destinationId || '') === targetId;
+          });
+        }
 
         setSouvenirs(normalized);
         

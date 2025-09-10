@@ -22,7 +22,10 @@ const DesaWisataMenuSection = ({ destinationTitle, destinationId, destinationSlu
         const data = await response.json();
         
         if (data.success) {
-          setPackages(data.packages || []);
+          const all = data.packages || [];
+          // filter by current destination
+          const filtered = all.filter(p => String(p.villageId || p.destinationId || p.souvenirId || '') === String(destinationId));
+          setPackages(filtered);
         } else {
           console.error('Gagal memuat data paket:', data.message);
           setError(data.message);
@@ -36,107 +39,10 @@ const DesaWisataMenuSection = ({ destinationTitle, destinationId, destinationSlu
     };
 
     fetchPackages();
-  }, []);
+  }, [destinationId]);
 
   // Fallback ke data statis jika API gagal
-  const fallbackMenus = [
-    {
-      id: 1,
-      name: "Tiket Masuk",
-      description: "Tiket masuk ke desa wisata dengan akses ke semua area umum",
-      price: 10000,
-      image: "/placeholder.jpg",
-      rating: 4.8,
-      duration: "Seharian",
-      isPopular: true,
-      category: "Tiket & Parkir",
-      additionalInfo: ["Gratis anak < 3 tahun", "Diskon pelajar 50%", "Diskon lansia 25%"]
-    },
-    {
-      id: 2,
-      name: "Jasa Pemandu",
-      description: "Pemandu wisata lokal yang akan menjelaskan budaya dan sejarah desa",
-      price: 50000,
-      image: "/placeholder.jpg",
-      rating: 4.9,
-      duration: "2-3 jam",
-      isPopular: true,
-      category: "Layanan",
-      additionalInfo: ["Max 10 orang", "Termasuk sejarah", "Bahasa Indonesia"]
-    },
-    {
-      id: 3,
-      name: "Paket Berkebun",
-      description: "Aktivitas berkebun tradisional dengan bimbingan petani lokal",
-      price: 20000,
-      image: "/placeholder.jpg",
-      rating: 4.7,
-      duration: "1-2 jam",
-      isPopular: false,
-      category: "Aktivitas",
-      additionalInfo: ["Alat disediakan", "Hasil panen", "Edukasi pertanian"]
-    },
-    {
-      id: 4,
-      name: "Memasak Tradisional",
-      description: "Belajar memasak masakan tradisional khas desa dengan resep turun temurun",
-      price: 30000,
-      image: "/placeholder.jpg",
-      rating: 4.8,
-      duration: "2-3 jam",
-      isPopular: true,
-      category: "Aktivitas",
-      additionalInfo: ["Bahan disediakan", "Resep dibagikan", "Bisa dibawa pulang"]
-    },
-    {
-      id: 5,
-      name: "Kerajinan Tangan",
-      description: "Membuat kerajinan tangan tradisional dengan bahan alami",
-      price: 25000,
-      image: "/placeholder.jpg",
-      rating: 4.6,
-      duration: "1-2 jam",
-      isPopular: false,
-      category: "Aktivitas",
-      additionalInfo: ["Bahan disediakan", "Hasil dibawa pulang", "Panduan lengkap"]
-    },
-    {
-      id: 6,
-      name: "Homestay Standard",
-      description: "Menginap di rumah warga dengan fasilitas standar dan suasana pedesaan",
-      price: 100000,
-      image: "/placeholder.jpg",
-      rating: 4.5,
-      duration: "Per malam",
-      isPopular: false,
-      category: "Penginapan",
-      additionalInfo: ["Sarapan", "WiFi", "Kamar mandi dalam"]
-    },
-    {
-      id: 7,
-      name: "Homestay Premium",
-      description: "Menginap di rumah warga dengan fasilitas premium dan kenyamanan maksimal",
-      price: 150000,
-      image: "/placeholder.jpg",
-      rating: 4.8,
-      duration: "Per malam",
-      isPopular: true,
-      category: "Penginapan",
-      additionalInfo: ["Sarapan", "WiFi", "AC", "Kamar mandi dalam", "Terrace"]
-    },
-    {
-      id: 8,
-      name: "Paket Camping",
-      description: "Camping di area desa wisata dengan pemandangan alam yang indah",
-      price: 50000,
-      image: "/placeholder.jpg",
-      rating: 4.7,
-      duration: "Per malam",
-      isPopular: false,
-      category: "Aktivitas",
-      additionalInfo: ["Tenda disediakan", "Makan malam", "Sarapan", "Pemandu"]
-    }
-  ];
+  const fallbackMenus = [];
 
   // Gunakan data dari API jika ada, fallback ke data statis
   const displayMenus = packages.length > 0 ? packages : fallbackMenus;
@@ -205,29 +111,7 @@ const DesaWisataMenuSection = ({ destinationTitle, destinationId, destinationSlu
   }
 
   if (error && packages.length === 0) {
-    return (
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">⚠️</span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Gagal Memuat Data
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {error}
-            </p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors"
-            >
-              Coba Lagi
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

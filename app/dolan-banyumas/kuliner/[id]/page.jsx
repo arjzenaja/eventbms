@@ -178,12 +178,12 @@ const KulinerDetail = () => {
 					<div className="flex justify-center">
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
 							{destination.rating && (
-								<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
+							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
 									<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
 										{parseFloat(destination.rating).toFixed(1)}
 									</div>
-									<div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
-								</div>
+								<div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
+							</div>
 							)}
 							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
 								<div className="text-2xl font-bold text-orange-600 dark:text-orange-400">500+</div>
@@ -250,7 +250,7 @@ const KulinerDetail = () => {
 										</div>
 										<div>
 											<h2 className="text-3xl font-bold text-gray-800 dark:text-white">Pengelola Kuliner</h2>
-											<p className="text-gray-600 dark:text-gray-300">Tim pengelola destinasi kuliner</p>
+											<p className="text-gray-600 dark:text-gray-300">Tim pengelola kuliner</p>
 										</div>
 									</div>
 								</div>
@@ -266,7 +266,7 @@ const KulinerDetail = () => {
 											</div>
 											<div>
 												<h3 className="text-xl font-bold text-gray-800 dark:text-white">{destination.manager || 'Tim Pengelola Kuliner'}</h3>
-												<p className="text-gray-600 dark:text-gray-300">Pengelola Destinasi</p>
+												<p className="text-gray-600 dark:text-gray-300">Pengelola Kuliner</p>
 												<div className="flex items-center gap-2 mt-2">
 													<div className="flex gap-1">
 														{[...Array(5)].map((_, i) => (
@@ -303,9 +303,9 @@ const KulinerDetail = () => {
 											</a>
 										) : (
 											<button className="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-3 cursor-not-allowed">
-												<BiPhone className="text-xl" />
-												<span>Telepon</span>
-											</button>
+											<BiPhone className="text-xl" />
+											<span>Telepon</span>
+										</button>
 										)}
 
 										{/* WhatsApp Button */}
@@ -321,9 +321,9 @@ const KulinerDetail = () => {
 											</a>
 										) : (
 											<button className="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white font-medium py-4 px-6 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-3 cursor-not-allowed">
-												<FaWhatsapp className="text-xl" />
-												<span>WhatsApp</span>
-											</button>
+											<FaWhatsapp className="text-xl" />
+											<span>WhatsApp</span>
+										</button>
 										)}
 									</div>
 								</div>
@@ -699,7 +699,7 @@ const KulinerDetail = () => {
 			<SimpleMenuSection 
 				destinationTitle={destination.title} 
 				destinationId={id}
-				destinationSlug={destination.slug || destination.title?.toLowerCase().replace(/\s+/g, '-')}
+				destinationSlug={destination.slug || ''}
 			/>
 		</div>
 	);

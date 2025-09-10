@@ -340,7 +340,7 @@ export default function NewSouvenirPackage() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setFormData(prev => ({ ...prev, souvenirId: '' }));
+                                  setFormData(prev => ({ ...prev, souvenirId: '', souvenirTitle: '' }));
                                   closeSouvenirDropdown();
                                 }}
                                 className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 outline-none ${formData.souvenirId === '' ? 'bg-blue-50' : ''}`}
@@ -361,7 +361,7 @@ export default function NewSouvenirPackage() {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    setFormData(prev => ({ ...prev, souvenirId: souvenir.id }));
+                                    setFormData(prev => ({ ...prev, souvenirId: souvenir.id, souvenirTitle: souvenir.title }));
                                     closeSouvenirDropdown();
                                   }}
                                   className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 outline-none ${formData.souvenirId === souvenir.id ? 'bg-blue-50' : ''}`}
@@ -383,19 +383,20 @@ export default function NewSouvenirPackage() {
                       )}
                   </div>
 
-                  <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nama Toko
-                    </label>
-                    <input
-                      type="text"
-                      name="souvenirTitle"
-                      value={formData.souvenirTitle}
-                      onChange={handleInputChange}
-                      placeholder="Contoh: Toko Batik Banyumas"
+                  {/* Nama Toko otomatis dari pilihan; sembunyikan input jika sudah memilih */}
+                  {!formData.souvenirId && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Toko</label>
+                      <input
+                        type="text"
+                        name="souvenirTitle"
+                        value={formData.souvenirTitle}
+                        onChange={handleInputChange}
+                        placeholder="Contoh: Toko Batik Banyumas"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all duration-200"
-                    />
+                      />
                     </div>
+                  )}
                   </div>
                 </div>
 
@@ -424,7 +425,8 @@ export default function NewSouvenirPackage() {
                   </div>
                 </div>
 
-                {/* Category & Settings Section */}
+                {/* Category & Settings Section - removed per request */}
+                {/*
                 <div className="mb-8">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
@@ -542,9 +544,10 @@ export default function NewSouvenirPackage() {
                     </div>
                   </div>
                 </div>
+                */}
 
-                {/* Availability Section */}
-                <div className="mb-8">
+                {/* Availability Section - removed per request */}
+                {/*<div className="mb-8">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
                       <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -565,7 +568,7 @@ export default function NewSouvenirPackage() {
                     Paket toko tersedia untuk dipesan
                   </label>
                   </div>
-                </div>
+                </div>*/}
 
                 {/* Submit Buttons */}
                 <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">

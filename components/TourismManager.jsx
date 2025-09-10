@@ -5,12 +5,29 @@ import { FaWhatsapp, FaInstagram, FaGlobe } from 'react-icons/fa';
 const TourismManager = ({ destination, contactInfo }) => {
   console.log('TourismManager rendering with:', { destination, contactInfo });
   
-  // Extract contact information
-  const phoneContact = Array.isArray(contactInfo) ? contactInfo.find(c => c.type === 'phone') : null;
-  const whatsappContact = Array.isArray(contactInfo) ? contactInfo.find(c => c.type === 'whatsapp') : null;
-  const phoneNumberDisplay = phoneContact?.value || whatsappContact?.value || '';
-  const phoneNumberDigits = (phoneContact?.value || '').replace(/\D/g, '');
-  const whatsappDigits = (whatsappContact?.value || '').replace(/\D/g, '');
+  // Normalize contact data: support array, object, or direct destination fields
+  const contactObj = Array.isArray(contactInfo)
+    ? contactInfo.reduce((acc, c) => { acc[c.type] = c.value; return acc; }, {})
+    : (contactInfo || {});
+
+  const normalizedPhone = contactObj.phone || destination?.phone || destination?.contact || '';
+  const normalizedWhatsapp = contactObj.whatsapp || destination?.whatsapp || '';
+
+  const phoneNumberDisplay = normalizedPhone || normalizedWhatsapp || '';
+  const phoneNumberDigits = String(normalizedPhone || '').replace(/\D/g, '');
+  const whatsappDigits = String(normalizedWhatsapp || '').replace(/\D/g, '');
+
+  // Smart fallback for manager name: use text in parentheses in contact or non-numeric words
+  const deriveManagerFromContact = (contact) => {
+    if (!contact || typeof contact !== 'string') return '';
+    const paren = contact.match(/\(([^)]+)\)/);
+    if (paren && paren[1]) return paren[1].trim().replace(/\b\w/g, (m) => m.toUpperCase());
+    // fallback: remove digits and symbols, take last word(s)
+    const words = contact.replace(/[0-9+\-\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    return words || '';
+  };
+
+  const managerName = destination?.manager || deriveManagerFromContact(destination?.contact) || 'Tim Pengelola Wisata';
   
   return (
     <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
@@ -36,7 +53,7 @@ const TourismManager = ({ destination, contactInfo }) => {
           {/* Manager Info */}
           <div className="flex-1">
             <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-1">
-              {destination?.manager || "Tim Pengelola Wisata"}
+              {managerName}
             </h4>
             <p className="text-gray-600 dark:text-gray-400 mb-2">Pengelola Destinasi</p>
             
@@ -102,7 +119,7 @@ const TourismManager = ({ destination, contactInfo }) => {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-gray-600 dark:text-gray-400">WhatsApp</p>
-                  <p className="font-medium text-gray-800 dark:text-white">{whatsappContact?.value}</p>
+                  <p className="font-medium text-gray-800 dark:text-white">{normalizedWhatsapp}</p>
                 </div>
                 <a 
                   href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent('Halo, saya tertarik dengan destinasi wisata')}`}
@@ -154,7 +171,7 @@ const TourismManager = ({ destination, contactInfo }) => {
           <div>
             <h6 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">Jam Operasional</h6>
             <p className="text-sm text-blue-700 dark:text-blue-300">
-              Senin - Minggu: 08:00 - 17:00 WIB
+              {destination?.opening_hours || 'Senin - Minggu: 08:00 - 17:00 WIB'}
             </p>
             <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
               *Jam operasional dapat berubah sesuai kondisi

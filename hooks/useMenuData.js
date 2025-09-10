@@ -15,9 +15,12 @@ const useMenuData = (destinationId, destinationSlug) => {
 
         const params = new URLSearchParams();
         if (destinationId) params.append('destinationId', destinationId);
-        if (destinationSlug) params.append('slug', destinationSlug);
+        // Only use slug if it looks like a clean slug (avoid full URLs or placeholders)
+        const isValidSlug = typeof destinationSlug === 'string' && /^[a-z0-9-]+$/.test(destinationSlug.trim());
+        if (isValidSlug) params.append('slug', destinationSlug.trim());
 
-        const response = await fetch(`/api/kuliner/menu?${params}`);
+        const apiUrl = `/api/kuliner/menu?${params}&ts=${Date.now()}`;
+        const response = await fetch(apiUrl, { cache: 'no-store' });
         
         if (!response.ok) {
           throw new Error('Failed to fetch menu data');

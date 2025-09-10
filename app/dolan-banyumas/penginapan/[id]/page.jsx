@@ -756,9 +756,9 @@ const PenginapanDetail = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
                     </div>
-                    Tim Pengelola Wisata
+                    Tim Pengelola Penginapan
                   </h3>
-                  <p className="text-white/80">Tim pengelola destinasi wisata</p>
+                  <p className="text-white/80">Tim pengelola penginapan</p>
                 </div>
 
                 {/* Manager Profile */}
@@ -771,8 +771,8 @@ const PenginapanDetail = () => {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-2xl font-bold text-white mb-2">Tim Pengelola Wisata</h4>
-                        <p className="text-white/70 text-lg mb-2">Pengelola Destinasi</p>
+                        <h4 className="text-2xl font-bold text-white mb-2">{destination?.manager || 'Tim Pengelola Penginapan'}</h4>
+                        <p className="text-white/70 text-lg mb-2">Pengelola Penginapan</p>
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-1">
                             {[...Array(5)].map((_, i) => (
@@ -808,7 +808,7 @@ const PenginapanDetail = () => {
                         </div>
                         <div>
                           <p className="text-white/70 text-sm">Telepon</p>
-                          <p className="text-white font-bold">+62 812-3456-7890</p>
+                          <p className="text-white font-bold">{destination?.phone || destination?.contact || '-'}</p>
                         </div>
                       </div>
                       <button className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-110">
@@ -827,7 +827,7 @@ const PenginapanDetail = () => {
                         </div>
                         <div>
                           <p className="text-white/70 text-sm">WhatsApp</p>
-                          <p className="text-white font-bold">+62 812-3456-7890</p>
+                          <p className="text-white font-bold">{destination?.whatsapp || '-'}</p>
                         </div>
                       </div>
                       <button className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-110">
@@ -868,7 +868,7 @@ const PenginapanDetail = () => {
                     </div>
                     <div>
                       <h5 className="text-xl font-bold text-white mb-2">Jam Operasional</h5>
-                      <p className="text-white/70 text-lg">Senin - Minggu: 08:00 - 17:00 WIB</p>
+                      <p className="text-white/70 text-lg">{destination?.opening_hours || 'Tidak tersedia'}</p>
                       <p className="text-white/50 text-sm">*Jam operasional dapat berubah sesuai kondisi</p>
                     </div>
                   </div>

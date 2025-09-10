@@ -1,4 +1,4 @@
-'use client';
+  'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -56,6 +56,12 @@ export default function CulinaryMenuManagement() {
   const [selectedDestination, setSelectedDestination] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // Reset category when destination changes
+  const handleDestinationChange = (destinationId) => {
+    setSelectedDestination(destinationId);
+    setSelectedCategory('all'); // Reset category when destination changes
+  };
   const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
@@ -67,16 +73,16 @@ export default function CulinaryMenuManagement() {
       setIsLoading(true);
       setError('');
 
-      // Fetch culinary destinations
-      const destinationsResponse = await fetch('/api/kuliner');
+      // Fetch culinary destinations (no cache)
+      const destinationsResponse = await fetch(`/api/kuliner?ts=${Date.now()}`, { cache: 'no-store' });
       const destinationsData = await destinationsResponse.json();
 
       if (destinationsData.success) {
         setCulinaryDestinations(destinationsData.kuliner || []);
       }
 
-      // Fetch menu items
-      const menuResponse = await fetch('/api/kuliner/menu');
+      // Fetch menu items (no cache)
+      const menuResponse = await fetch(`/api/kuliner/menu?ts=${Date.now()}`, { cache: 'no-store' });
       const menuData = await menuResponse.json();
 
       if (menuData.success) {
@@ -148,13 +154,23 @@ export default function CulinaryMenuManagement() {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || 
-      item.category === selectedCategory;
+      (selectedDestination !== 'all' && item.category === selectedCategory);
 
     return matchesDestination && matchesSearch && matchesCategory;
   });
 
-  // Get unique categories
-  const categories = [...new Set(menuItems.map(item => item.category))];
+  // Get unique categories based on selected destination
+  const getCategoriesForDestination = () => {
+    if (selectedDestination === 'all') {
+      return [...new Set(menuItems.map(item => item.category))];
+    } else {
+      return [...new Set(menuItems
+        .filter(item => item.destinationId === selectedDestination)
+        .map(item => item.category)
+      )];
+    }
+  };
+  const categories = getCategoriesForDestination();
 
   // Stats
   const totalCount = filteredMenuItems.length;
@@ -173,7 +189,7 @@ export default function CulinaryMenuManagement() {
         `"${(i.name || '').replace(/"/g,'""')}"`,
         `"${(i.description || '').replace(/"/g,'""')}"`,
         i.category || '',
-        (i.category === 'THE ESPRESSO BASED' || i.category === 'SHAKEN SWEET & CREAMY Series' || i.category === 'SHAKEN FRESH Presso') ? 
+        (["THE ESPRESSO BASED","Senja Espresso Based","Tea Series","Coffee Series","Milk Series","Fruits Series","Non Coffee","Tea","Classic Coffee","Milk Base","Non Coffe+"].includes(i.category)) ? 
           `${i.priceIced || i.price || ''}${i.priceHot ? ` / ${i.priceHot}` : ''}` : 
           (i.price ?? ''),
         i.cookingTime || '',
@@ -220,7 +236,7 @@ export default function CulinaryMenuManagement() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <div className="bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
@@ -264,17 +280,20 @@ export default function CulinaryMenuManagement() {
                 </div>
                 <CustomSelect
                   className="lg:col-span-3"
-                  label="Filter Destinasi"
+                  label="Filter Kuliner"
                   value={selectedDestination}
-                  onChange={setSelectedDestination}
-                  options={[{ value: 'all', label: 'Semua Destinasi', icon: '🔎' }, ...culinaryDestinations.map(d => ({ value: d.id, label: d.title, icon: '📍' }))]}
+                  onChange={handleDestinationChange}
+                  options={[{ value: 'all', label: 'Semua Kuliner', icon: '🔎' }, ...culinaryDestinations.map(d => ({ value: d.id, label: d.title, icon: '📍' }))]}
                 />
                 <CustomSelect
                   className="lg:col-span-3"
                   label="Filter Kategori"
                   value={selectedCategory}
                   onChange={setSelectedCategory}
-                  options={[{ value: 'all', label: 'Semua Kategori', icon: '🔎' }, ...categories.map(c => ({ value: c, label: c, icon: '🍽️' }))]}
+                  options={selectedDestination === 'all' 
+                    ? [{ value: 'all', label: 'Pilih kuliner terlebih dahulu', icon: '⚠️' }]
+                    : [{ value: 'all', label: 'Semua Kategori', icon: '🔎' }, ...categories.map(c => ({ value: c, label: c, icon: '🍽️' }))]
+                  }
                 />
                 <div className="lg:col-span-1 flex justify-end">
                   <button
@@ -314,164 +333,216 @@ export default function CulinaryMenuManagement() {
               <div className="bg-white rounded-lg shadow p-5 flex items-center">
                 <div className="h-14 w-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mr-4 text-2xl">📈</div>
                 <div>
-                  <div className="text-sm text-gray-600">Destinasi</div>
+                  <div className="text-sm text-gray-600">Kuliner</div>
                   <div className="text-2xl font-semibold">{destinationCount}</div>
                 </div>
               </div>
             </div>
 
-            {/* Menu Items Table */}
+            {/* Selected Destination Info */}
+            {selectedDestination !== 'all' && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center">
+                  <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 text-xl">
+                    📍
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-900">
+                      {culinaryDestinations.find(d => d.id === selectedDestination)?.title || 'Unknown Destination'}
+                    </h3>
+                    <p className="text-sm text-blue-700">
+                      Menampilkan {filteredMenuItems.length} menu dari {categories.length} kategori
+                    </p>
+                  </div>
+                  <div className="ml-auto">
+                    <button
+                      onClick={() => handleDestinationChange('all')}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      Lihat Semua Kuliner
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Menu Items */}
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Menu Items ({filteredMenuItems.length})
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {selectedDestination === 'all' 
+                      ? `Semua Menu Kuliner (${filteredMenuItems.length})`
+                      : `Menu ${culinaryDestinations.find(d => d.id === selectedDestination)?.title || 'Unknown'} (${filteredMenuItems.length})`
+                    }
+                  </h3>
+                  {selectedDestination !== 'all' && (
+                    <div className="text-sm text-gray-500">
+                      Kategori: {categories.length} tersedia
+                    </div>
+                  )}
+                </div>
               </div>
 
               {filteredMenuItems.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">Tidak ada menu yang ditemukan</p>
-                  <Link 
-                    href="/admin/culinary/menu/new"
-                    className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                  >
-                    Tambah Menu Pertama
-                  </Link>
+                  {selectedDestination === 'all' ? (
+                    <>
+                      <p className="text-gray-500 mb-4">Tidak ada menu yang ditemukan</p>
+                      <Link 
+                        href="/admin/culinary/menu/new"
+                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                      >
+                        Tambah Menu Pertama
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-500 mb-2">
+                        Tidak ada menu untuk kuliner "{culinaryDestinations.find(d => d.id === selectedDestination)?.title || 'Unknown'}"
+                      </p>
+                      <p className="text-sm text-gray-400 mb-4">
+                        Coba pilih kuliner lain atau tambah menu baru
+                      </p>
+                      <div className="flex justify-center gap-3">
+                        <button
+                          onClick={() => handleDestinationChange('all')}
+                          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+                        >
+                          Lihat Semua Kuliner
+                        </button>
+                        <Link 
+                          href="/admin/culinary/menu/new"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                        >
+                          Tambah Menu Baru
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Menu
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Kategori
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Harga
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Rating
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Destinasi
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Aksi
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredMenuItems.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-12 w-12">
-                                <img
-                                  className="h-12 w-12 rounded-lg object-cover"
-                                  src={item.image || '/placeholder.jpg'}
-                                  alt={item.name}
-                                />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredMenuItems.map((item, index) => (
+                    <div key={`${item.id}-${index}`} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                      {/* Image */}
+                      <div className="h-48 bg-gray-100">
+                        <img
+                          className="w-full h-full object-cover"
+                          src={(item.image ? `${item.image}?v=${encodeURIComponent(item.updated_at || '')}` : '/placeholder.jpg')}
+                          alt={item.name}
+                          onError={(e) => { e.currentTarget.src = '/placeholder.jpg'; }}
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-4">
+                        {/* Title & Category */}
+                        <div className="mb-3">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                            {item.name}
+                          </h3>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {item.category}
+                          </span>
+                        </div>
+                        
+                        {/* Description */}
+                        <p className="text-sm text-gray-600 mb-3 overflow-hidden" style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}>
+                          {item.description}
+                        </p>
+                        
+                        {/* Price & Time */}
+                        <div className="mb-3">
+                          <div className="text-lg font-bold text-green-600">
+                            {(['THE ESPRESSO BASED','Senja Espresso Based','Tea Series','Coffee Series','Milk Series','Fruits Series','Non Coffee','Tea','Classic Coffee','Milk Base','Non Coffe+','Coffee Based','Minuman','Kopi'].includes(item.category)) ? (
+                              <div className="space-y-1">
+                                {(item.priceIced || item.price) && (
+                                  <div>🧊 Rp {(item.priceIced || item.price || 0).toLocaleString('id-ID')}</div>
+                                )}
+                                {item.priceHot && (
+                                  <div>☕ Rp {(item.priceHot || 0).toLocaleString('id-ID')}</div>
+                                )}
                               </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">
-                                  {item.name}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  {item.description.length > 50 
-                                    ? `${item.description.substring(0, 50)}...` 
-                                    : item.description}
-                                </div>
-                                <div className="flex items-center mt-1">
-                                  {item.isPopular && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 mr-2">
-                                      Populer
-                                    </span>
-                                  )}
-                                  {item.isSpicy && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 mr-2">
-                                      Pedas
-                                    </span>
-                                  )}
-                                  {item.halal && (
-                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                      Halal
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              {item.category}
+                            ) : (
+                              <div>Rp {item.price?.toLocaleString('id-ID') || '0'}</div>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            ⏱️ {item.cookingTime || '15-20 menit'}
+                          </div>
+                        </div>
+                        
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {item.isPopular && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                              ⭐ Populer
                             </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {(item.category === 'THE ESPRESSO BASED' || item.category === 'SHAKEN SWEET & CREAMY Series' || item.category === 'SHAKEN FRESH Presso') ? (
-                                <div className="space-y-1">
-                                  {(item.priceIced || item.price) && (
-                                    <div>🧊 Rp {(item.priceIced || item.price || 0).toLocaleString('id-ID')}</div>
-                                  )}
-                                  {item.priceHot && (
-                                    <div>☕ Rp {(item.priceHot || 0).toLocaleString('id-ID')}</div>
-                                  )}
-                                </div>
-                              ) : (
-                                <div>Rp {item.price?.toLocaleString('id-ID') || '0'}</div>
-                              )}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {item.cookingTime}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <span className="text-sm text-gray-900">{item.rating}</span>
-                              <span className="text-yellow-400 ml-1">★</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleToggleStatus(item.id, item.available)}
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                item.available
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-red-100 text-red-800'
-                              }`}
-                            >
-                              {item.available ? 'Tersedia' : 'Tidak Tersedia'}
-                            </button>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {item.destinationTitle || 'N/A'}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex justify-end space-x-2">
-                              <Link
-                                href={`/admin/culinary/menu/${item.id}/edit`}
-                                className="text-blue-600 hover:text-blue-900"
-                              >
-                                Edit
-                              </Link>
-                              <button
-                                onClick={() => handleDelete(item.id)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                Hapus
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          )}
+                          {item.isSpicy && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                              🌶️ Pedas
+                            </span>
+                          )}
+                          {item.halal && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                              ✅ Halal
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Rating & Status */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center">
+                            <span className="text-sm text-gray-900 mr-1">
+                              {item.rating || '0'}
+                            </span>
+                            <span className="text-yellow-400">⭐</span>
+                          </div>
+                          <button
+                            onClick={() => handleToggleStatus(item.id, item.available)}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              item.available
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {item.available ? '✅ Tersedia' : '❌ Tidak Tersedia'}
+                          </button>
+                        </div>
+                        
+                        {/* Destination */}
+                        {selectedDestination === 'all' && (
+                          <div className="mb-3">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                              📍 {item.destinationTitle || 'Unknown Destination'}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {/* Actions */}
+                        <div className="flex space-x-2">
+                          <Link
+                            href={`/admin/culinary/menu/${item.id}/edit`}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-3 rounded-md text-sm font-medium transition-colors"
+                          >
+                            ✏️ Edit
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-md text-sm font-medium transition-colors"
+                          >
+                            🗑️ Hapus
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
