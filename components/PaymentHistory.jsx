@@ -1,7 +1,11 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { PaymentContext } from "@/context/PaymentContext";
-import { BiCheckCircle, BiXCircle, BiClock, BiEye, BiRefreshCw } from "react-icons/bi";
+import { BiCheckCircle } from "react-icons/bi";
+import { BiXCircle } from "react-icons/bi";
+import { BiTime } from "react-icons/bi";
+import { BiShow } from "react-icons/bi";
+import { BiRefresh } from "react-icons/bi";
 
 const PaymentHistory = () => {
   const { paymentHistory } = useContext(PaymentContext);
@@ -33,9 +37,9 @@ const PaymentHistory = () => {
       case 'cancelled':
         return <BiXCircle className="text-red-400 text-lg" />;
       case 'pending':
-        return <BiClock className="text-yellow-400 text-lg" />;
+        return <BiTime className="text-yellow-400 text-lg" />;
       default:
-        return <BiClock className="text-gray-400 text-lg" />;
+        return <BiTime className="text-gray-400 text-lg" />;
     }
   };
 
@@ -73,34 +77,39 @@ const PaymentHistory = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 mt-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-100">Riwayat Pembayaran</h2>
-          <p className="text-gray-400">Semua transaksi pembayaran Anda</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Riwayat Pembayaran</h1>
+          <p className="text-blue-200 text-lg">Semua transaksi pembayaran Anda</p>
         </div>
         <button
           onClick={fetchPayments}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
         >
-          <BiRefreshCw className="text-lg" />
+          <BiRefresh className="text-lg" />
           Refresh
         </button>
       </div>
 
       {/* Payments List */}
       {payments.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-4">Belum ada riwayat pembayaran</div>
-          <div className="text-sm text-gray-500">Pembayaran Anda akan muncul di sini</div>
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-2">Belum ada riwayat pembayaran</h3>
+          <p className="text-blue-200">Pembayaran Anda akan muncul di sini setelah melakukan transaksi</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {payments.map((payment) => (
             <div
               key={payment.id}
-              className="bg-white/5 rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-2xl hover:bg-white/15 transition-all duration-300"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -160,7 +169,7 @@ const PaymentHistory = () => {
                     onClick={() => window.open(`/payment-status/${payment.id}`, '_blank')}
                     className="flex items-center gap-1 px-3 py-1 bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-600/30 text-sm"
                   >
-                    <BiEye className="text-sm" />
+                    <BiShow className="text-sm" />
                     Detail
                   </button>
                   {payment.status === 'pending' && (

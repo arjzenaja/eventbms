@@ -29,7 +29,7 @@ const writeDatabase = (data) => {
 // GET - Get specific payment by ID
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ error: "Payment ID is required" }, { status: 400 });
@@ -53,7 +53,7 @@ export async function GET(request, { params }) {
 // PUT - Update specific payment
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { status, notes, paymentProof, adminNotes } = body;
 
@@ -114,7 +114,7 @@ export async function PUT(request, { params }) {
 // DELETE - Delete specific payment
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ error: "Payment ID is required" }, { status: 400 });

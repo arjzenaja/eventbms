@@ -468,6 +468,24 @@ export default function CulinaryMenuManagement() {
                                   <div>☕ Rp {(item.priceHot || 0).toLocaleString('id-ID')}</div>
                                 )}
                               </div>
+                            ) : (item.category === 'Steak Ala Waroeng' && (item.priceBrown != null || item.priceCheese != null)) ? (
+                              <div className="space-y-1">
+                                {item.priceBrown != null && (
+                                  <div>Brown Sauce: Rp {(item.priceBrown || 0).toLocaleString('id-ID')}</div>
+                                )}
+                                {item.priceCheese != null && (
+                                  <div>Cheese Sauce: Rp {(item.priceCheese || 0).toLocaleString('id-ID')}</div>
+                                )}
+                              </div>
+                            ) : (item.priceMedium != null || item.priceLarge != null) ? (
+                              <div className="space-y-1">
+                                {item.priceMedium != null && (
+                                  <div>Sedang: Rp {(item.priceMedium || 0).toLocaleString('id-ID')}</div>
+                                )}
+                                {item.priceLarge != null && (
+                                  <div>Besar: Rp {(item.priceLarge || 0).toLocaleString('id-ID')}</div>
+                                )}
+                              </div>
                             ) : (
                               <div>Rp {item.price?.toLocaleString('id-ID') || '0'}</div>
                             )}

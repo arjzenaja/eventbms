@@ -205,7 +205,55 @@ const PaymentProvider = ({ children }) => {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
       };
 
-      // Add to payment history
+      // Save to database via API
+      try {
+        const response = await fetch('/api/payments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderData,
+            paymentMethod: selectedPaymentMethod,
+            paymentForm: { ...paymentForm },
+            amount: orderData.totalPrice,
+            fee: selectedPaymentMethod?.fee || 0,
+            userId: null // You can add user ID here if you have user authentication
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save payment to database');
+        }
+
+        const result = await response.json();
+        console.log('Payment saved to database:', result);
+        
+        // Save payment data to localStorage for success page
+        const successData = {
+          orderId: result.payment.id,
+          customerName: orderData.customerName || paymentForm.customerName,
+          customerEmail: orderData.customerEmail || paymentForm.customerEmail,
+          eventName: orderData.eventName,
+          paymentMethod: selectedPaymentMethod?.name || 
+                        (selectedPaymentMethod?.type === 'bank' ? 'Bank Transfer' :
+                         selectedPaymentMethod?.type === 'ewallet' ? 'E-Wallet' :
+                         selectedPaymentMethod?.type === 'credit_card' ? 'Kartu Kredit' :
+                         selectedPaymentMethod?.type || 'Pembayaran'),
+          totalAmount: paymentRecord.totalAmount
+        };
+        
+        localStorage.setItem('lastPaymentData', JSON.stringify(successData));
+        
+        // Redirect to success page
+        window.location.href = `/payment-success?paymentId=${result.payment.id}`;
+        return; // Exit early to prevent showing success state in this component
+      } catch (dbError) {
+        console.error('Error saving payment to database:', dbError);
+        // Continue with local state even if database save fails
+      }
+
+      // Add to payment history (local state)
       setPaymentHistory(prev => [paymentRecord, ...prev]);
 
       setPaymentStatus({
@@ -330,4 +378,5 @@ const PaymentProvider = ({ children }) => {
   );
 };
 
+export { PaymentProvider };
 export default PaymentProvider;

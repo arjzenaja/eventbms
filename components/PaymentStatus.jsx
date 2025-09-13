@@ -1,7 +1,19 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { PaymentContext } from "@/context/PaymentContext";
-import { BiCheckCircle, BiXCircle, BiClock, BiRefreshCw } from "react-icons/bi";
+import { BiCheckCircle } from "react-icons/bi";
+import { BiXCircle } from "react-icons/bi";
+import { BiTime } from "react-icons/bi";
+import { BiRefresh } from "react-icons/bi";
+import { BiDownload } from "react-icons/bi";
+import { BiShare } from "react-icons/bi";
+import { BiCopy } from "react-icons/bi";
+import { BiCalendar } from "react-icons/bi";
+import { BiCreditCard } from "react-icons/bi";
+import { BiUser } from "react-icons/bi";
+import { BiEnvelope } from "react-icons/bi";
+import { BiPhone } from "react-icons/bi";
+import { BiReceipt } from "react-icons/bi";
 
 const PaymentStatus = ({ paymentId, onRefresh }) => {
   const { paymentHistory } = useContext(PaymentContext);
@@ -32,14 +44,14 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'completed':
-        return <BiCheckCircle className="text-green-400 text-xl" />;
+        return <BiCheckCircle className="text-green-400 text-4xl" />;
       case 'failed':
       case 'cancelled':
-        return <BiXCircle className="text-red-400 text-xl" />;
+        return <BiXCircle className="text-red-400 text-4xl" />;
       case 'pending':
-        return <BiClock className="text-yellow-400 text-xl" />;
+        return <BiTime className="text-yellow-400 text-4xl" />;
       default:
-        return <BiClock className="text-gray-400 text-xl" />;
+        return <BiTime className="text-gray-400 text-4xl" />;
     }
   };
 
@@ -72,6 +84,25 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
     }
   };
 
+  const getStatusBgColor = (status) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-green-500/20 border-green-400/30';
+      case 'failed':
+      case 'cancelled':
+        return 'bg-red-500/20 border-red-400/30';
+      case 'pending':
+        return 'bg-yellow-500/20 border-yellow-400/30';
+      default:
+        return 'bg-gray-500/20 border-gray-400/30';
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    // You can add a toast notification here
+  };
+
   const formatPrice = (price) => `Rp ${Number(price || 0).toLocaleString("id-ID")}`;
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString('id-ID', {
@@ -85,180 +116,339 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-white text-lg">Memuat status pembayaran...</p>
+        </div>
       </div>
     );
   }
 
   if (!payment) {
     return (
-      <div className="text-center p-8">
-        <div className="text-gray-400 mb-4">Pembayaran tidak ditemukan</div>
-        <button
-          onClick={fetchPaymentStatus}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-        >
-          Refresh
-        </button>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <BiXCircle className="text-red-400 text-4xl" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-4">Pembayaran Tidak Ditemukan</h2>
+            <p className="text-blue-200 mb-8">ID pembayaran tidak valid atau telah dihapus</p>
+            <button
+              onClick={fetchPaymentStatus}
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105"
+            >
+              <BiRefresh className="inline mr-2" />
+              Coba Lagi
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Payment Status Header */}
-      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            {getStatusIcon(payment.status)}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-100">
-                {getStatusText(payment.status)}
-              </h3>
-              <p className={`text-sm ${getStatusColor(payment.status)}`}>
-                ID: {payment.id}
-              </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">Status Pembayaran</h1>
+          <p className="text-blue-200 text-lg">Detail transaksi pembayaran Anda</p>
+        </div>
+
+        {/* Status Card */}
+        <div className={`${getStatusBgColor(payment.status)} backdrop-blur-lg rounded-3xl p-8 border shadow-2xl`}>
+          <div className="text-center mb-8">
+            <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              {getStatusIcon(payment.status)}
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              {getStatusText(payment.status)}
+            </h2>
+            <p className="text-lg text-gray-300">
+              {payment.status === 'completed' && 'Pembayaran Anda telah berhasil diproses'}
+              {payment.status === 'pending' && 'Menunggu konfirmasi pembayaran'}
+              {payment.status === 'failed' && 'Pembayaran gagal diproses'}
+              {payment.status === 'cancelled' && 'Pembayaran telah dibatalkan'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <BiCalendar className="text-blue-400 text-xl" />
+                <h3 className="text-lg font-semibold text-white">Tanggal Transaksi</h3>
+              </div>
+              <p className="text-gray-300">{formatDate(payment.createdAt)}</p>
+            </div>
+
+            <div className="bg-white/5 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <BiCreditCard className="text-green-400 text-xl" />
+                <h3 className="text-lg font-semibold text-white">Total Pembayaran</h3>
+              </div>
+              <p className="text-2xl font-bold text-green-400">{formatPrice(payment.totalAmount)}</p>
             </div>
           </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-gray-400">ID Transaksi:</span>
+              <span className="text-white font-mono bg-white/10 px-3 py-1 rounded-lg">
+                {payment.id}
+              </span>
+            </div>
+            <button
+              onClick={() => copyToClipboard(payment.id)}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <BiCopy className="text-lg" />
+              <span className="text-sm">Copy</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Payment Details */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+          <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <BiReceipt className="text-blue-400" />
+            Detail Pembayaran
+          </h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Event Information */}
+            <div className="space-y-6">
+              <div className="bg-white/5 rounded-2xl p-6">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <BiReceipt className="text-purple-400" />
+                  Informasi Event
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-gray-400 text-sm">Nama Event</span>
+                    <p className="text-white font-medium">{payment.orderData?.eventName || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 text-sm">Tipe Tiket</span>
+                    <p className="text-white capitalize">{payment.orderData?.ticketType || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 text-sm">Jumlah Tiket</span>
+                    <p className="text-white">{payment.orderData?.amount || 0} tiket</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customer Information */}
+              <div className="bg-white/5 rounded-2xl p-6">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <BiUser className="text-green-400" />
+                  Informasi Customer
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <BiUser className="text-gray-400" />
+                    <div>
+                      <span className="text-gray-400 text-sm">Nama</span>
+                      <p className="text-white">{payment.orderData?.customerName || payment.paymentForm?.customerName || 'N/A'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <BiEnvelope className="text-gray-400" />
+                    <div>
+                      <span className="text-gray-400 text-sm">Email</span>
+                      <p className="text-white">{payment.orderData?.customerEmail || payment.paymentForm?.customerEmail || 'N/A'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <BiPhone className="text-gray-400" />
+                    <div>
+                      <span className="text-gray-400 text-sm">Telepon</span>
+                      <p className="text-white">{payment.orderData?.customerPhone || payment.paymentForm?.customerPhone || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Information */}
+            <div className="space-y-6">
+              <div className="bg-white/5 rounded-2xl p-6">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <BiCreditCard className="text-blue-400" />
+                  Metode Pembayaran
+                </h4>
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">
+                    {payment.paymentMethod?.icon || 
+                     (payment.paymentMethod?.type === 'bank' ? '🏦' : 
+                      payment.paymentMethod?.type === 'ewallet' ? '📱' : 
+                      payment.paymentMethod?.type === 'credit_card' ? '💳' : '💳')}
+                  </span>
+                  <div>
+                    <p className="text-white font-medium">
+                      {payment.paymentMethod?.name || 
+                       payment.paymentMethod?.type === 'bank' ? 'Bank Transfer' :
+                       payment.paymentMethod?.type === 'ewallet' ? 'E-Wallet' :
+                       payment.paymentMethod?.type === 'credit_card' ? 'Kartu Kredit' :
+                       payment.paymentMethod?.type || 'Pembayaran'}
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      {payment.paymentMethod?.type === 'bank' ? 'Transfer Bank' :
+                       payment.paymentMethod?.type === 'ewallet' ? 'Dompet Digital' :
+                       payment.paymentMethod?.type === 'credit_card' ? 'Kartu Kredit' :
+                       payment.paymentMethod?.type || 'Metode Pembayaran'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white/5 rounded-2xl p-6">
+                <h4 className="text-lg font-semibold text-white mb-4">Rincian Harga</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Subtotal</span>
+                    <span className="text-white">{formatPrice(payment.amount)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Biaya Admin</span>
+                    <span className="text-white">{formatPrice(payment.fee)}</span>
+                  </div>
+                  <div className="h-px bg-white/10 my-3" />
+                  <div className="flex justify-between text-lg font-bold">
+                    <span className="text-white">Total</span>
+                    <span className="text-green-400">{formatPrice(payment.totalAmount)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Instructions (if pending) */}
+        {payment.status === 'pending' && payment.paymentMethod && (
+          <div className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-lg rounded-3xl p-8 border border-blue-400/30 shadow-2xl">
+            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <BiCreditCard className="text-blue-400" />
+              Instruksi Pembayaran
+            </h3>
+            
+            {payment.paymentMethod.id === 'bank_transfer' && (
+              <div className="space-y-6">
+                <div className="text-lg text-blue-200">
+                  Transfer ke rekening berikut:
+                </div>
+                <div className="bg-white/10 rounded-2xl p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">Bank:</span>
+                        <span className="text-white font-medium">{payment.paymentForm.bankCode}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">No. Rekening:</span>
+                        <span className="text-white font-mono bg-white/10 px-3 py-1 rounded-lg">
+                          {payment.paymentForm.accountNumber}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">Atas Nama:</span>
+                        <span className="text-white font-medium">{payment.paymentForm.accountHolder}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-blue-200 text-sm mb-2">Jumlah Transfer</div>
+                        <div className="text-3xl font-bold text-white bg-green-500/20 px-6 py-3 rounded-xl">
+                          {formatPrice(payment.totalAmount)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {payment.paymentMethod.id === 'e_wallet' && (
+              <div className="space-y-6">
+                <div className="text-lg text-blue-200">
+                  Transfer ke e-wallet berikut:
+                </div>
+                <div className="bg-white/10 rounded-2xl p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">E-Wallet:</span>
+                        <span className="text-white font-medium">{payment.paymentForm.walletCode}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">Nomor:</span>
+                        <span className="text-white font-mono bg-white/10 px-3 py-1 rounded-lg">
+                          {payment.paymentForm.phoneNumber}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-blue-200 text-sm mb-2">Jumlah Transfer</div>
+                        <div className="text-3xl font-bold text-white bg-green-500/20 px-6 py-3 rounded-xl">
+                          {formatPrice(payment.totalAmount)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 p-4 bg-yellow-500/20 rounded-xl border border-yellow-400/30">
+              <div className="flex items-center gap-2 text-yellow-200">
+                <BiTime className="text-lg" />
+                <span className="font-medium">Pembayaran akan diverifikasi dalam 1x24 jam</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin Notes (if any) */}
+        {payment.adminNotes && (
+          <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 backdrop-blur-lg rounded-3xl p-6 border border-yellow-400/30 shadow-2xl">
+            <h4 className="text-lg font-semibold text-yellow-300 mb-3 flex items-center gap-2">
+              <BiTime className="text-lg" />
+              Catatan Admin
+            </h4>
+            <p className="text-yellow-200">{payment.adminNotes}</p>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={fetchPaymentStatus}
-            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+            className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
           >
-            <BiRefreshCw className="text-xl" />
+            <BiRefresh className="text-xl" />
+            Refresh Status
+          </button>
+          
+          <button
+            onClick={() => window.print()}
+            className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+          >
+            <BiDownload className="text-xl" />
+            Download PDF
+          </button>
+          
+          <button
+            onClick={() => copyToClipboard(window.location.href)}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
+          >
+            <BiShare className="text-xl" />
+            Share Link
           </button>
         </div>
-
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <div className="text-gray-400">Tanggal Pembayaran</div>
-            <div className="text-gray-100">{formatDate(payment.createdAt)}</div>
-          </div>
-          <div>
-            <div className="text-gray-400">Total Pembayaran</div>
-            <div className="text-gray-100 font-semibold">{formatPrice(payment.totalAmount)}</div>
-          </div>
-        </div>
       </div>
-
-      {/* Payment Details */}
-      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-        <h4 className="text-lg font-semibold text-gray-100 mb-4">Detail Pembayaran</h4>
-        
-        <div className="space-y-4">
-          <div>
-            <div className="text-sm text-gray-400">Metode Pembayaran</div>
-            <div className="text-gray-100 flex items-center gap-2">
-              <span className="text-lg">{payment.paymentMethod?.icon}</span>
-              {payment.paymentMethod?.name}
-            </div>
-          </div>
-
-          <div>
-            <div className="text-sm text-gray-400">Event</div>
-            <div className="text-gray-100">{payment.orderData?.eventName}</div>
-          </div>
-
-          <div>
-            <div className="text-sm text-gray-400">Tipe Tiket</div>
-            <div className="text-gray-100 capitalize">{payment.orderData?.ticketType}</div>
-          </div>
-
-          <div>
-            <div className="text-sm text-gray-400">Jumlah Tiket</div>
-            <div className="text-gray-100">{payment.orderData?.amount} tiket</div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="text-sm text-gray-400">Subtotal</div>
-              <div className="text-gray-100">{formatPrice(payment.amount)}</div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-400">Biaya Admin</div>
-              <div className="text-gray-100">{formatPrice(payment.fee)}</div>
-            </div>
-          </div>
-
-          <div className="h-px bg-white/10" />
-          
-          <div className="flex justify-between text-lg font-semibold">
-            <span className="text-gray-200">Total</span>
-            <span className="text-purple-300">{formatPrice(payment.totalAmount)}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Payment Instructions (if pending) */}
-      {payment.status === 'pending' && payment.paymentMethod && (
-        <div className="bg-blue-600/10 border border-blue-400/20 rounded-xl p-6">
-          <h4 className="text-lg font-semibold text-blue-300 mb-4">Instruksi Pembayaran</h4>
-          
-          {payment.paymentMethod.id === 'bank_transfer' && (
-            <div className="space-y-3">
-              <div className="text-sm text-blue-200">
-                Transfer ke rekening berikut:
-              </div>
-              <div className="bg-white/5 rounded-lg p-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-blue-200">Bank:</span>
-                    <span className="text-white">{payment.paymentForm.bankCode}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-200">No. Rekening:</span>
-                    <span className="text-white font-mono">{payment.paymentForm.accountNumber}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-200">Atas Nama:</span>
-                    <span className="text-white">{payment.paymentForm.accountHolder}</span>
-                  </div>
-                  <div className="flex justify-between font-semibold">
-                    <span className="text-blue-200">Jumlah:</span>
-                    <span className="text-white">{formatPrice(payment.totalAmount)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {payment.paymentMethod.id === 'e_wallet' && (
-            <div className="space-y-3">
-              <div className="text-sm text-blue-200">
-                Transfer ke e-wallet berikut:
-              </div>
-              <div className="bg-white/5 rounded-lg p-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-blue-200">E-Wallet:</span>
-                    <span className="text-white">{payment.paymentForm.walletCode}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-200">Nomor:</span>
-                    <span className="text-white font-mono">{payment.paymentForm.phoneNumber}</span>
-                  </div>
-                  <div className="flex justify-between font-semibold">
-                    <span className="text-blue-200">Jumlah:</span>
-                    <span className="text-white">{formatPrice(payment.totalAmount)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="text-xs text-blue-200 mt-4">
-            * Pembayaran akan diverifikasi dalam 1x24 jam
-          </div>
-        </div>
-      )}
-
-      {/* Admin Notes (if any) */}
-      {payment.adminNotes && (
-        <div className="bg-yellow-600/10 border border-yellow-400/20 rounded-xl p-4">
-          <h5 className="text-sm font-semibold text-yellow-300 mb-2">Catatan Admin</h5>
-          <p className="text-sm text-yellow-200">{payment.adminNotes}</p>
-        </div>
-      )}
     </div>
   );
 };

@@ -2,8 +2,8 @@ import { Poppins, Caveat } from "next/font/google";
 import "./globals.css";
 
 // contexts
-import EventProvider from "@/context/EventContext";
-import TicketProvider from "@/context/TicketContext";
+import { EventProvider } from "@/context/EventContext";
+import { TicketProvider } from "@/context/TicketContext";
 import { UserProvider } from "@/context/UserContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 

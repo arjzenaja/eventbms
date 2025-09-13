@@ -9,7 +9,20 @@ const TicketProvider = ({ children }) => {
   const [showMenu, setShowMenu] = useState(false); // state to manage menu visibility
   const [itemAmount, setItemAmount] = useState(1); // state to track item amount (quanity of items)
   const [totalPrice, setTotalPrice] = useState(0); // state to store the total price
-  const [checkoutData, setCheckoutData] = useState(null); //state to store the checkout data 
+  const [checkoutData, setCheckoutData] = useState(null); //state to store the checkout data
+
+  // Load checkout data from localStorage on mount
+  useEffect(() => {
+    const savedCheckoutData = localStorage.getItem('checkoutData');
+    if (savedCheckoutData) {
+      try {
+        setCheckoutData(JSON.parse(savedCheckoutData));
+      } catch (error) {
+        console.error('Error parsing checkout data:', error);
+        localStorage.removeItem('checkoutData');
+      }
+    }
+  }, []); 
 
   const initalizeEvent = (fetchEvent) => {
     setEvent(fetchEvent);
@@ -68,6 +81,8 @@ const TicketProvider = ({ children }) => {
     };
 
     setCheckoutData(ticketData); // in case if we want to use the data for the checkout page
+    // Save to localStorage for persistence across page navigation
+    localStorage.setItem('checkoutData', JSON.stringify(ticketData));
   };
 
   const increaseAmount = () => {
@@ -76,6 +91,11 @@ const TicketProvider = ({ children }) => {
 
   const decreaseAmount = () => {
     setItemAmount((prevAmount) => (prevAmount > 1 ? prevAmount -1 :1)); // if prevAmount is bigger then 1 you can decrease otherwise keep it to 1
+  }
+
+  const clearCheckoutData = () => {
+    setCheckoutData(null);
+    localStorage.removeItem('checkoutData');
   }
 
   return (
@@ -94,6 +114,7 @@ const TicketProvider = ({ children }) => {
        initalizeEvent,
        increaseAmount,
        decreaseAmount,
+       clearCheckoutData,
       }}
        >
       {children}
@@ -101,4 +122,5 @@ const TicketProvider = ({ children }) => {
   );
 };
 
+export { TicketProvider };
 export default TicketProvider;

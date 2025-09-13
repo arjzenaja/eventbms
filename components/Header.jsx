@@ -79,7 +79,7 @@ const Header = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white rounded-full transition-all duration-300 group-hover:w-full"></span>
                 </Link>
                 <Link 
-                  href="/destinations" 
+                  href="/panduan-dolan-banyumas" 
                   className="relative text-gray-300 hover:text-white transition-all duration-300 font-medium group"
                 >
                   <span className="relative z-10">Panduan Kami</span>
@@ -195,7 +195,7 @@ const Header = () => {
                 Tentang Kami
               </Link>
               <Link 
-                href="/destinations" 
+                href="/panduan-dolan-banyumas" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-3 px-4 text-gray-300 hover:text-white transition-all duration-300 font-medium rounded-lg hover:bg-gray-800/50"
               >

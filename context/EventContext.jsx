@@ -171,5 +171,3 @@ export const EventProvider = ({ children }) => {
     </EventContext.Provider>
   );
 };
-
-export default EventProvider;

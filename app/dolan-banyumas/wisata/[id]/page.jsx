@@ -10,6 +10,8 @@ import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import TourismManager from "../../../../components/TourismManager";
 import WisataPackages from "../../../../components/WisataPackages";
+import BuyTicket from "../../../../components/BuyTicket";
+import { TicketProvider } from "../../../../context/TicketContext";
 
 const WisataDetail = () => {
   const { id } = useParams();
@@ -18,7 +20,6 @@ const WisataDetail = () => {
   const [error, setError] = useState(null);
   const [mapDistance, setMapDistance] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     const fetchDestination = async () => {
@@ -477,104 +478,20 @@ const WisataDetail = () => {
                     </div>
                   </div>
                   
-                  {/* Price Display */}
-                  <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-4 mb-6 border border-blue-100 dark:border-blue-800">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Harga per orang</span>
-                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
-                          {destination.entrance_fee}
-                        </div>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quantity Selector */}
-                  <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-4 mb-6 border border-blue-100 dark:border-blue-800">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah Tiket</span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Pilih jumlah tiket yang diinginkan</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <button 
-                          onClick={() => setQty(Math.max(1, qty - 1))}
-                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                          </svg>
-                        </button>
-                        <div className="min-w-[60px] text-center">
-                          <span className="text-2xl font-bold text-gray-800 dark:text-white">{qty}</span>
-                        </div>
-                        <button 
-                          onClick={() => setQty(qty + 1)}
-                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Total Price */}
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl p-4 mb-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm opacity-90">Total Pembayaran</span>
-                        <div className="text-2xl font-bold mt-1">
-                          {(() => {
-                            const price = Number(destination.entrance_fee.replace(/[^\d]/g, '')) || 0;
-                            return `Rp ${(price * qty).toLocaleString('id-ID')}`;
-                          })()}
-                        </div>
-                      </div>
-                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <button
-                    onClick={() => {
-                      const price = Number(destination.entrance_fee.replace(/[^\d]/g, '')) || 0;
-                      const total = `Rp ${(price * qty).toLocaleString('id-ID')}`;
-                      const msg = `Halo, saya ingin membeli ${qty} tiket untuk ${destination.title}. Total: ${total}`;
-                      
-                      const whatsappContact = contactInfo.find(c => c.type === 'whatsapp');
-                      const phoneContact = contactInfo.find(c => c.type === 'phone');
-                      
-                      if (whatsappContact) {
-                        window.open(`https://wa.me/${whatsappContact.value.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
-                      } else if (phoneContact) {
-                        window.location.href = `tel:${phoneContact.value}`;
-                      }
-                    }}
-                    className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center gap-3 text-lg"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                    </svg>
-                    <span>Beli Tiket Sekarang</span>
-                  </button>
-
-                  {/* Additional Info */}
-                  <div className="text-center mt-4">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      💳 Pembayaran aman • ⚡ Proses cepat • 🎫 Tiket digital
-                    </p>
-                  </div>
+                  {/* Ticket Purchase Section */}
+                  <TicketProvider>
+                    <BuyTicket event={{
+                      id: destination.id,
+                      title: destination.title,
+                      img_lg: destination.img_lg,
+                      location: destination.location,
+                      seats: [{
+                        seat: 'general',
+                        price: Number(destination.entrance_fee.replace(/[^\d]/g, '')) || 0,
+                        desc: 'Tiket masuk umum'
+                      }]
+                    }} />
+                  </TicketProvider>
                 </div>
               )}
 

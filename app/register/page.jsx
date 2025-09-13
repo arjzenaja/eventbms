@@ -87,19 +87,50 @@ export default function UserRegister() {
       const data = await response.json();
       
       if (data.success) {
-        // Do not log in yet; require email verification first
+        // Send OTP after successful registration
         try {
-          localStorage.setItem('pendingVerifyEmail', JSON.stringify({
-            email: formData.email,
-            token: data?.meta?.verify_token || null
-          }));
-          localStorage.setItem('flashToast', JSON.stringify({
-            type: 'info',
-            title: 'Verifikasi Diperlukan',
-            message: 'Kami telah mengirim tautan verifikasi ke email Anda. Silakan verifikasi untuk melanjutkan.'
-          }));
-        } catch (_) {}
-        router.push('/verify-email');
+          const otpResponse = await fetch('/api/users/send-otp', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: formData.email,
+              name: formData.name
+            }),
+          });
+
+          const otpData = await otpResponse.json();
+
+          if (otpData.success) {
+            // Store data for OTP verification
+            localStorage.setItem('pendingVerifyEmail', JSON.stringify({
+              email: formData.email,
+              name: formData.name
+            }));
+            
+            // Show notification first
+            try {
+              localStorage.setItem('flashToast', JSON.stringify({
+                type: 'info',
+                title: 'Kode OTP Dikirim',
+                message: 'Kami telah mengirim kode OTP ke email Anda. Silakan verifikasi untuk melanjutkan.'
+              }));
+            } catch (error) {
+              console.warn('Could not set flash toast:', error);
+            }
+            
+            // Small delay to ensure notification is set before redirect
+            setTimeout(() => {
+              router.push('/verify-otp');
+            }, 100);
+          } else {
+            setError(otpData.message || 'Gagal mengirim kode OTP');
+          }
+        } catch (otpError) {
+          console.error('OTP send error:', otpError);
+          setError('Registrasi berhasil, tetapi gagal mengirim kode OTP. Silakan coba login.');
+        }
       } else {
         setError(data.message);
       }

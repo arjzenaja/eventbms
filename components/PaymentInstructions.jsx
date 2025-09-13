@@ -18,6 +18,20 @@ const PaymentInstructions = ({ paymentMethod, amount, paymentForm }) => {
   };
 
   const renderBankTransferInstructions = () => {
+    if (!paymentMethod.banks || !Array.isArray(paymentMethod.banks)) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400">Data bank tidak tersedia</div>
+        </div>
+      );
+    }
+    if (!paymentForm || !paymentForm.bankCode) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400">Data pembayaran tidak lengkap</div>
+        </div>
+      );
+    }
     const bank = paymentMethod.banks.find(b => b.code === paymentForm.bankCode);
     if (!bank) return null;
 
@@ -106,6 +120,20 @@ const PaymentInstructions = ({ paymentMethod, amount, paymentForm }) => {
   };
 
   const renderEWalletInstructions = () => {
+    if (!paymentMethod.wallets || !Array.isArray(paymentMethod.wallets)) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400">Data e-wallet tidak tersedia</div>
+        </div>
+      );
+    }
+    if (!paymentForm || !paymentForm.walletCode) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400">Data pembayaran tidak lengkap</div>
+        </div>
+      );
+    }
     const wallet = paymentMethod.wallets.find(w => w.code === paymentForm.walletCode);
     if (!wallet) return null;
 
@@ -263,6 +291,14 @@ const PaymentInstructions = ({ paymentMethod, amount, paymentForm }) => {
     return (
       <div className="text-center py-8">
         <div className="text-gray-400">Metode pembayaran tidak ditemukan</div>
+      </div>
+    );
+  }
+
+  if (!paymentForm) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-gray-400">Data pembayaran tidak ditemukan</div>
       </div>
     );
   }

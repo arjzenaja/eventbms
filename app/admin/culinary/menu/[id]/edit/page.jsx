@@ -1,4 +1,4 @@
-'use client';
+  'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
@@ -23,6 +23,8 @@ export default function EditMenuItem() {
     price: '',
     priceIced: '',
     priceHot: '',
+    priceBrown: '',
+    priceCheese: '',
     cookingTime: '',
     category: 'Makanan Utama',
     destinationId: '',
@@ -195,6 +197,8 @@ export default function EditMenuItem() {
           price: menuItem.price || '',
           priceIced: menuItem.priceIced || '',
           priceHot: menuItem.priceHot || '',
+          priceBrown: menuItem.priceBrown || '',
+          priceCheese: menuItem.priceCheese || '',
           cookingTime: menuItem.cookingTime || '',
           category: menuItem.category || 'Makanan Utama',
           destinationId: menuItem.destinationId || '',
@@ -350,12 +354,23 @@ export default function EditMenuItem() {
         'Tea',
         'Classic Coffee',
         'Milk Base',
-        'Non Coffe+'
+        'Non Coffe+',
+        'Minuman',
+        'Kopi'
+      ];
+      
+      const steakDualPricingCategories = [
+        'Steak Ala Waroeng'
       ];
       
       if (dualPricingCategories.includes(formData.category)) {
         if (!formData.priceIced && !formData.priceHot) {
           alert('Untuk minuman dengan dual pricing, minimal salah satu harga (Iced atau Hot) harus diisi');
+          return;
+        }
+      } else if (steakDualPricingCategories.includes(formData.category)) {
+        if (!formData.priceBrown && !formData.priceCheese) {
+          alert('Untuk Steak Ala Waroeng, minimal salah satu harga (Brown Sauce atau Cheese Sauce) harus diisi');
           return;
         }
       } else {
@@ -512,7 +527,7 @@ export default function EditMenuItem() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Harga dan Waktu</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {(formData.category === 'THE ESPRESSO BASED' || formData.category === 'Senja Espresso Based' || formData.category === 'SHAKEN SWEET & CREAMY Series' || formData.category === 'SHAKEN FRESH Presso' || formData.category === 'Tea Series' || formData.category === 'Coffee Series' || formData.category === 'Milk Series' || formData.category === 'Fruits Series' || formData.category === 'Non Coffee' || formData.category === 'Tea' || formData.category === 'Classic Coffee' || formData.category === 'Milk Base' || formData.category === 'Non Coffe+') ? (
+                    {(formData.category === 'THE ESPRESSO BASED' || formData.category === 'Senja Espresso Based' || formData.category === 'SHAKEN SWEET & CREAMY Series' || formData.category === 'SHAKEN FRESH Presso' || formData.category === 'Tea Series' || formData.category === 'Coffee Series' || formData.category === 'Milk Series' || formData.category === 'Fruits Series' || formData.category === 'Non Coffee' || formData.category === 'Tea' || formData.category === 'Classic Coffee' || formData.category === 'Milk Base' || formData.category === 'Non Coffe+' || formData.category === 'Minuman' || formData.category === 'Kopi') ? (
                       <>
                         <div>
                           <label htmlFor="priceIced" className="block text-sm font-medium text-gray-700">
@@ -542,6 +557,39 @@ export default function EditMenuItem() {
                             onChange={handleInputChange}
                             className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             placeholder="24000"
+                          />
+                        </div>
+                      </>
+                    ) : (formData.category === 'Steak Ala Waroeng') ? (
+                      <>
+                        <div>
+                          <label htmlFor="priceBrown" className="block text-sm font-medium text-gray-700">
+                            Harga Brown Sauce (Rp) *
+                          </label>
+                          <input
+                            type="number"
+                            id="priceBrown"
+                            name="priceBrown"
+                            min="0"
+                            value={formData.priceBrown}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="21818"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="priceCheese" className="block text-sm font-medium text-gray-700">
+                            Harga Cheese Sauce (Rp) *
+                          </label>
+                          <input
+                            type="number"
+                            id="priceCheese"
+                            name="priceCheese"
+                            min="0"
+                            value={formData.priceCheese}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="25455"
                           />
                         </div>
                       </>

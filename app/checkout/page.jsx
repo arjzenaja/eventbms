@@ -3,6 +3,7 @@ import React from "react";
 import PaymentCheckout from "@/components/PaymentCheckout";
 import { PaymentProvider } from "@/context/PaymentContext";
 import { TicketProvider } from "@/context/TicketContext";
+import { UserProvider } from "@/context/UserContext";
 
 export default function CheckoutPage() {
   const handleBack = () => {
@@ -17,12 +18,14 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-      <TicketProvider>
-        <PaymentProvider>
-          <PaymentCheckout onBack={handleBack} onSuccess={handleSuccess} />
-        </PaymentProvider>
-      </TicketProvider>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pt-24">
+      <UserProvider>
+        <TicketProvider>
+          <PaymentProvider>
+            <PaymentCheckout onBack={handleBack} onSuccess={handleSuccess} />
+          </PaymentProvider>
+        </TicketProvider>
+      </UserProvider>
     </div>
   );
 }

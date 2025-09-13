@@ -161,19 +161,24 @@ export default function UserLogin() {
       const data = await response.json();
       
       if (data.success) {
-        login(data.user);
-        
-        // Show success notification and redirect immediately
+        // Show success notification first
         try {
           localStorage.setItem('flashToast', JSON.stringify({
             type: 'success',
             title: 'Login Berhasil!',
             message: `Selamat datang kembali, ${data.user.name}!`
           }));
-        } catch (_) {}
+        } catch (error) {
+          console.warn('Could not set flash toast:', error);
+        }
         
-        // Redirect to home page immediately
-        router.push('/');
+        // Login user
+        login(data.user);
+        
+        // Small delay to ensure notification is set before redirect
+        setTimeout(() => {
+          router.push('/');
+        }, 100);
       } else {
         if (data.requires_verification) {
           try {
