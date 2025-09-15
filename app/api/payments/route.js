@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { validateAdminAuth, createUnauthorizedResponse } from "../../../lib/admin-auth";
 
 const dbPath = path.join(process.cwd(), "db.json");
 
@@ -29,6 +30,12 @@ const writeDatabase = (data) => {
 // GET - Get all payments or specific payment
 export async function GET(request) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (!authResult.isValid) {
+      return createUnauthorizedResponse(authResult.error);
+    }
+
     const { searchParams } = new URL(request.url);
     const paymentId = searchParams.get("id");
     const userId = searchParams.get("userId");
@@ -69,34 +76,51 @@ export async function GET(request) {
 // POST - Create new payment
 export async function POST(request) {
   try {
+    // For payment creation, we don't require admin authentication
+    // This is called by customers during checkout
     const body = await request.json();
+    console.log('Received payment data:', JSON.stringify(body, null, 2));
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
+    
     const {
       orderData,
       paymentMethod,
       paymentForm,
       amount,
       fee,
-      userId
+      userId,
+      paymentProof
     } = body;
 
     // Validate required fields
-    if (!orderData || !paymentMethod || !amount) {
+    if (!orderData || !paymentMethod || amount === undefined || amount === null) {
+      console.error('Missing required fields:', { 
+        orderData: !!orderData, 
+        paymentMethod: !!paymentMethod, 
+        amount: amount,
+        amountType: typeof amount
+      });
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing required fields", details: { orderData: !!orderData, paymentMethod: !!paymentMethod, amount } },
         { status: 400 }
       );
     }
 
     const db = readDatabase();
+    console.log('Database loaded:', { hasPayments: !!db.payments, paymentsCount: db.payments?.length || 0 });
+    
     if (!db.payments) {
+      console.log('Creating payments array...');
       db.payments = [];
     }
 
     // Generate unique payment ID
     const paymentId = `PAY-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    console.log('Generated payment ID:', paymentId);
 
     // Calculate total amount
     const totalAmount = amount + (fee || 0);
+    console.log('Calculated total amount:', totalAmount);
 
     // Create payment record
     const payment = {
@@ -109,22 +133,36 @@ export async function POST(request) {
       fee: fee || 0,
       totalAmount,
       status: "pending",
+      paymentProof: paymentProof || null,
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
       updatedAt: new Date().toISOString()
     };
 
+    console.log('Created payment object:', JSON.stringify(payment, null, 2));
+
     // Add to database
+    console.log('Adding payment to database array...');
+    console.log('Current payments count:', db.payments.length);
     db.payments.push(payment);
+    console.log('After adding payment count:', db.payments.length);
 
     // Write to database
-    if (!writeDatabase(db)) {
+    console.log('Attempting to write to database...');
+    const writeResult = writeDatabase(db);
+    console.log('Write result:', writeResult);
+    
+    if (!writeResult) {
+      console.error('Failed to write payment to database');
       return NextResponse.json(
-        { error: "Failed to save payment" },
+        { error: "Failed to save payment", details: "Database write failed" },
         { status: 500 }
       );
     }
 
+    console.log('Payment created successfully:', payment.id);
+    console.log('Total payments in database:', db.payments.length);
+    
     return NextResponse.json({
       success: true,
       payment,
@@ -133,13 +171,23 @@ export async function POST(request) {
 
   } catch (error) {
     console.error("Error creating payment:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error stack:", error.stack);
+    return NextResponse.json({ 
+      error: "Internal server error", 
+      details: error.message 
+    }, { status: 500 });
   }
 }
 
 // PUT - Update payment status
 export async function PUT(request) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (!authResult.isValid) {
+      return createUnauthorizedResponse(authResult.error);
+    }
+
     const body = await request.json();
     const { paymentId, status, notes } = body;
 
@@ -189,6 +237,12 @@ export async function PUT(request) {
 // DELETE - Delete payment
 export async function DELETE(request) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (!authResult.isValid) {
+      return createUnauthorizedResponse(authResult.error);
+    }
+
     const { searchParams } = new URL(request.url);
     const paymentId = searchParams.get("id");
 

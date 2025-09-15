@@ -1,4 +1,5 @@
 import { EventContext } from '@/context/EventContext';
+import { useTheme } from '@/context/ThemeContext';
 import React, { useContext } from 'react';
 
 import {
@@ -15,6 +16,7 @@ import { BiMap } from 'react-icons/bi';
 
 const EventLocation = () => {
   const { events, selectedLocation, setSelectedLocation } = useContext(EventContext);
+  const { isDark } = useTheme();
   
   // Ensure events is an array and filter out invalid locations
   const validLocations = Array.isArray(events) 
@@ -38,21 +40,20 @@ const EventLocation = () => {
   console.log("Unique locations:", uniqueLocations);
 
   return (
-    <div className='flex items-center gap-[10px] w-full xl:w-[190px] select-none'>
-      {/* icon */}
-      <div className='text-lg text-[#3B82F6]'>
-        <BiMap />
+    <div className='flex items-center gap-3 w-full select-none'>
+      <div className="text-blue-400">
+        <BiMap className="w-5 h-5" />
       </div>
       <Select
         value={selectedLocation}
         onValueChange={(value) => setSelectedLocation(value)}
       >
-        <SelectTrigger className="bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 text-white shadow-none font-medium flex items-center justify-between">
+        <SelectTrigger className={`bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 ${isDark ? 'text-white' : 'text-gray-900'} shadow-none font-medium flex items-center justify-between`}>
           <SelectValue placeholder="Cari lokasi" />
         </SelectTrigger>
-        <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
+        <SelectContent className="z-30 bg-white/95 backdrop-blur-md border border-gray-200/30 shadow-xl rounded-lg">
           <SelectGroup>
-            <SelectLabel className="font-semibold text-gray-900 dark:text-white px-3 py-2">Location</SelectLabel>
+            <SelectLabel className="font-semibold text-gray-900 px-3 py-2">Location</SelectLabel>
             {uniqueLocations
               .filter(location => location && typeof location === 'string' && location.trim() !== '')
               .map((location, index) => {
@@ -65,7 +66,7 @@ const EventLocation = () => {
                 }
                 
                 return (
-                  <SelectItem key={`location-${value}-${index}`} value={value} className="text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer px-3 py-2">
+                  <SelectItem key={`location-${value}-${index}`} value={value} className="text-gray-900 hover:bg-blue-50 cursor-pointer px-3 py-2">
                     {location}
                   </SelectItem>
                 );

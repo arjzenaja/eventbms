@@ -61,8 +61,8 @@ const BuyTicket = ({ event }) => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-semibold text-gray-100">Pilih Kursi</div>
-            <div className="text-xs text-gray-400">Harga per kursi</div>
+            <div className="text-sm font-semibold text-gray-800 dark:text-gray-100">Pilih Kursi</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Harga per kursi</div>
           </div>
         </div>
 
@@ -77,29 +77,29 @@ const BuyTicket = ({ event }) => {
                   onClick={() => handleSeat(s.seat, s.price)}
                   className={`w-full rounded-xl border px-4 py-3 flex items-start justify-between gap-3 transition-all text-left ${
                     isSelected
-                      ? "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-400/60 shadow"
-                      : "bg-white/5 border-white/10 hover:bg-white/10"
+                      ? "bg-gradient-to-r from-purple-100/80 to-pink-100/80 dark:from-purple-600/20 dark:to-pink-600/20 border-purple-300/60 dark:border-purple-400/60 shadow"
+                      : "bg-gray-50/80 dark:bg-white/5 border-gray-200/60 dark:border-white/10 hover:bg-gray-100/80 dark:hover:bg-white/10"
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <span
                       className={`mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border ${
-                        isSelected ? "bg-purple-600 border-purple-500" : "border-white/40"
+                        isSelected ? "bg-purple-600 border-purple-500" : "border-gray-300/60 dark:border-white/40"
                       }`}
                     >
                       {isSelected && <BiCheck className="text-white text-sm" />}
                     </span>
                     <div>
-                      <div className="font-semibold capitalize text-gray-100">{s.seat}</div>
+                      <div className="font-semibold capitalize text-gray-800 dark:text-gray-100">{s.seat}</div>
                       {s.desc && (
-                        <div className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                        <div className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-0.5">
                           <BiInfoCircle className="w-3.5 h-3.5" /> {s.desc}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className={`text-sm font-semibold ${isSelected ? "text-purple-300" : "text-gray-200"}`}>
+                  <div className={`text-sm font-semibold ${isSelected ? "text-purple-600 dark:text-purple-300" : "text-gray-700 dark:text-gray-200"}`}>
                     {formatPrice(s.price)}
                   </div>
                 </button>
@@ -107,15 +107,15 @@ const BuyTicket = ({ event }) => {
             })}
           </div>
         ) : (
-          <div className="text-sm text-gray-300">Belum ada data kursi.</div>
+          <div className="text-sm text-gray-600 dark:text-gray-300">Belum ada data kursi.</div>
         )}
       </div>
 
       {/* Price list moved to EventPackages component */}
 
       {/* Quantity */}
-      <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/10 px-3 py-2">
-        <div className="text-sm text-gray-300">Jumlah</div>
+      <div className="flex items-center justify-between rounded-xl bg-gray-50/80 dark:bg-white/5 border border-gray-200/60 dark:border-white/10 px-3 py-2">
+        <div className="text-sm text-gray-700 dark:text-gray-300">Jumlah</div>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -124,7 +124,7 @@ const BuyTicket = ({ event }) => {
           >
             <BiMinus className="text-white" />
           </button>
-          <div className="min-w-[24px] text-center font-semibold tabular-nums">{itemAmount}</div>
+          <div className="min-w-[24px] text-center font-semibold tabular-nums text-gray-800 dark:text-gray-100">{itemAmount}</div>
           <button
             type="button"
             onClick={increaseAmount}
@@ -136,23 +136,23 @@ const BuyTicket = ({ event }) => {
       </div>
 
       {/* Summary */}
-      <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-3">
+      <div className="rounded-xl bg-gray-50/80 dark:bg-white/5 border border-gray-200/60 dark:border-white/10 px-4 py-3">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-300">Kursi dipilih</span>
-          <span className="font-semibold text-gray-100">{seat?.seat ? seat.seat : "-"}</span>
+          <span className="text-gray-600 dark:text-gray-300">Kursi dipilih</span>
+          <span className="font-semibold text-gray-800 dark:text-gray-100">{seat?.seat ? seat.seat : "-"}</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-1">
-          <span className="text-gray-300">Harga per kursi</span>
-          <span className="font-semibold text-gray-100">{seat?.price ? formatPrice(seat.price) : "-"}</span>
+          <span className="text-gray-600 dark:text-gray-300">Harga per kursi</span>
+          <span className="font-semibold text-gray-800 dark:text-gray-100">{seat?.price ? formatPrice(seat.price) : "-"}</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-1">
-          <span className="text-gray-300">Jumlah</span>
-          <span className="font-semibold text-gray-100">{itemAmount}</span>
+          <span className="text-gray-600 dark:text-gray-300">Jumlah</span>
+          <span className="font-semibold text-gray-800 dark:text-gray-100">{itemAmount}</span>
         </div>
-        <div className="h-px bg-white/10 my-3" />
+        <div className="h-px bg-gray-200/60 dark:bg-white/10 my-3" />
         <div className="flex items-center justify-between text-base">
-          <span className="font-semibold text-gray-200">Total</span>
-          <span className="font-extrabold text-purple-300">{formatPrice(totalPrice)}</span>
+          <span className="font-semibold text-gray-700 dark:text-gray-200">Total</span>
+          <span className="font-extrabold text-purple-600 dark:text-purple-300">{formatPrice(totalPrice)}</span>
         </div>
       </div>
 

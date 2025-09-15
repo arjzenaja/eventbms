@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { BiCart, BiStar, BiTime, BiMoney } from 'react-icons/bi';
 import { FaWhatsapp } from 'react-icons/fa';
 
-const MenuCard = ({ menu, onBuyClick }) => {
+const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   // Define dual pricing categories at component level
@@ -28,6 +28,17 @@ const MenuCard = ({ menu, onBuyClick }) => {
     e.stopPropagation();
     if (onBuyClick) {
       onBuyClick(menu);
+    }
+  };
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (onAddToCart) {
+      onAddToCart(menu);
+    } else {
+      alert(`${menu.name} ditambahkan ke keranjang!`);
     }
   };
 
@@ -165,20 +176,30 @@ const MenuCard = ({ menu, onBuyClick }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2">
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 group-hover:scale-105"
+            >
+              <BiCart className="text-lg" />
+              Tambah ke Keranjang
+            </button>
+            <button
+              onClick={handleWhatsAppClick}
+              className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-xl transition-all duration-200 group-hover:scale-105"
+              title="Pesan via WhatsApp"
+            >
+              <FaWhatsapp className="text-lg" />
+            </button>
+          </div>
+          
           <button
             onClick={handleBuyClick}
-            className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 group-hover:scale-105"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 group-hover:scale-105"
           >
             <BiCart className="text-lg" />
-            Beli Menu
-          </button>
-          <button
-            onClick={handleWhatsAppClick}
-            className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-xl transition-all duration-200 group-hover:scale-105"
-            title="Pesan via WhatsApp"
-          >
-            <FaWhatsapp className="text-lg" />
+            Beli Langsung
           </button>
         </div>
 

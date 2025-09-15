@@ -27,12 +27,14 @@ const Home = () => {
       ) : (
         <div className="relative">
           {/* Features Section */}
-          <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 relative overflow-hidden">
+          <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900/60 dark:via-blue-900/40 dark:to-indigo-900/50 relative overflow-hidden">
             {/* Background Elements */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-500 rounded-full blur-3xl"></div>
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-slate-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-blue-300/30 to-indigo-300/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-indigo-300/30 to-slate-300/30 rounded-full blur-3xl animate-pulse delay-2000"></div>
+              <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+              <div className="absolute bottom-1/3 left-1/4 w-56 h-56 bg-gradient-to-br from-slate-200/30 to-blue-200/30 rounded-full blur-3xl animate-pulse delay-1500"></div>
             </div>
             
             <div className="container mx-auto px-4 relative z-10">

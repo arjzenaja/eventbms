@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PaymentSuccess from "@/components/PaymentSuccess";
 import { PaymentProvider } from "@/context/PaymentContext";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function PaymentSuccessWrapper() {
   const searchParams = useSearchParams();
+  const { theme } = useTheme();
   const [paymentData, setPaymentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -62,8 +64,12 @@ export default function PaymentSuccessWrapper() {
     // Clear payment data from localStorage
     if (typeof window !== 'undefined') {
       localStorage.removeItem('lastPaymentData');
-      // Navigate to events page
-      window.location.href = '/events';
+      // Navigate to appropriate page based on order type
+      if (paymentData?.items) {
+        window.location.href = '/dolan-banyumas';
+      } else {
+        window.location.href = '/events';
+      }
     }
   };
 
@@ -78,8 +84,14 @@ export default function PaymentSuccessWrapper() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+      <div className={`min-h-screen flex items-center justify-center ${
+        theme === 'dark' 
+          ? 'bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900' 
+          : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
+      }`}>
+        <div className={`w-8 h-8 border-2 border-t-transparent rounded-full animate-spin ${
+          theme === 'dark' ? 'border-purple-400' : 'border-blue-500'
+        }`} />
       </div>
     );
   }

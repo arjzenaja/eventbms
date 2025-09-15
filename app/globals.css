@@ -12,29 +12,87 @@
   display: none;  /* Safari and Chrome */
 }
 
+/* Global scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.4) 100%);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.6) 100%);
+  transform: scaleY(1.1);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.4) 0%, rgba(37, 99, 235, 0.5) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.6) 0%, rgba(37, 99, 235, 0.7) 100%);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(59, 130, 246, 0.4) transparent;
+}
+
 /* Dropdown scrollbar styles */
 select::-webkit-scrollbar {
   width: 8px;
 }
 
 select::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: rgb(243 244 246);
   border-radius: 4px;
 }
 
+.dark select::-webkit-scrollbar-track {
+  background: rgb(55 65 81);
+}
+
 select::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: rgb(209 213 219);
   border-radius: 4px;
   transition: background 0.3s ease;
 }
 
+.dark select::-webkit-scrollbar-thumb {
+  background: rgb(107 114 128);
+}
+
 select::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: rgb(156 163 175);
+}
+
+.dark select::-webkit-scrollbar-thumb:hover {
+  background: rgb(75 85 99);
 }
 
 select {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f3f4f6;
+  scrollbar-color: rgb(209 213 219) rgb(243 244 246);
+}
+
+.dark select {
+  scrollbar-color: rgb(107 114 128) rgb(55 65 81);
 }
 
 /* Thumbnail carousel scrollbar styles */

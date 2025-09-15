@@ -9,10 +9,12 @@ import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import LocationInfo from "../../../../components/LocationInfo";
+import { useTheme } from "../../../../context/ThemeContext";
 
 
 const PenginapanDetail = () => {
   const { id } = useParams();
+  const { isDark } = useTheme();
   const [destination, setDestination] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -179,18 +181,18 @@ const PenginapanDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-800 via-gray-700 to-zinc-800 flex items-center justify-center relative overflow-hidden">
+      <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-800 via-gray-700 to-zinc-800' : 'from-blue-100 via-blue-200 to-blue-300'} flex items-center justify-center relative overflow-hidden`}>
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-600/20 via-gray-500/15 to-zinc-600/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-slate-600/20 via-gray-500/15 to-zinc-600/20' : 'from-blue-200/30 via-blue-300/20 to-blue-400/20'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/10' : 'from-white/20'} via-transparent to-transparent`}></div>
         
         <div className="text-center relative z-10">
           <div className="relative">
-            <div className="w-20 h-20 border-4 border-slate-400 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-slate-300 rounded-full animate-spin mx-auto" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+            <div className={`w-20 h-20 border-4 ${isDark ? 'border-slate-400' : 'border-blue-400'} border-t-transparent rounded-full animate-spin mx-auto mb-6`}></div>
+            <div className={`absolute inset-0 w-20 h-20 border-4 border-transparent ${isDark ? 'border-t-slate-300' : 'border-t-blue-300'} rounded-full animate-spin mx-auto`} style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
           </div>
-          <div className="text-slate-100 text-xl font-medium">Memuat informasi penginapan...</div>
-          <div className="text-slate-300 text-sm mt-2">Mohon tunggu sebentar</div>
+          <div className={`${isDark ? 'text-slate-100' : 'text-slate-800'} text-xl font-medium`}>Memuat informasi penginapan...</div>
+          <div className={`${isDark ? 'text-slate-300' : 'text-slate-600'} text-sm mt-2`}>Mohon tunggu sebentar</div>
         </div>
       </div>
     );
@@ -198,22 +200,22 @@ const PenginapanDetail = () => {
 
   if (error || !destination) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-800 via-gray-700 to-zinc-800 flex items-center justify-center relative overflow-hidden">
+      <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-800 via-gray-700 to-zinc-800' : 'from-blue-100 via-blue-200 to-blue-300'} flex items-center justify-center relative overflow-hidden`}>
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-600/20 via-gray-500/15 to-zinc-600/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-slate-600/20 via-gray-500/15 to-zinc-600/20' : 'from-blue-200/30 via-blue-300/20 to-blue-400/20'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/10' : 'from-white/20'} via-transparent to-transparent`}></div>
         
         <div className="text-center relative z-10">
-          <div className="w-32 h-32 bg-slate-500/20 rounded-full flex items-center justify-center mx-auto mb-8 backdrop-blur-sm border border-slate-500/30">
-            <svg className="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`w-32 h-32 ${isDark ? 'bg-slate-500/20 border-slate-500/30' : 'bg-blue-500/20 border-blue-500/30'} rounded-full flex items-center justify-center mx-auto mb-8 backdrop-blur-sm border`}>
+            <svg className={`w-16 h-16 ${isDark ? 'text-slate-400' : 'text-blue-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold text-slate-100 mb-4">Penginapan Tidak Ditemukan</h1>
-          <p className="text-slate-300 mb-8 text-lg">Penginapan yang Anda cari tidak ditemukan atau telah dihapus.</p>
+          <h1 className={`text-4xl font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'} mb-4`}>Penginapan Tidak Ditemukan</h1>
+          <p className={`${isDark ? 'text-slate-300' : 'text-slate-600'} mb-8 text-lg`}>Penginapan yang Anda cari tidak ditemukan atau telah dihapus.</p>
           <button 
             onClick={() => window.history.back()} 
-            className="bg-gradient-to-r from-slate-600 to-gray-600 hover:from-slate-700 hover:to-gray-700 text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-2xl"
+            className={`bg-gradient-to-r ${isDark ? 'from-slate-600 to-gray-600 hover:from-slate-700 hover:to-gray-700' : 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'} text-white px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-semibold text-lg shadow-2xl`}
           >
             ← Kembali
           </button>
@@ -223,21 +225,21 @@ const PenginapanDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-zinc-900">
+    <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-900 via-gray-800 to-zinc-900' : 'from-blue-50 via-blue-100 to-blue-200'}`}>
       {/* Hero Section with Background Image */}
       <div className="relative pt-20 pb-32 overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-600/20 via-gray-500/15 to-zinc-600/20"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-slate-600/20 via-gray-500/15 to-zinc-600/20' : 'from-blue-200/30 via-blue-300/20 to-blue-400/20'}`}></div>
         <div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-8"></div>
         
         {/* Additional Background Layers */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-slate-800/10 via-transparent to-zinc-800/10"></div>
+        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/10' : 'from-white/20'} via-transparent to-transparent`}></div>
+        <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r ${isDark ? 'from-slate-800/10' : 'from-blue-200/20'} via-transparent ${isDark ? 'to-zinc-800/10' : 'to-blue-300/20'}`}></div>
         
         {/* Subtle Grid Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }}></div>
         </div>
@@ -248,9 +250,9 @@ const PenginapanDetail = () => {
             <div className="flex items-center justify-between mt-12 mb-8">
             <button 
               onClick={() => window.history.back()} 
-                className="group inline-flex items-center gap-3 text-gray-200 hover:text-gray-100 transition-all duration-300 transform hover:scale-105"
+                className={`group inline-flex items-center gap-3 ${isDark ? 'text-gray-200 hover:text-gray-100' : 'text-slate-700 hover:text-slate-800'} transition-all duration-300 transform hover:scale-105`}
               >
-                <div className="w-10 h-10 bg-gray-600/30 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-gray-500/40 transition-all duration-300">
+                <div className={`w-10 h-10 ${isDark ? 'bg-gray-600/30 group-hover:bg-gray-500/40' : 'bg-blue-500/30 group-hover:bg-blue-500/40'} backdrop-blur-sm rounded-xl flex items-center justify-center transition-all duration-300`}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
@@ -263,13 +265,13 @@ const PenginapanDetail = () => {
                   onClick={() => setIsLiked(!isLiked)}
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 ${
                     isLiked 
-                      ? 'bg-gradient-to-r from-gray-600 to-slate-600 text-white shadow-2xl' 
-                      : 'bg-gray-600/30 backdrop-blur-sm text-gray-200 hover:bg-gray-500/40'
+                      ? `${isDark ? 'bg-gradient-to-r from-gray-600 to-slate-600' : 'bg-gradient-to-r from-blue-500 to-blue-600'} text-white shadow-2xl` 
+                      : `${isDark ? 'bg-gray-600/30 hover:bg-gray-500/40' : 'bg-blue-500/30 hover:bg-blue-500/40'} backdrop-blur-sm ${isDark ? 'text-gray-200' : 'text-slate-700'}`
                   }`}
                 >
                   <BiHeart className={`text-xl ${isLiked ? 'fill-current' : ''}`} />
                 </button>
-                <button className="w-12 h-12 bg-gray-600/30 backdrop-blur-sm rounded-2xl flex items-center justify-center text-gray-200 hover:bg-gray-500/40 transition-all duration-300 transform hover:scale-110">
+                <button className={`w-12 h-12 ${isDark ? 'bg-gray-600/30 hover:bg-gray-500/40' : 'bg-blue-500/30 hover:bg-blue-500/40'} backdrop-blur-sm rounded-2xl flex items-center justify-center ${isDark ? 'text-gray-200' : 'text-slate-700'} transition-all duration-300 transform hover:scale-110`}>
                   <BiShareAlt className="text-xl" />
             </button>
               </div>
@@ -292,13 +294,13 @@ const PenginapanDetail = () => {
               </div>
               
               {/* Title */}
-              <h1 className="text-5xl md:text-7xl font-black text-gray-100 mb-6 leading-tight">
+              <h1 className={`text-5xl md:text-7xl font-black ${isDark ? 'text-gray-100' : 'text-slate-800'} mb-6 leading-tight`}>
                 {destination.title}
               </h1>
               
               {/* Location */}
-              <div className="flex items-center justify-center gap-3 text-gray-200 text-xl mb-8">
-                <div className="w-12 h-12 bg-gradient-to-r from-gray-600 to-slate-600 rounded-2xl flex items-center justify-center shadow-2xl">
+              <div className={`flex items-center justify-center gap-3 ${isDark ? 'text-gray-200' : 'text-slate-700'} text-xl mb-8`}>
+                <div className={`w-12 h-12 bg-gradient-to-r ${isDark ? 'from-gray-600 to-slate-600' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center shadow-2xl`}>
                   <BiMap className="text-2xl text-white" />
                 </div>
                 <span className="font-medium">{destination.location}</span>
@@ -307,45 +309,45 @@ const PenginapanDetail = () => {
               {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 {destination.price_range && (
-                  <div className="bg-gray-700/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-600/30 shadow-2xl">
+                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
                         <BiMoney className="text-3xl text-white" />
                       </div>
-                      <p className="text-gray-300 text-sm mb-2">Harga per Malam</p>
-                      <p className="text-2xl font-bold text-gray-100">{destination.price_range}</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Harga per Malam</p>
+                      <p className={`text-2xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.price_range}</p>
                     </div>
                   </div>
                 )}
 
                 {destination.rating && (
-                  <div className="bg-gray-700/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-600/30 shadow-2xl">
+                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
                         <BiStar className="text-3xl text-white" />
                       </div>
-                      <p className="text-gray-300 text-sm mb-2">Rating</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Rating</p>
                       <div className="flex items-center justify-center gap-1 mb-2">
                         {[...Array(5)].map((_, i) => (
                           <BiStar 
                             key={i} 
-                            className={`w-6 h-6 ${i < parseInt(destination.rating) ? 'text-gray-300 fill-current' : 'text-gray-500'}`} 
+                            className={`w-6 h-6 ${i < parseInt(destination.rating) ? `${isDark ? 'text-gray-300' : 'text-yellow-500'} fill-current` : `${isDark ? 'text-gray-500' : 'text-gray-300'}`}`} 
                           />
                         ))}
                       </div>
-                      <p className="text-xl font-bold text-gray-100">({destination.rating}/5)</p>
+                      <p className={`text-xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>({destination.rating}/5)</p>
                     </div>
                   </div>
                 )}
 
                 {destination.contact && (
-                  <div className="bg-gray-700/40 backdrop-blur-sm rounded-3xl p-6 border border-gray-600/30 shadow-2xl">
+                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
+                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
                         <BiPhone className="text-3xl text-white" />
                       </div>
-                      <p className="text-gray-300 text-sm mb-2">Kontak</p>
-                      <p className="text-lg font-semibold text-gray-100">{destination.contact}</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Kontak</p>
+                      <p className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.contact}</p>
                     </div>
                   </div>
                 )}
@@ -364,10 +366,10 @@ const PenginapanDetail = () => {
               {/* Left Column - Media & Maps */}
               <div className="xl:col-span-2 space-y-8">
                               {/* Photo Gallery */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
                 <div className="mb-6">
-                  <h3 className="text-3xl font-bold text-white mb-2">Galeri Foto</h3>
-                  <p className="text-white/80">Lihat keindahan penginapan kami</p>
+                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Galeri Foto</h3>
+                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Lihat keindahan penginapan kami</p>
                 </div>
               <PhotoGallery
                 images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
@@ -376,15 +378,15 @@ const PenginapanDetail = () => {
               </div>
 
               {/* Interactive Map */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
                 <div className="mb-6">
-                  <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
                     <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl">
                       <BiMap className="text-white text-2xl" />
                     </div>
                     Lokasi & Peta
                   </h3>
-                  <p className="text-white/80">Temukan lokasi penginapan kami</p>
+                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Temukan lokasi penginapan kami</p>
                 </div>
               <ErrorBoundary>
                 <SmartMap
@@ -403,9 +405,9 @@ const PenginapanDetail = () => {
               {/* Right Column - Info & Actions */}
               <div className="space-y-6">
                               {/* Description Card */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
                 <div className="mb-6">
-                  <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -414,32 +416,32 @@ const PenginapanDetail = () => {
                   Deskripsi
                 </h3>
                 </div>
-                <p className="text-white/80 leading-relaxed text-lg">
+                <p className={`${isDark ? 'text-white/80' : 'text-slate-600'} leading-relaxed text-lg`}>
                   {destination.description || destination.short_description || "Deskripsi penginapan tidak tersedia saat ini."}
                 </p>
               </div>
 
               {/* Amenities Card */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
                 <div className="mb-6">
-                  <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
                     <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl">
                       <FaConciergeBell className="text-white text-2xl" />
                   </div>
                     Fasilitas & Amenitas
                 </h3>
-                  <p className="text-white/80">Nikmati berbagai fasilitas yang tersedia</p>
+                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Nikmati berbagai fasilitas yang tersedia</p>
                         </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   {amenities.map((amenity, index) => {
                     const IconComponent = amenityIcons[amenity] || FaConciergeBell;
                     return (
-                      <div key={index} className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                      <div key={index} className={`flex items-center gap-4 p-4 ${isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-blue-50/50 border-blue-200/50 hover:bg-blue-100/50'} rounded-2xl border transition-all duration-300 transform hover:scale-105`}>
                         <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
                           <IconComponent className="w-5 h-5 text-white" />
                         </div>
-                        <span className="font-semibold text-white">{amenity}</span>
+                        <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{amenity}</span>
                       </div>
                     );
                   })}
@@ -595,8 +597,8 @@ const PenginapanDetail = () => {
                   <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                   🛏️ Pilihan Tipe Kamar
                 </div>
-                <h2 className="text-5xl font-black text-white mb-6">Tipe Kamar Tersedia</h2>
-                <p className="text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+                <h2 className={`text-5xl font-black ${isDark ? 'text-white' : 'text-slate-800'} mb-6`}>Tipe Kamar Tersedia</h2>
+                <p className={`text-2xl ${isDark ? 'text-white/80' : 'text-slate-600'} max-w-3xl mx-auto leading-relaxed`}>
                   Pilih tipe kamar yang sesuai dengan kebutuhan dan budget Anda
                 </p>
               </div>
@@ -617,8 +619,8 @@ const PenginapanDetail = () => {
                     return (
                       <div
                         key={index}
-                                          className={`group relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border-2 transition-all duration-500 hover:shadow-2xl hover:scale-105 ${
-                      selectedRoom === item.id ? 'border-green-500 shadow-2xl' : 'border-white/20 hover:border-green-400'
+                                          className={`group relative ${isDark ? 'bg-white/10' : 'bg-white/90'} backdrop-blur-xl rounded-3xl p-8 border-2 transition-all duration-500 hover:shadow-2xl hover:scale-105 ${
+                      selectedRoom === item.id ? 'border-green-500 shadow-2xl' : `${isDark ? 'border-white/20 hover:border-green-400' : 'border-blue-200/50 hover:border-green-400'}`
                     }`}
                       onClick={() => setSelectedRoom(item.id)}
                     >
@@ -636,10 +638,10 @@ const PenginapanDetail = () => {
                         <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-2xl">
                           <FaBed className="text-white text-3xl" />
                             </div>
-                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors">
+                        <h3 className={`text-2xl font-bold ${isDark ? 'text-white group-hover:text-green-400' : 'text-slate-800 group-hover:text-green-600'} mb-3 transition-colors`}>
                                 {name}
                         </h3>
-                        <div className="flex items-center justify-center gap-6 text-sm text-white/80">
+                        <div className={`flex items-center justify-center gap-6 text-sm ${isDark ? 'text-white/80' : 'text-slate-600'}`}>
                           <span className="flex items-center gap-2">
                             <FaUsers className="w-4 h-4 text-green-400" />
                             {capacity}
@@ -654,17 +656,17 @@ const PenginapanDetail = () => {
                       {/* Room Details */}
                       <div className="space-y-6 mb-8">
                               {desc && (
-                          <p className="text-white/80 text-base leading-relaxed text-center">
+                          <p className={`${isDark ? 'text-white/80' : 'text-slate-600'} text-base leading-relaxed text-center`}>
                                   {desc}
                                 </p>
                               )}
                         
-                        <div className="bg-white/10 rounded-2xl p-4 border border-white/20">
-                          <div className="flex items-center gap-3 text-sm text-white/90 mb-3">
+                        <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/50 border-blue-200/50'} rounded-2xl p-4 border`}>
+                          <div className={`flex items-center gap-3 text-sm ${isDark ? 'text-white/90' : 'text-slate-700'} mb-3`}>
                             <FaBed className="w-5 h-5 text-green-400" />
                             <span className="font-semibold">Tipe Tempat Tidur</span>
                           </div>
-                          <p className="text-white font-bold text-lg">{bed}</p>
+                          <p className={`${isDark ? 'text-white' : 'text-slate-800'} font-bold text-lg`}>{bed}</p>
                             </div>
                           </div>
 
@@ -673,19 +675,19 @@ const PenginapanDetail = () => {
                         <div className="text-4xl font-black text-green-400 mb-2">
                           {price ? `Rp ${Number(price).toLocaleString('id-ID')}` : 'Rp -'}
                         </div>
-                        <div className="text-white/70 font-medium">per malam</div>
+                        <div className={`${isDark ? 'text-white/70' : 'text-slate-500'} font-medium`}>per malam</div>
                         </div>
 
                       {/* Features */}
                         {includes.length > 0 && (
                         <div className="mb-8">
-                          <div className="text-base font-semibold text-white/90 mb-4 flex items-center gap-3">
+                          <div className={`text-base font-semibold ${isDark ? 'text-white/90' : 'text-slate-700'} mb-4 flex items-center gap-3`}>
                             <FaCheckCircle className="w-5 h-5 text-green-400" />
                             Fasilitas Kamar:
                             </div>
                           <div className="grid grid-cols-1 gap-3">
                             {includes.slice(0, 4).map((inc, i) => (
-                              <div key={i} className="flex items-center gap-3 text-sm text-white/80">
+                              <div key={i} className={`flex items-center gap-3 text-sm ${isDark ? 'text-white/80' : 'text-slate-600'}`}>
                                 <div className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0"></div>
                                   <span className="truncate">{inc}</span>
                                 </div>
@@ -725,7 +727,7 @@ const PenginapanDetail = () => {
 
                 {(roomItems.length > 0 ? roomItems : demoRooms).length > 6 && (
                 <div className="text-center mt-16">
-                  <button className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-bold py-5 px-10 rounded-3xl transition-all duration-300 transform hover:scale-105 text-xl border border-white/20 shadow-2xl">
+                  <button className={`inline-flex items-center gap-4 ${isDark ? 'bg-white/10 hover:bg-white/20 border-white/20' : 'bg-blue-500/20 hover:bg-blue-500/30 border-blue-300/50'} backdrop-blur-sm ${isDark ? 'text-white' : 'text-slate-700'} font-bold py-5 px-10 rounded-3xl transition-all duration-300 transform hover:scale-105 text-xl border shadow-2xl`}>
                     <span>Lihat Semua Tipe Kamar</span>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -742,15 +744,15 @@ const PenginapanDetail = () => {
                   <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                   👥 Tim Pengelola
                 </div>
-                <h2 className="text-5xl font-black text-white mb-6">Pengelola Penginapan</h2>
-                <p className="text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+                <h2 className={`text-5xl font-black ${isDark ? 'text-white' : 'text-slate-800'} mb-6`}>Pengelola Penginapan</h2>
+                <p className={`text-2xl ${isDark ? 'text-white/80' : 'text-slate-600'} max-w-3xl mx-auto leading-relaxed`}>
                   Kenali tim pengelola yang siap melayani kebutuhan akomodasi Anda
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-slate-800/80 via-gray-700/80 to-zinc-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+              <div className={`${isDark ? 'bg-gradient-to-br from-slate-800/80 via-gray-700/80 to-zinc-800/80 border-white/20' : 'bg-gradient-to-br from-white/90 via-blue-50/80 to-blue-100/80 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
                 <div className="mb-8">
-                  <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -758,11 +760,11 @@ const PenginapanDetail = () => {
                     </div>
                     Tim Pengelola Penginapan
                   </h3>
-                  <p className="text-white/80">Tim pengelola penginapan</p>
+                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Tim pengelola penginapan</p>
                 </div>
 
                 {/* Manager Profile */}
-                <div className="bg-white/10 rounded-2xl p-6 border border-white/20 mb-8">
+                <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/50 border-blue-200/50'} rounded-2xl p-6 border mb-8`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-6">
                       <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-2xl">
@@ -771,8 +773,8 @@ const PenginapanDetail = () => {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-2xl font-bold text-white mb-2">{destination?.manager || 'Tim Pengelola Penginapan'}</h4>
-                        <p className="text-white/70 text-lg mb-2">Pengelola Penginapan</p>
+                        <h4 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>{destination?.manager || 'Tim Pengelola Penginapan'}</h4>
+                        <p className={`${isDark ? 'text-white/70' : 'text-slate-600'} text-lg mb-2`}>Pengelola Penginapan</p>
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-1">
                             {[...Array(5)].map((_, i) => (
@@ -781,7 +783,7 @@ const PenginapanDetail = () => {
                               </svg>
                             ))}
                           </div>
-                          <span className="text-white/70 text-sm">5.0 (Terpercaya)</span>
+                          <span className={`${isDark ? 'text-white/70' : 'text-slate-600'} text-sm`}>5.0 (Terpercaya)</span>
                         </div>
                       </div>
                     </div>
@@ -790,16 +792,16 @@ const PenginapanDetail = () => {
                         <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                         <span className="font-semibold">Online</span>
                       </div>
-                      <p className="text-white/70 text-sm">Siap melayani</p>
+                      <p className={`${isDark ? 'text-white/70' : 'text-slate-600'} text-sm`}>Siap melayani</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Contact Information */}
                 <div className="mb-8">
-                  <h4 className="text-2xl font-bold text-white mb-6">Informasi Kontak</h4>
+                  <h4 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-6`}>Informasi Kontak</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white/10 rounded-2xl p-4 border border-white/20 flex items-center justify-between">
+                    <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/50 border-blue-200/50'} rounded-2xl p-4 border flex items-center justify-between`}>
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -807,8 +809,8 @@ const PenginapanDetail = () => {
                           </svg>
                         </div>
                         <div>
-                          <p className="text-white/70 text-sm">Telepon</p>
-                          <p className="text-white font-bold">{destination?.phone || destination?.contact || '-'}</p>
+                          <p className={`${isDark ? 'text-white/70' : 'text-slate-600'} text-sm`}>Telepon</p>
+                          <p className={`${isDark ? 'text-white' : 'text-slate-800'} font-bold`}>{destination?.phone || destination?.contact || '-'}</p>
                         </div>
                       </div>
                       <button className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-110">
@@ -818,7 +820,7 @@ const PenginapanDetail = () => {
                       </button>
                     </div>
 
-                    <div className="bg-white/10 rounded-2xl p-4 border border-white/20 flex items-center justify-between">
+                    <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/50 border-blue-200/50'} rounded-2xl p-4 border flex items-center justify-between`}>
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                           <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -826,8 +828,8 @@ const PenginapanDetail = () => {
                           </svg>
                         </div>
                         <div>
-                          <p className="text-white/70 text-sm">WhatsApp</p>
-                          <p className="text-white font-bold">{destination?.whatsapp || '-'}</p>
+                          <p className={`${isDark ? 'text-white/70' : 'text-slate-600'} text-sm`}>WhatsApp</p>
+                          <p className={`${isDark ? 'text-white' : 'text-slate-800'} font-bold`}>{destination?.whatsapp || '-'}</p>
                         </div>
                       </div>
                       <button className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-110">

@@ -6,6 +6,7 @@ import { EventProvider } from "@/context/EventContext";
 import { TicketProvider } from "@/context/TicketContext";
 import { UserProvider } from "@/context/UserContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { CulinaryCartProvider } from "@/context/CulinaryCartContext";
 
 import ConditionalLayout from "@/components/ConditionalLayout";
 
@@ -32,15 +33,17 @@ export default function RootLayout({ children }) {
       <EventProvider>
         <TicketProvider>
           <ThemeProvider>
-            <html lang="en">
-              <body
-                className={`${poppins.variable} ${caveat.variable} antialiased bg-white text-slate-900 dark:bg-gray-900 dark:text-white`}
-              >
-                <ConditionalLayout>
-                  {children}
-                </ConditionalLayout>
-              </body>
-            </html>
+            <CulinaryCartProvider>
+              <html lang="en">
+                <body
+                  className={`${poppins.variable} ${caveat.variable} antialiased bg-white text-slate-900 dark:bg-gray-900 dark:text-white`}
+                >
+                  <ConditionalLayout>
+                    {children}
+                  </ConditionalLayout>
+                </body>
+              </html>
+            </CulinaryCartProvider>
           </ThemeProvider>
         </TicketProvider>
       </EventProvider>

@@ -315,6 +315,70 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const contentType = request.headers.get('content-type');
+    
+    // Check if it's an order submission (JSON) or menu creation (form data)
+    if (contentType && contentType.includes('application/json')) {
+      // Handle order submission
+      const orderData = await request.json();
+      
+      // Validate order data
+      if (!orderData.destinationId || !orderData.menuId || !orderData.quantity) {
+        return NextResponse.json(
+          { success: false, message: 'Data pesanan tidak lengkap' },
+          { status: 400 }
+        );
+      }
+      
+      // Read database to get menu details
+      const dbPath = path.join(process.cwd(), 'db.json');
+      const dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      
+      // Find the menu item
+      const menuItem = dbData.menu_items?.find(item => 
+        item.id === orderData.menuId || 
+        item.id === orderData.menuId.toString() ||
+        parseInt(item.id) === parseInt(orderData.menuId)
+      );
+      
+      if (!menuItem) {
+        return NextResponse.json(
+          { success: false, message: 'Menu tidak ditemukan' },
+          { status: 404 }
+        );
+      }
+      
+      // Create order record
+      const orderId = Date.now().toString();
+      const order = {
+        id: orderId,
+        menuId: orderData.menuId,
+        menuName: menuItem.name,
+        destinationId: orderData.destinationId,
+        quantity: orderData.quantity,
+        specialInstructions: orderData.specialInstructions || '',
+        totalPrice: orderData.totalPrice || (menuItem.price * orderData.quantity),
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+      
+      // Add order to database
+      if (!dbData.orders) {
+        dbData.orders = [];
+      }
+      dbData.orders.push(order);
+      
+      // Save to database
+      fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Pesanan berhasil dikirim',
+        order: order
+      });
+    }
+    
+    // Handle menu creation (form data)
     const formData = await request.formData();
     
     // Extract form data

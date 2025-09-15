@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { BiX, BiMinus, BiPlus, BiMoney, BiTime, BiCart } from 'react-icons/bi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Image from 'next/image';
+import { useCulinaryCart } from '../context/CulinaryCartContext';
 
 const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   const [quantity, setQuantity] = useState(1);
@@ -11,6 +12,7 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [drinkType, setDrinkType] = useState('iced'); // 'iced' or 'hot'
   const [selectedFlavor, setSelectedFlavor] = useState(''); // for flavor options
+  const { addToCart } = useCulinaryCart();
 
   // Define dual pricing categories at component level
   const dualPricingCategories = [
@@ -49,6 +51,41 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm }) => {
   const handleQuantityChange = (newQuantity) => {
     if (newQuantity >= 1 && newQuantity <= 10) {
       setQuantity(newQuantity);
+    }
+  };
+
+  const handleAddToCart = () => {
+    // Validate flavor selection for BUTTER RICE WITH DAUN JERUK
+    if (menu.category === 'BUTTER RICE WITH DAUN JERUK' && menu.flavorOptions && menu.flavorOptions.length > 0 && !selectedFlavor) {
+      alert('Pilih salah satu rasa terlebih dahulu!');
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    try {
+      // Add to cart using context
+      addToCart(
+        menu,
+        quantity,
+        dualPricingCategories.includes(menu.category) ? drinkType : null,
+        selectedFlavor,
+        specialInstructions
+      );
+
+      // Show success message
+      const flavorText = selectedFlavor ? ` (${selectedFlavor})` : '';
+      const drinkTypeText = dualPricingCategories.includes(menu.category) ? 
+        (drinkType === 'iced' ? ' 🧊 Iced' : ' ☕ Hot') : '';
+      
+      alert(`Menu ditambahkan ke keranjang!\n\n${menu.name}${drinkTypeText}${flavorText}\nJumlah: ${quantity}\nTotal: Rp ${totalPrice.toLocaleString('id-ID')}`);
+      
+      onClose();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -320,12 +357,21 @@ Apakah masih tersedia? Terima kasih!`;
           {/* Action Buttons */}
           <div className="space-y-3">
             <button
-              onClick={handleConfirm}
+              onClick={handleAddToCart}
               disabled={isProcessing}
               className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 px-4 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <BiCart className="text-lg" />
-              {isProcessing ? 'Memproses...' : 'Konfirmasi Pesanan'}
+              {isProcessing ? 'Menambahkan...' : 'Tambah ke Keranjang'}
+            </button>
+            
+            <button
+              onClick={handleConfirm}
+              disabled={isProcessing}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <BiCart className="text-lg" />
+              {isProcessing ? 'Memproses...' : 'Beli Langsung'}
             </button>
             
             <button

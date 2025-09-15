@@ -14,11 +14,15 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // Mark as hydrated
+    setIsHydrated(true);
+    
     // Check localStorage for saved theme preference
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
+    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       setTheme(savedTheme);
     } else {
       // Check system preference
@@ -28,14 +32,16 @@ export const ThemeProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Apply theme to document
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    // Only apply theme to document after hydration
+    if (isHydrated) {
+      const root = document.documentElement;
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
+      
+      // Save to localStorage
+      localStorage.setItem('theme', theme);
+    }
+  }, [theme, isHydrated]);
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
@@ -45,7 +51,8 @@ export const ThemeProvider = ({ children }) => {
     theme,
     toggleTheme,
     isDark: theme === 'dark',
-    isLight: theme === 'light'
+    isLight: theme === 'light',
+    isHydrated
   };
 
   return (

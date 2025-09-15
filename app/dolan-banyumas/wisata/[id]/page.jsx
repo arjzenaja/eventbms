@@ -138,9 +138,9 @@ const WisataDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="relative pt-24 pb-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 dark:from-blue-500/20 dark:via-indigo-500/20 dark:to-purple-500/20"></div>
         <div className="relative container mx-auto px-4">
           <button 
             onClick={() => window.history.back()} 
@@ -151,7 +151,7 @@ const WisataDetail = () => {
           </button>
 
           <div className="max-w-4xl mx-auto text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full mb-3 border border-blue-200 dark:border-blue-700">
+            <div className="inline-flex items-center gap-3 bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full mb-3 border border-blue-200/60 dark:border-blue-700 shadow-sm">
               <BiStar className="text-lg" />
               <span className="text-sm font-medium capitalize">{safeDestination.type}</span>
             </div>
@@ -160,13 +160,13 @@ const WisataDetail = () => {
               {safeDestination.title}
             </h1>
             
-            <div className="flex items-center justify-center gap-4 text-gray-600 dark:text-gray-400 mb-4">
+            <div className="flex items-center justify-center gap-4 text-gray-700 dark:text-gray-400 mb-4">
               <div className="flex items-center gap-2">
-                <BiMap className="text-xl text-blue-500" />
+                <BiMap className="text-xl text-blue-600 dark:text-blue-500" />
                 <span className="font-medium">{safeDestination.location}</span>
               </div>
               {safeDestination.recommended && (
-                <div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-700">
+                <div className="flex items-center gap-2 bg-yellow-100/90 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 px-3 py-1 rounded-full border border-yellow-200/60 dark:border-yellow-700 shadow-sm">
                   <BiStar className="text-lg" />
                   <span className="text-sm font-medium">Direkomendasikan</span>
                 </div>
@@ -179,7 +179,7 @@ const WisataDetail = () => {
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
                   isLiked 
                     ? 'bg-red-500 text-white shadow-lg' 
-                    : 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30'
+                    : 'bg-white/90 dark:bg-gray-800/80 text-gray-800 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 shadow-md border border-gray-200/50 dark:border-gray-700/50'
                 }`}
               >
                 <BiHeart className={`text-lg ${isLiked ? 'fill-current' : ''}`} />
@@ -203,7 +203,7 @@ const WisataDetail = () => {
                     console.error('Error sharing:', err);
                   }
                 }}
-                className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80"
+                className="flex items-center gap-2 bg-white/90 dark:bg-gray-800/80 text-gray-800 dark:text-gray-300 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80 shadow-md border border-gray-200/50 dark:border-gray-700/50"
               >
                 <BiShare className="text-lg" />
                 <span className="text-sm font-medium">Bagikan</span>
@@ -218,7 +218,7 @@ const WisataDetail = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             <div className="xl:col-span-2 space-y-8">
               {/* Gallery */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <ErrorBoundary>
                   <PhotoGallery
                     images={[safeDestination.img_lg, safeDestination.img_sm, ...(safeDestination.gallery || [])].filter(Boolean)}
@@ -228,7 +228,7 @@ const WisataDetail = () => {
               </div>
 
               {/* Description */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +239,7 @@ const WisataDetail = () => {
                 </div>
                 
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                     {safeDestination.description || safeDestination.short_description || "Deskripsi destinasi tidak tersedia"}
                   </p>
                 </div>
@@ -249,7 +249,7 @@ const WisataDetail = () => {
               <TourismManager destination={safeDestination} contactInfo={contactInfo} />
 
               {/* Map */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <ErrorBoundary>
                   <SmartMap
                     destination={safeDestination}
@@ -260,7 +260,7 @@ const WisataDetail = () => {
 
 
               {/* Paket Wisata */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <ErrorBoundary>
                   <WisataPackages destination={safeDestination} />
                 </ErrorBoundary>
@@ -270,7 +270,7 @@ const WisataDetail = () => {
             {/* Sidebar */}
             <div className="space-y-8">
               {/* Info Card */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Informasi Destinasi</h3>
                 
                 {safeDestination.entrance_fee && (
@@ -285,9 +285,9 @@ const WisataDetail = () => {
                 {safeDestination.address && (
                   <div className="mb-6">
                     <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Alamat</h4>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                      <BiMap className="text-xl text-blue-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300">{safeDestination.address}</span>
+                    <div className="flex items-start gap-3 p-3 bg-gray-100/80 dark:bg-gray-700/50 rounded-xl border border-gray-200/50 dark:border-gray-600/50">
+                      <BiMap className="text-xl text-blue-600 dark:text-blue-500 mt-1 flex-shrink-0" />
+                      <span className="text-gray-800 dark:text-gray-300">{safeDestination.address}</span>
                     </div>
                   </div>
                 )}
@@ -295,9 +295,9 @@ const WisataDetail = () => {
                 {safeDestination.created_at && (
                   <div className="mb-6">
                     <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Ditambahkan</h4>
-                    <div className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/30 rounded-xl">
-                      <BiTime className="text-xl text-amber-500" />
-                      <span className="text-amber-700 dark:text-amber-300">
+                    <div className="flex items-center gap-3 p-3 bg-amber-100/80 dark:bg-amber-900/30 rounded-xl border border-amber-200/50 dark:border-amber-700/50">
+                      <BiTime className="text-xl text-amber-600 dark:text-amber-500" />
+                      <span className="text-amber-800 dark:text-amber-300">
                         {new Date(safeDestination.created_at).toLocaleDateString('id-ID', {
                           year: 'numeric',
                           month: 'long',
@@ -319,10 +319,10 @@ const WisataDetail = () => {
                             <a 
                               key={index}
                               href={`tel:${contact.value}`}
-                              className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                              className="flex items-center gap-3 p-3 bg-blue-100/80 dark:bg-blue-900/30 rounded-xl hover:bg-blue-200/80 dark:hover:bg-blue-900/50 transition-colors border border-blue-200/50 dark:border-blue-700/50"
                             >
-                              <BiPhone className="text-xl text-blue-500" />
-                              <span className="text-blue-700 dark:text-blue-300">{contact.value}</span>
+                              <BiPhone className="text-xl text-blue-600 dark:text-blue-500" />
+                              <span className="text-blue-800 dark:text-blue-300">{contact.value}</span>
                             </a>
                           );
                         case 'whatsapp':
@@ -332,10 +332,10 @@ const WisataDetail = () => {
                               href={`https://wa.me/${contact.value.replace(/\D/g, '')}?text=${encodeURIComponent(`Halo, saya tertarik dengan destinasi ${safeDestination.title}`)}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
+                              className="flex items-center gap-3 p-3 bg-green-100/80 dark:bg-green-900/30 rounded-xl hover:bg-green-200/80 dark:hover:bg-green-900/50 transition-colors border border-green-200/50 dark:border-green-700/50"
                             >
-                              <FaWhatsapp className="text-xl text-green-500" />
-                              <span className="text-green-700 dark:text-green-300">WhatsApp</span>
+                              <FaWhatsapp className="text-xl text-green-600 dark:text-green-500" />
+                              <span className="text-green-800 dark:text-green-300">WhatsApp</span>
                             </a>
                           );
                         case 'instagram':
@@ -345,10 +345,10 @@ const WisataDetail = () => {
                               href={`https://instagram.com/${contact.value.replace('@', '')}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/30 rounded-xl hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors"
+                              className="flex items-center gap-3 p-3 bg-pink-100/80 dark:bg-pink-900/30 rounded-xl hover:bg-pink-200/80 dark:hover:bg-pink-900/50 transition-colors border border-pink-200/50 dark:border-pink-700/50"
                             >
-                              <FaInstagram className="text-xl text-pink-500" />
-                              <span className="text-pink-700 dark:text-pink-300">{contact.value}</span>
+                              <FaInstagram className="text-xl text-pink-600 dark:text-pink-500" />
+                              <span className="text-pink-800 dark:text-pink-300">{contact.value}</span>
                             </a>
                           );
                         case 'website':
@@ -358,10 +358,10 @@ const WisataDetail = () => {
                               href={contact.value}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors"
+                              className="flex items-center gap-3 p-3 bg-purple-100/80 dark:bg-purple-900/30 rounded-xl hover:bg-purple-200/80 dark:hover:bg-purple-900/50 transition-colors border border-purple-200/50 dark:border-purple-700/50"
                             >
-                              <FaGlobe className="text-xl text-purple-500" />
-                              <span className="text-purple-700 dark:text-purple-300">{contact.value}</span>
+                              <FaGlobe className="text-xl text-purple-600 dark:text-purple-500" />
+                              <span className="text-purple-800 dark:text-purple-300">{contact.value}</span>
                             </a>
                           );
                         case 'email':
@@ -369,12 +369,12 @@ const WisataDetail = () => {
                             <a 
                               key={index}
                               href={`mailto:${contact.value}`}
-                              className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-900/30 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900/50 transition-colors"
+                              className="flex items-center gap-3 p-3 bg-gray-100/80 dark:bg-gray-900/30 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-900/50 transition-colors border border-gray-200/50 dark:border-gray-700/50"
                             >
-                              <svg className="text-xl text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="text-xl text-gray-600 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                               </svg>
-                              <span className="text-gray-700 dark:text-gray-300">{contact.value}</span>
+                              <span className="text-gray-800 dark:text-gray-300">{contact.value}</span>
                             </a>
                           );
                         default:
@@ -441,7 +441,7 @@ const WisataDetail = () => {
 
               {/* Features Section */}
               {destination.features && destination.features.length > 0 && (
-                <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+                <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -453,9 +453,9 @@ const WisataDetail = () => {
                   
                   <div className="space-y-3">
                     {destination.features.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-sm text-purple-700 dark:text-purple-300">{feature}</span>
+                      <div key={index} className="flex items-center gap-3 p-3 bg-purple-100/80 dark:bg-purple-900/20 rounded-xl border border-purple-200/60 dark:border-purple-700">
+                        <div className="w-2 h-2 bg-purple-600 dark:bg-purple-500 rounded-full"></div>
+                        <span className="text-sm text-purple-800 dark:text-purple-300">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -587,18 +587,18 @@ const WisataDetail = () => {
               </div>
 
               {/* Package Pricing Section */}
-              <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
                 <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Pilihan Paket Wisata</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">Pilih paket yang sesuai dengan kebutuhan Anda</p>
-                  <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-xs font-medium mt-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <div className="inline-flex items-center gap-2 bg-green-100/90 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs font-medium mt-3 border border-green-200/60 dark:border-green-700/50">
+                    <div className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full"></div>
                     <span>Paket Tersedia</span>
                   </div>
                 </div>
 
                 {/* Package Card */}
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-700 rounded-2xl p-4">
+                <div className="bg-gradient-to-br from-blue-100/80 to-purple-100/80 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200/60 dark:border-blue-700 rounded-2xl p-4">
                   {/* Package Header */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -615,12 +615,12 @@ const WisataDetail = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                        {destination.entrance_fee || destination.price_range || "Rp Gratis"}
-                      </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">per orang</div>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-blue-700 dark:text-blue-400">
+                      {destination.entrance_fee || destination.price_range || "Rp Gratis"}
                     </div>
+                    <div className="text-xs text-gray-700 dark:text-gray-400">per orang</div>
+                  </div>
                   </div>
 
                   {/* Features Included */}
@@ -628,20 +628,20 @@ const WisataDetail = () => {
                     <h5 className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Fitur yang termasuk:</h5>
                     <div className="grid grid-cols-1 gap-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Tiket Masuk</span>
+                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                        <span className="text-xs text-gray-800 dark:text-gray-300">Tiket Masuk</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Panduan Wisata</span>
+                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                        <span className="text-xs text-gray-800 dark:text-gray-300">Panduan Wisata</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Fasilitas Dasar</span>
+                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                        <span className="text-xs text-gray-800 dark:text-gray-300">Fasilitas Dasar</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Asuransi</span>
+                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                        <span className="text-xs text-gray-800 dark:text-gray-300">Asuransi</span>
                       </div>
                     </div>
                   </div>
@@ -651,36 +651,36 @@ const WisataDetail = () => {
                     <h5 className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Syarat & Ketentuan:</h5>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h6 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Syarat:</h6>
+                        <h6 className="text-xs font-semibold text-gray-800 dark:text-gray-300 mb-1">Syarat:</h6>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">Min. 1 orang</span>
+                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">Min. 1 orang</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">Bayar full H-7</span>
+                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">Bayar full H-7</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">Konfirmasi H-3</span>
+                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">Konfirmasi H-3</span>
                           </div>
                         </div>
                       </div>
                       <div>
-                        <h6 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Pembatalan:</h6>
+                        <h6 className="text-xs font-semibold text-gray-800 dark:text-gray-300 mb-1">Pembatalan:</h6>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">H-7: 100%</span>
+                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">H-7: 100%</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">H-3: 50%</span>
+                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">H-3: 50%</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">H-1: 0%</span>
+                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
+                            <span className="text-xs text-gray-700 dark:text-gray-400">H-1: 0%</span>
                           </div>
                         </div>
                       </div>

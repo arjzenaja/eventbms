@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AlertTriangle, CheckCircle, Info, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from '@/context/ThemeContext';
 
 const iconMap = {
   success: CheckCircle,
@@ -11,32 +12,32 @@ const iconMap = {
   info: Info,
 };
 
-const colorMap = {
+const getColorMap = (isDark) => ({
   success: {
-    container: 'bg-green-50 border-green-200',
+    container: isDark ? 'bg-green-900/30 border-green-700' : 'bg-green-50 border-green-200',
     icon: 'text-green-500',
     button: 'bg-green-600 hover:bg-green-700 text-white',
-    buttonSecondary: 'bg-green-100 hover:bg-green-200 text-green-700',
+    buttonSecondary: isDark ? 'bg-green-800/50 hover:bg-green-700/50 text-green-300' : 'bg-green-100 hover:bg-green-200 text-green-700',
   },
   error: {
-    container: 'bg-red-50 border-red-200',
+    container: isDark ? 'bg-red-900/30 border-red-700' : 'bg-red-50 border-red-200',
     icon: 'text-red-500',
     button: 'bg-red-600 hover:bg-red-700 text-white',
-    buttonSecondary: 'bg-red-100 hover:bg-red-200 text-red-700',
+    buttonSecondary: isDark ? 'bg-red-800/50 hover:bg-red-700/50 text-red-300' : 'bg-red-100 hover:bg-red-200 text-red-700',
   },
   warning: {
-    container: 'bg-yellow-50 border-yellow-200',
+    container: isDark ? 'bg-yellow-900/30 border-yellow-700' : 'bg-yellow-50 border-yellow-200',
     icon: 'text-yellow-500',
     button: 'bg-yellow-600 hover:bg-yellow-700 text-white',
-    buttonSecondary: 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700',
+    buttonSecondary: isDark ? 'bg-yellow-800/50 hover:bg-yellow-700/50 text-yellow-300' : 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700',
   },
   info: {
-    container: 'bg-blue-50 border-blue-200',
+    container: isDark ? 'bg-blue-900/30 border-blue-700' : 'bg-blue-50 border-blue-200',
     icon: 'text-blue-500',
     button: 'bg-blue-600 hover:bg-blue-700 text-white',
-    buttonSecondary: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+    buttonSecondary: isDark ? 'bg-blue-800/50 hover:bg-blue-700/50 text-blue-300' : 'bg-blue-100 hover:bg-blue-200 text-blue-700',
   },
-};
+});
 
 export function ConfirmDialog({
   type = 'info',
@@ -52,11 +53,12 @@ export function ConfirmDialog({
   className,
   ...props
 }) {
+  const { isDark } = useTheme();
   const [isVisible, setIsVisible] = useState(show);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const IconComponent = iconMap[type];
-  const colors = colorMap[type];
+  const colors = getColorMap(isDark)[type];
 
   useEffect(() => {
     if (show) {
@@ -109,19 +111,19 @@ export function ConfirmDialog({
       >
         <div
           className={cn(
-            'relative bg-white rounded-2xl shadow-2xl border overflow-hidden',
+            `relative ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl border overflow-hidden`,
             colors.container
           )}
         >
           {/* Header */}
           <div className="flex items-center gap-3 p-6 pb-4">
             <IconComponent className={cn('w-6 h-6', colors.icon)} />
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>{title}</h3>
           </div>
 
           {/* Content */}
           <div className="px-6 pb-6">
-            <p className="text-sm leading-relaxed text-gray-700">{message}</p>
+            <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{message}</p>
           </div>
 
           {/* Footer */}

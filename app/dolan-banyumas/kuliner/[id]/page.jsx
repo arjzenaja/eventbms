@@ -10,14 +10,32 @@ import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 
 import SimpleMenuSection from "../../../../components/SimpleMenuSection";
+import FloatingCartButton from "../../../../components/FloatingCartButton";
+import { useCulinaryCart } from "../../../../context/CulinaryCartContext";
 
-const KulinerDetail = () => {
+const FloatingCartButtonWrapper = () => {
+	const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart, destination } = useCulinaryCart();
+	return (
+		<FloatingCartButton 
+			items={items}
+			totalItems={totalItems} 
+			totalPrice={totalPrice}
+			updateQuantity={updateQuantity}
+			removeFromCart={removeFromCart}
+			clearCart={clearCart}
+			destination={destination}
+		/>
+	);
+};
+
+const KulinerContent = () => {
 	const { id } = useParams();
 	const [destination, setDestination] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
+	const { setDestination: setCartDestination } = useCulinaryCart();
 
 	useEffect(() => {
 		const fetchDestination = async () => {
@@ -28,7 +46,9 @@ const KulinerDetail = () => {
 					throw new Error("Failed to fetch destination");
 				}
 				const data = await res.json();
-				setDestination(data.kuliner || data.destination || data);
+				const destData = data.kuliner || data.destination || data;
+				setDestination(destData);
+				setCartDestination(destData);
 			} catch (err) {
 				setError(err.message);
 			} finally {
@@ -117,7 +137,7 @@ const KulinerDetail = () => {
 	const parsedFeatures = parseFeatures(destination.features);
 
 			return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+			<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
 			{/* Hero Section */}
 			<div className="relative pt-24 pb-8 overflow-hidden">
 				<div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10"></div>
@@ -407,7 +427,7 @@ const KulinerDetail = () => {
 							</div>
 
 							{/* Informasi Kontak Section */}
-							<div className="mt-32 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
+							<div className="mt-30 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-xl">
 								<h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Informasi Kontak</h3>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									{/* Telepon Card */}
@@ -701,8 +721,11 @@ const KulinerDetail = () => {
 				destinationId={id}
 				destinationSlug={destination.slug || ''}
 			/>
+			
+			{/* Floating Cart Button */}
+			<FloatingCartButtonWrapper />
 		</div>
 	);
 };
 
-export default KulinerDetail;
+export default KulinerContent;

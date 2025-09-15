@@ -5,6 +5,7 @@ import MenuCard from './MenuCard';
 import BuyMenuModal from './BuyMenuModal';
 import useMenuData from '@/hooks/useMenuData';
 import LoadingSpinner from './LoadingSpinner';
+import { useCulinaryCart } from '../context/CulinaryCartContext';
 
 const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
@@ -12,7 +13,8 @@ const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug 
   const [activeCategory, setActiveCategory] = useState('all');
 
   // Use the hook to fetch menu data from API
-    const { menus, isLoading, error, categories, submitOrder } = useMenuData(destinationId, destinationSlug);
+  const { menus, isLoading, error, categories, submitOrder } = useMenuData(destinationId, destinationSlug);
+  const { addToCart } = useCulinaryCart();
 
   // Generate categories dynamically from actual menu data
   const allCategories = [...new Set(menus.map(menu => menu.category))];
@@ -49,18 +51,20 @@ const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug 
 
   const handleOrderConfirm = async (orderData) => {
     try {
-      // Use the submitOrder function from the hook
-      const result = await submitOrder(orderData);
+      // Add to cart instead of direct order
+      addToCart(
+        orderData.menu,
+        orderData.quantity,
+        orderData.drinkType,
+        orderData.selectedFlavor,
+        orderData.specialInstructions
+      );
       
-      if (result.success) {
-        alert(`Pesanan berhasil!\n\nMenu: ${orderData.menu.name}\nJumlah: ${orderData.quantity}\nTotal: Rp ${orderData.totalPrice.toLocaleString('id-ID')}\n\nPesanan Anda akan segera diproses.`);
-      } else {
-        alert('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
-      }
+      alert(`Menu ditambahkan ke keranjang!\n\nMenu: ${orderData.menu.name}\nJumlah: ${orderData.quantity}\nTotal: Rp ${orderData.totalPrice.toLocaleString('id-ID')}`);
       handleModalClose();
     } catch (error) {
       console.error('Order error:', error);
-      alert('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
+      alert('Terjadi kesalahan saat menambahkan ke keranjang. Silakan coba lagi.');
     }
   };
 
@@ -148,6 +152,10 @@ const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug 
                 key={`${menu.id}-${index}`}
                 menu={menu}
                 onBuyClick={handleBuyClick}
+                onAddToCart={(menu) => {
+                  addToCart(menu, 1, null, null, '');
+                  alert(`${menu.name} ditambahkan ke keranjang!`);
+                }}
               />
             ))}
           </div>

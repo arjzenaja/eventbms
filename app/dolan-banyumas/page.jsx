@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BiMap, BiSearch, BiFilter, BiGrid, BiStar, BiPhone } from "react-icons/bi";
 import { AiOutlineUnorderedList } from "react-icons/ai";
+import { useTheme } from '@/context/ThemeContext';
 
 // Loading Skeleton Component
 const DestinationSkeleton = ({ viewMode }) => {
@@ -37,6 +38,7 @@ const DestinationSkeleton = ({ viewMode }) => {
 };
 
 const DestinationsPage = () => {
+  const { isDark } = useTheme();
   const [destinations, setDestinations] = useState({});
   const [filteredData, setFilteredData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Semua");
@@ -392,14 +394,14 @@ const DestinationsPage = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-100 via-blue-200 via-blue-300 via-blue-400 to-blue-500 dark:from-blue-900/30 dark:via-blue-800/30 dark:via-blue-700/30 dark:via-blue-600/30 dark:to-blue-500/30 pt-32 relative overflow-hidden">
+    <div className={`bg-gradient-to-br ${isDark ? 'from-blue-900/30 via-blue-800/30 via-blue-700/30 via-blue-600/30 to-blue-500/30' : 'from-blue-100 via-blue-200 via-blue-300 via-blue-400 to-blue-500'} pt-32 relative overflow-hidden`}>
       {/* Animated background elements */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-20 w-40 h-40 bg-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-32 w-32 h-32 bg-blue-400/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-1/3 w-36 h-36 bg-blue-500/30 rounded-full blur-3xl animate-pulse delay-2000"></div>
-        <div className="absolute top-1/2 left-10 w-24 h-24 bg-blue-600/30 rounded-full blur-3xl animate-pulse delay-1500"></div>
-        <div className="absolute top-1/3 right-10 w-28 h-28 bg-blue-700/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className={`absolute top-20 left-20 w-40 h-40 ${isDark ? 'bg-blue-300/30' : 'bg-blue-300/30'} rounded-full blur-3xl animate-pulse`}></div>
+        <div className={`absolute top-40 right-32 w-32 h-32 ${isDark ? 'bg-blue-400/30' : 'bg-blue-400/30'} rounded-full blur-3xl animate-pulse delay-1000`}></div>
+        <div className={`absolute bottom-20 left-1/3 w-36 h-36 ${isDark ? 'bg-blue-500/30' : 'bg-blue-500/30'} rounded-full blur-3xl animate-pulse delay-2000`}></div>
+        <div className={`absolute top-1/2 left-10 w-24 h-24 ${isDark ? 'bg-blue-600/30' : 'bg-blue-600/30'} rounded-full blur-3xl animate-pulse delay-1500`}></div>
+        <div className={`absolute top-1/3 right-10 w-28 h-28 ${isDark ? 'bg-blue-700/30' : 'bg-blue-700/30'} rounded-full blur-3xl animate-pulse delay-500`}></div>
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -445,18 +447,18 @@ const DestinationsPage = () => {
         </div>
 
         {/* Search and Filters Section - Colorful & Beautiful */}
-        <div className="bg-gradient-to-br from-white/95 via-blue-50/50 via-blue-100/50 via-blue-200/50 via-blue-300/50 to-blue-400/50 dark:from-gray-800/95 dark:via-blue-900/20 dark:via-blue-800/20 dark:via-blue-700/20 dark:via-blue-600/20 dark:to-blue-500/20 backdrop-blur-xl rounded-3xl p-12 mb-20 border-2 border-blue-200/50 dark:border-blue-600/50 shadow-2xl shadow-blue-500/20 relative overflow-hidden">
+        <div className={`bg-gradient-to-br ${isDark ? 'from-gray-800/95 via-blue-900/20 via-blue-800/20 via-blue-700/20 via-blue-600/20 to-blue-500/20' : 'from-white/95 via-blue-50/50 via-blue-100/50 via-blue-200/50 via-blue-300/50 to-blue-400/50'} backdrop-blur-xl rounded-3xl p-12 mb-20 border-2 ${isDark ? 'border-blue-600/50' : 'border-blue-200/50'} shadow-2xl shadow-blue-500/20 relative overflow-hidden`}>
           {/* Background pattern */}
           <div className="absolute inset-0 -z-10 opacity-20">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.3)_1px,transparent_0)] bg-[length:25px_25px]"></div>
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.3)_1px,transparent_0)] bg-[length:35px_35px]"></div>
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.3)_1px,transparent_0)] bg-[length:45px_45px]"></div>
+            <div className={`absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,${isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.3)'}_1px,transparent_0)] bg-[length:25px_25px]`}></div>
+            <div className={`absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,${isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.3)'}_1px,transparent_0)] bg-[length:35px_35px]`}></div>
+            <div className={`absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_1px_1px,${isDark ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.3)'}_1px,transparent_0)] bg-[length:45px_45px]`}></div>
           </div>
           
           {/* Search Bar */}
           <div className="max-w-4xl mx-auto mb-12">
             <div className="relative group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-600 via-blue-700 via-blue-800 to-blue-900 rounded-3xl blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+                            <div className={`absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-600 via-blue-700 via-blue-800 to-blue-900 rounded-3xl blur-xl ${isDark ? 'opacity-30 group-hover:opacity-50' : 'opacity-40 group-hover:opacity-60'} transition-opacity duration-500`}></div>
               <div className="relative">
                 <BiSearch className="absolute left-6 top-1/2 transform -translate-y-1/2 text-blue-500 dark:text-blue-400 text-2xl z-10" />
                 <input
@@ -464,10 +466,10 @@ const DestinationsPage = () => {
                   placeholder="🔍 Cari destinasi, lokasi, atau deskripsi..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-16 pr-8 py-6 bg-white/95 dark:bg-gray-700/95 border-2 border-blue-200 dark:border-blue-600 rounded-3xl text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/30 focus:border-blue-500 text-xl font-medium shadow-xl transition-all duration-300"
+                  className={`w-full pl-16 pr-8 py-6 ${isDark ? 'bg-gray-700/95 border-blue-600 text-white placeholder-gray-400' : 'bg-white/95 border-blue-200 text-slate-700 placeholder-slate-400'} border-2 rounded-3xl focus:outline-none focus:ring-4 focus:ring-blue-500/30 focus:border-blue-500 text-xl font-medium shadow-xl transition-all duration-300`}
                 />
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <div className="px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-700 dark:text-blue-300 text-xs font-bold rounded-full border-2 border-blue-200 dark:border-blue-700 shadow-lg">
+                  <div className={`px-4 py-2 ${isDark ? 'bg-gradient-to-r from-blue-900/50 to-blue-800/50 text-blue-300 border-blue-700' : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border-blue-200'} text-xs font-bold rounded-full border-2 shadow-lg`}>
                     Enter ↵
                   </div>
                 </div>
@@ -482,7 +484,7 @@ const DestinationsPage = () => {
               className={`px-8 py-4 rounded-2xl text-base font-bold transition-all duration-500 transform hover:scale-110 ${
                 selectedCategory === "Semua"
                   ? "bg-gradient-to-r from-teal-500 via-teal-600 via-teal-700 via-teal-800 to-teal-900 text-white shadow-2xl shadow-teal-500/40 ring-4 ring-teal-500/20"
-                  : "bg-white/95 dark:bg-gray-700/95 text-slate-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 hover:shadow-xl border-2 border-teal-200 dark:border-teal-600 shadow-lg backdrop-blur-sm"
+                  : `${isDark ? 'bg-gray-700/95 text-white hover:bg-gray-600 border-teal-600' : 'bg-white/95 text-slate-700 hover:bg-white border-teal-200'} hover:shadow-xl border-2 shadow-lg backdrop-blur-sm`
               }`}
             >
               <div className="flex items-center gap-3">
@@ -501,13 +503,13 @@ const DestinationsPage = () => {
                 'from-indigo-500 to-indigo-600'
               ];
               const borderColors = [
-                'border-green-200 dark:border-green-600',
-                'border-orange-200 dark:border-orange-600',
-                'border-purple-200 dark:border-purple-600',
-                'border-pink-200 dark:border-pink-600',
-                'border-yellow-200 dark:border-yellow-600',
-                'border-red-200 dark:border-red-600',
-                'border-indigo-200 dark:border-indigo-600'
+                isDark ? 'border-green-600' : 'border-green-200',
+                isDark ? 'border-orange-600' : 'border-orange-200',
+                isDark ? 'border-purple-600' : 'border-purple-200',
+                isDark ? 'border-pink-600' : 'border-pink-200',
+                isDark ? 'border-yellow-600' : 'border-yellow-200',
+                isDark ? 'border-red-600' : 'border-red-200',
+                isDark ? 'border-indigo-600' : 'border-indigo-200'
               ];
               const iconColors = [
                 'text-green-500',
@@ -528,7 +530,7 @@ const DestinationsPage = () => {
                   className={`px-8 py-4 rounded-2xl text-base font-bold transition-all duration-500 flex items-center gap-3 transform hover:scale-110 ${
                   selectedCategory === category.title
                       ? `bg-gradient-to-r ${color} text-white shadow-2xl shadow-${color.split('-')[1]}-500/40 ring-4 ring-${color.split('-')[1]}-500/20`
-                      : `bg-white/95 dark:bg-gray-700/95 text-slate-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 hover:shadow-xl border-2 ${borderColor} hover:border-${borderColor.split('-')[1]}-300 dark:hover:border-${borderColor.split('-')[1]}-500 shadow-lg backdrop-blur-sm`
+                      : `${isDark ? 'bg-gray-700/95 text-white hover:bg-gray-600' : 'bg-white/95 text-slate-700 hover:bg-white'} hover:shadow-xl border-2 ${borderColor} shadow-lg backdrop-blur-sm`
                 }`}
               >
                   <span className={`text-2xl ${selectedCategory === category.title ? 'text-white' : iconColor}`}>{getCategoryIcon(category.title)}</span>
@@ -890,14 +892,14 @@ const DestinationsPage = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2">
-              <span className="text-slate-700 dark:text-white font-medium">Tampilan:</span>
-              <div className="flex bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-xl p-1 border border-slate-200 dark:border-gray-600 shadow-sm">
+              <span className={`${isDark ? 'text-white' : 'text-slate-700'} font-medium`}>Tampilan:</span>
+              <div className={`flex ${isDark ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-slate-200'} backdrop-blur-sm rounded-xl p-1 border shadow-sm`}>
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all duration-200 ${
                     viewMode === "grid"
                       ? "bg-blue-500 text-white shadow-sm"
-                      : "text-slate-600 dark:text-gray-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600"
+                      : `${isDark ? 'text-gray-300 hover:text-white hover:bg-gray-600' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100'}`
                   }`}
                   title="Grid View"
                 >
@@ -908,7 +910,7 @@ const DestinationsPage = () => {
                   className={`p-2 rounded-lg transition-all duration-200 ${
                     viewMode === "list"
                       ? "bg-blue-500 text-white shadow-sm"
-                      : "text-slate-600 dark:text-gray-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-600"
+                      : `${isDark ? 'text-gray-300 hover:text-white hover:bg-gray-600' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100'}`
                   }`}
                   title="List View"
                 >
@@ -919,26 +921,26 @@ const DestinationsPage = () => {
 
             {/* Sort Options */}
             <div className="flex items-center gap-2">
-              <BiFilter className="text-slate-600 dark:text-gray-400" />
+              <BiFilter className={`${isDark ? 'text-gray-400' : 'text-slate-600'}`} />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white/90 dark:bg-gray-700/90 border border-slate-200 dark:border-gray-600 rounded-lg px-3 py-2 text-slate-700 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                className={`${isDark ? 'bg-gray-700/90 border-gray-600 text-white' : 'bg-white/90 border-slate-200 text-slate-700'} border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm`}
               >
-                <option value="name" className="bg-white dark:bg-gray-700 text-slate-700 dark:text-white">Urutkan: Nama</option>
-                <option value="rating" className="bg-white dark:bg-gray-700 text-slate-700 dark:text-white">Urutkan: Rating</option>
-                <option value="location" className="bg-white dark:bg-gray-700 text-slate-700 dark:text-white">Urutkan: Lokasi</option>
+                <option value="name" className={`${isDark ? 'bg-gray-700 text-white' : 'bg-white text-slate-700'}`}>Urutkan: Nama</option>
+                <option value="rating" className={`${isDark ? 'bg-gray-700 text-white' : 'bg-white text-slate-700'}`}>Urutkan: Rating</option>
+                <option value="location" className={`${isDark ? 'bg-gray-700 text-white' : 'bg-white text-slate-700'}`}>Urutkan: Lokasi</option>
               </select>
             </div>
           </div>
 
           {/* Results Count */}
           <div className="text-center mb-12">
-            <div className="inline-block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-8 py-4 border border-slate-200 dark:border-gray-600 shadow-lg">
-              <p className="text-slate-700 dark:text-white text-lg">
-                <span className="text-blue-600 dark:text-blue-400 font-semibold">{filteredData.length}</span> destinasi ditemukan
+            <div className={`inline-block ${isDark ? 'bg-gray-800/80 border-gray-600' : 'bg-white/80 border-slate-200'} backdrop-blur-sm rounded-full px-8 py-4 border shadow-lg`}>
+              <p className={`${isDark ? 'text-white' : 'text-slate-700'} text-lg`}>
+                <span className={`${isDark ? 'text-blue-400' : 'text-blue-600'} font-semibold`}>{filteredData.length}</span> destinasi ditemukan
                 {selectedCategory !== "Semua" && (
-                  <span className="text-blue-600 dark:text-blue-400"> dalam kategori {selectedCategory}</span>
+                  <span className={`${isDark ? 'text-blue-400' : 'text-blue-600'}`}> dalam kategori {selectedCategory}</span>
                 )}
               </p>
             </div>
@@ -1071,7 +1073,7 @@ const DestinationsPage = () => {
               >
                 {viewMode === "grid" ? (
                   // Grid View Card (enhanced)
-                  <div className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 rounded-3xl overflow-hidden border border-blue-200 dark:border-blue-600 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 group-hover:scale-[1.02] shadow-lg transform hover:-translate-y-1">
+                  <div className={`relative ${isDark ? 'bg-gray-800/90 hover:bg-gray-700 border-blue-600 hover:border-blue-500' : 'bg-white/90 hover:bg-white border-blue-200 hover:border-blue-300'} backdrop-blur-sm transition-all duration-300 rounded-3xl overflow-hidden border hover:shadow-2xl hover:shadow-blue-500/20 group-hover:scale-[1.02] shadow-lg transform hover:-translate-y-1`}>
                     {/* Image */}
                     <div className="relative h-56 overflow-hidden">
                       <img
@@ -1094,25 +1096,28 @@ const DestinationsPage = () => {
                       {/* Bottom overlay title + meta */}
                       <div className="absolute bottom-0 left-0 right-0 z-10 p-4 text-white">
                         <h3 className="font-bold text-lg line-clamp-1">{item.title}</h3>
-                        <div className="flex items-center justify-between text-xs opacity-95 mt-1">
+                        <div className="flex items-center text-xs opacity-95 mt-1">
                           <div className="flex items-center gap-1">
                             <BiMap className="text-blue-300" />
                             <span className="truncate max-w-[12rem]">{item.location}</span>
                           </div>
-                          {item.entrance_fee ? (
-                            <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 border border-white/30">{item.entrance_fee}</span>
-                          ) : item.price_range ? (
-                            <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 border border-white/30">{item.price_range}</span>
-                          ) : item.type ? (
-                            <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 border border-white/30 capitalize">{item.type}</span>
-                          ) : null}
                         </div>
                       </div>
                     </div>
                     
                     {/* Content */}
                     <div className="p-5">
-                      <p className="text-slate-600 dark:text-gray-300 text-sm mb-3 line-clamp-2 leading-relaxed">
+                      {/* Price/Category Bubbles - moved above description */}
+                      <div className="mb-3">
+                        {item.entrance_fee ? (
+                          <div className="text-sm font-medium" style={{ color: '#3a62e3' }}>{item.entrance_fee}</div>
+                        ) : item.price_range ? (
+                          <div className="text-sm font-medium" style={{ color: '#3a62e3' }}>{item.price_range}</div>
+                        ) : item.type ? (
+                          <div className="text-sm font-medium capitalize" style={{ color: '#3a62e3' }}>{item.type}</div>
+                        ) : null}
+                      </div>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-3 line-clamp-2 leading-relaxed`}>
                         {item.short_description || item.description || "Deskripsi tidak tersedia"}
                       </p>
                       {(() => {
@@ -1123,13 +1128,13 @@ const DestinationsPage = () => {
                               {parsedFeatures.slice(0, 3).map((feature, index) => (
                                 <span
                                   key={index}
-                                  className="bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs"
+                                  className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-xs`}
                                 >
                                   {feature}
                                 </span>
                               ))}
                               {parsedFeatures.length > 3 && (
-                                <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
+                                <span className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-xs`}>
                                   +{parsedFeatures.length - 3} lagi
                                 </span>
                               )}
@@ -1144,7 +1149,7 @@ const DestinationsPage = () => {
                   </div>
                 ) : (
                   // List View Card
-                  <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 rounded-2xl overflow-hidden border border-blue-200 dark:border-blue-600 hover:border-blue-300 dark:hover:border-blue-500 p-6 shadow-lg border-l-4 border-blue-500/70">
+                  <div className={`${isDark ? 'bg-gray-800/90 hover:bg-gray-700 border-blue-600 hover:border-blue-500' : 'bg-white/90 hover:bg-white border-blue-200 hover:border-blue-300'} backdrop-blur-sm transition-all duration-300 rounded-2xl overflow-hidden border p-6 shadow-lg border-l-4 border-blue-500/70`}>
                     <div className="flex gap-6">
                       {/* Image */}
                       <div className="relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden">
@@ -1161,7 +1166,7 @@ const DestinationsPage = () => {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-slate-800 dark:text-white font-bold text-xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                          <h3 className={`${isDark ? 'text-white group-hover:text-blue-400' : 'text-slate-800 group-hover:text-blue-600'} font-bold text-xl transition-colors line-clamp-1`}>
                             {item.title}
                           </h3>
                           {item.rating && (
@@ -1171,7 +1176,7 @@ const DestinationsPage = () => {
                             </div>
                           )}
                         </div>
-                        <p className="text-slate-600 dark:text-gray-300 text-sm mb-3 line-clamp-2 leading-relaxed">
+                        <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-3 line-clamp-2 leading-relaxed`}>
                           {item.short_description || item.description || "Deskripsi tidak tersedia"}
                         </p>
                         

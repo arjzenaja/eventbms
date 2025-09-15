@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/select"
 import { useContext, useState } from "react";
 import { EventContext } from "@/context/EventContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const EventType = () => {
   const { events, selectedType, setSelectedType } = useContext(EventContext);
+  const { isDark } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
@@ -96,73 +98,32 @@ const EventType = () => {
   };
 
   return (
-    <div className="flex items-end xl:items-center gap-4 xl:gap-6 w-full max-w-[420px]">
-      {/* Kategori Dropdown */}
-      <div className="flex flex-col gap-1 flex-1 min-w-[170px]">
-        <label className="text-white font-bold text-xs">Kategori</label>
-        <div className="flex items-center gap-2">
-          <div className='text-sm text-[#3B82F6]'>
-            <BiLayer />
-          </div>
-          <Select
-            value={selectedCategory}
-            onValueChange={handleCategoryChange}
-          >
-            <SelectTrigger className="bg-white/20 border border-blue-300 rounded-md focus:ring-0 focus:ring-offset-0 text-left px-3 py-2 text-white placeholder-gray-300 shadow-none font-medium flex items-center justify-between text-sm h-9">
-              <SelectValue placeholder="Pilih Kategori" />
-              <BiChevronDown className="w-3 h-3 text-white" />
-            </SelectTrigger>
-            <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
-              <SelectGroup>
-                <SelectLabel className="font-semibold text-gray-900 dark:text-white px-3 py-2">Kategori</SelectLabel>
-                {categoryTypes.map((cat, index) => (
-                  <SelectItem 
-                    key={`category-${cat.category}-${index}`} 
-                    value={cat.category}
-                    className="text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer px-3 py-2"
-                  >
-                    {cat.category}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="flex items-center gap-3 w-full">
+      <div className="text-blue-400">
+        <BiLayer className="w-5 h-5" />
       </div>
-
-      {/* Sub Kategori Dropdown */}
-      <div className="flex flex-col gap-1 flex-1 min-w-[190px]">
-        <label className="text-white font-bold text-xs">Sub Kategori</label>
-        <div className="flex items-center gap-2">
-          <div className='text-sm text-[#3B82F6]'>
-            <BiLayer />
-          </div>
-          <Select
-            value={selectedSubCategory}
-            onValueChange={handleSubCategoryChange}
-            disabled={!selectedCategory}
-          >
-            <SelectTrigger className="bg-white/20 border border-blue-300 rounded-md focus:ring-0 focus:ring-offset-0 text-left px-3 py-2 text-white placeholder-gray-300 shadow-none font-medium flex items-center justify-between text-sm h-9 disabled:opacity-50">
-              <SelectValue placeholder="Pilih Sub Kategori" />
-              <BiChevronDown className="w-3 h-3 text-white" />
-            </SelectTrigger>
-            <SelectContent className="z-30 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl dark:shadow-none rounded-lg backdrop-blur-md">
-              <SelectGroup>
-                <SelectLabel className="font-semibold text-gray-900 dark:text-white px-3 py-2">Sub Kategori</SelectLabel>
-                {selectedCategory && getSubCategories(selectedCategory).map((subCat, index) => (
-                  <SelectItem 
-                    key={`subcategory-${subCat}-${index}`} 
-                    value={subCat}
-                    className="text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer px-3 py-2"
-                  >
-                    {subCat.replace(/-/g, ' ')}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <Select
+        value={selectedSubCategory}
+        onValueChange={handleSubCategoryChange}
+      >
+        <SelectTrigger className={`bg-transparent border-none focus:ring-0 focus:ring-offset-0 text-left p-0 ${isDark ? 'text-white' : 'text-gray-900'} shadow-none font-medium flex items-center justify-between`}>
+          <SelectValue placeholder="Kategori Wisata" />
+        </SelectTrigger>
+        <SelectContent className="z-30 bg-white/95 backdrop-blur-md border border-gray-200/30 shadow-xl rounded-lg">
+          <SelectGroup>
+            <SelectLabel className="font-semibold text-gray-900 px-3 py-2">Kategori Wisata</SelectLabel>
+            {categoryTypes.map((cat, index) => (
+              <SelectItem 
+                key={`category-${cat.category}-${index}`} 
+                value={cat.category}
+                className="text-gray-900 hover:bg-blue-50 cursor-pointer px-3 py-2"
+              >
+                {cat.category}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   );
 };

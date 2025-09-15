@@ -1,15 +1,12 @@
 "use client";
 import React, { useContext, useState, useEffect } from "react";
 import { TicketContext } from "@/context/TicketContext";
-import { BiInfoCircle, BiStar, BiCube, BiCart, BiMoney, BiTime, BiCamera, BiMessageRounded } from "react-icons/bi";
+import { BiInfoCircle, BiStar, BiCube, BiCart, BiMoney, BiTime, BiCamera, BiMessageRounded, BiCalendar, BiMap, BiUser, BiPhone } from "react-icons/bi";
 
 const EventPackages = ({ event }) => {
   const { handleSeat } = useContext(TicketContext);
   const seats = Array.isArray(event?.seats) ? event.seats : [];
   const pricing = event?.pricing || {};
-  const [activeCategory, setActiveCategory] = useState("Semua Menu");
-  const [menuItems, setMenuItems] = useState([]);
-  const [isLoadingMenu, setIsLoadingMenu] = useState(false);
 
   const formatPrice = (value) => {
     const num = Number(value || 0);
@@ -17,114 +14,10 @@ const EventPackages = ({ event }) => {
     return `Rp ${num.toLocaleString("id-ID")}`;
   };
 
-  // Fetch menu items for this event
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        setIsLoadingMenu(true);
-        // Try to fetch menu items from the API
-        const response = await fetch('/api/menu_items');
-        if (response.ok) {
-          const data = await response.json();
-          // Filter menu items that might be related to this event
-          // For now, we'll use all available menu items
-          setMenuItems(data.menu_items || []);
-        }
-      } catch (error) {
-        console.error('Error fetching menu items:', error);
-        // Fallback to sample data if API fails
-        setMenuItems(getSampleMenuItems());
-      } finally {
-        setIsLoadingMenu(false);
-      }
-    };
 
-    fetchMenuItems();
-  }, [event]);
-
-  // Sample menu data as fallback
-  const getSampleMenuItems = () => [
-    {
-      id: 1,
-      name: "Nasi Goreng Spesial",
-      description: "Nasi goreng dengan telur, ayam, dan sayuran segar khas Banyumas",
-      price: 25000,
-      rating: 4.8,
-      cookingTime: "10-15 menit",
-      category: "Makanan Utama",
-      isPopular: true,
-      isSpicy: false,
-      additionalInfo: ["Halal", "Fresh"],
-      image: "/placeholder.jpg"
-    },
-    {
-      id: 2,
-      name: "Sate Banyumas",
-      description: "Sate ayam dengan bumbu kacang khas Banyumas yang lezat",
-      price: 35000,
-      rating: 4.9,
-      cookingTime: "15-20 menit",
-      category: "Sate",
-      isPopular: true,
-      isSpicy: true,
-      additionalInfo: ["Halal", "Signature"],
-      image: "/placeholder.jpg"
-    },
-    {
-      id: 3,
-      name: "Soto Sokaraja",
-      description: "Soto ayam dengan kuah bening dan pelengkap lengkap",
-      price: 28000,
-      rating: 4.7,
-      cookingTime: "12-18 menit",
-      category: "Makanan Utama",
-      isPopular: false,
-      isSpicy: false,
-      additionalInfo: ["Halal", "Traditional"],
-      image: "/placeholder.jpg"
-    },
-    {
-      id: 4,
-      name: "Es Cendol Banyumas",
-      description: "Es cendol dengan santan dan gula merah khas Banyumas",
-      price: 8000,
-      rating: 4.8,
-      cookingTime: "5-8 menit",
-      category: "Minuman",
-      isPopular: false,
-      isSpicy: false,
-      additionalInfo: ["Halal", "Dessert"],
-      image: "/placeholder.jpg"
-    }
-  ];
-
-  // Category counts
-  const categoryCounts = {
-    "Semua Menu": menuItems.length,
-    "Menu Populer": menuItems.filter(item => item.isPopular || item.popular).length,
-    "Menu Utama": menuItems.filter(item => 
-      item.category === "Makanan Utama" || 
-      item.category === "Makanan" || 
-      item.category === "Sate"
-    ).length,
-    "Minuman": menuItems.filter(item => item.category === "Minuman").length
-  };
-
-  // Filter items based on active category
-  const filteredItems = activeCategory === "Semua Menu" 
-    ? menuItems 
-    : menuItems.filter(item => {
-        if (activeCategory === "Menu Populer") return item.isPopular || item.popular;
-        if (activeCategory === "Menu Utama") {
-          return item.category === "Makanan Utama" || 
-                 item.category === "Makanan" || 
-                 item.category === "Sate";
-        }
-        return item.category === activeCategory;
-      });
-
-  // Check if event is free
-  const isFreeEvent = pricing.free === true;
+  // Check if event is free - only if pricing.free is explicitly true
+  const isFreeEvent = pricing && pricing.free === true;
+  
 
   if (isFreeEvent) {
     return (
@@ -146,145 +39,139 @@ const EventPackages = ({ event }) => {
     );
   }
 
-  // Show pricing structure if available
-  const hasPricing = pricing.presale || pricing.normal || pricing.vip;
+  // Show pricing structure if available - check for actual pricing values
+  const hasPricing = (pricing.presale && pricing.presale > 0) || 
+                     (pricing.normal && pricing.normal > 0) || 
+                     (pricing.vip && pricing.vip > 0);
   const hasSeats = seats.length > 0;
+  
 
-  if (!hasPricing && !hasSeats) {
+  // Force show event info for events without proper pricing/seats
+  // Also show for events with empty pricing object
+  if (!hasPricing && !hasSeats || (pricing && Object.keys(pricing).length === 0)) {
     return (
-      <div className="bg-gray-900 rounded-2xl p-8">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 border border-white/30 dark:border-gray-700/30 shadow-2xl">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white mb-3">Menu Kuliner</h2>
-          <p className="text-gray-300 text-lg">
-            Jelajahi berbagai menu lezat yang tersedia di {event.title || "event ini"}. 
-            Pilih menu favorit Anda dan pesan langsung!
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Informasi Event</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
+            Informasi lengkap tentang {event?.title || "event ini"}
           </p>
         </div>
 
-        {/* Category Navigation */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
-          {Object.entries(categoryCounts).map(([category, count]) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeCategory === category
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-800 text-white hover:bg-gray-700'
-              }`}
-            >
-              {category}
-              <span className="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {count}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Loading State */}
-        {isLoadingMenu && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-400 text-lg">Memuat menu...</p>
-          </div>
-        )}
-
-        {/* Food Items Grid */}
-        {!isLoadingMenu && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredItems.map((item) => (
-              <div key={item.id} className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
-                {/* Image Section */}
-                <div className="relative h-48 bg-gray-700">
-                  <img 
-                    src={item.image || item.img_sm || "/placeholder.jpg"} 
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = '/placeholder.jpg';
-                    }}
-                  />
-                  
-                  {/* Popular Badge */}
-                  {(item.isPopular || item.popular) && (
-                    <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                      <BiStar className="w-3 h-3" />
-                      Populer
-                    </div>
-                  )}
-                  
-                  {/* Spicy Badge */}
-                  {item.isSpicy && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                      <span className="text-white">🔥</span>
-                      Pedas
-                    </div>
-                  )}
+        {/* Event Information */}
+        <div className="space-y-6">
+          {/* Event Details */}
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <BiInfoCircle className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+              Detail Event
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {event?.date && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center">
+                    <BiCalendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Tanggal</p>
+                    <p className="text-gray-900 dark:text-white font-medium">{event.date}</p>
+                  </div>
                 </div>
-
-                {/* Content Section */}
-                <div className="p-4 bg-gray-900">
-                  {/* Title and Rating */}
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-bold text-white flex-1">{item.name}</h3>
-                    <div className="flex items-center gap-1 text-yellow-400">
-                      <BiStar className="w-4 h-4 fill-current" />
-                      <span className="text-sm font-medium">{item.rating}</span>
-                    </div>
+              )}
+              {event?.time && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 dark:bg-green-500/20 rounded-lg flex items-center justify-center">
+                    <BiTime className="w-5 h-5 text-green-600 dark:text-green-400" />
                   </div>
-
-                  {/* Description */}
-                  <p className="text-gray-300 text-sm mb-3 leading-relaxed">
-                    {item.description}
-                  </p>
-
-                  {/* Price and Prep Time */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-1 text-green-400 font-bold">
-                      <BiCamera className="w-4 h-4" />
-                      {formatPrice(item.price)}
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-400 text-sm">
-                      <BiTime className="w-4 h-4" />
-                      {item.cookingTime || item.prepTime || "10-15 menit"}
-                    </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Waktu</p>
+                    <p className="text-gray-900 dark:text-white font-medium">{event.time}</p>
                   </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <button className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-300 flex items-center justify-center gap-2">
-                      <BiCart className="w-4 h-4" />
-                      Beli Menu
-                    </button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors duration-300">
-                      <BiMessageRounded className="w-5 h-5" />
-                    </button>
+                </div>
+              )}
+              {event?.location && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-500/20 rounded-lg flex items-center justify-center">
+                    <BiMap className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                   </div>
-
-                  {/* Tags */}
-                  <div className="flex gap-2">
-                    {(item.additionalInfo || item.tags || []).map((tag, index) => (
-                      <span key={index} className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Lokasi</p>
+                    <p className="text-gray-900 dark:text-white font-medium">{event.location}</p>
                   </div>
+                </div>
+              )}
+              {event?.organizer && (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-orange-100 dark:bg-orange-500/20 rounded-lg flex items-center justify-center">
+                    <BiUser className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                  </div>
+                  <div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Penyelenggara</p>
+                    <p className="text-gray-900 dark:text-white font-medium">{event.organizer}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Event Features */}
+          {event?.features && event.features.length > 0 && (
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <BiStar className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
+                Fasilitas & Fitur
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {event.features.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-2 bg-white dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                    <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full"></div>
+                    <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Contact Information */}
+          {event?.contact && (
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <BiPhone className="w-5 h-5 text-green-600 dark:text-green-400" />
+                Informasi Kontak
+              </h3>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-100 dark:bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <BiPhone className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">Kontak</p>
+                  <p className="text-gray-900 dark:text-white font-medium">{event.contact}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* No Items Message */}
-        {!isLoadingMenu && filteredItems.length === 0 && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-              <BiCube className="w-8 h-8 text-gray-400" />
             </div>
-            <p className="text-gray-400 text-lg">Tidak ada menu tersedia untuk kategori ini.</p>
+          )}
+
+          {/* Registration Notice */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-600/20 dark:to-purple-600/20 border border-blue-200 dark:border-blue-500/30 rounded-xl p-6 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <BiInfoCircle className="text-white text-2xl" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Informasi Pendaftaran</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Untuk informasi lebih lanjut tentang pendaftaran dan tiket, silakan hubungi penyelenggara event.
+            </p>
+            {event?.contact && (
+              <a 
+                href={`tel:${event.contact}`}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-300"
+              >
+                <BiPhone className="w-4 h-4" />
+                Hubungi Penyelenggara
+              </a>
+            )}
           </div>
-        )}
+        </div>
       </div>
     );
   }

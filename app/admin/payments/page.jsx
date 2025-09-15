@@ -7,6 +7,7 @@ import { BiXCircle } from "react-icons/bi";
 import { BiRefresh } from "react-icons/bi";
 import { BiTime } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const AdminPaymentsPage = () => {
   const [payments, setPayments] = useState([]);
@@ -22,7 +23,12 @@ const AdminPaymentsPage = () => {
   const fetchPayments = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/payments');
+      const response = await fetch('/api/payments', {
+        headers: {
+          'Authorization': 'Bearer admin-token', // In production, use real JWT token
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       setPayments(data.payments || []);
     } catch (error) {
@@ -37,6 +43,7 @@ const AdminPaymentsPage = () => {
       const response = await fetch(`/api/payments/${paymentId}`, {
         method: 'PUT',
         headers: {
+          'Authorization': 'Bearer admin-token', // In production, use real JWT token
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status, adminNotes }),
@@ -109,7 +116,8 @@ const AdminPaymentsPage = () => {
   }
 
   return (
-    <div className="p-6 space-y-6 bg-white min-h-screen">
+    <ProtectedRoute>
+      <div className="p-6 space-y-6 bg-white min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -199,6 +207,20 @@ const AdminPaymentsPage = () => {
                 <div className="text-xs text-gray-500">
                   {formatDate(payment.createdAt)}
                 </div>
+              </div>
+              {/* Payment Proof Indicator */}
+              <div className="flex items-center gap-2">
+                {payment.paymentProof?.hasProof ? (
+                  <div className="flex items-center gap-1 text-green-600 text-xs">
+                    <BiCheckCircle className="text-sm" />
+                    <span>Ada Bukti</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-yellow-600 text-xs">
+                    <BiTime className="text-sm" />
+                    <span>Belum Ada</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -319,6 +341,49 @@ const AdminPaymentsPage = () => {
                   </div>
                 </div>
 
+                {/* Payment Proof */}
+                {selectedPayment.paymentProof && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-black mb-3">Bukti Pembayaran</h3>
+                    <div className="space-y-3">
+                      {selectedPayment.paymentProof.imageUrl ? (
+                        <div className="relative">
+                          <img
+                            src={selectedPayment.paymentProof.imageUrl}
+                            alt="Payment proof"
+                            className="w-full max-w-md mx-auto rounded-lg shadow-lg border border-gray-200"
+                          />
+                          <div className="mt-2 text-center">
+                            <a
+                              href={selectedPayment.paymentProof.imageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 text-sm underline"
+                            >
+                              Buka dalam tab baru
+                            </a>
+                          </div>
+                        </div>
+                      ) : selectedPayment.paymentProof.fileName ? (
+                        <div className="bg-gray-100 rounded-lg p-4 text-center">
+                          <div className="text-gray-600 mb-2">File Bukti Pembayaran:</div>
+                          <div className="font-mono text-sm text-black">{selectedPayment.paymentProof.fileName}</div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {selectedPayment.paymentProof.hasProof ? 'Bukti tersedia' : 'Tidak ada bukti'}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="bg-yellow-100 rounded-lg p-4 text-center">
+                          <div className="text-yellow-800 font-medium">Belum ada bukti pembayaran</div>
+                          <div className="text-yellow-600 text-sm mt-1">
+                            Customer belum mengupload bukti pembayaran
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Admin Actions */}
                 {selectedPayment.status === 'pending' && (
                   <div className="space-y-3">
@@ -346,7 +411,8 @@ const AdminPaymentsPage = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 };
 
