@@ -13,6 +13,9 @@ import ConditionalLayout from "@/components/ConditionalLayout";
 export const metadata = {
   title: "EventBMS - Tourism Management System",
   description: "Sistem manajemen wisata Kabupaten Banyumas",
+  icons: {
+    icon: "/Lambang_Kabupaten_Banyumas.png"
+  }
 };
 
 const poppins = Poppins({

@@ -8,6 +8,7 @@ import { useTheme } from "@/context/ThemeContext";
 import PaymentMethod from "./PaymentMethod";
 import PaymentForm from "./PaymentForm";
 import PaymentProofUpload from "./PaymentProofUpload";
+import { Toast } from "@/components/ui/alert";
 import { BiCheckCircle } from "react-icons/bi";
 import { BiXCircle } from "react-icons/bi";
 import { BiLeftArrowAlt } from "react-icons/bi";
@@ -40,6 +41,7 @@ const PaymentCheckout = ({ onBack, onSuccess }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [toast, setToast] = useState({ show: false, type: 'warning', title: '', message: '' });
 
   const formatPrice = (price) => `Rp ${Number(price || 0).toLocaleString("id-ID")}`;
 
@@ -156,13 +158,23 @@ const PaymentCheckout = ({ onBack, onSuccess }) => {
 
     // Validate form data
     if (!formData.firstName || !formData.email || !formData.phone) {
-      alert('Mohon lengkapi semua field yang wajib diisi!');
+      setToast({
+        show: true,
+        type: 'warning',
+        title: 'Data belum lengkap',
+        message: 'Mohon lengkapi semua field yang wajib diisi.'
+      });
       return;
     }
 
     // Validate payment proof
     if (!paymentProof.file) {
-      alert('Mohon upload bukti pembayaran terlebih dahulu!');
+      setToast({
+        show: true,
+        type: 'error',
+        title: 'Bukti pembayaran wajib',
+        message: 'Mohon upload bukti pembayaran terlebih dahulu.'
+      });
       return;
     }
 
@@ -470,6 +482,16 @@ const PaymentCheckout = ({ onBack, onSuccess }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 mt-8">
+      <Toast
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        show={toast.show}
+        onClose={() => setToast(prev => ({ ...prev, show: false }))}
+        position="top-right"
+        autoClose={true}
+        autoCloseDelay={2800}
+      />
       {/* Demo Notice */}
       <div className={`bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-orange-500/20 border ${isDark ? 'border-yellow-400/40' : 'border-yellow-500/60'} rounded-2xl p-6 mb-8 shadow-lg backdrop-blur-sm`}>
         <div className="flex items-center gap-4">

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { validateAdminAuth, createUnauthorizedResponse } from "../../../../lib/admin-auth";
 
 const dbPath = path.join(process.cwd(), "db.json");
 
@@ -53,6 +54,12 @@ export async function GET(request, { params }) {
 // PUT - Update specific payment
 export async function PUT(request, { params }) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (!authResult.isValid) {
+      return createUnauthorizedResponse(authResult.error);
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { status, notes, paymentProof, adminNotes } = body;
@@ -114,6 +121,12 @@ export async function PUT(request, { params }) {
 // DELETE - Delete specific payment
 export async function DELETE(request, { params }) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (!authResult.isValid) {
+      return createUnauthorizedResponse(authResult.error);
+    }
+
     const { id } = await params;
 
     if (!id) {

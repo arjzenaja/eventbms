@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const ThemeContext = createContext();
 
@@ -13,47 +13,61 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [themeMode, setThemeMode] = useState('light'); // 'light' | 'dark' | 'auto'
+  const [appliedTheme, setAppliedTheme] = useState('light');
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Mark as hydrated
     setIsHydrated(true);
-    
-    // Check localStorage for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      setTheme(savedTheme);
+    const savedMode = localStorage.getItem('themeMode') || localStorage.getItem('theme');
+    if (savedMode === 'light' || savedMode === 'dark' || savedMode === 'auto') {
+      setThemeMode(savedMode);
     } else {
-      // Check system preference
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      setTheme(systemTheme);
+      setThemeMode('auto');
     }
   }, []);
 
   useEffect(() => {
-    // Only apply theme to document after hydration
-    if (isHydrated) {
+    if (!isHydrated) return;
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const computeApplied = (mode) => (mode === 'auto' ? (media.matches ? 'dark' : 'light') : mode);
+    const nextApplied = computeApplied(themeMode);
+    setAppliedTheme(nextApplied);
+
+    const applyToDom = (t) => {
       const root = document.documentElement;
       root.classList.remove('light', 'dark');
-      root.classList.add(theme);
-      
-      // Save to localStorage
-      localStorage.setItem('theme', theme);
-    }
-  }, [theme, isHydrated]);
+      root.classList.add(t);
+    };
+    applyToDom(nextApplied);
+    localStorage.setItem('themeMode', themeMode);
+
+    const handleChange = () => {
+      if (themeMode === 'auto') {
+        const newest = computeApplied('auto');
+        setAppliedTheme(newest);
+        applyToDom(newest);
+      }
+    };
+
+    media.addEventListener?.('change', handleChange);
+    return () => media.removeEventListener?.('change', handleChange);
+  }, [themeMode, isHydrated]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  const value = {
-    theme,
+  const value = useMemo(() => ({
+    theme: appliedTheme,
+    themeMode,
+    setThemeMode,
     toggleTheme,
-    isDark: theme === 'dark',
-    isLight: theme === 'light',
-    isHydrated
-  };
+    isDark: appliedTheme === 'dark',
+    isLight: appliedTheme === 'light',
+    isHydrated,
+  }), [appliedTheme, themeMode, isHydrated]);
 
   return (
     <ThemeContext.Provider value={value}>

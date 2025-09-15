@@ -4,10 +4,19 @@ import React, { useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue
+} from '@/components/ui/select';
+import { useTheme } from '@/context/ThemeContext';
 
 const SettingsPage = () => {
-  const { user, updateProfile, updatePreferences, logout } = useUser();
+  const { user, isLoading, updateProfile, updatePreferences, logout } = useUser();
   const router = useRouter();
+  const { setThemeMode, themeMode } = useTheme();
   
   const [activeTab, setActiveTab] = useState('profile');
   const [saved, setSaved] = useState(false);
@@ -76,11 +85,29 @@ const SettingsPage = () => {
     router.push('/');
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-600 dark:text-gray-300">Memuat...</div>
+      </div>
+    );
+  }
+
   if (!user) {
-    if (typeof window !== 'undefined') {
-      router.push('/login');
-    }
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-white/90 dark:bg-gray-800/90 rounded-3xl shadow-xl p-8 text-center">
+          <div className="text-2xl font-semibold mb-2 text-gray-800 dark:text-white">Silakan Masuk</div>
+          <p className="mb-6 text-gray-600 dark:text-gray-300">Anda perlu login untuk mengakses pengaturan akun.</p>
+          <button
+            onClick={() => router.push('/login')}
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg shadow-blue-500/25"
+          >
+            Masuk
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -227,29 +254,64 @@ const SettingsPage = () => {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Tema
                         </label>
-                        <select
-                          value={preferencesForm.theme}
-                          onChange={(e) => setPreferencesForm({...preferencesForm, theme: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                        >
-                          <option value="light">Mode Terang</option>
-                          <option value="dark">Mode Gelap</option>
-                          <option value="auto">Otomatis</option>
-                        </select>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { value: 'light', label: 'Mode Terang', icon: '☀️' },
+                            { value: 'dark', label: 'Mode Gelap', icon: '🌙' },
+                            { value: 'auto', label: 'Otomatis', icon: '⚙️' }
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => {
+                                setPreferencesForm({ ...preferencesForm, theme: opt.value });
+                                setThemeMode(opt.value);
+                              }}
+                              aria-pressed={preferencesForm.theme === opt.value}
+                              className={`p-4 rounded-2xl border transition-all text-left ${
+                                preferencesForm.theme === opt.value
+                                  ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg leading-none">{opt.icon}</span>
+                                <span className="font-medium">{opt.label}</span>
+                              </div>
+                              <div className="mt-2">
+                                <span
+                                  className={`inline-block h-4 w-4 rounded-full border-2 align-middle ${
+                                    preferencesForm.theme === opt.value
+                                      ? 'border-blue-600 bg-blue-600'
+                                      : 'border-gray-300'
+                                  }`}
+                                  role="radio"
+                                  aria-checked={preferencesForm.theme === opt.value}
+                                />
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Bahasa
                         </label>
-                        <select
-                          value={preferencesForm.language}
-                          onChange={(e) => setPreferencesForm({...preferencesForm, language: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                        >
-                          <option value="id">Bahasa Indonesia</option>
-                          <option value="en">English</option>
-                        </select>
+                        <div className="w-full">
+                          <Select
+                            value={preferencesForm.language}
+                            onValueChange={(val) => setPreferencesForm({ ...preferencesForm, language: val })}
+                          >
+                            <SelectTrigger className="h-12 rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 text-gray-900 dark:text-white">
+                              <SelectValue placeholder="Pilih bahasa" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-xl">
+                              <SelectItem value="id">Bahasa Indonesia</SelectItem>
+                              <SelectItem value="en">English</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                     </div>
 

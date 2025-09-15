@@ -189,6 +189,14 @@ export function Toast({
   const [isVisible, setIsVisible] = useState(show);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Sync internal visibility with external `show` prop
+  useEffect(() => {
+    setIsVisible(show);
+    if (show) {
+      setIsAnimating(false);
+    }
+  }, [show]);
+
   // Log component props for debugging
   useEffect(() => {
     if (show) {

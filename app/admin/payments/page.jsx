@@ -15,6 +15,8 @@ const AdminPaymentsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [quickReason, setQuickReason] = useState("");
 
   useEffect(() => {
     fetchPayments();
@@ -384,10 +386,67 @@ const AdminPaymentsPage = () => {
                   </div>
                 )}
 
+                {/* Refund Section (read-only overview) */}
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold text-black mb-3">Status Refund</h3>
+                  {selectedPayment.refund ? (
+                    <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3">
+                      <div>
+                        <div className="text-sm text-gray-600">Jumlah Refund</div>
+                        <div className="text-base font-semibold text-purple-600">{formatPrice(selectedPayment.refund.amount)}</div>
+                        <div className="text-xs text-gray-500 mt-1">Status: <span className="capitalize">{selectedPayment.refund.status}</span></div>
+                      </div>
+                      <button
+                        onClick={() => { window.location.href = '/admin/refunds'; }}
+                        className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+                      >Kelola Refund</button>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-600">
+                      Belum ada permintaan refund untuk pembayaran ini.
+                    </div>
+                  )}
+                </div>
+
                 {/* Admin Actions */}
                 {selectedPayment.status === 'pending' && (
                   <div className="space-y-3">
                     <h3 className="text-lg font-semibold text-black">Aksi Admin</h3>
+                    {/* Rejection Form */}
+                    <div className="space-y-2 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                      <div className="text-sm text-gray-900 font-semibold">Alasan Penolakan</div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => { setQuickReason('Bukti pembayaran tidak valid/blur'); setRejectionReason('Bukti pembayaran tidak valid/blur'); }}
+                          className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-100 text-gray-800"
+                        >Bukti tidak valid</button>
+                        <button
+                          type="button"
+                          onClick={() => { setQuickReason('Nominal transfer tidak sesuai'); setRejectionReason('Nominal transfer tidak sesuai'); }}
+                          className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-100 text-gray-800"
+                        >Nominal tidak sesuai</button>
+                        <button
+                          type="button"
+                          onClick={() => { setQuickReason('Melewati batas waktu pembayaran'); setRejectionReason('Melewati batas waktu pembayaran'); }}
+                          className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-100 text-gray-800"
+                        >Lewat batas waktu</button>
+                        <button
+                          type="button"
+                          onClick={() => { setQuickReason('Data transaksi tidak cocok'); setRejectionReason('Data transaksi tidak cocok'); }}
+                          className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-100 text-gray-800"
+                        >Data tidak cocok</button>
+                      </div>
+                      <textarea
+                        value={rejectionReason}
+                        onChange={(e) => setRejectionReason(e.target.value)}
+                        placeholder="Tuliskan alasan penolakan untuk ditampilkan ke pelanggan..."
+                        rows={3}
+                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-purple-400"
+                      />
+                      <div className="text-xs text-gray-600">Alasan ini akan terlihat oleh pelanggan pada halaman status pembayaran.</div>
+                    </div>
+
                     <div className="flex gap-3">
                       <button
                         onClick={() => updatePaymentStatus(selectedPayment.id, 'completed', 'Pembayaran diverifikasi')}
@@ -397,7 +456,7 @@ const AdminPaymentsPage = () => {
                         Verifikasi
                       </button>
                       <button
-                        onClick={() => updatePaymentStatus(selectedPayment.id, 'cancelled', 'Pembayaran dibatalkan')}
+                        onClick={() => updatePaymentStatus(selectedPayment.id, 'cancelled', rejectionReason || 'Pembayaran dibatalkan oleh admin')}
                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                       >
                         <BiXCircle className="text-lg" />
