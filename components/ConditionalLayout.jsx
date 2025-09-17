@@ -29,9 +29,14 @@ export default function ConditionalLayout({ children }) {
   return (
     <>
       {!isAdminPage && <Header />}
-      {children}
-      {/* Only show user notifications if NOT on admin page */}
-      {!isAdminPage && <NotificationProvider />}
+      {/* Wrap page content with NotificationProvider so hooks work inside */}
+      {!isAdminPage ? (
+        <NotificationProvider>
+          {children}
+        </NotificationProvider>
+      ) : (
+        children
+      )}
       {!isAdminPage && <Footer />}
     </>
   );

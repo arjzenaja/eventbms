@@ -120,7 +120,8 @@ export async function POST(request) {
       data: {
         email,
         expires_in: 600, // 10 minutes in seconds
-        otp_id: otpRecord.id
+        otp_id: otpRecord.id,
+        cooldown_seconds: 30
       }
     });
     

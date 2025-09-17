@@ -4,8 +4,10 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { UserProvider, useUser } from '@/context/UserContext';
 import { BiRefresh, BiCheckCircle, BiXCircle, BiTime, BiEnvelope, BiLeftArrowAlt } from 'react-icons/bi';
+import { useTheme } from '@/context/ThemeContext';
 
 function VerifyOTPContent() {
+  const { isDark, isHydrated } = useTheme();
   const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -14,6 +16,7 @@ function VerifyOTPContent() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [cooldownLeft, setCooldownLeft] = useState(0);
   const [otpId, setOtpId] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [maxAttempts, setMaxAttempts] = useState(3);
@@ -58,6 +61,16 @@ function VerifyOTPContent() {
     return () => clearInterval(interval);
   }, [timeLeft]);
 
+  useEffect(() => {
+    let cooldownTimer;
+    if (cooldownLeft > 0) {
+      cooldownTimer = setInterval(() => {
+        setCooldownLeft(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(cooldownTimer);
+  }, [cooldownLeft]);
+
   const checkOTPStatus = async () => {
     try {
       const response = await fetch(`/api/users/verify-otp?email=${encodeURIComponent(email)}`);
@@ -65,6 +78,9 @@ function VerifyOTPContent() {
       
       if (data.success) {
         setTimeLeft(data.data.expires_in);
+        if (typeof data.data.cooldown_remaining === 'number') {
+          setCooldownLeft(data.data.cooldown_remaining);
+        }
         setOtpId(data.data.otp_id);
         setAttempts(data.data.attempts);
         setMaxAttempts(data.data.max_attempts);
@@ -196,6 +212,11 @@ function VerifyOTPContent() {
       if (data.success) {
         setTimeLeft(data.data.expires_in);
         setOtpId(data.data.otp_id);
+        if (typeof data.data.cooldown_seconds === 'number') {
+          setCooldownLeft(data.data.cooldown_seconds);
+        } else {
+          setCooldownLeft(30);
+        }
         setAttempts(0);
         setOtpCode(['', '', '', '', '', '']);
         
@@ -223,16 +244,25 @@ function VerifyOTPContent() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Prevent flash of wrong theme before hydration
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-100 flex items-center justify-center p-4">
+        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+      <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-900 via-blue-900 to-indigo-900' : 'from-blue-50 via-blue-100 to-indigo-100'} flex items-center justify-center p-4`}>
         <div className="max-w-md w-full">
-          <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl text-center">
+          <div className={`bg-gradient-to-br ${isDark ? 'from-white/10 to-white/5 backdrop-blur-lg border-white/20' : 'from-white to-white/90 border-slate-200'} rounded-3xl p-8 border shadow-2xl text-center`}>
             <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <BiCheckCircle className="text-white text-4xl" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">Verifikasi Berhasil!</h1>
-            <p className="text-blue-200 mb-8">
+            <h1 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-800'}`}>Verifikasi Berhasil!</h1>
+            <p className={`${isDark ? 'text-blue-200' : 'text-slate-600'} mb-8`}>
               Email Anda telah berhasil diverifikasi. Anda akan diarahkan ke halaman utama.
             </p>
             <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
@@ -243,19 +273,19 @@ function VerifyOTPContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+    <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-900 via-blue-900 to-indigo-900' : 'from-blue-50 via-blue-100 to-indigo-100'} flex items-center justify-center p-4`}>
       <div className="max-w-md w-full">
-        <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+        <div className={`bg-gradient-to-br ${isDark ? 'from-white/10 to-white/5 backdrop-blur-lg border-white/20' : 'from-white to-white/90 border-slate-200'} rounded-3xl p-8 border shadow-2xl`}>
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <BiEnvelope className="text-white text-2xl" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Verifikasi Email</h1>
-            <p className="text-blue-200 text-sm">
+            <h1 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>Verifikasi Email</h1>
+            <p className={`${isDark ? 'text-blue-200' : 'text-slate-600'} text-sm`}>
               Masukkan 6 digit kode OTP yang telah dikirim ke
             </p>
-            <p className="text-white font-semibold">{email}</p>
+            <p className={`${isDark ? 'text-white' : 'text-slate-900'} font-semibold`}>{email}</p>
           </div>
 
           {/* OTP Input */}
@@ -273,14 +303,18 @@ function VerifyOTPContent() {
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={handlePaste}
-                  className="w-12 h-12 text-center text-2xl font-bold bg-white/10 border border-white/20 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 focus:bg-white/15 transition-all duration-300"
+                  className={`w-12 h-12 text-center text-2xl font-bold rounded-xl transition-all duration-300 focus:ring-2 ${
+                    isDark
+                      ? 'bg-white/10 border border-white/20 text-white focus:border-blue-400 focus:ring-blue-400/20 focus:bg-white/15'
+                      : 'bg-white border border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-blue-400/30'
+                  }`}
                   disabled={isLoading}
                 />
               ))}
             </div>
             
             {error && (
-              <div className="flex items-center gap-2 text-red-400 text-sm mb-4">
+              <div className={`flex items-center gap-2 text-sm mb-4 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                 <BiXCircle className="text-lg" />
                 <span>{error}</span>
               </div>
@@ -290,22 +324,22 @@ function VerifyOTPContent() {
           {/* Timer and Resend */}
           <div className="text-center mb-6">
             {timeLeft > 0 ? (
-              <div className="flex items-center justify-center gap-2 text-blue-200 text-sm mb-4">
+              <div className={`flex items-center justify-center gap-2 text-sm mb-4 ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
                 <BiTime className="text-lg" />
                 <span>Kode berlaku selama: {formatTime(timeLeft)}</span>
               </div>
             ) : (
-              <div className="text-yellow-400 text-sm mb-4">
+              <div className={`${isDark ? 'text-yellow-400' : 'text-amber-600'} text-sm mb-4`}>
                 Kode OTP telah kedaluwarsa
               </div>
             )}
             
             <button
               onClick={handleResendOTP}
-              disabled={isResending || timeLeft > 0}
-              className={`text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors ${
-                isResending || timeLeft > 0 ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              disabled={isResending || cooldownLeft > 0}
+              className={`text-sm font-medium transition-colors ${
+                isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
+              } ${isResending || cooldownLeft > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isResending ? (
                 <div className="flex items-center gap-2">
@@ -315,7 +349,7 @@ function VerifyOTPContent() {
               ) : (
                 <div className="flex items-center gap-2">
                   <BiRefresh className="text-lg" />
-                  Kirim ulang kode OTP
+                  {cooldownLeft > 0 ? `Kirim ulang dalam ${formatTime(cooldownLeft)}` : 'Kirim ulang kode OTP'}
                 </div>
               )}
             </button>
@@ -337,8 +371,10 @@ function VerifyOTPContent() {
               disabled={isLoading || otpCode.join('').length !== 6}
               className={`w-full font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform ${
                 isLoading || otpCode.join('').length !== 6
-                  ? 'bg-gray-600 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:scale-105 shadow-lg hover:shadow-blue-500/25'
+                  ? (isDark
+                      ? 'bg-gray-600 text-white/70 cursor-not-allowed'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed')
+                  : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 hover:scale-105 shadow-lg hover:shadow-blue-500/25'
               }`}
             >
               {isLoading ? (
@@ -354,7 +390,9 @@ function VerifyOTPContent() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => router.push('/resend-otp')}
-                className="bg-transparent border-2 border-yellow-400/30 text-yellow-400 font-bold py-3 px-4 rounded-2xl hover:bg-yellow-400/10 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                className={`bg-transparent border-2 font-bold py-3 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 text-sm ${
+                  isDark ? 'border-yellow-400/30 text-yellow-400 hover:bg-yellow-400/10' : 'border-amber-400/50 text-amber-600 hover:bg-amber-50'
+                }`}
               >
                 <BiRefresh className="text-lg" />
                 Kirim Ulang
@@ -362,7 +400,9 @@ function VerifyOTPContent() {
               
               <button
                 onClick={() => router.push('/register')}
-                className="bg-transparent border-2 border-white/30 text-white font-bold py-3 px-4 rounded-2xl hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                className={`bg-transparent border-2 font-bold py-3 px-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 text-sm ${
+                  isDark ? 'border-white/30 text-white hover:bg-white/10' : 'border-slate-300 text-slate-700 hover:bg-slate-50'
+                }`}
               >
                 <BiLeftArrowAlt className="text-lg" />
                 Kembali

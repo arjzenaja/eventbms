@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { BiMap, BiSearch, BiFilter, BiGrid, BiStar, BiPhone } from "react-icons/bi";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import { useTheme } from '@/context/ThemeContext';
@@ -39,6 +40,7 @@ const DestinationSkeleton = ({ viewMode }) => {
 
 const DestinationsPage = () => {
   const { isDark } = useTheme();
+  const searchParams = useSearchParams();
   const [destinations, setDestinations] = useState({});
   const [filteredData, setFilteredData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Semua");
@@ -173,6 +175,27 @@ const DestinationsPage = () => {
         return 'Semua Jenis';
     }
   };
+
+  // Handle URL parameters for category filtering
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      // Map URL parameter to category title
+      const categoryMap = {
+        'biro-perjalanan': 'Biro Perjalanan',
+        'desa-wisata': 'Desa Wisata',
+        'kuliner': 'Kuliner',
+        'wisata': 'Objek Wisata',
+        'oleh-oleh': 'Oleh-Oleh',
+        'penginapan': 'Penginapan'
+      };
+      
+      const categoryTitle = categoryMap[categoryParam];
+      if (categoryTitle) {
+        setSelectedCategory(categoryTitle);
+      }
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchDestinations = async () => {

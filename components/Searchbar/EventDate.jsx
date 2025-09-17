@@ -22,7 +22,7 @@ const EventDate = () => {
       </div>
       <Popover>
         <PopoverTrigger asChild>
-          <Button className={`w-full justify-start p-0 bg-transparent hover:bg-transparent ${isDark ? 'text-white' : 'text-gray-900'} shadow-none font-medium`}>
+          <Button variant="ghost" className={`w-full justify-start p-0 ${isDark ? 'text-white hover:bg-gray-700/50' : 'text-gray-900 hover:bg-gray-100/50'} shadow-none font-medium`}>
             {selectedDate ? (
               format(selectedDate, "PPP")
             ) : (
@@ -30,11 +30,11 @@ const EventDate = () => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white/95 backdrop-blur-md border border-gray-200/30 shadow-xl">
+        <PopoverContent className={`w-auto p-0 ${isDark ? 'bg-gray-800/95' : 'bg-white/95'} backdrop-blur-md border ${isDark ? 'border-gray-600/30' : 'border-gray-200/30'} shadow-xl`}>
           <Calendar
             mode="single"
             selected={selectedDate}
-            className="bg-transparent text-gray-900 rounded-xl p-4"
+            className={`bg-transparent ${isDark ? 'text-white' : 'text-gray-900'} rounded-xl p-4`}
             onSelect={handleDateChange}
             initialFocus
           />

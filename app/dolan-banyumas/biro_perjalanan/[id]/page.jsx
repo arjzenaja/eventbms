@@ -10,6 +10,7 @@ import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import TravelAgencyManager from "../../../../components/TravelAgencyManager";
 import TravelAgencyPriceList from "../../../../components/TravelAgencyPriceList";
+import RatingReviews from "../../../../components/RatingReviews";
 
 const BiroPerjalananDetail = () => {
 	const { id } = useParams();
@@ -90,6 +91,35 @@ const BiroPerjalananDetail = () => {
 
 	const contactInfo = parseContact(destination.contact);
 
+	// Handle share functionality
+	const handleShare = async () => {
+		const shareData = {
+			title: destination.title,
+			text: `Lihat biro perjalanan ${destination.title} di Dolan Banyumas`,
+			url: window.location.href
+		};
+
+		try {
+			if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+				await navigator.share(shareData);
+			} else {
+				// Fallback: copy to clipboard
+				await navigator.clipboard.writeText(window.location.href);
+				alert('Link berhasil disalin ke clipboard!');
+			}
+		} catch (error) {
+			console.error('Error sharing:', error);
+			// Fallback: copy to clipboard
+			try {
+				await navigator.clipboard.writeText(window.location.href);
+				alert('Link berhasil disalin ke clipboard!');
+			} catch (clipboardError) {
+				console.error('Error copying to clipboard:', clipboardError);
+				alert('Gagal membagikan. Silakan salin URL secara manual.');
+			}
+		}
+	};
+
 	// Prepare gallery images
 	const galleryImages = [
 		destination.img_lg,
@@ -99,99 +129,121 @@ const BiroPerjalananDetail = () => {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-			{/* Hero Section */}
-			<div className="relative pt-24 pb-8 overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-rose-500/20"></div>
+			{/* Enhanced Hero Section */}
+			<div className="relative pt-24 pb-16 overflow-hidden">
+				{/* Enhanced Background Pattern */}
+				<div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-rose-500/30"></div>
+				<div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-10"></div>
+				
+				{/* Floating Elements */}
+				<div className="absolute top-20 left-10 w-20 h-20 bg-purple-300/20 rounded-full blur-xl animate-bounce"></div>
+				<div className="absolute top-40 right-20 w-16 h-16 bg-pink-300/20 rounded-full blur-xl animate-bounce delay-1000"></div>
+				<div className="absolute bottom-20 left-1/4 w-12 h-12 bg-rose-300/20 rounded-full blur-xl animate-bounce delay-2000"></div>
+				<div className="absolute top-60 right-1/3 w-14 h-14 bg-violet-300/20 rounded-full blur-xl animate-bounce delay-3000"></div>
+				
 				<div className="relative container mx-auto px-4">
-					{/* Back Button */}
+					{/* Enhanced Back Button */}
 					<button 
 						onClick={() => window.history.back()} 
-						className="group mt-12 mb-6 inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-16 mb-8 inline-flex items-center gap-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
-						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
-						<span className="font-medium">Kembali ke Dolan Banyumas</span>
+						<div className="w-12 h-12 bg-purple-500/30 group-hover:bg-purple-500/40 backdrop-blur-sm rounded-2xl flex items-center justify-center transition-all duration-300 shadow-xl">
+							<BiArrowBack className="text-2xl group-hover:scale-110 transition-transform" />
+						</div>
+						<span className="font-bold text-lg">Kembali ke Dolan Banyumas</span>
 					</button>
 
-					{/* Main Header */}
-					<div className="max-w-4xl mx-auto text-center mb-8">
-						<div className="inline-flex items-center gap-3 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-4 py-2 rounded-full mb-3 border border-purple-200 dark:border-purple-700">
-							<BiStar className="text-lg" />
-							<span className="text-sm font-medium capitalize">{destination.type}</span>
+					{/* Enhanced Main Header */}
+					<div className="max-w-5xl mx-auto text-center mb-12">
+						{/* Enhanced Type Badge */}
+						<div className="inline-flex items-center gap-4 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white px-8 py-4 rounded-full text-lg font-bold mb-6 shadow-2xl">
+							<BiStar className="text-2xl" style={{ animationDuration: '3s' }} />
+							<span>Biro Perjalanan</span>
 						</div>
 						
-						<h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-3 leading-tight">
+						{/* Enhanced Title */}
+						<h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 mb-6 leading-tight">
 							{destination.title}
 						</h1>
 						
-						<div className="flex items-center justify-center gap-4 text-gray-600 dark:text-gray-400 mb-4">
-							<div className="flex items-center gap-2">
-								<BiMap className="text-xl text-purple-500" />
-								<span className="font-medium">{destination.location}</span>
+						{/* Enhanced Location & Recommendation */}
+						<div className="flex items-center justify-center gap-6 text-gray-700 dark:text-gray-300 mb-6">
+							<div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl border border-purple-200 dark:border-purple-700">
+								<BiMap className="text-2xl text-purple-500" />
+								<span className="font-bold text-lg">{destination.location}</span>
 							</div>
 							{destination.recommended && (
-								<div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-700">
-									<BiStar className="text-lg" />
-									<span className="text-sm font-medium">Direkomendasikan</span>
+								<div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-6 py-3 rounded-full text-lg font-bold shadow-2xl animate-pulse">
+									<BiStar className="text-2xl" style={{ animationDuration: '3s' }} />
+									<span>Direkomendasikan</span>
 								</div>
 							)}
 							{destination.rating && (
-								<div className="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1 rounded-full border border-green-200 dark:border-green-700">
-									<BiStar className="text-lg" />
-									<span className="text-sm font-medium">{destination.rating}/5</span>
+								<div className="flex items-center gap-3 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full text-lg font-bold shadow-2xl">
+									<BiStar className="text-2xl" />
+									<span>{destination.rating}/5</span>
 								</div>
 							)}
 						</div>
 
-						{/* Action Buttons */}
-						<div className="flex items-center justify-center gap-3">
+						{/* Enhanced Action Buttons */}
+						<div className="flex items-center justify-center gap-6">
 							<button 
 								onClick={() => setIsLiked(!isLiked)}
-								className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+								className={`group flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl ${
 									isLiked 
-										? 'bg-red-500 text-white shadow-lg' 
-										: 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30'
+										? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-2xl' 
+										: 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 backdrop-blur-sm border border-red-200 dark:border-red-700'
 								}`}
 							>
-								<BiHeart className={`text-lg ${isLiked ? 'fill-current' : ''}`} />
-								<span className="text-sm font-medium">{isLiked ? 'Disukai' : 'Sukai'}</span>
+								<BiHeart className={`text-2xl group-hover:scale-110 transition-transform ${isLiked ? 'fill-current' : ''}`} />
+								<span className="font-bold text-lg">{isLiked ? 'Disukai' : 'Suka'}</span>
 							</button>
 							
-							<button className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80">
-								<BiShare className="text-lg" />
-								<span className="text-sm font-medium">Bagikan</span>
+							<button 
+								onClick={handleShare}
+								className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-all duration-300 transform hover:scale-105 shadow-xl backdrop-blur-sm border border-blue-200 dark:border-blue-700"
+							>
+								<BiShare className="text-2xl group-hover:scale-110 transition-transform" />
+								<span className="font-bold text-lg">Bagikan</span>
 							</button>
 						</div>
+						
+						{/* Enhanced Description */}
+						<p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium mt-8">
+							{destination.description}
+						</p>
 					</div>
 				</div>
 			</div>
 
-			{/* Main Content */}
-			<div className="container mx-auto px-4 pb-12">
+			{/* Enhanced Main Content */}
+			<div className="container mx-auto px-4 pb-16">
 				<div className="max-w-7xl mx-auto">
-					<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
 						{/* Left Column - Gallery & Map */}
-						<div className="xl:col-span-2 space-y-6">
-							{/* Photo Gallery */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl mb-6 mt-6">
+						<div className="xl:col-span-2 space-y-12">
+							{/* Enhanced Photo Gallery */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl mb-8 mt-8">
 								<PhotoGallery
 									images={galleryImages}
 									title={destination.title}
 								/>
 							</div>
 
-							{/* Description Section */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
-								<div className="flex items-center gap-3 mb-4">
-									<div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-										<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							{/* Enhanced Description Section */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+								<div className="flex items-center gap-4 mb-6">
+									<div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl">
+										<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 										</svg>
 									</div>
-									<h2 className="text-2xl font-bold text-gray-800 dark:text-white">Tentang Biro Perjalanan</h2>
+									<h2 className="text-3xl font-black text-gray-800 dark:text-white">Tentang Biro Perjalanan</h2>
 								</div>
 								
 								<div className="prose prose-lg max-w-none">
-									<p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
+									<p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
 										{destination.description || destination.short_description || "Deskripsi biro perjalanan tidak tersedia"}
 									</p>
 								</div>
@@ -200,140 +252,156 @@ const BiroPerjalananDetail = () => {
 							{/* Pengelola Biro Perjalanan Section */}
 							<TravelAgencyManager destination={destination} contactInfo={contactInfo} />
 
-							{/* Map Section */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
+							{/* Enhanced Map Section */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+								<div className="flex items-center gap-4 mb-6">
+									<div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+										<BiMap className="text-white text-2xl" />
+									</div>
+									<h2 className="text-3xl font-black text-gray-800 dark:text-white">Lokasi</h2>
+								</div>
 								<ErrorBoundary>
 									<SmartMap destination={destination} onDistanceCalculated={setMapDistance} />
 								</ErrorBoundary>
 							</div>
 
-							{/* Distance & Travel Time Section */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
-								<h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Jarak & Waktu Tempuh</h3>
+							{/* Enhanced Distance & Travel Time Section */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+								<div className="flex items-center gap-4 mb-6">
+									<div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl">
+										<BiTime className="text-white text-2xl" />
+									</div>
+									<h3 className="text-3xl font-black text-gray-800 dark:text-white">Jarak & Waktu Tempuh</h3>
+								</div>
 								
-								{/* Distance Card */}
-								<div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 mb-6 text-white">
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-											<BiMap className="text-2xl text-white" />
+								{/* Enhanced Distance Card */}
+								<div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-3xl p-6 mb-8 text-white shadow-2xl">
+									<div className="flex items-center gap-4">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+											<BiMap className="text-white text-3xl" />
 										</div>
 										<div>
-											<p className="text-sm opacity-90">Jarak dari Lokasi Anda</p>
-											<p className="text-2xl font-bold">{mapDistance || "0.5 km"}</p>
+											<p className="text-lg opacity-90 font-medium">Jarak dari Lokasi Anda</p>
+											<p className="text-3xl font-black">{mapDistance || "0.5 km"}</p>
 										</div>
 									</div>
 								</div>
 
-								{/* Transport Options Grid */}
-								<div className="grid grid-cols-3 gap-3">
+								{/* Enhanced Transport Options Grid */}
+								<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 									{/* Mobil */}
-									<div className="bg-blue-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Mobil</p>
-										<p className="text-sm font-bold">1 menit</p>
+										<p className="text-lg font-bold mb-1">Mobil</p>
+										<p className="text-sm opacity-90">1 menit</p>
 									</div>
 
 									{/* Motor */}
-									<div className="bg-green-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Motor</p>
-										<p className="text-sm font-bold">1 menit</p>
+										<p className="text-lg font-bold mb-1">Motor</p>
+										<p className="text-sm opacity-90">1 menit</p>
 									</div>
 
 									{/* Bus */}
-									<div className="bg-purple-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Bus</p>
-										<p className="text-sm font-bold">1 menit</p>
+										<p className="text-lg font-bold mb-1">Bus</p>
+										<p className="text-sm opacity-90">1 menit</p>
 									</div>
 
 									{/* Kereta */}
-									<div className="bg-orange-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Kereta</p>
-										<p className="text-sm font-bold">1 menit</p>
+										<p className="text-lg font-bold mb-1">Kereta</p>
+										<p className="text-sm opacity-90">1 menit</p>
 									</div>
 
 									{/* Jalan Kaki */}
-									<div className="bg-red-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Jalan</p>
-										<p className="text-sm font-bold">7 menit</p>
+										<p className="text-lg font-bold mb-1">Jalan</p>
+										<p className="text-sm opacity-90">7 menit</p>
 									</div>
 
 									{/* Sepeda */}
-									<div className="bg-teal-500 rounded-xl p-3 text-white text-center">
-										<div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-											<svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl p-6 text-white text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+										<div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+											<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
 											</svg>
 										</div>
-										<p className="text-xs font-medium">Sepeda</p>
-										<p className="text-sm font-bold">2 menit</p>
+										<p className="text-lg font-bold mb-1">Sepeda</p>
+										<p className="text-sm opacity-90">2 menit</p>
 									</div>
 								</div>
 							</div>
 						</div>
 
-						{/* Right Sidebar */}
-						<div className="space-y-4">
-							{/* Price & Contact Card */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl mt-6">
-								<h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Informasi Biro Perjalanan</h3>
+						{/* Enhanced Right Sidebar */}
+						<div className="space-y-8">
+							{/* Enhanced Price & Contact Card */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl mt-8">
+								<div className="flex items-center gap-4 mb-6">
+									<div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl">
+										<BiMoney className="text-white text-2xl" />
+									</div>
+									<h3 className="text-2xl font-black text-gray-800 dark:text-white">Informasi Biro Perjalanan</h3>
+								</div>
 								
-								{/* Price Section */}
+								{/* Enhanced Price Section */}
 								{destination.price_range && (
-									<div className="mb-6">
-										<div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-4 text-white text-center mb-4">
-											<div className="text-sm opacity-90 mb-1">Kisaran Harga</div>
-											<div className="text-2xl font-bold">{destination.price_range}</div>
+									<div className="mb-8">
+										<div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl p-6 text-white text-center shadow-2xl">
+											<div className="text-lg opacity-90 mb-2 font-medium">Kisaran Harga</div>
+											<div className="text-3xl font-black">{destination.price_range}</div>
 										</div>
 									</div>
 								)}
 
-								{/* Opening Hours */}
+								{/* Enhanced Opening Hours */}
 								{destination.opening_hours && (
-									<div className="mb-6">
-										<h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Jam Operasional</h4>
-										<div className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/30 rounded-xl">
-											<BiTime className="text-xl text-amber-500" />
-											<span className="text-amber-700 dark:text-amber-300">{destination.opening_hours}</span>
+									<div className="mb-8">
+										<h4 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Jam Operasional</h4>
+										<div className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-2xl border border-amber-200 dark:border-amber-700">
+											<BiTime className="text-2xl text-amber-500" />
+											<span className="text-lg text-amber-700 dark:text-amber-300 font-medium">{destination.opening_hours}</span>
 										</div>
 									</div>
 								)}
 
-								{/* Contact Section */}
+								{/* Enhanced Contact Section */}
 								{contactInfo && Object.keys(contactInfo).length > 0 && (
-									<div className="mb-6">
-										<h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Kontak</h4>
-										<div className="space-y-3">
+									<div className="mb-8">
+										<h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Kontak</h4>
+										<div className="space-y-4">
 											{contactInfo.phone && (
 												<a 
 													href={`tel:${contactInfo.phone}`}
-													className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+													className="group flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl hover:from-blue-100 hover:to-cyan-100 dark:hover:from-blue-900/50 dark:hover:to-cyan-900/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-blue-200 dark:border-blue-700"
 												>
-													<BiPhone className="text-xl text-blue-500" />
-													<span className="text-blue-700 dark:text-blue-300">{contactInfo.phone}</span>
+													<BiPhone className="text-2xl text-blue-500 group-hover:scale-110 transition-transform" />
+													<span className="text-lg text-blue-700 dark:text-blue-300 font-medium">{contactInfo.phone}</span>
 												</a>
 											)}
 											
@@ -342,10 +410,10 @@ const BiroPerjalananDetail = () => {
 													href={`https://wa.me/${cleanPhoneNumber(contactInfo.whatsapp)}?text=Halo, saya tertarik dengan biro perjalanan ${destination.title}`}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/30 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
+													className="group flex items-center gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/50 dark:hover:to-emerald-900/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-green-200 dark:border-green-700"
 												>
-													<FaWhatsapp className="text-xl text-green-500" />
-													<span className="text-green-700 dark:text-green-300">WhatsApp</span>
+													<FaWhatsapp className="text-2xl text-green-500 group-hover:scale-110 transition-transform" />
+													<span className="text-lg text-green-700 dark:text-green-300 font-medium">WhatsApp</span>
 												</a>
 											)}
 											
@@ -354,10 +422,10 @@ const BiroPerjalananDetail = () => {
 													href={`https://instagram.com/${contactInfo.instagram.replace('@', '')}`}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/30 rounded-xl hover:bg-pink-100 dark:hover:bg-pink-900/50 transition-colors"
+													className="group flex items-center gap-4 p-4 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/30 dark:to-rose-900/30 rounded-2xl hover:from-pink-100 hover:to-rose-100 dark:hover:from-pink-900/50 dark:hover:to-rose-900/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-pink-200 dark:border-pink-700"
 												>
-													<FaInstagram className="text-xl text-pink-500" />
-													<span className="text-pink-700 dark:text-pink-300">Instagram</span>
+													<FaInstagram className="text-2xl text-pink-500 group-hover:scale-110 transition-transform" />
+													<span className="text-lg text-pink-700 dark:text-pink-300 font-medium">Instagram</span>
 												</a>
 											)}
 											
@@ -366,34 +434,34 @@ const BiroPerjalananDetail = () => {
 													href={contactInfo.website}
 													target="_blank"
 													rel="noopener noreferrer"
-													className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors"
+													className="group flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/30 dark:to-violet-900/30 rounded-2xl hover:from-purple-100 hover:to-violet-100 dark:hover:from-purple-900/50 dark:hover:to-violet-900/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border border-purple-200 dark:border-purple-700"
 												>
-													<FaGlobe className="text-xl text-purple-500" />
-													<span className="text-purple-700 dark:text-purple-300">Website</span>
+													<FaGlobe className="text-2xl text-purple-500 group-hover:scale-110 transition-transform" />
+													<span className="text-lg text-purple-700 dark:text-purple-300 font-medium">Website</span>
 												</a>
 											)}
 										</div>
 									</div>
 								)}
 
-								{/* Address Section */}
+								{/* Enhanced Address Section */}
 								{destination.address && (
-									<div className="mb-6">
-										<h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Alamat</h4>
-										<div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-											<BiMap className="text-xl text-purple-500 mt-1 flex-shrink-0" />
-											<span className="text-gray-700 dark:text-gray-300">{destination.address}</span>
+									<div className="mb-8">
+										<h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Alamat</h4>
+										<div className="flex items-start gap-4 p-4 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-700/50 dark:to-slate-700/50 rounded-2xl border border-gray-200 dark:border-gray-600">
+											<BiMap className="text-2xl text-purple-500 mt-1 flex-shrink-0" />
+											<span className="text-lg text-gray-700 dark:text-gray-300 font-medium">{destination.address}</span>
 										</div>
 									</div>
 								)}
 
-								{/* Created Date */}
+								{/* Enhanced Created Date */}
 								{destination.created_at && (
 									<div>
-										<h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Ditambahkan</h4>
-										<div className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-900/30 rounded-xl">
-											<BiTime className="text-xl text-amber-500" />
-											<span className="text-amber-700 dark:text-amber-300">
+										<h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Ditambahkan</h4>
+										<div className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-2xl border border-amber-200 dark:border-amber-700">
+											<BiTime className="text-2xl text-amber-500" />
+											<span className="text-lg text-amber-700 dark:text-amber-300 font-medium">
 												{new Date(destination.created_at).toLocaleDateString('id-ID', {
 													year: 'numeric',
 													month: 'long',
@@ -405,107 +473,129 @@ const BiroPerjalananDetail = () => {
 								)}
 							</div>
 
-							{/* Features Section */}
+							{/* Enhanced Rating & Reviews Section */}
+							<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+								<div className="flex items-center gap-4 mb-6">
+									<div className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl">
+										<BiStar className="text-white text-2xl" />
+									</div>
+									<h3 className="text-2xl font-black text-gray-800 dark:text-white">Rating & Ulasan</h3>
+								</div>
+								<RatingReviews 
+									rating={parseFloat(destination.rating) || 4.5}
+									reviewCount={0}
+									onWriteReview={(reviewData) => {
+										// Handle review submission
+										console.log('Review submitted:', reviewData);
+									}}
+									storageKey={`reviews:biro-perjalanan:${destination?.id || params?.id || 'unknown'}`}
+								/>
+							</div>
+
+							{/* Enhanced Features Section */}
 							{destination.features && destination.features.length > 0 && (
-								<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
-									<div className="flex items-center gap-3 mb-4">
-										<div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-											<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+									<div className="flex items-center gap-4 mb-6">
+										<div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl">
+											<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
 											</svg>
 										</div>
-										<h3 className="text-xl font-bold text-gray-800 dark:text-white">Fitur & Fasilitas</h3>
+										<h3 className="text-2xl font-black text-gray-800 dark:text-white">Fitur & Fasilitas</h3>
 									</div>
 									
-									<div className="space-y-3">
+									<div className="space-y-4">
 										{destination.features.map((feature, index) => (
-											<div key={index} className="flex items-center gap-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-700">
-												<div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-												<span className="text-sm text-purple-700 dark:text-purple-300">{feature}</span>
+											<div key={index} className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border border-purple-200 dark:border-purple-700 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+												<div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+												<span className="text-lg text-purple-700 dark:text-purple-300 font-medium">{feature}</span>
 											</div>
 										))}
 									</div>
 								</div>
 							)}
 
-							{/* Services Section */}
+							{/* Enhanced Services Section */}
 							{destination.services && destination.services.length > 0 && (
-								<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl">
-									<div className="flex items-center gap-3 mb-4">
-										<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-											<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl">
+									<div className="flex items-center gap-4 mb-6">
+										<div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+											<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
 											</svg>
 										</div>
-										<h3 className="text-xl font-bold text-gray-800 dark:text-white">Layanan</h3>
+										<h3 className="text-2xl font-black text-gray-800 dark:text-white">Layanan</h3>
 									</div>
 									
-									<div className="space-y-3">
+									<div className="space-y-4">
 										{destination.services.map((service, index) => (
-											<div key={index} className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-700">
-												<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-												<span className="text-sm text-blue-700 dark:text-blue-300">{service}</span>
+											<div key={index} className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl border border-blue-200 dark:border-blue-700 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+												<div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+												<span className="text-lg text-blue-700 dark:text-blue-300 font-medium">{service}</span>
 											</div>
 										))}
 									</div>
 								</div>
 							)}
 
-							{/* Quick Actions */}
-							<div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 text-white text-center">
-								<h3 className="text-xl font-bold mb-4">Aksi Cepat</h3>
+							{/* Enhanced Quick Actions */}
+							<div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white text-center shadow-2xl">
+								<h3 className="text-2xl font-black mb-6">Aksi Cepat</h3>
 								
-								{/* Main Action Buttons - Horizontal Layout */}
-								<div className="grid grid-cols-4 gap-3 mb-4">
-									{/* Telepon Button */}
+								{/* Enhanced Main Action Buttons - Horizontal Layout */}
+								<div className="grid grid-cols-4 gap-4 mb-6">
+									{/* Enhanced Telepon Button */}
 									{contactInfo.phone ? (
 										<a 
 											href={`tel:${contactInfo.phone}`}
-											className="flex flex-col items-center justify-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+											className="group flex flex-col items-center justify-center gap-3 bg-amber-600/80 hover:bg-amber-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl"
 										>
-											<BiPhone className="text-2xl" />
-											<span className="text-xs">Telepon</span>
+											<BiPhone className="text-3xl group-hover:scale-110 transition-transform" />
+											<span className="text-sm">Telepon</span>
 										</a>
 									) : (
-										<button className="flex flex-col items-center justify-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-											<BiPhone className="text-2xl" />
-											<span className="text-xs">Telepon</span>
+										<button className="group flex flex-col items-center justify-center gap-3 bg-amber-600/80 hover:bg-amber-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+											<BiPhone className="text-3xl group-hover:scale-110 transition-transform" />
+											<span className="text-sm">Telepon</span>
 										</button>
 									)}
 									
-									{/* WhatsApp Button */}
+									{/* Enhanced WhatsApp Button */}
 									{contactInfo.whatsapp ? (
 										<a 
 											href={`https://wa.me/${cleanPhoneNumber(contactInfo.whatsapp)}?text=Halo, saya tertarik dengan biro perjalanan ${destination.title}`}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+											className="group flex flex-col items-center justify-center gap-3 bg-green-600/80 hover:bg-green-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl"
 										>
-											<FaWhatsapp className="text-2xl" />
-											<span className="text-xs">WhatsApp</span>
+											<FaWhatsapp className="text-3xl group-hover:scale-110 transition-transform" />
+											<span className="text-sm">WhatsApp</span>
 										</a>
 									) : (
-										<button className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-											<FaWhatsapp className="text-2xl" />
-											<span className="text-xs">WhatsApp</span>
+										<button className="group flex flex-col items-center justify-center gap-3 bg-green-600/80 hover:bg-green-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+											<FaWhatsapp className="text-3xl group-hover:scale-110 transition-transform" />
+											<span className="text-sm">WhatsApp</span>
 										</button>
 									)}
 									
-									{/* Arahkan Button */}
-									<button className="flex flex-col items-center justify-center gap-2 bg-purple-600/80 hover:bg-purple-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-										<BiMap className="text-2xl" />
-										<span className="text-xs">Arahkan</span>
+									{/* Enhanced Arahkan Button */}
+									<button className="group flex flex-col items-center justify-center gap-3 bg-purple-600/80 hover:bg-purple-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+										<BiMap className="text-3xl group-hover:scale-110 transition-transform" />
+										<span className="text-sm">Arahkan</span>
 									</button>
 									
-									{/* Bagikan Button */}
-									<button className="flex flex-col items-center justify-center gap-2 bg-red-600/80 hover:bg-red-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-										<BiShare className="text-2xl" />
-										<span className="text-xs">Bagikan</span>
+									{/* Enhanced Bagikan Button */}
+									<button 
+										onClick={handleShare}
+										className="group flex flex-col items-center justify-center gap-3 bg-red-600/80 hover:bg-red-500 text-white font-bold py-4 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl"
+									>
+										<BiShare className="text-3xl group-hover:scale-110 transition-transform" />
+										<span className="text-sm">Bagikan</span>
 									</button>
 								</div>
 								
-								{/* Additional Info */}
-								<div className="text-purple-100 text-sm">
+								{/* Enhanced Additional Info */}
+								<div className="text-purple-100 text-lg font-medium">
 									<p>Pilih aksi yang ingin Anda lakukan</p>
 								</div>
 							</div>

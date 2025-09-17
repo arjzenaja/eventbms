@@ -254,7 +254,7 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
 
   if (isLoading) {
     return (
-      <div className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50' : 'bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'} flex items-center justify-center`}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className={`w-16 h-16 border-4 ${isLight ? 'border-blue-400' : 'border-purple-400'} border-t-transparent rounded-full animate-spin mx-auto mb-4`} />
           <p className={`${isLight ? 'text-gray-900' : 'text-white'} text-lg`}>Memuat status pembayaran...</p>
@@ -265,7 +265,7 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
 
   if (!payment) {
     return (
-      <div className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50' : 'bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'} flex items-center justify-center p-4`}>
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
           <div className={`${isLight ? 'bg-white border-gray-200 shadow-lg' : 'bg-white/10 backdrop-blur-lg border-white/20 shadow-2xl'} rounded-3xl p-8 border`}>
             <div className={`w-20 h-20 ${isLight ? 'bg-red-100' : 'bg-red-500/20'} rounded-full flex items-center justify-center mx-auto mb-6`}>
@@ -287,7 +287,7 @@ const PaymentStatus = ({ paymentId, onRefresh }) => {
   }
 
   return (
-    <div className={`min-h-screen ${isLight ? 'bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50' : 'bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'} p-4`}>
+    <div className="p-4">
       <div className="max-w-4xl mx-auto space-y-8">
         <Toast
           type={toast.type}

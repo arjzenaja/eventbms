@@ -9,6 +9,7 @@ import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import LocationInfo from "../../../../components/LocationInfo";
+import RatingReviews from "../../../../components/RatingReviews";
 import { useTheme } from "../../../../context/ThemeContext";
 
 
@@ -226,128 +227,135 @@ const PenginapanDetail = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${isDark ? 'from-slate-900 via-gray-800 to-zinc-900' : 'from-blue-50 via-blue-100 to-blue-200'}`}>
-      {/* Hero Section with Background Image */}
-      <div className="relative pt-20 pb-32 overflow-hidden">
-        {/* Background Pattern */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-slate-600/20 via-gray-500/15 to-zinc-600/20' : 'from-blue-200/30 via-blue-300/20 to-blue-400/20'}`}></div>
-        <div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-8"></div>
+      {/* Enhanced Hero Section with Background Image */}
+      <div className="relative pt-24 pb-40 overflow-hidden">
+        {/* Enhanced Background Pattern */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-slate-600/30 via-gray-500/25 to-zinc-600/30' : 'from-blue-200/40 via-blue-300/30 to-blue-400/40'}`}></div>
+        <div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-10"></div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-300/20 rounded-full blur-xl animate-bounce"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-300/20 rounded-full blur-xl animate-bounce delay-1000"></div>
+        <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-purple-300/20 rounded-full blur-xl animate-bounce delay-2000"></div>
+        <div className="absolute top-60 right-1/3 w-14 h-14 bg-cyan-300/20 rounded-full blur-xl animate-bounce delay-3000"></div>
         
         {/* Additional Background Layers */}
-        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/10' : 'from-white/20'} via-transparent to-transparent`}></div>
-        <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r ${isDark ? 'from-slate-800/10' : 'from-blue-200/20'} via-transparent ${isDark ? 'to-zinc-800/10' : 'to-blue-300/20'}`}></div>
+        <div className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-black/20' : 'from-white/30'} via-transparent to-transparent`}></div>
+        <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-r ${isDark ? 'from-slate-800/20' : 'from-blue-200/30'} via-transparent ${isDark ? 'to-zinc-800/20' : 'to-blue-300/30'}`}></div>
         
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 opacity-5">
+        {/* Enhanced Grid Pattern */}
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} 1px, transparent 0)`,
+            backgroundImage: `radial-gradient(circle at 1px 1px, ${isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} 1px, transparent 0)`,
             backgroundSize: '40px 40px'
           }}></div>
         </div>
         
         <div className="relative z-10 container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            {/* Back Button & Actions */}
-            <div className="flex items-center justify-between mt-12 mb-8">
-            <button 
-              onClick={() => window.history.back()} 
-                className={`group inline-flex items-center gap-3 ${isDark ? 'text-gray-200 hover:text-gray-100' : 'text-slate-700 hover:text-slate-800'} transition-all duration-300 transform hover:scale-105`}
+            {/* Enhanced Back Button & Actions */}
+            <div className="flex items-center justify-between mt-16 mb-12">
+              <button 
+                onClick={() => window.history.back()} 
+                className={`group inline-flex items-center gap-4 ${isDark ? 'text-gray-200 hover:text-gray-100' : 'text-slate-700 hover:text-slate-800'} transition-all duration-300 transform hover:scale-105`}
               >
-                <div className={`w-10 h-10 ${isDark ? 'bg-gray-600/30 group-hover:bg-gray-500/40' : 'bg-blue-500/30 group-hover:bg-blue-500/40'} backdrop-blur-sm rounded-xl flex items-center justify-center transition-all duration-300`}>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`w-12 h-12 ${isDark ? 'bg-gray-600/40 group-hover:bg-gray-500/50' : 'bg-blue-500/40 group-hover:bg-blue-500/50'} backdrop-blur-sm rounded-2xl flex items-center justify-center transition-all duration-300 shadow-xl`}>
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </div>
-                <span className="font-medium">Kembali ke Dolan Banyumas</span>
+                <span className="font-bold text-lg">Kembali ke Dolan Banyumas</span>
               </button>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <button 
                   onClick={() => setIsLiked(!isLiked)}
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 ${
+                  className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-xl ${
                     isLiked 
-                      ? `${isDark ? 'bg-gradient-to-r from-gray-600 to-slate-600' : 'bg-gradient-to-r from-blue-500 to-blue-600'} text-white shadow-2xl` 
-                      : `${isDark ? 'bg-gray-600/30 hover:bg-gray-500/40' : 'bg-blue-500/30 hover:bg-blue-500/40'} backdrop-blur-sm ${isDark ? 'text-gray-200' : 'text-slate-700'}`
+                      ? `${isDark ? 'bg-gradient-to-r from-red-500 to-pink-500' : 'bg-gradient-to-r from-red-500 to-pink-500'} text-white shadow-red-500/25` 
+                      : `${isDark ? 'bg-gray-600/40 hover:bg-gray-500/50' : 'bg-blue-500/40 hover:bg-blue-500/50'} backdrop-blur-sm ${isDark ? 'text-gray-200' : 'text-slate-700'}`
                   }`}
                 >
-                  <BiHeart className={`text-xl ${isLiked ? 'fill-current' : ''}`} />
+                  <BiHeart className={`text-2xl ${isLiked ? 'fill-current' : ''}`} />
                 </button>
-                <button className={`w-12 h-12 ${isDark ? 'bg-gray-600/30 hover:bg-gray-500/40' : 'bg-blue-500/30 hover:bg-blue-500/40'} backdrop-blur-sm rounded-2xl flex items-center justify-center ${isDark ? 'text-gray-200' : 'text-slate-700'} transition-all duration-300 transform hover:scale-110`}>
-                  <BiShareAlt className="text-xl" />
-            </button>
+                <button className={`w-14 h-14 ${isDark ? 'bg-gray-600/40 hover:bg-gray-500/50' : 'bg-blue-500/40 hover:bg-blue-500/50'} backdrop-blur-sm rounded-2xl flex items-center justify-center ${isDark ? 'text-gray-200' : 'text-slate-700'} transition-all duration-300 transform hover:scale-110 shadow-xl`}>
+                  <BiShareAlt className="text-2xl" />
+                </button>
               </div>
             </div>
 
-            {/* Main Content */}
+            {/* Enhanced Main Content */}
             <div className="text-center">
-              {/* Badges */}
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-2xl">
-                  <FaBed className="w-5 h-5" />
+              {/* Enhanced Badges */}
+              <div className="flex items-center justify-center gap-6 mb-8">
+                <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-8 py-4 rounded-full text-lg font-bold shadow-2xl">
+                  <FaBed className="w-6 h-6" />
                   {destination.type || 'Penginapan'}
                 </div>
                 {destination.recommended && (
-                  <div className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-2xl animate-pulse">
-                    <BiStar className="w-5 h-5" />
+                  <div className="inline-flex items-center gap-4 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-8 py-4 rounded-full text-lg font-bold shadow-2xl animate-pulse">
+                    <BiStar className="w-6 h-6" style={{ animationDuration: '3s' }} />
                     ⭐ Direkomendasikan
                   </div>
                 )}
               </div>
               
-              {/* Title */}
-              <h1 className={`text-5xl md:text-7xl font-black ${isDark ? 'text-gray-100' : 'text-slate-800'} mb-6 leading-tight`}>
+              {/* Enhanced Title */}
+              <h1 className={`text-6xl md:text-8xl font-black ${isDark ? 'text-gray-100' : 'text-slate-800'} mb-8 leading-tight bg-gradient-to-r from-gray-800 via-blue-600 to-indigo-600 ${isDark ? 'dark:from-white dark:via-blue-400 dark:to-indigo-400' : ''} bg-clip-text text-transparent`}>
                 {destination.title}
               </h1>
               
-              {/* Location */}
-              <div className={`flex items-center justify-center gap-3 ${isDark ? 'text-gray-200' : 'text-slate-700'} text-xl mb-8`}>
-                <div className={`w-12 h-12 bg-gradient-to-r ${isDark ? 'from-gray-600 to-slate-600' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center shadow-2xl`}>
-                  <BiMap className="text-2xl text-white" />
+              {/* Enhanced Location */}
+              <div className={`flex items-center justify-center gap-4 ${isDark ? 'text-gray-200' : 'text-slate-700'} text-2xl mb-12`}>
+                <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-600 to-slate-600' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center shadow-2xl`}>
+                  <BiMap className="text-3xl text-white" />
                 </div>
-                <span className="font-medium">{destination.location}</span>
+                <span className="font-bold text-2xl">{destination.location}</span>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {/* Enhanced Quick Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 {destination.price_range && (
-                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
+                  <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
                     <div className="text-center">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
-                        <BiMoney className="text-3xl text-white" />
+                      <div className={`w-20 h-20 bg-gradient-to-r ${isDark ? 'from-green-500 to-emerald-500' : 'from-green-500 to-emerald-500'} rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
+                        <BiMoney className="text-4xl text-white" />
                       </div>
-                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Harga per Malam</p>
-                      <p className={`text-2xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.price_range}</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-lg mb-3 font-medium`}>Harga per Malam</p>
+                      <p className={`text-3xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.price_range}</p>
                     </div>
                   </div>
                 )}
 
                 {destination.rating && (
-                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
+                  <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
                     <div className="text-center">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
-                        <BiStar className="text-3xl text-white" />
+                      <div className={`w-20 h-20 bg-gradient-to-r ${isDark ? 'from-yellow-500 to-orange-500' : 'from-yellow-500 to-orange-500'} rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
+                        <BiStar className="text-4xl text-white" />
                       </div>
-                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Rating</p>
-                      <div className="flex items-center justify-center gap-1 mb-2">
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-lg mb-3 font-medium`}>Rating</p>
+                      <div className="flex items-center justify-center gap-1 mb-3">
                         {[...Array(5)].map((_, i) => (
                           <BiStar 
                             key={i} 
-                            className={`w-6 h-6 ${i < parseInt(destination.rating) ? `${isDark ? 'text-gray-300' : 'text-yellow-500'} fill-current` : `${isDark ? 'text-gray-500' : 'text-gray-300'}`}`} 
+                            className={`w-7 h-7 ${i < parseInt(destination.rating) ? `${isDark ? 'text-yellow-400' : 'text-yellow-500'} fill-current animate-pulse` : `${isDark ? 'text-gray-500' : 'text-gray-300'}`}`}
+                            style={{ animationDuration: '3s' }}
                           />
                         ))}
                       </div>
-                      <p className={`text-xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>({destination.rating}/5)</p>
+                      <p className={`text-2xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>({destination.rating}/5)</p>
                     </div>
                   </div>
                 )}
 
                 {destination.contact && (
-                  <div className={`${isDark ? 'bg-gray-700/40 border-gray-600/30' : 'bg-white/80 border-blue-200/50'} backdrop-blur-sm rounded-3xl p-6 border shadow-2xl`}>
+                  <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
                     <div className="text-center">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${isDark ? 'from-gray-500 to-slate-500' : 'from-blue-500 to-blue-600'} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl`}>
-                        <BiPhone className="text-3xl text-white" />
+                      <div className={`w-20 h-20 bg-gradient-to-r ${isDark ? 'from-blue-500 to-indigo-500' : 'from-blue-500 to-indigo-500'} rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
+                        <BiPhone className="text-4xl text-white" />
                       </div>
-                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-sm mb-2`}>Kontak</p>
-                      <p className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.contact}</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-slate-600'} text-lg mb-3 font-medium`}>Kontak</p>
+                      <p className={`text-xl font-bold ${isDark ? 'text-gray-100' : 'text-slate-800'}`}>{destination.contact}</p>
                     </div>
                   </div>
                 )}
@@ -357,44 +365,57 @@ const PenginapanDetail = () => {
             </div>
           </div>
 
-          {/* Main Content */}
-      <div className="relative z-20 -mt-20 pb-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              
-              {/* Left Column - Media & Maps */}
-              <div className="xl:col-span-2 space-y-8">
-                              {/* Photo Gallery */}
-              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
-                <div className="mb-6">
-                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Galeri Foto</h3>
-                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Lihat keindahan penginapan kami</p>
-                </div>
-              <PhotoGallery
-                images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
-                title={destination.title}
-              />
-              </div>
-
-              {/* Interactive Map */}
-              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
-                <div className="mb-6">
-                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                      <BiMap className="text-white text-2xl" />
+          {/* Enhanced Main Content */}
+          <div className="relative z-20 -mt-24 pb-24">
+            <div className="container mx-auto px-4">
+              <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+                  
+                  {/* Left Column - Media & Maps */}
+                  <div className="xl:col-span-2 space-y-10">
+                    {/* Enhanced Photo Gallery */}
+                    <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-indigo-500/5 to-purple-500/5 rounded-3xl"></div>
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-8">
+                          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Galeri Foto</h3>
+                            <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
+                          </div>
+                        </div>
+                        <PhotoGallery
+                          images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
+                          title={destination.title}
+                        />
+                      </div>
                     </div>
-                    Lokasi & Peta
-                  </h3>
-                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Temukan lokasi penginapan kami</p>
-                </div>
-              <ErrorBoundary>
-                <SmartMap
-                  destination={destination}
-                  onDistanceCalculated={setMapDistance}
-                />
-              </ErrorBoundary>
-              </div>
+
+                    {/* Enhanced Interactive Map */}
+                    <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-emerald-500/5 to-teal-500/5 rounded-3xl"></div>
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-8">
+                          <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <BiMap className="text-white text-3xl" />
+                          </div>
+                          <div>
+                            <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Lokasi & Peta</h3>
+                            <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                          </div>
+                        </div>
+                        <ErrorBoundary>
+                          <SmartMap
+                            destination={destination}
+                            onDistanceCalculated={setMapDistance}
+                          />
+                        </ErrorBoundary>
+                      </div>
+                    </div>
 
               {/* Location Info */}
               <ErrorBoundary>
@@ -402,51 +423,72 @@ const PenginapanDetail = () => {
               </ErrorBoundary>
               </div>
 
-              {/* Right Column - Info & Actions */}
-              <div className="space-y-6">
-                              {/* Description Card */}
-              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
-                <div className="mb-6">
-                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  Deskripsi
-                </h3>
-                </div>
-                <p className={`${isDark ? 'text-white/80' : 'text-slate-600'} leading-relaxed text-lg`}>
-                  {destination.description || destination.short_description || "Deskripsi penginapan tidak tersedia saat ini."}
-                </p>
-              </div>
-
-              {/* Amenities Card */}
-              <div className={`${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl`}>
-                <div className="mb-6">
-                  <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2 flex items-center gap-3`}>
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl">
-                      <FaConciergeBell className="text-white text-2xl" />
-                  </div>
-                    Fasilitas & Amenitas
-                </h3>
-                  <p className={`${isDark ? 'text-white/80' : 'text-slate-600'}`}>Nikmati berbagai fasilitas yang tersedia</p>
+                  {/* Right Column - Info & Actions */}
+                  <div className="space-y-8">
+                    {/* Enhanced Description Card */}
+                    <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl"></div>
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-8">
+                          <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Deskripsi</h3>
+                            <div className="w-16 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+                          </div>
                         </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  {amenities.map((amenity, index) => {
-                    const IconComponent = amenityIcons[amenity] || FaConciergeBell;
-                    return (
-                      <div key={index} className={`flex items-center gap-4 p-4 ${isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-blue-50/50 border-blue-200/50 hover:bg-blue-100/50'} rounded-2xl border transition-all duration-300 transform hover:scale-105`}>
-                        <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                          <IconComponent className="w-5 h-5 text-white" />
+                        <div className="bg-gradient-to-r from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-900/20 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-800">
+                          <p className={`${isDark ? 'text-white/80' : 'text-slate-600'} leading-relaxed text-lg`}>
+                            {destination.description || destination.short_description || "Deskripsi penginapan tidak tersedia saat ini."}
+                          </p>
                         </div>
-                        <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-700'}`}>{amenity}</span>
                       </div>
-                    );
-                  })}
-                </div>
-                            </div>
+                    </div>
+
+              {/* Rating & Reviews Section */}
+              <RatingReviews 
+                rating={parseFloat(destination.rating) || 4.5}
+                reviewCount={0}
+                onWriteReview={(reviewData) => {
+                  // Handle review submission
+                  console.log('Review submitted:', reviewData);
+                }}
+                storageKey={`reviews:penginapan:${destination?.id || params?.id || 'unknown'}`}
+                className={isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'}
+              />
+
+                    {/* Enhanced Amenities Card */}
+                    <div className={`group ${isDark ? 'bg-white/10 border-white/20' : 'bg-white/90 border-blue-200/50'} backdrop-blur-xl rounded-3xl p-8 border shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1`}>
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-emerald-500/5 to-teal-500/5 rounded-3xl"></div>
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-8">
+                          <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <FaConciergeBell className="text-white text-3xl" />
+                          </div>
+                          <div>
+                            <h3 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-2`}>Fasilitas & Amenitas</h3>
+                            <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          {amenities.map((amenity, index) => {
+                            const IconComponent = amenityIcons[amenity] || FaConciergeBell;
+                            return (
+                              <div key={index} className={`group/item flex items-center gap-4 p-5 ${isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-green-50/50 border-green-200/50 hover:bg-green-100/50'} rounded-2xl border transition-all duration-300 transform hover:scale-105 shadow-lg`}>
+                                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
+                                  <IconComponent className="w-6 h-6 text-white" />
+                                </div>
+                                <span className={`font-bold text-lg ${isDark ? 'text-white' : 'text-slate-700'}`}>{amenity}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
 
               {/* Aksi Cepat Card */}
               <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl">

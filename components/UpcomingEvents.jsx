@@ -51,13 +51,40 @@ const UpcomingEvents = () => {
           modules={[Pagination]}
           className='w-full h-[500px]'
         >
-          {filteredEvents.map((event, index) => (
-            <SwiperSlide key={index} className='select-none'>
-                              <Link href={`/dolan-banyumas/event/${event.id}`}>
-                <Event event={event}/>
-              </Link>
-            </SwiperSlide>
-          ))}
+          {filteredEvents.map((event, index) => {
+            // Determine the correct route based on the item's category
+            const getItemRoute = (item) => {
+              if (item.__categoryKey) {
+                switch (item.__categoryKey) {
+                  case 'wisata':
+                    return `/destination/wisata/${item.id}`;
+                  case 'kuliner':
+                    return `/destination/kuliner/${item.id}`;
+                  case 'penginapan':
+                    return `/destination/penginapan/${item.id}`;
+                  case 'oleh_oleh':
+                    return `/destination/oleh-oleh/${item.id}`;
+                  case 'desa_wisata':
+                    return `/destination/desa-wisata/${item.id}`;
+                  case 'biro_perjalanan':
+                    return `/destination/biro-perjalanan/${item.id}`;
+                  case 'events':
+                  default:
+                    return `/dolan-banyumas/event/${item.id}`;
+                }
+              }
+              // Fallback to event route if no category key
+              return `/dolan-banyumas/event/${item.id}`;
+            };
+
+            return (
+              <SwiperSlide key={index} className='select-none'>
+                <Link href={getItemRoute(event)}>
+                  <Event event={event}/>
+                </Link>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       ): (
         <SkeletonGrid itemCount={16}/>

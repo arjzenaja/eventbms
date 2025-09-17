@@ -28,34 +28,65 @@ export const EventProvider = ({ children }) => {
     today.setHours(0, 0, 0, 0); // reset jam ke 00:00:00
 
     return events.filter((event) => {
-      // check event date (exclude past events)
-      const eventDate = new Date(event.date);
-      eventDate.setHours(0, 0, 0, 0); // reset jam ke 00:00:00
-      if (eventDate < today) return false;
+      // Only filter by date for events that have a valid date field
+      if (event.date && event.date !== "" && event.date !== null) {
+        try {
+          const eventDate = new Date(event.date);
+          if (!isNaN(eventDate.getTime())) {
+            eventDate.setHours(0, 0, 0, 0);
+            if (eventDate < today) return false;
+          }
+        } catch (error) {
+          console.warn('Invalid date format for event:', event.title, event.date);
+        }
+      }
 
-      // check search term 
+      // check search term - search in title, description, and location
       const matchesSearch = appliedFilters.searchTerm
-        ? event.title
-          .toLowerCase()
-          .includes(appliedFilters.searchTerm.toLowerCase())
+        ? (
+            (event.title || "").toLowerCase().includes(appliedFilters.searchTerm.toLowerCase()) ||
+            (event.short_description || "").toLowerCase().includes(appliedFilters.searchTerm.toLowerCase()) ||
+            (event.description || "").toLowerCase().includes(appliedFilters.searchTerm.toLowerCase()) ||
+            (event.location || "").toLowerCase().includes(appliedFilters.searchTerm.toLowerCase())
+          )
         : true;
 
-      // check location 
+      // check location - more flexible matching
       const matchesLocation = appliedFilters.selectedLocation && appliedFilters.selectedLocation !== "all-locations"
-        ? event.location.toLowerCase() === 
-          appliedFilters.selectedLocation.toLowerCase()
+        ? (event.location || "").toLowerCase().includes(appliedFilters.selectedLocation.toLowerCase())
         : true;
 
-      // check date 
+      // check date - only for events with valid dates
       const matchesDate = appliedFilters.selectedDate
-        ? eventDate.toDateString() === 
-          new Date(appliedFilters.selectedDate).toDateString()
+        ? (() => {
+            if (!event.date || event.date === "" || event.date === null) return true; // Don't filter out items without dates
+            try {
+              const eventDate = new Date(event.date);
+              if (isNaN(eventDate.getTime())) return true; // Don't filter out items with invalid dates
+              eventDate.setHours(0, 0, 0, 0);
+              const selectedDate = new Date(appliedFilters.selectedDate);
+              selectedDate.setHours(0, 0, 0, 0);
+              return eventDate.toDateString() === selectedDate.toDateString();
+            } catch (error) {
+              return true; // Don't filter out items with date parsing errors
+            }
+          })()
         : true;
 
-      // check type
+      // check type - more flexible matching
       const matchesType = appliedFilters.selectedType
-        ? event.type.toLowerCase() === 
-          appliedFilters.selectedType.toLowerCase()
+        ? (() => {
+            if (!event.type) return true; // Don't filter out items without type
+            const eventType = (event.type || "").toLowerCase();
+            const filterType = appliedFilters.selectedType.toLowerCase();
+            
+            // Check for exact match or partial match
+            return eventType === filterType || 
+                   eventType.includes(filterType) || 
+                   filterType.includes(eventType) ||
+                   // Check category as well
+                   (event.category || "").toLowerCase().includes(filterType);
+          })()
         : true;
 
       return matchesSearch && matchesLocation && matchesDate && matchesType;

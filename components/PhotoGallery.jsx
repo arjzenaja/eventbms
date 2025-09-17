@@ -192,7 +192,7 @@ const PhotoGallery = ({ images, title, className = "" }) => {
           {/* Left Arrow */}
           <button
             onClick={prevImage}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 z-20 opacity-0 group-hover:opacity-100 shadow-lg"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 z-20 opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-lg"
             aria-label="Previous image"
           >
             <ChevronLeft className="w-7 h-7" />
@@ -201,7 +201,7 @@ const PhotoGallery = ({ images, title, className = "" }) => {
           {/* Right Arrow */}
           <button
             onClick={nextImage}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 z-20 opacity-0 group-hover:opacity-100 shadow-lg"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-14 h-14 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 z-20 opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-lg"
             aria-label="Next image"
           >
             <ChevronRight className="w-7 h-7" />
@@ -212,6 +212,15 @@ const PhotoGallery = ({ images, title, className = "" }) => {
       {/* Controls row below the photo (inside card) */}
       {displayImages.length > 1 && (
         <div className="flex items-center justify-center gap-3 mt-3">
+          {/* Prev Button (always visible) */}
+          <button
+            onClick={prevImage}
+            className="w-9 h-9 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-all duration-200"
+            aria-label="Gambar sebelumnya"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
           {/* Dot Indicators */}
           <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-black/30 text-white/90">
             {displayImages.map((_, index) => (
@@ -225,6 +234,15 @@ const PhotoGallery = ({ images, title, className = "" }) => {
               />
             ))}
           </div>
+
+          {/* Next Button (always visible) */}
+          <button
+            onClick={nextImage}
+            className="w-9 h-9 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-all duration-200"
+            aria-label="Gambar berikutnya"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
 
           {/* Toggle Thumbnails */}
           <button

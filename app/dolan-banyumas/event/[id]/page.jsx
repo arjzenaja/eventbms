@@ -12,8 +12,8 @@ import EventSchedule from "../../../../components/EventSchedule";
 import BuyTicket from "../../../../components/BuyTicket";
 import EventPackages from "../../../../components/EventPackages";
 import Organizers from "../../../../components/Organizers";
-import RecommendedEvent from "../../../../components/RecommendedEvent";
 import UpcomingEvents from "../../../../components/UpcomingEvents";
+import RatingReviews from "../../../../components/RatingReviews";
 import { BiMap, BiPhone, BiTime, BiCalendar, BiShare, BiHeart, BiNavigation, BiStar, BiUser } from "react-icons/bi";
 
 const EventDetails = () => {
@@ -390,6 +390,18 @@ const EventDetails = () => {
                 <BuyTicket event={event} />
               </div>
 
+              {/* Rating & Reviews Section */}
+              <RatingReviews 
+                rating={parseFloat(event.rating) || 4.5}
+                reviewCount={0}
+                onWriteReview={(reviewData) => {
+                  // Handle review submission
+                  console.log('Review submitted:', reviewData);
+                }}
+                storageKey={`reviews:event:${event?.id || params?.id || 'unknown'}`}
+                className="bg-white/90 dark:bg-gray-800/90 border-white/30 dark:border-gray-700/30"
+              />
+
               {/* Event Info Card */}
               <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-rose-600 rounded-2xl p-6 text-white shadow-2xl">
                 <div className="text-center mb-6">
@@ -488,11 +500,10 @@ const EventDetails = () => {
         </div>
       </div>
 
-      {/* Recommendations & Upcoming */}
+      {/* Upcoming Events */}
       <div className="container mx-auto px-4 pb-16">
         <div className="max-w-6xl mx-auto space-y-12">
-          <RecommendedEvent />
-          <UpcomingEvents />
+          {/* <UpcomingEvents /> */}
         </div>
       </div>
 

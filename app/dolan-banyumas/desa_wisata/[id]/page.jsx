@@ -90,79 +90,106 @@ const DesaWisataDetail = () => {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-			{/* Hero Section */}
-			<div className="relative pt-24 pb-8 overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-teal-500/20"></div>
+			{/* Enhanced Hero Section */}
+			<div className="relative pt-24 pb-16 overflow-hidden">
+				{/* Enhanced Background Pattern */}
+				<div className="absolute inset-0 bg-gradient-to-r from-green-500/30 via-emerald-500/30 to-teal-500/30"></div>
+				<div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-10"></div>
+				
+				{/* Floating Elements */}
+				<div className="absolute top-20 left-10 w-20 h-20 bg-green-300/20 rounded-full blur-xl animate-bounce"></div>
+				<div className="absolute top-40 right-20 w-16 h-16 bg-emerald-300/20 rounded-full blur-xl animate-bounce delay-1000"></div>
+				<div className="absolute bottom-20 left-1/4 w-12 h-12 bg-teal-300/20 rounded-full blur-xl animate-bounce delay-2000"></div>
+				<div className="absolute top-60 right-1/3 w-14 h-14 bg-cyan-300/20 rounded-full blur-xl animate-bounce delay-3000"></div>
+				
 				<div className="relative container mx-auto px-4">
-					{/* Back Button */}
-						<button 
-							onClick={() => window.history.back()} 
-						className="group mt-12 mb-6 inline-flex items-center gap-2 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-all duration-300 transform hover:-translate-x-1"
+					{/* Enhanced Back Button */}
+					<button 
+						onClick={() => window.history.back()} 
+						className="group mt-16 mb-8 inline-flex items-center gap-4 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
-						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
-						<span className="font-medium">Kembali ke Dolan Banyumas</span>
+						<div className="w-12 h-12 bg-green-500/30 group-hover:bg-green-500/40 backdrop-blur-sm rounded-2xl flex items-center justify-center transition-all duration-300 shadow-xl">
+							<BiArrowBack className="text-2xl group-hover:scale-110 transition-transform" />
+						</div>
+						<span className="font-bold text-lg">Kembali ke Dolan Banyumas</span>
 					</button>
 
-					{/* Main Header */}
-					<div className="max-w-4xl mx-auto text-center mb-8">
-						<div className="inline-flex items-center gap-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-4 py-2 rounded-full mb-3 border border-green-200 dark:border-green-700">
-							<BiStar className="text-lg" />
-							<span className="text-sm font-medium capitalize">{destination.type}</span>
+					{/* Enhanced Main Header */}
+					<div className="max-w-5xl mx-auto text-center mb-12">
+						<div className="inline-flex items-center gap-4 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-8 py-4 rounded-full text-lg font-bold mb-6 shadow-2xl">
+							<BiStar className="text-2xl" style={{ animationDuration: '3s' }} />
+							<span className="capitalize">{destination.type || 'Desa Wisata'}</span>
 						</div>
 						
-						<h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-3 leading-tight">
+						<h1 className="text-6xl md:text-8xl font-black text-gray-800 dark:text-white mb-8 leading-tight bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
 							{destination.title}
 						</h1>
 						
-						<div className="flex items-center justify-center gap-4 text-gray-600 dark:text-gray-400 mb-4">
-							<div className="flex items-center gap-2">
-								<BiMap className="text-xl text-green-500" />
-								<span className="font-medium">{destination.location}</span>
+						<div className="flex items-center justify-center gap-6 text-gray-600 dark:text-gray-400 mb-8">
+							<div className="flex items-center gap-3">
+								<div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl">
+									<BiMap className="text-2xl text-white" />
+								</div>
+								<span className="font-bold text-xl">{destination.location}</span>
 							</div>
 							{destination.recommended && (
-								<div className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-700">
-									<BiStar className="text-lg" />
-									<span className="text-sm font-medium">Direkomendasikan</span>
+								<div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 text-white px-6 py-3 rounded-full text-lg font-bold shadow-2xl animate-pulse">
+									<BiStar className="text-2xl" style={{ animationDuration: '3s' }} />
+									<span>Direkomendasikan</span>
 								</div>
 							)}
 						</div>
 
-						{/* Action Buttons */}
-						<div className="flex items-center justify-center gap-3">
+						{/* Enhanced Action Buttons */}
+						<div className="flex items-center justify-center gap-6">
 							<button 
 								onClick={() => setIsLiked(!isLiked)}
-								className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+								className={`flex items-center gap-3 px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl ${
 									isLiked 
-										? 'bg-red-500 text-white shadow-lg' 
-										: 'bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30'
+										? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-red-500/25' 
+										: 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 backdrop-blur-sm'
 								}`}
 							>
-								<BiHeart className={`text-lg ${isLiked ? 'fill-current' : ''}`} />
-								<span className="text-sm font-medium">{isLiked ? 'Disukai' : 'Sukai'}</span>
+								<BiHeart className={`text-2xl ${isLiked ? 'fill-current' : ''}`} />
+								<span className="font-bold text-lg">{isLiked ? 'Disukai' : 'Sukai'}</span>
 							</button>
 							
-							<button className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80">
-								<BiShare className="text-lg" />
-								<span className="text-sm font-medium">Bagikan</span>
-						</button>
+							<button className="flex items-center gap-3 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80 backdrop-blur-sm shadow-xl">
+								<BiShare className="text-2xl" />
+								<span className="font-bold text-lg">Bagikan</span>
+							</button>
 						</div>
 					</div>
 						</div>
 					</div>
 
-					{/* Main Content */}
-			<div className="container mx-auto px-4 pb-12">
-				<div className="max-w-7xl mx-auto">
-					<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-						{/* Left Column - Gallery & Map */}
-						<div className="xl:col-span-2 space-y-6">
-							{/* Photo Gallery */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl mb-6 mt-6">
-							<PhotoGallery
-								images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
-								title={destination.title}
-							/>
-							</div>
+					{/* Enhanced Main Content */}
+					<div className="container mx-auto px-4 pb-16">
+						<div className="max-w-7xl mx-auto">
+							<div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
+								{/* Left Column - Gallery & Map */}
+								<div className="xl:col-span-2 space-y-10">
+									{/* Enhanced Photo Gallery */}
+									<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+										<div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-emerald-500/5 to-teal-500/5 rounded-3xl"></div>
+										<div className="relative">
+											<div className="flex items-center gap-4 mb-8">
+												<div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+													<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+													</svg>
+												</div>
+												<div>
+													<h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Galeri Foto</h3>
+													<div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+												</div>
+											</div>
+											<PhotoGallery
+												images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
+												title={destination.title}
+											/>
+										</div>
+									</div>
 
 							{/* Description Section */}
 							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">

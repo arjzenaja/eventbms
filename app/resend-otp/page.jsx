@@ -28,8 +28,7 @@ export default function ResendOTPPage() {
       router.push('/register');
     }
 
-    // Set cooldown timer
-    setCooldown(60); // 1 minute cooldown
+    // Jangan set cooldown awal; hanya setelah kirim ulang sukses
   }, [router]);
 
   useEffect(() => {
@@ -67,7 +66,8 @@ export default function ResendOTPPage() {
 
       if (data.success) {
         setSuccess(true);
-        setCooldown(60); // Reset cooldown
+        const nextCooldown = (data?.data?.cooldown_seconds ?? 30);
+        setCooldown(nextCooldown);
         
         // Show success message
         localStorage.setItem('flashToast', JSON.stringify({

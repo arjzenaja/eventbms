@@ -151,12 +151,17 @@ export async function GET(request) {
     const now = new Date();
     const expiresAt = new Date(otpRecord.expires_at);
     const remainingSeconds = Math.max(0, Math.floor((expiresAt - now) / 1000));
+    // Cooldown (30s) since OTP creation to prevent rapid resend
+    const createdAt = new Date(otpRecord.created_at);
+    const cooldownTotal = 30; // seconds
+    const cooldownRemaining = Math.max(0, cooldownTotal - Math.floor((now - createdAt) / 1000));
     
     return NextResponse.json({
       success: true,
       data: {
         email: otpRecord.email,
         expires_in: remainingSeconds,
+        cooldown_remaining: cooldownRemaining,
         attempts: otpRecord.attempts,
         max_attempts: otpRecord.max_attempts,
         otp_id: otpRecord.id

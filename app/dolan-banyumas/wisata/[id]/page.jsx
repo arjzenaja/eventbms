@@ -11,6 +11,7 @@ import SmartMap from "../../../../components/SmartMap";
 import TourismManager from "../../../../components/TourismManager";
 import WisataPackages from "../../../../components/WisataPackages";
 import BuyTicket from "../../../../components/BuyTicket";
+import RatingReviews from "../../../../components/RatingReviews";
 import { TicketProvider } from "../../../../context/TicketContext";
 
 const WisataDetail = () => {
@@ -92,6 +93,27 @@ const WisataDetail = () => {
   };
 
   const contactInfo = parseContact(destination?.contact);
+
+  // Function to shorten URL for display
+  const shortenUrl = (url) => {
+    if (!url) return '';
+    try {
+      const urlObj = new URL(url);
+      // Remove www. prefix and show only domain + path (max 30 chars)
+      let displayUrl = urlObj.hostname.replace(/^www\./, '');
+      if (urlObj.pathname !== '/') {
+        displayUrl += urlObj.pathname;
+      }
+      // Truncate if too long
+      if (displayUrl.length > 30) {
+        displayUrl = displayUrl.substring(0, 27) + '...';
+      }
+      return displayUrl;
+    } catch {
+      // If URL parsing fails, return truncated original
+      return url.length > 30 ? url.substring(0, 27) + '...' : url;
+    }
+  };
   
 
   
@@ -139,51 +161,68 @@ const WisataDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="relative pt-24 pb-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 dark:from-blue-500/20 dark:via-indigo-500/20 dark:to-purple-500/20"></div>
+      {/* Enhanced Hero Section */}
+      <div className="relative pt-24 pb-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 animate-pulse"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+          {/* Floating Elements */}
+          <div className="absolute top-20 left-10 w-20 h-20 bg-blue-300/20 rounded-full blur-xl animate-bounce"></div>
+          <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-300/20 rounded-full blur-xl animate-bounce delay-1000"></div>
+          <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-purple-300/20 rounded-full blur-xl animate-bounce delay-2000"></div>
+          <div className="absolute top-60 right-1/3 w-14 h-14 bg-cyan-300/20 rounded-full blur-xl animate-bounce delay-3000"></div>
+        </div>
+        
         <div className="relative container mx-auto px-4">
+          {/* Enhanced Back Button */}
           <button 
             onClick={() => window.history.back()} 
-            className="group mt-12 mb-6 inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 transform hover:-translate-x-1"
+            className="group mt-12 mb-10 inline-flex items-center gap-3 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 transform hover:-translate-x-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl border border-blue-200 dark:border-blue-800 hover:shadow-2xl"
           >
             <BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
-            <span className="font-medium">Kembali ke Dolan Banyumas</span>
+            <span className="font-semibold">Kembali ke Dolan Banyumas</span>
           </button>
 
-          <div className="max-w-4xl mx-auto text-center mb-8">
-            <div className="inline-flex items-center gap-3 bg-blue-100/80 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full mb-3 border border-blue-200/60 dark:border-blue-700 shadow-sm">
-              <BiStar className="text-lg" />
-              <span className="text-sm font-medium capitalize">{safeDestination.type}</span>
+          {/* Enhanced Hero Content */}
+          <div className="max-w-6xl mx-auto text-center mb-16">
+            {/* Enhanced Category Badge */}
+            <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-full mb-8 shadow-2xl border border-blue-400/30">
+              <BiStar className="text-xl animate-pulse" style={{ animationDuration: '3s' }} />
+              <span className="text-lg font-bold capitalize tracking-wide">{safeDestination.type}</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-3 leading-tight">
+            {/* Enhanced Title */}
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 dark:text-white mb-8 leading-tight bg-gradient-to-r from-gray-900 via-blue-600 to-indigo-600 dark:from-white dark:via-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
               {safeDestination.title}
             </h1>
             
-            <div className="flex items-center justify-center gap-4 text-gray-700 dark:text-gray-400 mb-4">
-              <div className="flex items-center gap-2">
-                <BiMap className="text-xl text-blue-600 dark:text-blue-500" />
-                <span className="font-medium">{safeDestination.location}</span>
+            {/* Enhanced Location and Recommendation */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-700 dark:text-gray-400 mb-12">
+              <div className="flex items-center gap-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-xl border border-white/60 dark:border-gray-700/50">
+                <BiMap className="text-2xl text-blue-600 dark:text-blue-500" />
+                <span className="font-bold text-gray-800 dark:text-gray-200 text-lg">{safeDestination.location}</span>
               </div>
               {safeDestination.recommended && (
-                <div className="flex items-center gap-2 bg-yellow-100/90 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 px-3 py-1 rounded-full border border-yellow-200/60 dark:border-yellow-700 shadow-sm">
-                  <BiStar className="text-lg" />
-                  <span className="text-sm font-medium">Direkomendasikan</span>
+                <div className="flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-3 rounded-full shadow-xl border border-yellow-300/50">
+                  <BiStar className="text-xl animate-pulse" style={{ animationDuration: '3s' }} />
+                  <span className="text-lg font-bold">Direkomendasikan</span>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-center gap-3">
+            {/* Enhanced Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <button 
                 onClick={() => setIsLiked(!isLiked)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+                className={`group flex items-center gap-4 px-10 py-5 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl ${
                   isLiked 
-                    ? 'bg-red-500 text-white shadow-lg' 
-                    : 'bg-white/90 dark:bg-gray-800/80 text-gray-800 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 shadow-md border border-gray-200/50 dark:border-gray-700/50'
+                    ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-red-500/25' 
+                    : 'bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/30 shadow-xl border border-gray-200/50 dark:border-gray-700/50'
                 }`}
               >
-                <BiHeart className={`text-lg ${isLiked ? 'fill-current' : ''}`} />
-                <span className="text-sm font-medium">{isLiked ? 'Disukai' : 'Sukai'}</span>
+                <BiHeart className={`text-2xl group-hover:scale-110 transition-transform ${isLiked ? 'fill-current' : ''}`} />
+                <span className="font-bold text-lg">{isLiked ? 'Disukai' : 'Sukai'}</span>
               </button>
               
               <button 
@@ -203,101 +242,160 @@ const WisataDetail = () => {
                     console.error('Error sharing:', err);
                   }
                 }}
-                className="flex items-center gap-2 bg-white/90 dark:bg-gray-800/80 text-gray-800 dark:text-gray-300 px-5 py-2.5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/80 shadow-md border border-gray-200/50 dark:border-gray-700/50"
+                className="group flex items-center gap-4 bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-300 px-10 py-5 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700/90 shadow-xl border border-gray-200/50 dark:border-gray-700/50"
               >
-                <BiShare className="text-lg" />
-                <span className="text-sm font-medium">Bagikan</span>
+                <BiShare className="text-2xl group-hover:scale-110 transition-transform" />
+                <span className="font-bold text-lg">Bagikan</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 pb-12 pt-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div className="xl:col-span-2 space-y-8">
-              {/* Gallery */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="lg:col-span-2 space-y-8 lg:space-y-10">
+              {/* Enhanced Gallery */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-6 border border-white/60 dark:border-gray-700/60 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-indigo-500/5 to-purple-500/5 rounded-3xl"></div>
+                <div className="relative">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Galeri Foto</h3>
+                      <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
+                    </div>
+                  </div>
                 <ErrorBoundary>
                   <PhotoGallery
                     images={[safeDestination.img_lg, safeDestination.img_sm, ...(safeDestination.gallery || [])].filter(Boolean)}
                     title={safeDestination.title}
                   />
                 </ErrorBoundary>
+                </div>
               </div>
 
-              {/* Description */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/60 dark:border-gray-700/50 shadow-xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* Enhanced Description */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl"></div>
+                <div className="relative">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Tentang Destinasi</h2>
+                    <div>
+                      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Tentang Destinasi</h2>
+                      <div className="w-16 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+                    </div>
                 </div>
                 
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg bg-gradient-to-r from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-900/20 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-800">
                     {safeDestination.description || safeDestination.short_description || "Deskripsi destinasi tidak tersedia"}
                   </p>
+                  </div>
                 </div>
               </div>
 
               {/* Pengelola Wisata */}
               <TourismManager destination={safeDestination} contactInfo={contactInfo} />
 
-              {/* Map */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
+              {/* Enhanced Map */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-6 border border-white/60 dark:border-gray-700/60 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-emerald-500/5 to-teal-500/5 rounded-3xl"></div>
+                <div className="relative">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <BiMap className="w-7 h-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Peta Lokasi</h3>
+                      <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                    </div>
+                  </div>
                 <ErrorBoundary>
                   <SmartMap
                     destination={safeDestination}
                     onDistanceCalculated={setMapDistance}
                   />
                 </ErrorBoundary>
+                </div>
               </div>
 
 
-              {/* Paket Wisata */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
+              {/* Paket Wisata - Hidden */}
+              {/* <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl hover-lift animate-scale-in">
                 <ErrorBoundary>
                   <WisataPackages destination={safeDestination} />
                 </ErrorBoundary>
-              </div>
+              </div> */}
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {/* Info Card */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Informasi Destinasi</h3>
+            {/* Enhanced Sidebar */}
+            <div className="space-y-8 lg:space-y-10">
+              {/* Enhanced Info Card */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-indigo-500/5 to-purple-500/5 rounded-3xl"></div>
+                <div className="relative">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                    <div>
+                      <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Informasi Destinasi</h3>
+                      <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
+                    </div>
+                </div>
                 
                 {safeDestination.entrance_fee && (
-                  <div className="mb-6">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-4 text-white text-center">
-                      <div className="text-sm opacity-90 mb-1">Harga Tiket</div>
-                      <div className="text-2xl font-bold">{safeDestination.entrance_fee}</div>
+                    <div className="mb-10">
+                      <div className="bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-3xl p-8 text-white text-center shadow-2xl border border-green-400/30 relative overflow-hidden">
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+                        
+                        <div className="relative">
+                          <div className="flex items-center justify-center gap-3 mb-4">
+                            <BiMoney className="text-3xl" />
+                            <span className="text-xl font-bold opacity-90">Harga Tiket</span>
+                      </div>
+                          <div className="text-4xl font-bold mb-3">{safeDestination.entrance_fee}</div>
+                          <div className="text-lg opacity-80">per orang</div>
+                        </div>
                     </div>
                   </div>
                 )}
 
                 {safeDestination.address && (
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Alamat</h4>
-                    <div className="flex items-start gap-3 p-3 bg-gray-100/80 dark:bg-gray-700/50 rounded-xl border border-gray-200/50 dark:border-gray-600/50">
-                      <BiMap className="text-xl text-blue-600 dark:text-blue-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-800 dark:text-gray-300">{safeDestination.address}</span>
+                    <div className="mb-10">
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
+                        <BiMap className="text-2xl text-blue-600 dark:text-blue-500" />
+                      Alamat Lengkap
+                    </h4>
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-700/50 shadow-lg">
+                        <span className="text-gray-800 dark:text-gray-300 leading-relaxed text-lg">{safeDestination.address}</span>
                     </div>
                   </div>
                 )}
 
                 {safeDestination.created_at && (
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Ditambahkan</h4>
-                    <div className="flex items-center gap-3 p-3 bg-amber-100/80 dark:bg-amber-900/30 rounded-xl border border-amber-200/50 dark:border-amber-700/50">
-                      <BiTime className="text-xl text-amber-600 dark:text-amber-500" />
-                      <span className="text-amber-800 dark:text-amber-300">
+                    <div className="mb-10">
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
+                        <BiTime className="text-2xl text-amber-600 dark:text-amber-500" />
+                      Ditambahkan
+                    </h4>
+                      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 border border-amber-200/50 dark:border-amber-700/50 shadow-lg">
+                        <span className="text-amber-800 dark:text-amber-300 font-bold text-lg">
                         {new Date(safeDestination.created_at).toLocaleDateString('id-ID', {
                           year: 'numeric',
                           month: 'long',
@@ -309,112 +407,160 @@ const WisataDetail = () => {
                 )}
 
                 {contactInfo.length > 0 && (
-                  <div className="space-y-3">
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Kontak</h4>
+                    <div className="space-y-6">
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-3">
+                        <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      Kontak & Informasi
+                    </h4>
                     
-                    {contactInfo.map((contact, index) => {
-                      switch (contact.type) {
-                        case 'phone':
-                          return (
-                            <a 
-                              key={index}
-                              href={`tel:${contact.value}`}
-                              className="flex items-center gap-3 p-3 bg-blue-100/80 dark:bg-blue-900/30 rounded-xl hover:bg-blue-200/80 dark:hover:bg-blue-900/50 transition-colors border border-blue-200/50 dark:border-blue-700/50"
-                            >
-                              <BiPhone className="text-xl text-blue-600 dark:text-blue-500" />
-                              <span className="text-blue-800 dark:text-blue-300">{contact.value}</span>
-                            </a>
-                          );
-                        case 'whatsapp':
-                          return (
-                            <a 
-                              key={index}
-                              href={`https://wa.me/${contact.value.replace(/\D/g, '')}?text=${encodeURIComponent(`Halo, saya tertarik dengan destinasi ${safeDestination.title}`)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-green-100/80 dark:bg-green-900/30 rounded-xl hover:bg-green-200/80 dark:hover:bg-green-900/50 transition-colors border border-green-200/50 dark:border-green-700/50"
-                            >
-                              <FaWhatsapp className="text-xl text-green-600 dark:text-green-500" />
-                              <span className="text-green-800 dark:text-green-300">WhatsApp</span>
-                            </a>
-                          );
-                        case 'instagram':
-                          return (
-                            <a 
-                              key={index}
-                              href={`https://instagram.com/${contact.value.replace('@', '')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-pink-100/80 dark:bg-pink-900/30 rounded-xl hover:bg-pink-200/80 dark:hover:bg-pink-900/50 transition-colors border border-pink-200/50 dark:border-pink-700/50"
-                            >
-                              <FaInstagram className="text-xl text-pink-600 dark:text-pink-500" />
-                              <span className="text-pink-800 dark:text-pink-300">{contact.value}</span>
-                            </a>
-                          );
-                        case 'website':
-                          return (
-                            <a 
-                              key={index}
-                              href={contact.value}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-3 p-3 bg-purple-100/80 dark:bg-purple-900/30 rounded-xl hover:bg-purple-200/80 dark:hover:bg-purple-900/50 transition-colors border border-purple-200/50 dark:border-purple-700/50"
-                            >
-                              <FaGlobe className="text-xl text-purple-600 dark:text-purple-500" />
-                              <span className="text-purple-800 dark:text-purple-300">{contact.value}</span>
-                            </a>
-                          );
-                        case 'email':
-                          return (
-                            <a 
-                              key={index}
-                              href={`mailto:${contact.value}`}
-                              className="flex items-center gap-3 p-3 bg-gray-100/80 dark:bg-gray-900/30 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-900/50 transition-colors border border-gray-200/50 dark:border-gray-700/50"
-                            >
-                              <svg className="text-xl text-gray-600 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                              </svg>
-                              <span className="text-gray-800 dark:text-gray-300">{contact.value}</span>
-                            </a>
-                          );
-                        default:
-                          return null;
-                      }
-                    })}
+                      <div className="grid grid-cols-1 gap-4">
+                      {contactInfo.map((contact, index) => {
+                        switch (contact.type) {
+                          case 'phone':
+                            return (
+                              <a 
+                                key={index}
+                                href={`tel:${contact.value}`}
+                                  className="group flex items-center gap-4 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-300 transform hover:scale-105 shadow-lg border border-blue-200/50 dark:border-blue-700/50"
+                              >
+                                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <BiPhone className="text-2xl text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-1">Telepon</div>
+                                    <div className="text-blue-800 dark:text-blue-300 font-bold text-lg">{contact.value}</div>
+                                </div>
+                                  <svg className="w-6 h-6 text-blue-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </a>
+                            );
+                          case 'whatsapp':
+                            return (
+                              <a 
+                                key={index}
+                                href={`https://wa.me/${contact.value.replace(/\D/g, '')}?text=${encodeURIComponent(`Halo, saya tertarik dengan destinasi ${safeDestination.title}`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                  className="group flex items-center gap-4 p-5 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/30 dark:hover:to-emerald-900/30 transition-all duration-300 transform hover:scale-105 shadow-lg border border-green-200/50 dark:border-green-700/50"
+                              >
+                                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <FaWhatsapp className="text-2xl text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-sm font-bold text-green-600 dark:text-green-400 mb-1">WhatsApp</div>
+                                    <div className="text-green-800 dark:text-green-300 font-bold text-lg">Chat Sekarang</div>
+                                </div>
+                                  <svg className="w-6 h-6 text-green-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </a>
+                            );
+                          case 'instagram':
+                            return (
+                              <a 
+                                key={index}
+                                href={`https://instagram.com/${contact.value.replace('@', '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                  className="group flex items-center gap-4 p-5 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-2xl hover:from-pink-100 hover:to-rose-100 dark:hover:from-pink-900/30 dark:hover:to-rose-900/30 transition-all duration-300 transform hover:scale-105 shadow-lg border border-pink-200/50 dark:border-pink-700/50"
+                              >
+                                  <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <FaInstagram className="text-2xl text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-sm font-bold text-pink-600 dark:text-pink-400 mb-1">Instagram</div>
+                                    <div className="text-pink-800 dark:text-pink-300 font-bold text-lg">{contact.value}</div>
+                                </div>
+                                  <svg className="w-6 h-6 text-pink-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </a>
+                            );
+                          case 'website':
+                            return (
+                              <a 
+                                key={index}
+                                href={contact.value}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                  className="group flex items-center gap-4 p-5 bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-2xl hover:from-purple-100 hover:to-violet-100 dark:hover:from-purple-900/30 dark:hover:to-violet-900/30 transition-all duration-300 transform hover:scale-105 shadow-lg border border-purple-200/50 dark:border-purple-700/50"
+                                title={contact.value}
+                              >
+                                  <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-violet-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <FaGlobe className="text-2xl text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-sm font-bold text-purple-600 dark:text-purple-400 mb-1">Website</div>
+                                    <div className="text-purple-800 dark:text-purple-300 font-bold text-lg">{shortenUrl(contact.value)}</div>
+                                </div>
+                                  <svg className="w-6 h-6 text-purple-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </a>
+                            );
+                          case 'email':
+                            return (
+                              <a 
+                                key={index}
+                                href={`mailto:${contact.value}`}
+                                  className="group flex items-center gap-4 p-5 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-800/50 dark:to-slate-800/50 rounded-2xl hover:from-gray-100 hover:to-slate-100 dark:hover:from-gray-800/70 dark:hover:to-slate-800/70 transition-all duration-300 transform hover:scale-105 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
+                              >
+                                  <div className="w-14 h-14 bg-gradient-to-br from-gray-500 to-slate-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <svg className="text-2xl text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                  </svg>
+                                </div>
+                                <div className="flex-1">
+                                    <div className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-1">Email</div>
+                                    <div className="text-gray-800 dark:text-gray-300 font-bold text-lg">{contact.value}</div>
+                                </div>
+                                  <svg className="w-6 h-6 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </a>
+                            );
+                          default:
+                            return null;
+                        }
+                      })}
+                    </div>
                   </div>
                 )}
 
-                {/* Pengelola Wisata */}
+                  {/* Enhanced Pengelola Wisata */}
                 {safeDestination.manager && (
-                  <div className="mt-6">
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Pengelola Wisata</h4>
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700 rounded-2xl p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="mt-8">
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Pengelola Wisata</h4>
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700 rounded-2xl p-6 shadow-lg">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                         </div>
                         <div>
-                          <div className="font-semibold text-gray-800 dark:text-white">{safeDestination.manager}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">Pengelola Destinasi</div>
+                            <div className="font-bold text-gray-800 dark:text-white text-lg">{safeDestination.manager}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Pengelola Destinasi</div>
                         </div>
                       </div>
                       
-                      {/* Contact Pengelola */}
+                        {/* Enhanced Contact Pengelola */}
                       {(() => {
                         const phoneContact = contactInfo.find(c => c.type === 'phone');
                         const whatsappContact = contactInfo.find(c => c.type === 'whatsapp');
                         
                         if (phoneContact || whatsappContact) {
                           return (
-                            <div className="mt-4 flex gap-2">
+                              <div className="mt-6 flex gap-3">
                               {phoneContact && (
                                 <a 
                                   href={`tel:${phoneContact.value}`}
-                                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-center py-2 px-3 rounded-lg text-sm font-medium transition-colors"
+                                    className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-center py-3 px-4 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
                                 >
-                                  <BiPhone className="inline mr-1" />
+                                    <BiPhone className="inline mr-2 text-lg" />
                                   Telepon
                                 </a>
                               )}
@@ -423,9 +569,9 @@ const WisataDetail = () => {
                                   href={`https://wa.me/${whatsappContact.value.replace(/\D/g, '')}?text=Halo, saya ingin bertanya tentang destinasi ${destination.title}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex-1 bg-green-500 hover:bg-green-600 text-white text-center py-2 px-3 rounded-lg text-sm font-medium transition-colors"
+                                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-center py-3 px-4 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
                                 >
-                                  <FaWhatsapp className="inline mr-1" />
+                                    <FaWhatsapp className="inline mr-2 text-lg" />
                                   WhatsApp
                                 </a>
                               )}
@@ -437,27 +583,35 @@ const WisataDetail = () => {
                     </div>
                   </div>
                 )}
+                </div>
               </div>
 
-              {/* Features Section */}
+
+              {/* Enhanced Features Section */}
               {destination.features && destination.features.length > 0 && (
-                <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/60 dark:border-gray-700/60 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-red-500/5 rounded-3xl"></div>
+                  <div className="relative">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">Fitur & Fasilitas</h3>
+                      <div>
+                        <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Fitur & Fasilitas</h3>
+                        <div className="w-16 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                      </div>
                   </div>
                   
-                  <div className="space-y-3">
+                    <div className="space-y-4">
                     {destination.features.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 bg-purple-100/80 dark:bg-purple-900/20 rounded-xl border border-purple-200/60 dark:border-purple-700">
-                        <div className="w-2 h-2 bg-purple-600 dark:bg-purple-500 rounded-full"></div>
-                        <span className="text-sm text-purple-800 dark:text-purple-300">{feature}</span>
+                        <div key={index} className="group/item flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl border border-purple-200 dark:border-purple-700 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                          <div className="w-3 h-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full group-hover/item:scale-125 transition-transform"></div>
+                          <span className="text-lg text-purple-700 dark:text-purple-300 font-medium">{feature}</span>
                       </div>
                     ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -495,27 +649,45 @@ const WisataDetail = () => {
                 </div>
               )}
 
-              {/* Quick Actions */}
-              <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl p-6 text-white text-center">
-                <h3 className="text-xl font-bold mb-4">Aksi Cepat</h3>
+              {/* Enhanced Quick Actions */}
+              <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl border border-orange-400/30 hover-lift animate-fade-in-right">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">Aksi Cepat</h3>
+                  <p className="text-orange-100 text-sm">Pilih aksi yang ingin Anda lakukan</p>
+                </div>
                 
-                {/* Main Action Buttons - Horizontal Layout */}
-                <div className="grid grid-cols-4 gap-3 mb-4">
+                {/* Enhanced Action Buttons - Larger Size */}
+                <div className="grid grid-cols-2 gap-4">
                   {/* Telepon Button */}
                   {(() => {
                     const phoneContact = contactInfo.find(c => c.type === 'phone');
                     return phoneContact ? (
                       <a 
                         href={`tel:${phoneContact.value}`}
-                        className="flex flex-col items-center justify-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20"
                       >
-                        <BiPhone className="text-2xl" />
-                        <span className="text-xs">Telepon</span>
+                        <div className="w-16 h-16 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <BiPhone className="text-3xl" />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold">Telepon</div>
+                          <div className="text-sm opacity-80">Hubungi langsung</div>
+                        </div>
                       </a>
                     ) : (
-                      <button className="flex flex-col items-center justify-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        <BiPhone className="text-2xl" />
-                        <span className="text-xs">Telepon</span>
+                      <button className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20">
+                        <div className="w-16 h-16 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <BiPhone className="text-3xl" />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold">Telepon</div>
+                          <div className="text-sm opacity-80">Hubungi langsung</div>
+                        </div>
                       </button>
                     );
                   })()}
@@ -528,15 +700,25 @@ const WisataDetail = () => {
                         href={`https://wa.me/${whatsappContact.value.replace(/\D/g, '')}?text=Halo, saya tertarik dengan destinasi wisata ${destination.title}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20"
                       >
-                        <FaWhatsapp className="text-2xl" />
-                        <span className="text-xs">WhatsApp</span>
+                        <div className="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <FaWhatsapp className="text-3xl" />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold">WhatsApp</div>
+                          <div className="text-sm opacity-80">Chat sekarang</div>
+                        </div>
                       </a>
                     ) : (
-                      <button className="flex flex-col items-center justify-center gap-2 bg-green-600/80 hover:bg-green-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        <FaWhatsapp className="text-2xl" />
-                        <span className="text-xs">WhatsApp</span>
+                      <button className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20">
+                        <div className="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <FaWhatsapp className="text-3xl" />
+                        </div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold">WhatsApp</div>
+                          <div className="text-sm opacity-80">Chat sekarang</div>
+                        </div>
                       </button>
                     );
                   })()}
@@ -549,10 +731,15 @@ const WisataDetail = () => {
                         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank');
                       }
                     }}
-                    className="flex flex-col items-center justify-center gap-2 bg-purple-600/80 hover:bg-purple-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20"
                   >
-                    <BiMap className="text-2xl" />
-                    <span className="text-xs">Arahkan</span>
+                    <div className="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <BiMap className="text-3xl" />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold">Arahkan</div>
+                      <div className="text-sm opacity-80">Buka di Maps</div>
+                    </div>
                   </button>
                   
                   {/* Bagikan Button */}
@@ -573,121 +760,134 @@ const WisataDetail = () => {
                         console.error(e);
                       }
                     }}
-                    className="flex flex-col items-center justify-center gap-2 bg-red-600/80 hover:bg-red-500 text-white font-medium py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="group flex flex-col items-center justify-center gap-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl border border-white/20"
                   >
-                    <BiShare className="text-2xl" />
-                    <span className="text-xs">Bagikan</span>
+                    <div className="w-16 h-16 bg-red-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <BiShare className="text-3xl" />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold">Bagikan</div>
+                      <div className="text-sm opacity-80">Share link</div>
+                    </div>
                   </button>
-                </div>
-                
-                {/* Additional Info */}
-                <div className="text-orange-100 text-sm">
-                  <p>Pilih aksi yang ingin Anda lakukan</p>
                 </div>
               </div>
 
-              {/* Package Pricing Section */}
-              <div className="bg-white/85 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/60 dark:border-gray-700/50 shadow-xl">
-                <div className="text-center mb-4">
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Pilihan Paket Wisata</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Pilih paket yang sesuai dengan kebutuhan Anda</p>
-                  <div className="inline-flex items-center gap-2 bg-green-100/90 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs font-medium mt-3 border border-green-200/60 dark:border-green-700/50">
-                    <div className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full"></div>
+              {/* Enhanced Package Pricing Section - Hidden */}
+              {/* <div className="bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-6 border border-white/60 dark:border-gray-700/50 shadow-2xl hover-lift animate-scale-in">
+                <div className="text-center mb-6">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Pilihan Paket Wisata</h3>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">Pilih paket yang sesuai dengan kebutuhan Anda</p>
+                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-full text-sm font-semibold border border-green-200/60 dark:border-green-700/50 shadow-md">
+                    <div className="w-2 h-2 bg-green-600 dark:bg-green-500 rounded-full animate-pulse"></div>
                     <span>Paket Tersedia</span>
                   </div>
                 </div>
 
-                {/* Package Card */}
-                <div className="bg-gradient-to-br from-blue-100/80 to-purple-100/80 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200/60 dark:border-blue-700 rounded-2xl p-4">
-                  {/* Package Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 border border-blue-200/60 dark:border-blue-700/50 rounded-3xl p-6 shadow-xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-bold text-gray-800 dark:text-white">Paket Standar</h4>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-yellow-500">⭐</span>
-                          <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">Recommended</span>
+                        <h4 className="text-xl font-bold text-gray-800 dark:text-white">Paket Standar</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                          </div>
+                          <span className="text-sm text-yellow-600 dark:text-yellow-400 font-semibold bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded-full">Recommended</span>
                         </div>
                       </div>
                     </div>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-blue-700 dark:text-blue-400">
-                      {destination.entrance_fee || destination.price_range || "Rp Gratis"}
-                    </div>
-                    <div className="text-xs text-gray-700 dark:text-gray-400">per orang</div>
-                  </div>
-                  </div>
-
-                  {/* Features Included */}
-                  <div className="mb-4">
-                    <h5 className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Fitur yang termasuk:</h5>
-                    <div className="grid grid-cols-1 gap-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-800 dark:text-gray-300">Tiket Masuk</span>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-1">
+                        {destination.entrance_fee || destination.price_range || "Rp Gratis"}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-800 dark:text-gray-300">Panduan Wisata</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-800 dark:text-gray-300">Fasilitas Dasar</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                        <span className="text-xs text-gray-800 dark:text-gray-300">Asuransi</span>
-                      </div>
+                      <div className="text-sm text-gray-700 dark:text-gray-400 font-medium">per orang</div>
                     </div>
                   </div>
 
-                  {/* Terms & Conditions */}
-                  <div className="mb-4">
-                    <h5 className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Syarat & Ketentuan:</h5>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <h6 className="text-xs font-semibold text-gray-800 dark:text-gray-300 mb-1">Syarat:</h6>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">Min. 1 orang</span>
+                  <div className="mb-6">
+                    <h5 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Fitur yang termasuk:
+                    </h5>
+                    <div className="grid grid-cols-1 gap-3">
+                      {[
+                        "Tiket Masuk",
+                        "Panduan Wisata",
+                        "Fasilitas Dasar",
+                        "Asuransi Perjalanan",
+                        "Parkir Gratis",
+                        "WiFi Area"
+                      ].map((feature, index) => (
+                        <div key={index} className="flex items-center gap-3 p-3 bg-white/60 dark:bg-gray-800/40 rounded-xl border border-white/60 dark:border-gray-700/30">
+                          <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">Bayar full H-7</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-blue-600 dark:bg-blue-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">Konfirmasi H-3</span>
-                          </div>
+                          <span className="text-sm font-medium text-gray-800 dark:text-gray-300">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <h5 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-600 dark:text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Syarat & Ketentuan:
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-4 border border-amber-200/50 dark:border-amber-700/50">
+                        <h6 className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-3">Syarat:</h6>
+                        <div className="space-y-2">
+                          {[
+                            "Min. 1 orang",
+                            "Bayar full H-7",
+                            "Konfirmasi H-3",
+                            "Valid ID diperlukan"
+                          ].map((term, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-amber-600 dark:bg-amber-500 rounded-full"></div>
+                              <span className="text-xs text-amber-700 dark:text-amber-400">{term}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                      <div>
-                        <h6 className="text-xs font-semibold text-gray-800 dark:text-gray-300 mb-1">Pembatalan:</h6>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">H-7: 100%</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">H-3: 50%</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-1 h-1 bg-red-600 dark:bg-red-500 rounded-full"></div>
-                            <span className="text-xs text-gray-700 dark:text-gray-400">H-1: 0%</span>
-                          </div>
+                      <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 border border-red-200/50 dark:border-red-700/50">
+                        <h6 className="text-sm font-semibold text-red-800 dark:text-red-300 mb-3">Pembatalan:</h6>
+                        <div className="space-y-2">
+                          {[
+                            "H-7: 100% refund",
+                            "H-3: 50% refund",
+                            "H-1: 0% refund",
+                            "Force majeure: 100%"
+                          ].map((term, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-red-600 dark:bg-red-500 rounded-full"></div>
+                              <span className="text-xs text-red-700 dark:text-red-400">{term}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Call to Action */}
                   <button 
                     onClick={() => {
                       const price = destination.entrance_fee || destination.price_range || "Rp Gratis";
@@ -702,17 +902,35 @@ const WisataDetail = () => {
                         window.location.href = `tel:${phoneContact.value}`;
                       }
                     }}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm"
+                    className="group w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center justify-center gap-3 text-lg"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
                     </svg>
                     <span>Pilih Paket Ini</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Rating & Reviews Section - Moved to Bottom */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="max-w-7xl mx-auto">
+          <RatingReviews 
+            rating={parseFloat(destination.rating) || 4.5}
+            reviewCount={0}
+            onWriteReview={(reviewData) => {
+              // Handle review submission
+              console.log('Review submitted:', reviewData);
+            }}
+            storageKey={`reviews:wisata:${destination?.id || params?.id || 'unknown'}`}
+          />
         </div>
       </div>
     </div>

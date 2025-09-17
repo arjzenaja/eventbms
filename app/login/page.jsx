@@ -59,7 +59,7 @@ function ImageGallery({ images }) {
             />
             {/* Overlay with title */}
             <div className="absolute inset-0 bg-black/20 flex items-end">
-              <div className="p-4 text-white">
+              <div className="p-4 pb-12 text-white">
                 <h3 className="text-lg font-semibold">{image.title}</h3>
                 <p className="text-sm opacity-90">{image.description}</p>
               </div>
@@ -94,12 +94,12 @@ function ImageGallery({ images }) {
 
       {/* Dots Indicator */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 index === currentIndex 
                   ? 'bg-white scale-125' 
                   : 'bg-white/50 hover:bg-white/75'
@@ -124,23 +124,35 @@ export default function UserLogin() {
 
   // Sample images for the gallery - you can replace these with your actual images
   const galleryImages = [
+      // {
+      //   src: "/hero/hero-bg1.png",
+      //   alt: "Hero Background 1",
+      //   title: "Event Decoration",
+      //   description: "Elegant event decorations and arrangements"
+      // },
+      // {
+      //   src: "/hero/hero-bg2.png",
+      //   alt: "Hero Background 2",
+      //   title: "Celebration",
+      //   description: "Memorable celebration moments"
+      // },
     {
-      src: "/images/dessert-table.jpg", // Replace with your actual image path
-      alt: "Dessert Table",
-      title: "Dessert Table",
-      description: "Beautiful dessert table setup for celebrations"
+      src: "/hero/bunderan batur.jpg",
+      alt: "Bunderan Batur",
+      title: "Bunderan Batur",
+      description: "Simbol kebanggaan Kabupaten Banyumas"
     },
     {
-      src: "/images/event-decor.jpg", // Replace with your actual image path
-      alt: "Event Decoration",
-      title: "Event Decoration",
-      description: "Elegant event decorations and arrangements"
+      src: "/hero/menara teratai.jpg",
+      alt: "Menara Teratai",
+      title: "Menara Teratai",
+      description: "Landmark modern di Banyumas"
     },
     {
-      src: "/images/celebration.jpg", // Replace with your actual image path
-      alt: "Celebration",
-      title: "Celebration",
-      description: "Memorable celebration moments"
+      src: "/objekwisata/hutanpinus.jpg",
+      alt: "Hutan Pinus",
+      title: "Hutan Pinus",
+      description: "Keindahan alam Banyumas yang menyejukkan"
     }
   ];
 
@@ -202,7 +214,7 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4 pt-28 md:pt-36">
       {/* Main Card Container */}
       <div className="w-full max-w-md">
         {/* Logo */}

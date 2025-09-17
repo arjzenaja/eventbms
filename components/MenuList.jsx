@@ -288,6 +288,7 @@ const MenuList = ({ menus = [], destinationTitle = "Kuliner" }) => {
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onConfirm={handleOrderConfirm}
+          hideAddToCart={true}
         />
       )}
     </div>

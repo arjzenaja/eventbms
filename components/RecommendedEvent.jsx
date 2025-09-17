@@ -70,15 +70,42 @@ const RecommendedEvent = () => {
               modules={[Pagination]}
               className="w-full pb-12"
             >
-              {filteredRecommendedEvents.map((event, index) => (
-                <SwiperSlide key={event.id || index} className="select-none">
-                  <div className="h-full flex flex-col">
-                    <Link href={`/dolan-banyumas/event/${event.id}`} className="h-full block group">
-                      <Event event={event} />
-                    </Link>
-                  </div>
-                </SwiperSlide>
-              ))}
+              {filteredRecommendedEvents.map((event, index) => {
+                // Determine the correct route based on the item's category
+                const getItemRoute = (item) => {
+                  if (item.__categoryKey) {
+                    switch (item.__categoryKey) {
+                      case 'wisata':
+                        return `/destination/wisata/${item.id}`;
+                      case 'kuliner':
+                        return `/destination/kuliner/${item.id}`;
+                      case 'penginapan':
+                        return `/destination/penginapan/${item.id}`;
+                      case 'oleh_oleh':
+                        return `/destination/oleh-oleh/${item.id}`;
+                      case 'desa_wisata':
+                        return `/destination/desa-wisata/${item.id}`;
+                      case 'biro_perjalanan':
+                        return `/destination/biro-perjalanan/${item.id}`;
+                      case 'events':
+                      default:
+                        return `/dolan-banyumas/event/${item.id}`;
+                    }
+                  }
+                  // Fallback to event route if no category key
+                  return `/dolan-banyumas/event/${item.id}`;
+                };
+
+                return (
+                  <SwiperSlide key={event.id || index} className="select-none">
+                    <div className="h-full flex flex-col">
+                      <Link href={getItemRoute(event)} className="h-full block group">
+                        <Event event={event} />
+                      </Link>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
             
             {/* Custom Pagination - Centered */}

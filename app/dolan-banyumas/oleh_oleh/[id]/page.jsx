@@ -9,6 +9,7 @@ import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import LocationInfo from "../../../../components/LocationInfo";
+import RatingReviews from "../../../../components/RatingReviews";
 
 import SimpleSouvenirSection from "../../../../components/SimpleSouvenirSection";
 
@@ -88,87 +89,134 @@ const OlehOlehDetail = () => {
 	const contactInfo = parseContact(destination.contact);
 
 	return (
-		<div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-			{/* Hero Section */}
-			<div className="relative pt-24 pb-8 overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10"></div>
+		<div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+			{/* Enhanced Hero Section */}
+			<div className="relative pt-24 pb-16 overflow-hidden">
+				{/* Enhanced Background Pattern */}
+				<div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20"></div>
+				<div className="absolute inset-0 bg-[url('/pattern_bg.png')] opacity-10"></div>
+				
+				{/* Floating Elements */}
+				<div className="absolute top-20 left-10 w-20 h-20 bg-emerald-300/20 rounded-full blur-xl animate-bounce"></div>
+				<div className="absolute top-40 right-20 w-16 h-16 bg-teal-300/20 rounded-full blur-xl animate-bounce delay-1000"></div>
+				<div className="absolute bottom-20 left-1/4 w-12 h-12 bg-cyan-300/20 rounded-full blur-xl animate-bounce delay-2000"></div>
+				<div className="absolute top-60 right-1/3 w-14 h-14 bg-green-300/20 rounded-full blur-xl animate-bounce delay-3000"></div>
+				
 				<div className="relative container mx-auto px-4">
-					{/* Back Button */}
+					{/* Enhanced Back Button */}
 					<button 
 						onClick={() => window.history.back()} 
-						className="group mt-12 mb-6 inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 transform hover:-translate-x-1"
+						className="group mt-16 mb-8 inline-flex items-center gap-4 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-all duration-300 transform hover:-translate-x-1"
 					>
-						<BiArrowBack className="text-xl group-hover:scale-110 transition-transform" />
-						<span className="font-medium">Kembali ke Dolan Banyumas</span>
+						<div className="w-12 h-12 bg-emerald-500/30 group-hover:bg-emerald-500/40 backdrop-blur-sm rounded-2xl flex items-center justify-center transition-all duration-300 shadow-xl">
+							<BiArrowBack className="text-2xl group-hover:scale-110 transition-transform" />
+						</div>
+						<span className="font-bold text-lg">Kembali ke Dolan Banyumas</span>
 					</button>
 
-					{/* Main Header */}
-					<div className="max-w-4xl mx-auto text-center mb-8">
-						<div className="inline-flex items-center gap-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
-							<BiStar className="text-lg" />
-							<span>Oleh-Oleh</span>
+					{/* Enhanced Main Header */}
+					<div className="max-w-5xl mx-auto text-center mb-12">
+						<div className="inline-flex items-center gap-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white px-8 py-4 rounded-full text-lg font-bold mb-6 shadow-2xl">
+							<BiStar className="text-2xl" style={{ animationDuration: '3s' }} />
+							<span>Oleh-Oleh Khas Banyumas</span>
 						</div>
-						<h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+						<h1 className="text-6xl md:text-8xl font-black text-gray-900 dark:text-white mb-8 leading-tight bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:via-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">
 							{destination.title}
 						</h1>
-						<p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+						<p className="text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
 							{destination.short_description || destination.description || "Temukan oleh-oleh khas Banyumas yang menarik"}
 						</p>
 					</div>
 
-					{/* Quick Stats */}
+					{/* Enhanced Quick Stats */}
 					<div className="flex justify-center">
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">4.8</div>
-								<div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl">
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 text-center border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+									<BiStar className="text-3xl text-white" />
+								</div>
+								<div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">4.8</div>
+								<div className="text-lg text-gray-600 dark:text-gray-400 font-medium">Rating</div>
 							</div>
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">500+</div>
-								<div className="text-sm text-gray-600 dark:text-gray-400">Pengunjung</div>
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 text-center border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+									<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+									</svg>
+								</div>
+								<div className="text-3xl font-bold text-teal-600 dark:text-teal-400 mb-2">500+</div>
+								<div className="text-lg text-gray-600 dark:text-gray-400 font-medium">Pengunjung</div>
 							</div>
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">25</div>
-								<div className="text-sm text-gray-600 dark:text-gray-400">Produk</div>
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 text-center border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+									<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+									</svg>
+								</div>
+								<div className="text-3xl font-bold text-cyan-600 dark:text-cyan-400 mb-2">25</div>
+								<div className="text-lg text-gray-600 dark:text-gray-400 font-medium">Produk</div>
 							</div>
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-4 text-center border border-white/50 dark:border-gray-700/50">
-								<div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">24/7</div>
-								<div className="text-sm text-gray-600 dark:text-gray-400">Jam Buka</div>
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 text-center border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+									<BiTime className="text-3xl text-white" />
+								</div>
+								<div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">24/7</div>
+								<div className="text-lg text-gray-600 dark:text-gray-400 font-medium">Jam Buka</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			{/* Main Content */}
-			<div className="container mx-auto px-4 pb-12">
+			{/* Enhanced Main Content */}
+			<div className="container mx-auto px-4 pb-16">
 				<div className="max-w-7xl mx-auto">
-					<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
 						{/* Left Column - Gallery & Map */}
-						<div className="xl:col-span-2 space-y-6">
-							{/* Photo Gallery */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-5 border border-white/50 dark:border-gray-700/50 shadow-xl mb-6 mt-6">
-								<PhotoGallery
-									images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
-									title={destination.title}
-								/>
+						<div className="xl:col-span-2 space-y-10">
+							{/* Enhanced Photo Gallery */}
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-teal-500/5 to-cyan-500/5 rounded-3xl"></div>
+								<div className="relative">
+									<div className="flex items-center gap-4 mb-8">
+										<div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+											<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+											</svg>
+										</div>
+										<div>
+											<h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Galeri Foto</h3>
+											<div className="w-16 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
+										</div>
+									</div>
+									<PhotoGallery
+										images={[destination.img_lg, destination.img_sm, ...(destination.gallery || [])].filter(Boolean)}
+										title={destination.title}
+									/>
+								</div>
 							</div>
 
-							{/* Description Section */}
-							<div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-3xl p-6 border border-white/50 dark:border-gray-700/50 shadow-xl">
-								<div className="flex items-center gap-3 mb-4">
-									<div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
-										<svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-										</svg>
+							{/* Enhanced Description Section */}
+							<div className="group bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/50 dark:border-gray-700/50 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-1">
+								<div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-cyan-500/5 to-blue-500/5 rounded-3xl"></div>
+								<div className="relative">
+									<div className="flex items-center gap-4 mb-8">
+										<div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+											<svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+											</svg>
+										</div>
+										<div>
+											<h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Tentang Oleh-Oleh</h2>
+											<div className="w-16 h-1 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full"></div>
+										</div>
 									</div>
-									<h2 className="text-2xl font-bold text-gray-800 dark:text-white">Tentang Oleh-Oleh</h2>
-								</div>
-								
-								<div className="prose prose-lg max-w-none">
-									<p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-										{destination.description || destination.short_description || "Deskripsi oleh-oleh tidak tersedia"}
-									</p>
+									
+									<div className="bg-gradient-to-r from-gray-50 to-teal-50 dark:from-gray-800 dark:to-teal-900/20 p-6 rounded-2xl border border-teal-200 dark:border-teal-800">
+										<p className="text-gray-600 dark:text-gray-300 leading-relaxed text-xl">
+											{destination.description || destination.short_description || "Deskripsi oleh-oleh tidak tersedia"}
+										</p>
+									</div>
 								</div>
 							</div>
 
@@ -444,6 +492,17 @@ const OlehOlehDetail = () => {
 									)}
 								</div>
 							</div>
+
+							{/* Rating & Reviews Section */}
+							<RatingReviews 
+								rating={parseFloat(destination.rating) || 4.5}
+								reviewCount={0}
+								onWriteReview={(reviewData) => {
+									// Handle review submission
+									console.log('Review submitted:', reviewData);
+								}}
+								storageKey={`reviews:oleh-oleh:${destination?.id || params?.id || 'unknown'}`}
+							/>
 
 							{/* Features Section */}
 							{destination.features && destination.features.length > 0 && (

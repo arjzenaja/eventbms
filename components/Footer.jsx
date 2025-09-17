@@ -104,42 +104,42 @@ const Footer = () => {
             </h2>
             
             <div className='flex flex-wrap justify-center items-center gap-8 md:gap-12 lg:gap-16'>
-              <Link href="/destinations?category=travel-agency" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=biro-perjalanan" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path d='M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z' />
                 </svg>
                 <span className='text-lg font-medium'>Biro Perjalanan</span>
               </Link>
               
-              <Link href="/destinations?category=tourism-village" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=desa-wisata" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path fillRule='evenodd' d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z' clipRule='evenodd' />
                 </svg>
                 <span className='text-lg font-medium'>Desa Wisata</span>
               </Link>
               
-              <Link href="/destinations?category=culinary" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=kuliner" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path d='M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z' />
                 </svg>
                 <span className='text-lg font-medium'>Kuliner</span>
               </Link>
               
-              <Link href="/destinations?category=tourist-attraction" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=wisata" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path fillRule='evenodd' d='M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z' clipRule='evenodd' />
                 </svg>
                 <span className='text-lg font-medium'>Objek Wisata</span>
               </Link>
               
-              <Link href="/destinations?category=souvenirs" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=oleh-oleh" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path fillRule='evenodd' d='M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' clipRule='evenodd' />
                 </svg>
                 <span className='text-lg font-medium'>Oleh-oleh</span>
               </Link>
               
-              <Link href="/destinations?category=accommodation" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
+              <Link href="/dolan-banyumas?category=penginapan" className='group flex items-center gap-3 text-white hover:text-yellow-400 transition-colors duration-300'>
                 <svg className='w-5 h-5 text-yellow-400' fill='currentColor' viewBox='0 0 20 20'>
                   <path d='M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z' />
                 </svg>
