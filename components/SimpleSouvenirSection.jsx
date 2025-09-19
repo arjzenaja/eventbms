@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react';
 import SouvenirCard from './SouvenirCard';
+import BuyMenuModal from './BuyMenuModal';
 import useSouvenirData from '@/hooks/useSouvenirData';
 import LoadingSpinner from './LoadingSpinner';
 
 const SimpleSouvenirSection = ({ destinationTitle, destinationId, destinationSlug }) => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isBuyOpen, setIsBuyOpen] = useState(false);
 
   // Use the hook to fetch souvenir data from API
   const { souvenirs, isLoading, error } = useSouvenirData(destinationId, destinationSlug);
@@ -113,6 +116,7 @@ const SimpleSouvenirSection = ({ destinationTitle, destinationId, destinationSlu
               <SouvenirCard
                 key={item.id}
                 item={item}
+                onBuyClick={(it) => { setSelectedItem(it); setIsBuyOpen(true); }}
               />
             ))}
           </div>
@@ -171,6 +175,14 @@ const SimpleSouvenirSection = ({ destinationTitle, destinationId, destinationSlu
               </div>
             </div>
           </div>
+          {/* Buy Modal for souvenirs (no WhatsApp order, direct buy only) */}
+          <BuyMenuModal
+            menu={selectedItem}
+            isOpen={isBuyOpen}
+            onClose={() => setIsBuyOpen(false)}
+            hideWhatsAppOrder={true}
+            contextType="souvenir"
+          />
         </div>
       </div>
     </div>

@@ -11,7 +11,12 @@ const SouvenirCard = ({ item, onBuyClick }) => {
   const handleBuyClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onBuyClick) onBuyClick(item);
+    if (onBuyClick) {
+      onBuyClick(item);
+      return;
+    }
+    // Default fallback: open WhatsApp order message
+    handleWhatsAppClick(e);
   };
 
   const handleWhatsAppClick = (e) => {

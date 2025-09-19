@@ -40,6 +40,9 @@ export default function EditEvent() {
     img_sm: '',
     img_lg: ''
   });
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
+  const [currentGallery, setCurrentGallery] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -94,6 +97,7 @@ export default function EditEvent() {
             img_sm: event.img_sm || '',
             img_lg: event.img_lg || ''
           });
+          setCurrentGallery(Array.isArray(event.gallery) ? event.gallery : []);
         } else {
           setError(data.message || 'Gagal memuat data event');
         }
@@ -152,6 +156,33 @@ export default function EditEvent() {
     }
   };
 
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    const validFiles = [];
+    const previewPromises = [];
+
+    files.forEach((file) => {
+      if (!file.type.startsWith('image/')) return;
+      if (file.size > 5 * 1024 * 1024) return;
+      validFiles.push(file);
+      previewPromises.push(new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => resolve(ev.target.result);
+        reader.readAsDataURL(file);
+      }));
+    });
+
+    Promise.all(previewPromises).then((previews) => {
+      setGalleryFiles((prev) => [...prev, ...validFiles]);
+      setGalleryPreviews((prev) => [...prev, ...previews]);
+    });
+  };
+
+  const removeNewGalleryItem = (index) => {
+    setGalleryFiles((prev) => prev.filter((_, i) => i !== index));
+    setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleRemoveImage = (name) => {
     setImageFiles(prev => ({
       ...prev,
@@ -186,6 +217,10 @@ export default function EditEvent() {
       }
       if (imageFiles.img_lg) {
         formDataToSend.append('img_lg', imageFiles.img_lg);
+      }
+      // Add gallery files (multiple)
+      if (galleryFiles.length) {
+        galleryFiles.forEach((file) => formDataToSend.append('gallery', file));
       }
 
       const response = await fetch(`/api/events/${id}`, {
@@ -572,6 +607,49 @@ export default function EditEvent() {
                       </div>
                     )}
                   </div>
+                </div>
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Galeri Foto</h3>
+                  <p className="text-sm text-gray-500 mb-3">Tambahkan beberapa foto (maks 5MB per file).</p>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleGalleryChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+
+                  {currentGallery.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Galeri saat ini</p>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                        {currentGallery.map((url, idx) => (
+                          <img key={idx} src={url} alt={`galeri-${idx}`} className="w-24 h-24 object-cover rounded border" />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {galleryPreviews.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Akan diunggah</p>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                        {galleryPreviews.map((src, idx) => (
+                          <div key={idx} className="relative">
+                            <img src={src} alt={`preview-${idx}`} className="w-24 h-24 object-cover rounded border" />
+                            <button
+                              type="button"
+                              onClick={() => removeNewGalleryItem(idx)}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

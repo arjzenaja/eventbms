@@ -107,6 +107,7 @@ export async function PUT(request, { params }) {
     // Handle image files
     const img_sm = formData.get('img_sm');
     const img_lg = formData.get('img_lg');
+    const galleryEntries = formData.getAll('gallery');
     
     // Create uploads directory if it doesn't exist
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -116,6 +117,7 @@ export async function PUT(request, { params }) {
     
     let img_sm_path = existingEvent.img_sm || '/placeholder.jpg';
     let img_lg_path = existingEvent.img_lg || '/placeholder.jpg';
+    let gallery_paths = Array.isArray(existingEvent.gallery) ? [...existingEvent.gallery] : [];
     
     // Save small image if provided
     if (img_sm && img_sm instanceof File) {
@@ -137,6 +139,19 @@ export async function PUT(request, { params }) {
       const img_lg_buffer = Buffer.from(await img_lg.arrayBuffer());
       fs.writeFileSync(img_lg_path_full, img_lg_buffer);
       img_lg_path = `/uploads/${img_lg_filename}`;
+    }
+
+    // Save gallery images if provided
+    if (Array.isArray(galleryEntries) && galleryEntries.length) {
+      for (const file of galleryEntries) {
+        if (!(file instanceof File)) continue;
+        const ext = path.extname(file.name) || '.jpg';
+        const filename = `event_gallery_${Date.now()}_${Math.random().toString(36).slice(2,8)}${ext}`;
+        const fullPath = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        fs.writeFileSync(fullPath, buffer);
+        gallery_paths.push(`/uploads/${filename}`);
+      }
     }
     
     // Parse features if it's a JSON string
@@ -169,6 +184,7 @@ export async function PUT(request, { params }) {
       ...existingEvent,
       img_sm: img_sm_path,
       img_lg: img_lg_path,
+      gallery: gallery_paths,
       title: title,
       location: location,
       short_description: short_description || description?.substring(0, 100) || description,

@@ -8,7 +8,7 @@ import { useCulinaryCart } from '../context/CulinaryCartContext';
 import { useNotifications } from './NotificationProvider';
 import { useRouter } from 'next/navigation';
 
-const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm, hideAddToCart = false }) => {
+const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm, hideAddToCart = false, hideWhatsAppOrder = false, contextType = 'culinary' }) => {
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -138,7 +138,7 @@ const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm, hideAddToCart = false 
       });
 
       onClose();
-      router.push('/checkout-culinary');
+      router.push(contextType === 'souvenir' ? '/checkout-souvenir' : '/checkout-culinary');
     } catch (error) {
       console.error('Error processing direct buy:', error);
       addNotification({
@@ -449,13 +449,15 @@ Apakah masih tersedia? Terima kasih!`;
               {isProcessing ? 'Memproses...' : 'Beli Langsung'}
             </button>
             
-            <button
-              onClick={handleWhatsAppOrder}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 px-6 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-3 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              <FaWhatsapp className="text-xl" />
-              Pesan via WhatsApp
-            </button>
+            {!hideWhatsAppOrder && (
+              <button
+                onClick={handleWhatsAppOrder}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 px-6 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-3 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <FaWhatsapp className="text-xl" />
+                Pesan via WhatsApp
+              </button>
+            )}
           </div>
         </div>
       </div>

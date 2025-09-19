@@ -10,6 +10,8 @@ import { BiTime } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
 import { BiRefresh } from "react-icons/bi";
 import { BiMoneyWithdraw } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
+import { BiCopy } from "react-icons/bi";
 import { Toast } from "@/components/ui/alert";
 
 const PaymentHistory = () => {
@@ -25,6 +27,7 @@ const PaymentHistory = () => {
   const [refundReason, setRefundReason] = useState('');
   const [isSubmittingRefund, setIsSubmittingRefund] = useState(false);
   const [toast, setToast] = useState({ show: false, type: 'info', title: '', message: '' });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -168,12 +171,13 @@ const PaymentHistory = () => {
     });
   };
 
-  
-
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className={`w-8 h-8 border-2 ${isLight ? 'border-blue-400' : 'border-purple-400'} border-t-transparent rounded-full animate-spin`} />
+      <div className="flex items-center justify-center h-72">
+        <div className="relative">
+          <div className={`w-12 h-12 rounded-full border-4 ${isLight ? 'border-blue-200' : 'border-purple-400/40'} border-t-transparent animate-spin`}></div>
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-transparent border-t-blue-500 animate-spin" style={{ animationDuration: '1.5s' }}></div>
+        </div>
       </div>
     );
   }
@@ -183,22 +187,22 @@ const PaymentHistory = () => {
       <div className="space-y-8 mt-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className={`text-3xl font-bold ${isLight ? 'text-gray-900' : 'text-white'} mb-2`}>Riwayat Pembayaran</h1>
+            <h1 className={`text-4xl font-black ${isLight ? 'text-gray-900' : 'text-white'} mb-2`}>Riwayat Pembayaran</h1>
             <p className={`${isLight ? 'text-blue-600' : 'text-blue-200'} text-lg`}>Semua transaksi pembayaran Anda</p>
           </div>
         </div>
         
         <div className="text-center py-16">
-          <div className={`w-24 h-24 ${isLight ? 'bg-gray-100' : 'bg-white/10'} rounded-full flex items-center justify-center mx-auto mb-6`}>
+          <div className={`${isLight ? 'bg-gradient-to-br from-gray-100 to-gray-200' : 'bg-white/10'} w-28 h-28 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl`}>
             <svg className={`w-12 h-12 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h3 className={`text-xl font-semibold ${isLight ? 'text-gray-700' : 'text-white'} mb-2`}>Silakan Login Terlebih Dahulu</h3>
+          <h3 className={`text-2xl font-bold ${isLight ? 'text-gray-700' : 'text-white'} mb-2`}>Silakan Login Terlebih Dahulu</h3>
           <p className={`${isLight ? 'text-blue-600' : 'text-blue-200'} mb-6`}>Anda perlu login untuk melihat riwayat pembayaran</p>
           <button
             onClick={() => window.location.href = '/login'}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300"
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             Login Sekarang
           </button>
@@ -211,8 +215,17 @@ const PaymentHistory = () => {
   const statusFilter = (searchParams?.get('status') || 'all').toLowerCase();
 
   const paymentsFiltered = payments.filter((p) => {
-    if (statusFilter === 'all') return true;
-    return (p.status || '').toLowerCase() === statusFilter;
+    const matchesStatus = statusFilter === 'all' ? true : (p.status || '').toLowerCase() === statusFilter;
+    const q = searchQuery.trim().toLowerCase();
+    const matchesQuery = !q || [
+      p.id,
+      p.orderData?.eventName,
+      p.orderData?.ticketType,
+      p.paymentMethod?.name,
+      p.paymentForm?.customerEmail,
+      p.orderData?.customerEmail,
+    ].filter(Boolean).some(v => String(v).toLowerCase().includes(q));
+    return matchesStatus && matchesQuery;
   });
 
   const setStatusFilter = (status) => {
@@ -234,43 +247,55 @@ const PaymentHistory = () => {
   }, {});
 
   return (
-    <div className="space-y-8 mt-8">
+    <div className="space-y-10 mt-8">
       {/* Quick Filters - enhanced UI */}
-      <div className={`z-40 ${isLight ? 'bg-white/90 border-gray-200' : 'bg-slate-900/80 border-white/10'} backdrop-blur-md border rounded-2xl p-3 shadow-lg`}> 
-        <div className="flex flex-wrap gap-2">
-          {[
-            { key: 'all', label: 'Semua', icon: '📋' },
-            { key: 'pending', label: 'Pending', icon: '⏳' },
-            { key: 'completed', label: 'Berhasil', icon: '✅' },
-            { key: 'failed', label: 'Gagal', icon: '❌' },
-            { key: 'cancelled', label: 'Dibatalkan', icon: '🛑' },
-            { key: 'refund_requested', label: 'Refund Diajukan', icon: '🧾' },
-            { key: 'refunded', label: 'Refund Disetujui', icon: '💸' },
-            { key: 'refund_rejected', label: 'Refund Ditolak', icon: '🚫' }
-          ].map(f => (
-            <button
-              key={f.key}
-              onClick={() => setStatusFilter(f.key)}
-              className={`group px-4 py-2 rounded-full text-sm border transition-all duration-200 flex items-center gap-2 ${
-                (statusFilter === f.key)
-                  ? (isLight ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-transparent shadow-md' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-transparent shadow-lg')
-                  : (isLight ? 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15')
-              }`}
-            >
-              <span className="text-base">{f.icon}</span>
-              <span className="font-medium">{f.label}</span>
-              <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
-                (statusFilter === f.key)
-                  ? (isLight ? 'bg-white/20 text-white' : 'bg-white/20 text-white')
-                  : (isLight ? 'bg-gray-100 text-gray-600' : 'bg-white/10 text-gray-300')
-              }`}>
-                {statusCounts[f.key] || 0}
-              </span>
-            </button>
-          ))}
+      <div className={`${isLight ? 'bg-white/80 border-gray-200' : 'bg-slate-900/70 border-white/10'} backdrop-blur-xl border rounded-3xl p-4 shadow-2xl`}> 
+        <div className="flex flex-col gap-4">
+          {/* Search */}
+          <div className="relative">
+            <BiSearch className={`absolute left-4 top-1/2 -translate-y-1/2 ${isLight ? 'text-gray-400' : 'text-gray-300'}`} />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari transaksi (event, ID, email, metode)"
+              className={`w-full pl-12 pr-4 py-3 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLight ? 'bg-white border-gray-300 text-gray-900' : 'bg-white/10 border-white/20 text-white placeholder:text-gray-300'}`}
+            />
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {[
+              { key: 'all', label: 'Semua', icon: '📋' },
+              { key: 'pending', label: 'Pending', icon: '⏳' },
+              { key: 'completed', label: 'Berhasil', icon: '✅' },
+              { key: 'failed', label: 'Gagal', icon: '❌' },
+              { key: 'cancelled', label: 'Dibatalkan', icon: '🛑' },
+              { key: 'refund_requested', label: 'Refund Diajukan', icon: '🧾' },
+              { key: 'refunded', label: 'Refund Disetujui', icon: '💸' },
+              { key: 'refund_rejected', label: 'Refund Ditolak', icon: '🚫' }
+            ].map(f => (
+              <button
+                key={f.key}
+                onClick={() => setStatusFilter(f.key)}
+                className={`group px-5 py-2.5 rounded-2xl text-sm border transition-all duration-200 flex items-center gap-2 hover:shadow-md ${
+                  (statusFilter === f.key)
+                    ? (isLight ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-transparent shadow-md' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-transparent shadow-lg')
+                    : (isLight ? 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15')
+                }`}
+              >
+                <span className="text-base">{f.icon}</span>
+                <span className="font-medium">{f.label}</span>
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
+                  (statusFilter === f.key)
+                    ? 'bg-white/20 text-white'
+                    : (isLight ? 'bg-gray-100 text-gray-600' : 'bg-white/10 text-gray-300')
+                }`}>
+                  {statusCounts[f.key] || 0}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="h-4 xl:h-8" />
+
       <Toast
         type={toast.type}
         title={toast.title}
@@ -281,15 +306,16 @@ const PaymentHistory = () => {
         autoClose={true}
         autoCloseDelay={2600}
       />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className={`text-3xl font-bold ${isLight ? 'text-gray-900' : 'text-white'} mb-2`}>Riwayat Pembayaran</h1>
+          <h1 className={`text-4xl font-black ${isLight ? 'text-gray-900' : 'text-white'} mb-2`}>Riwayat Pembayaran</h1>
           <p className={`${isLight ? 'text-blue-600' : 'text-blue-200'} text-lg`}>Semua transaksi pembayaran Anda</p>
         </div>
         <button
           onClick={fetchPayments}
-          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
         >
           <BiRefresh className="text-lg" />
           Refresh
@@ -298,38 +324,47 @@ const PaymentHistory = () => {
 
       {/* Payments List */}
       {(paymentsFiltered.length === 0) ? (
-        <div className="text-center py-16">
-          <div className={`w-24 h-24 ${isLight ? 'bg-gray-100' : 'bg-white/10'} rounded-full flex items-center justify-center mx-auto mb-6`}>
+        <div className="text-center py-20">
+          <div className={`${isLight ? 'bg-gradient-to-br from-gray-100 to-gray-200' : 'bg-white/10'} w-28 h-28 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl`}>
             <svg className={`w-12 h-12 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h3 className={`text-xl font-semibold ${isLight ? 'text-gray-700' : 'text-white'} mb-2`}>Belum ada riwayat pembayaran</h3>
-          <p className={`${isLight ? 'text-blue-600' : 'text-blue-200'}`}>Pembayaran Anda akan muncul di sini setelah melakukan transaksi</p>
+          <h3 className={`text-2xl font-bold ${isLight ? 'text-gray-700' : 'text-white'} mb-2`}>Belum ada riwayat pembayaran</h3>
+          <p className={`${isLight ? 'text-blue-600' : 'text-blue-200'} mb-6`}>Pembayaran Anda akan muncul di sini setelah melakukan transaksi</p>
+          <a href="/events" className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg">Jelajahi Event</a>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {paymentsFiltered.map((payment) => (
             <div
               key={payment.id}
               className={`${isLight 
-                ? 'bg-white border-gray-200 shadow-lg hover:shadow-xl' 
-                : 'bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border-white/20 shadow-2xl hover:from-white/15 hover:to-white/10'} rounded-3xl p-6 border transition-all duration-300 hover:scale-[1.01]`}
+                ? 'bg-white border-gray-200 shadow-xl hover:shadow-2xl' 
+                : 'bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-white/20 shadow-2xl hover:from-white/15 hover:to-white/10'} rounded-3xl p-7 border transition-all duration-300 hover:scale-[1.01]`}
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
                   {getStatusIcon(payment.status)}
                   <div>
-                    <div className={`font-semibold text-lg ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
+                    <div className={`font-extrabold text-lg ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
                       {payment.orderData?.eventName || 'Event'}
                     </div>
-                    <div className={`text-xs ${isLight ? 'text-gray-500' : 'text-gray-400'} font-mono`}> 
-                      {payment.id}
+                    <div className={`flex items-center gap-2 text-xs ${isLight ? 'text-gray-500' : 'text-gray-400'} font-mono`}>
+                      <span>{payment.id}</span>
+                      <button
+                        onClick={() => navigator.clipboard?.writeText(payment.id)}
+                        className={`${isLight ? 'hover:text-gray-700' : 'hover:text-gray-200'} transition-colors`}
+                        title="Copy ID"
+                        aria-label="Copy ID"
+                      >
+                        <BiCopy />
+                      </button>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-xl font-extrabold ${isLight ? 'text-purple-600' : 'text-purple-300'}`}>
+                  <div className={`text-2xl font-black ${isLight ? 'text-purple-600' : 'text-purple-300'}`}>
                     {formatPrice(payment.totalAmount)}
                   </div>
                   <div className={`text-sm ${isLight ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -338,7 +373,7 @@ const PaymentHistory = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 mb-5 text-sm">
                 <div>
                   <div className={`${isLight ? 'text-gray-500' : 'text-gray-400'}`}>Tipe Tiket</div>
                   <div className={`${isLight ? 'text-gray-900' : 'text-gray-100'} capitalize`}>{payment.orderData?.ticketType}</div>
@@ -356,14 +391,14 @@ const PaymentHistory = () => {
                 </div>
                 <div>
                   <div className={`${isLight ? 'text-gray-500' : 'text-gray-400'}`}>Status</div>
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(payment.status)}`}>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${getStatusColor(payment.status)}`}>
                     {getStatusIcon(payment.status)}
                     <span className="capitalize">{payment.status?.replace('_', ' ')}</span>
                   </span>
                 </div>
               </div>
 
-              <div className={`h-px ${isLight ? 'bg-gray-200' : 'bg-white/10'} my-3`} />
+              <div className={`h-px ${isLight ? 'bg-gray-200' : 'bg-white/10'} my-4`} />
 
               <div className="flex items-center justify-between">
                 <div className={`text-sm ${isLight ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -378,7 +413,7 @@ const PaymentHistory = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => window.open(`/payment-status/${payment.id}`, '_blank')}
-                    className={`flex items-center gap-1 px-3 py-1 ${isLight ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500/30 text-blue-200 hover:bg-blue-500/40'} rounded-lg text-sm transition-colors`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 ${isLight ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500/30 text-blue-200 hover:bg-blue-500/40'} rounded-lg text-sm transition-colors`}
                   >
                     <BiShow className="text-sm" />
                     Detail
@@ -386,7 +421,7 @@ const PaymentHistory = () => {
                   {payment.status === 'pending' && (
                     <button
                       onClick={() => window.open(`/payment-instructions/${payment.id}`, '_blank')}
-                      className={`flex items-center gap-1 px-3 py-1 ${isLight ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-green-500/30 text-green-200 hover:bg-green-500/40'} rounded-lg text-sm transition-colors`}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 ${isLight ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-green-500/30 text-green-200 hover:bg-green-500/40'} rounded-lg text-sm transition-colors`}
                     >
                       Instruksi
                     </button>
@@ -394,7 +429,7 @@ const PaymentHistory = () => {
                   {(payment.status === 'cancelled' || payment.status === 'failed') && !payment.refund && (
                     <button
                       onClick={() => handleRefundRequest(payment)}
-                      className={`flex items-center gap-1 px-3 py-1 ${isLight ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-orange-500/30 text-orange-200 hover:bg-orange-500/40'} rounded-lg text-sm transition-colors`}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 ${isLight ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-orange-500/30 text-orange-200 hover:bg-orange-500/40'} rounded-lg text-sm transition-colors`}
                     >
                       <BiMoneyWithdraw className="text-sm" />
                       Refund
@@ -405,15 +440,15 @@ const PaymentHistory = () => {
               
               {/* Refund Status */}
               {payment.refund && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-white/10">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <BiMoneyWithdraw className="text-orange-500" />
+                      <BiMoneyWithdraw className="text-orange-400" />
                       <span className={`text-sm ${isLight ? 'text-gray-600' : 'text-gray-300'}`}>
                         Status Refund:
                       </span>
                     </div>
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getRefundStatus(payment)?.color}`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${getRefundStatus(payment)?.color}`}>
                       {getRefundStatus(payment)?.text}
                     </span>
                   </div>
@@ -436,15 +471,20 @@ const PaymentHistory = () => {
 
       {/* Refund Request Modal */}
       {showRefundModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`${isLight ? 'bg-white' : 'bg-gray-800'} rounded-2xl p-6 max-w-md w-full`}>
-            <h3 className={`text-xl font-bold ${isLight ? 'text-gray-900' : 'text-white'} mb-4`}>
-              Ajukan Refund
-            </h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className={`${isLight ? 'bg-white' : 'bg-gray-800'} rounded-3xl p-6 max-w-md w-full shadow-2xl border ${isLight ? 'border-gray-200' : 'border-white/10'}`}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white shadow-lg">
+                <BiMoneyWithdraw className="text-xl" />
+              </div>
+              <h3 className={`text-2xl font-black ${isLight ? 'text-gray-900' : 'text-white'}`}>
+                Ajukan Refund
+              </h3>
+            </div>
             
             <div className="mb-4">
-              <div className={`${isLight ? 'bg-gray-50' : 'bg-gray-700'} rounded-lg p-3 mb-3`}>
-                <div className="text-sm font-medium text-gray-600 mb-1">Detail Pembayaran</div>
+              <div className={`${isLight ? 'bg-gray-50' : 'bg-gray-700'} rounded-xl p-4 mb-3 border ${isLight ? 'border-gray-200' : 'border-white/10'}`}>
+                <div className="text-sm font-bold text-gray-600 mb-1">Detail Pembayaran</div>
                 <div className={`${isLight ? 'text-gray-900' : 'text-white'} font-semibold`}>
                   {selectedPayment?.orderData?.eventName}
                 </div>
@@ -458,14 +498,14 @@ const PaymentHistory = () => {
             </div>
 
             <div className="mb-4">
-              <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-gray-300'} mb-2`}>
+              <label className={`block text-sm font-bold ${isLight ? 'text-gray-700' : 'text-gray-300'} mb-2`}>
                 Alasan Refund *
               </label>
               <textarea
                 value={refundReason}
                 onChange={(e) => setRefundReason(e.target.value)}
                 placeholder="Jelaskan alasan mengapa Anda meminta refund..."
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   isLight 
                     ? 'bg-white border-gray-300 text-gray-900' 
                     : 'bg-gray-700 border-gray-600 text-white'
@@ -477,7 +517,7 @@ const PaymentHistory = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowRefundModal(false)}
-                className={`flex-1 px-4 py-2 border rounded-lg font-medium ${
+                className={`flex-1 px-4 py-2 border rounded-xl font-bold ${
                   isLight 
                     ? 'border-gray-300 text-gray-700 hover:bg-gray-50' 
                     : 'border-gray-600 text-gray-300 hover:bg-gray-700'
@@ -488,7 +528,7 @@ const PaymentHistory = () => {
               <button
                 onClick={submitRefundRequest}
                 disabled={isSubmittingRefund}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-2xl font-bold hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
               >
                 {isSubmittingRefund ? 'Mengirim...' : 'Ajukan Refund'}
               </button>

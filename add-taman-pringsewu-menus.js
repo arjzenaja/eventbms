@@ -104,6 +104,10 @@ const tamanPringsewuMenus = [
   // PAKET RAMADHAN 4
   createMenuItem("Paket Ramadhan 4", "Paket ramadhan 4 (untuk 3 orang) - Nasi Putih, Sop Sosis, Ayam Gulung, Tahu Cabe Ijo, Kerupuk, Acar & Sambal, Buah, Mineral Gelas, Sop Sayur, Udang Gulung, Tumis Jamur", 29000, "Paket Ramadhan 4", ["Halal", "Package", "Ramadhan"], false, false, "15-20 menit"),
 
+  // PENUH BERKAH (Paket berbuka puasa)
+  createMenuItem("Paket 3 Orang", "Penuh Berkah: Paket untuk 3 orang. Termasuk Nasi, Ayam Tepung Asam Manis, Tumis Kacang Panjang, Soun Cabe Ijo, Cap Cay Jawa, Mie Goreng, Buah & Mineral Gelas.", 160000, "Penuh Berkah", ["Halal", "Package", "Ramadhan"], false, false, "20-30 menit"),
+  createMenuItem("Paket 5 Orang", "Penuh Berkah: Paket untuk 5 orang. Termasuk Nasi, Gurame Cabe Ijo, Tahu Tempe Asam Manis, Cap Cay, Mie Goreng, Buah & Teh Tarik.", 240000, "Penuh Berkah", ["Halal", "Package", "Ramadhan"], false, false, "25-35 menit"),
+
   // SOP
   createMenuItem("Sop Buntut", "Sop buntut", 30000, "Sop", ["Halal", "Soup"], false, false, "20-25 menit"),
   createMenuItem("Sop Iga", "Sop iga", 30000, "Sop", ["Halal", "Soup"], false, false, "20-25 menit"),

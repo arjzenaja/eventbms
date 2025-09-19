@@ -8,7 +8,6 @@ import { FaWhatsapp, FaInstagram, FaGlobe } from "react-icons/fa";
 import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
-import LocationInfo from "../../../../components/LocationInfo";
 import RatingReviews from "../../../../components/RatingReviews";
 
 import SimpleSouvenirSection from "../../../../components/SimpleSouvenirSection";
@@ -415,8 +414,7 @@ const OlehOlehDetail = () => {
 								/>
 							</ErrorBoundary>
 
-							{/* Location Info */}
-							<LocationInfo destination={destination} />
+				
 						</div>
 
 						{/* Right Column - Info & Actions */}

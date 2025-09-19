@@ -13,6 +13,7 @@ import RatingReviews from "../../../../components/RatingReviews";
 import SimpleMenuSection from "../../../../components/SimpleMenuSection";
 import FloatingCartButton from "../../../../components/FloatingCartButton";
 import { useCulinaryCart } from "../../../../context/CulinaryCartContext";
+import useMenuData from "@/hooks/useMenuData";
 
 const FloatingCartButtonWrapper = () => {
 	const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart, destination } = useCulinaryCart();
@@ -37,6 +38,9 @@ const KulinerContent = () => {
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
 	const { setDestination: setCartDestination } = useCulinaryCart();
+
+	// Fetch menus for this kuliner to show accurate count in stat card
+	const { menus: menuItems } = useMenuData(id, destination?.slug || "");
 
 	useEffect(() => {
 		const fetchDestination = async () => {
@@ -161,7 +165,7 @@ const KulinerContent = () => {
 		return (
 		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-red-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
 		{/* Hero Section */}
-		<div className="relative pt-24 pb-12 overflow-hidden">
+		<div className="relative pt-24 pb-12 overflow-visible">
 			{/* Animated Background */}
 			<div className="absolute inset-0">
 				<div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 animate-pulse"></div>
@@ -188,7 +192,7 @@ const KulinerContent = () => {
 						<BiStar className="text-lg animate-pulse" />
 						<span>Kuliner Terbaik Banyumas</span>
 					</div>
-					<h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight bg-gradient-to-r from-gray-900 via-red-600 to-orange-600 dark:from-white dark:via-red-400 dark:to-orange-400 bg-clip-text text-transparent">
+					<h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.15] pb-1 md:pb-2 bg-gradient-to-r from-gray-900 via-red-600 to-orange-600 dark:from-white dark:via-red-400 dark:to-orange-400 bg-clip-text text-transparent">
 						{destination.title}
 					</h1>
 					
@@ -245,9 +249,9 @@ const KulinerContent = () => {
 							<div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Pengunjung</div>
 						</div>
 						<div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 text-center border border-white/60 dark:border-gray-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">
-							<div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2 group-hover:scale-110 transition-transform">
-								{destination.menu ? destination.menu.length : 0}
-							</div>
+						<div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2 group-hover:scale-110 transition-transform">
+							{Array.isArray(menuItems) ? menuItems.length : 0}
+						</div>
 							<div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Menu</div>
 						</div>
 						<div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 text-center border border-white/60 dark:border-gray-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">

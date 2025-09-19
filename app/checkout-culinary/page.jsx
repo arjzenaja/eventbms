@@ -2,27 +2,40 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BiArrowBack, BiUser, BiPhone, BiMapPin, BiTime, BiCreditCard, BiCheckCircle } from 'react-icons/bi';
+import { BiArrowBack, BiUser, BiPhone, BiTime, BiCreditCard, BiCheckCircle } from 'react-icons/bi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Image from 'next/image';
 import { useCulinaryCart } from '../../context/CulinaryCartContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useUser } from '../../context/UserContext';
 
 const CheckoutCulinary = () => {
   const router = useRouter();
   const { items, totalPrice, clearCart, destination } = useCulinaryCart();
   const { isDark } = useTheme();
+  const { user, isAuthenticated } = useUser();
   
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    address: '',
     notes: ''
   });
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState('bank_transfer');
+
+  const methodDefs = {
+    bank_transfer: { id: 'bank_transfer', name: 'Bank Transfer', icon: '🏦', fee: 0 },
+    e_wallet: { id: 'e_wallet', name: 'E-Wallet', icon: '📱', fee: 2500 },
+    qris: { id: 'qris', name: 'QRIS', icon: '🔳', fee: 0 }
+  };
+
+  // Sub-options state similar to wisata checkout
+  const [bankCode, setBankCode] = useState('BCA');
+  const [walletCode, setWalletCode] = useState('DANA');
+  const [walletPhone, setWalletPhone] = useState('');
 
   useEffect(() => {
     if (items.length === 0) {
@@ -38,11 +51,28 @@ const CheckoutCulinary = () => {
     }));
   };
 
+  const validateMethodDetails = () => {
+    if (selectedMethod === 'bank_transfer') {
+      if (!bankCode) return { ok: false, msg: 'Pilih bank untuk transfer.' };
+    }
+    if (selectedMethod === 'e_wallet') {
+      if (!walletCode) return { ok: false, msg: 'Pilih e-wallet.' };
+      if (!walletPhone.trim()) return { ok: false, msg: 'Isi nomor e-wallet untuk konfirmasi.' };
+    }
+    return { ok: true };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone || !formData.address) {
+    if (!formData.name || !formData.phone) {
       alert('Mohon lengkapi semua field yang wajib diisi');
+      return;
+    }
+
+    const valid = validateMethodDetails();
+    if (!valid.ok) {
+      alert(valid.msg);
       return;
     }
 
@@ -51,6 +81,8 @@ const CheckoutCulinary = () => {
     try {
       // Generate order ID
       const newOrderId = `CUL-${Date.now()}`;
+      
+      const selected = methodDefs[selectedMethod] || methodDefs.bank_transfer;
       
       // Create payment data
       const paymentData = {
@@ -62,26 +94,25 @@ const CheckoutCulinary = () => {
           amount: items.length,
           totalPrice: totalPrice,
           customerName: formData.name,
-          customerEmail: formData.email || '',
+          customerEmail: (isAuthenticated() && user?.email) ? user.email : (formData.email || ''),
           customerPhone: formData.phone,
           destination: destination,
           items: items,
-          address: formData.address,
           notes: formData.notes
         },
-        paymentMethod: {
-          type: 'cash_on_delivery',
-          name: 'Bayar di Tempat',
-          icon: '💰'
-        },
+        paymentMethod: { ...selected },
         paymentForm: {
           customerName: formData.name,
-          customerEmail: formData.email || '',
-          customerPhone: formData.phone
+          customerEmail: (isAuthenticated() && user?.email) ? user.email : (formData.email || ''),
+          customerPhone: formData.phone,
+          // sub options
+          bankCode: selectedMethod === 'bank_transfer' ? bankCode : undefined,
+          walletCode: selectedMethod === 'e_wallet' ? walletCode : undefined,
+          phoneNumber: selectedMethod === 'e_wallet' ? walletPhone : undefined
         },
         amount: totalPrice,
-        fee: 0,
-        userId: null
+        fee: selected.fee,
+        userId: (isAuthenticated() && (user?.id || user?.email)) ? (user.id || user.email) : null
       };
 
       // Save payment to database
@@ -101,13 +132,12 @@ const CheckoutCulinary = () => {
         const successData = {
           orderId: result.payment.id,
           customerName: formData.name,
-          customerEmail: formData.email || '',
+          customerEmail: (isAuthenticated() && user?.email) ? user.email : (formData.email || ''),
           eventName: destination?.title || 'Pesanan Kuliner',
-          paymentMethod: 'Bayar di Tempat',
-          totalAmount: totalPrice,
+          paymentMethod: selected.name,
+          totalAmount: totalPrice + (selected.fee || 0),
           destination: destination,
           items: items,
-          address: formData.address,
           notes: formData.notes
         };
         
@@ -141,7 +171,7 @@ const CheckoutCulinary = () => {
     // Customer info
     message += `👤 Nama: ${formData.name}\n`;
     message += `📞 Telepon: ${formData.phone}\n`;
-    message += `📍 Alamat: ${formData.address}\n`;
+    
     if (formData.notes) {
       message += `📝 Catatan: ${formData.notes}\n`;
     }
@@ -320,7 +350,7 @@ const CheckoutCulinary = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold">Total Pembayaran</span>
                       <span className="text-3xl font-bold">
-                        Rp {totalPrice.toLocaleString('id-ID')}
+                        Rp {(totalPrice + (methodDefs[selectedMethod]?.fee || 0)).toLocaleString('id-ID')}
                       </span>
                     </div>
                     <p className="text-orange-100 text-sm mt-2">
@@ -330,7 +360,7 @@ const CheckoutCulinary = () => {
                 </div>
               </div>
 
-              {/* Enhanced Payment Methods */}
+              {/* Payment Methods with sub-options */}
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 dark:border-gray-700/50">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
@@ -342,37 +372,81 @@ const CheckoutCulinary = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-2xl p-6 border-2 border-orange-200 dark:border-orange-700">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                        <BiCreditCard className="text-white text-xl" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 dark:text-white text-lg">Bayar di Tempat</h4>
-                        <p className="text-gray-600 dark:text-gray-400">Bayar saat pesanan diantar</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-sm text-green-600 dark:text-green-400 font-medium">Rekomendasi</span>
+                  {['bank_transfer','e_wallet','qris'].map((m) => (
+                    <div key={m} className={`${selectedMethod === m ? 'border-2 border-orange-400 bg-gradient-to-r from-orange-900/20 to-transparent' : 'border border-gray-200 dark:border-gray-600 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800'} rounded-2xl p-6 w-full text-left transition-colors`}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedMethod(m)}
+                        className="w-full flex items-center gap-4 text-left"
+                      >
+                        <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                          <span className="text-white text-xl">{methodDefs[m].icon}</span>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-                        <FaWhatsapp className="text-white text-xl" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 dark:text-white text-lg">Transfer via WhatsApp</h4>
-                        <p className="text-gray-600 dark:text-gray-400">Konfirmasi pembayaran via WhatsApp</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">Alternatif</span>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 dark:text-white text-lg">{methodDefs[m].name}</h4>
+                          <p className="text-gray-600 dark:text-gray-400">
+                            {m === 'bank_transfer' && 'Transfer ke rekening bank'}
+                            {m === 'e_wallet' && 'Bayar via e-wallet populer'}
+                            {m === 'qris' && 'Scan QRIS untuk membayar'}
+                          </p>
+                          {m === selectedMethod && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-sm text-green-600 dark:text-green-400 font-medium">Dipilih</span>
+                            </div>
+                          )}
                         </div>
-                      </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                          Biaya: Rp {(methodDefs[m].fee || 0).toLocaleString('id-ID')}
+                        </div>
+                      </button>
+
+                      {selectedMethod === 'bank_transfer' && m === 'bank_transfer' && (
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                          {['BCA','BNI','BRI','MANDIRI'].map(code => (
+                            <button
+                              key={code}
+                              type="button"
+                              onClick={() => setBankCode(code)}
+                              className={`${bankCode === code ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600'} px-3 py-2 rounded-xl text-sm font-medium`}
+                            >
+                              {code}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {selectedMethod === 'e_wallet' && m === 'e_wallet' && (
+                        <div className="mt-4 space-y-3">
+                          <div className="flex flex-wrap gap-3">
+                            {['DANA','OVO','GOPAY','SHOPEEPAY'].map(code => (
+                              <button
+                                key={code}
+                                type="button"
+                                onClick={() => setWalletCode(code)}
+                                className={`${walletCode === code ? 'bg-purple-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600'} px-3 py-2 rounded-xl text-sm font-medium`}
+                              >
+                                {code}
+                              </button>
+                            ))}
+                          </div>
+                          <input
+                            type="tel"
+                            value={walletPhone}
+                            onChange={(e) => setWalletPhone(e.target.value)}
+                            placeholder="Nomor e-wallet untuk konfirmasi"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                          />
+                        </div>
+                      )}
+
+                      {selectedMethod === 'qris' && m === 'qris' && (
+                        <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                          Nanti setelah checkout Anda akan menerima instruksi untuk scan QRIS.
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -428,26 +502,6 @@ const CheckoutCulinary = () => {
                         required
                         className="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg transition-all duration-200"
                         placeholder="08xxxxxxxxxx"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-lg font-bold text-gray-900 dark:text-white mb-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                            <BiMapPin className="text-purple-600 dark:text-purple-400" />
-                          </div>
-                          Alamat Pengiriman <span className="text-red-500">*</span>
-                        </div>
-                      </label>
-                      <textarea
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                        rows={3}
-                        className="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none text-lg transition-all duration-200"
-                        placeholder="Masukkan alamat lengkap untuk pengiriman"
                       />
                     </div>
                     

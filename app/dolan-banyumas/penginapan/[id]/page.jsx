@@ -8,7 +8,6 @@ import { FaBed, FaShower, FaTv, FaSnowflake, FaWifi, FaParking, FaSwimmingPool, 
 import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
-import LocationInfo from "../../../../components/LocationInfo";
 import RatingReviews from "../../../../components/RatingReviews";
 import { useTheme } from "../../../../context/ThemeContext";
 
@@ -416,11 +415,7 @@ const PenginapanDetail = () => {
                         </ErrorBoundary>
                       </div>
                     </div>
-
-              {/* Location Info */}
-              <ErrorBoundary>
-                <LocationInfo destination={destination} mapDistance={mapDistance} />
-              </ErrorBoundary>
+              
               </div>
 
                   {/* Right Column - Info & Actions */}
