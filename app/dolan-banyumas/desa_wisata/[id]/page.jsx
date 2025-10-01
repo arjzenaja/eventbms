@@ -12,6 +12,8 @@ import DesaWisataMenuSection from "../../../../components/DesaWisataMenuSection"
 import TourismManager from "../../../../components/TourismManager";
 import WeatherInfo from "../../../../components/WeatherInfo";
 import Rating from "../../../../components/Rating";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const DesaWisataDetail = () => {
 	const { id } = useParams();
@@ -20,22 +22,39 @@ const DesaWisataDetail = () => {
 	const [error, setError] = useState(null);
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
+	const [showLoadingToast, setShowLoadingToast] = useState(false);
+	const [showExploreNotification, setShowExploreNotification] = useState(false);
+	const [notificationType, setNotificationType] = useState('loading');
 
 	useEffect(() => {
 		const fetchDestination = async () => {
-			try {
-				setIsLoading(true);
-				const res = await fetch(`/api/desa_wisata/${id}`);
-				if (!res.ok) {
-					throw new Error("Failed to fetch destination");
-				}
-				const data = await res.json();
-				setDestination(data.desa_wisata || data.destination || data);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setIsLoading(false);
+		try {
+			setIsLoading(true);
+			setShowLoadingToast(true);
+			setShowExploreNotification(true);
+			setNotificationType('loading');
+			const res = await fetch(`/api/desa_wisata/${id}`);
+			if (!res.ok) {
+				throw new Error("Failed to fetch destination");
 			}
+			const data = await res.json();
+			setDestination(data.desa_wisata || data.destination || data);
+			
+			// Show success notification
+			setNotificationType('success');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 2000);
+		} catch (err) {
+			setError(err.message);
+			setNotificationType('error');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 3000);
+		} finally {
+			setIsLoading(false);
+			setShowLoadingToast(false);
+		}
 		};
 
 		if (id) {
@@ -549,6 +568,30 @@ const DesaWisataDetail = () => {
 				destinationTitle={destination.title}
 				destinationId={destination.id}
 				destinationSlug={destination.slug}
+			/>
+			
+			{/* Loading Toast */}
+			<LoadingToast 
+				show={showLoadingToast}
+				title="Memuat konten desa wisata..."
+				message="Mohon tunggu sebentar"
+				onClose={() => setShowLoadingToast(false)}
+			/>
+			
+			{/* Explore Notification */}
+			<ExploreNotification 
+				show={showExploreNotification}
+				title={notificationType === 'loading' ? 'Memuat Konten Desa Wisata...' : 
+				       notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+				       'Gagal Memuat Konten'}
+				message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+				         notificationType === 'success' ? 'Informasi desa wisata telah siap untuk dilihat' : 
+				         'Terjadi kesalahan saat memuat konten'}
+				type={notificationType}
+				onClose={() => setShowExploreNotification(false)}
+				onRefresh={() => window.location.reload()}
+				autoClose={notificationType !== 'loading'}
+				autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
 			/>
 		</div>
 	);

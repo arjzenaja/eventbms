@@ -300,6 +300,9 @@ const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug 
                       message: `${menu.name} • x${quantity}`,
                     });
                   }}
+                  hideAddToCart={true}
+                  hideDirectBuy={true}
+                  hideQuantity={true}
                 />
               </div>
             ))}
@@ -388,6 +391,9 @@ const   SimpleMenuSection = ({ destinationTitle, destinationId, destinationSlug 
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onConfirm={handleOrderConfirm}
+          hideAddToCart={true}
+          hideDirectBuy={true}
+          hideQuantity={true}
         />
       )}
     </div>

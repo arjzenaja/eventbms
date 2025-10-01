@@ -415,6 +415,7 @@ const InteractiveMap = ({ destination, onDistanceCalculated }) => {
         );
       }
 
+  const SHOW_WAZE_APPLE = false; // hide Waze & Apple Maps (not removed)
   return (
     <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-gray-600 shadow-lg">
       <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-3">
@@ -456,6 +457,7 @@ const InteractiveMap = ({ destination, onDistanceCalculated }) => {
             >
               <BiNavigation className="w-4 h-4" />
             </button>
+            {SHOW_WAZE_APPLE && (
             <button
               onClick={() => openInMaps('waze')}
               className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg shadow-lg transition-all duration-300 hover:scale-105"
@@ -465,6 +467,7 @@ const InteractiveMap = ({ destination, onDistanceCalculated }) => {
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
               </svg>
             </button>
+            )}
           </div>
         )}
 
@@ -497,6 +500,7 @@ const InteractiveMap = ({ destination, onDistanceCalculated }) => {
       </div>
 
       {/* Additional Navigation Options */}
+      {SHOW_WAZE_APPLE && (
       <div className="flex flex-wrap gap-2 mt-3">
         <button
           onClick={() => openInMaps('apple')}
@@ -518,6 +522,7 @@ const InteractiveMap = ({ destination, onDistanceCalculated }) => {
           Waze
         </button>
       </div>
+      )}
     </div>
   );
 };

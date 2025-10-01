@@ -11,6 +11,8 @@ import SmartMap from "../../../../components/SmartMap";
 import TravelAgencyManager from "../../../../components/TravelAgencyManager";
 import TravelAgencyPriceList from "../../../../components/TravelAgencyPriceList";
 import RatingReviews from "../../../../components/RatingReviews";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const BiroPerjalananDetail = () => {
 	const { id } = useParams();
@@ -19,22 +21,39 @@ const BiroPerjalananDetail = () => {
 	const [error, setError] = useState(null);
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
+	const [showLoadingToast, setShowLoadingToast] = useState(false);
+	const [showExploreNotification, setShowExploreNotification] = useState(false);
+	const [notificationType, setNotificationType] = useState('loading');
 
 	useEffect(() => {
 		const fetchDestination = async () => {
-			try {
-				setIsLoading(true);
-				const res = await fetch(`/api/biro_perjalanan/${id}`);
-				if (!res.ok) {
-					throw new Error("Failed to fetch destination");
-				}
-				const data = await res.json();
-				setDestination(data.biro_perjalanan || data.destination || data);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setIsLoading(false);
+		try {
+			setIsLoading(true);
+			setShowLoadingToast(true);
+			setShowExploreNotification(true);
+			setNotificationType('loading');
+			const res = await fetch(`/api/biro_perjalanan/${id}`);
+			if (!res.ok) {
+				throw new Error("Failed to fetch destination");
 			}
+			const data = await res.json();
+			setDestination(data.biro_perjalanan || data.destination || data);
+			
+			// Show success notification
+			setNotificationType('success');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 2000);
+		} catch (err) {
+			setError(err.message);
+			setNotificationType('error');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 3000);
+		} finally {
+			setIsLoading(false);
+			setShowLoadingToast(false);
+		}
 		};
 
 		if (id) {
@@ -520,6 +539,30 @@ const BiroPerjalananDetail = () => {
 					<TravelAgencyPriceList destination={destination} contactInfo={contactInfo} />
 				</div>
 			</div>
+			
+			{/* Loading Toast */}
+			<LoadingToast 
+				show={showLoadingToast}
+				title="Memuat konten biro perjalanan..."
+				message="Mohon tunggu sebentar"
+				onClose={() => setShowLoadingToast(false)}
+			/>
+			
+			{/* Explore Notification */}
+			<ExploreNotification 
+				show={showExploreNotification}
+				title={notificationType === 'loading' ? 'Memuat Konten Biro Perjalanan...' : 
+				       notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+				       'Gagal Memuat Konten'}
+				message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+				         notificationType === 'success' ? 'Informasi biro perjalanan telah siap untuk dilihat' : 
+				         'Terjadi kesalahan saat memuat konten'}
+				type={notificationType}
+				onClose={() => setShowExploreNotification(false)}
+				onRefresh={() => window.location.reload()}
+				autoClose={notificationType !== 'loading'}
+				autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+			/>
 		</div>
 	);
 };

@@ -4,16 +4,19 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { BiMap, BiPhone, BiTime, BiMoney, BiStar, BiHeart, BiShare, BiArrowBack } from "react-icons/bi";
-import { FaWhatsapp, FaInstagram, FaGlobe } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram, FaGlobe, FaUtensils } from "react-icons/fa";
 import PhotoGallery from "../../../../components/PhotoGallery";
 import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
+import MiniMap from "../../../../components/MiniMap";
 import RatingReviews from "../../../../components/RatingReviews";
 
 import SimpleMenuSection from "../../../../components/SimpleMenuSection";
 import FloatingCartButton from "../../../../components/FloatingCartButton";
 import { useCulinaryCart } from "../../../../context/CulinaryCartContext";
 import useMenuData from "@/hooks/useMenuData";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const FloatingCartButtonWrapper = () => {
 	const { items, totalItems, totalPrice, updateQuantity, removeFromCart, clearCart, destination } = useCulinaryCart();
@@ -37,6 +40,9 @@ const KulinerContent = () => {
 	const [error, setError] = useState(null);
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
+	const [showLoadingToast, setShowLoadingToast] = useState(false);
+	const [showExploreNotification, setShowExploreNotification] = useState(false);
+	const [notificationType, setNotificationType] = useState('loading');
 	const { setDestination: setCartDestination } = useCulinaryCart();
 
 	// Fetch menus for this kuliner to show accurate count in stat card
@@ -44,21 +50,35 @@ const KulinerContent = () => {
 
 	useEffect(() => {
 		const fetchDestination = async () => {
-			try {
-				setIsLoading(true);
-				const res = await fetch(`/api/kuliner/${id}`);
-				if (!res.ok) {
-					throw new Error("Failed to fetch destination");
-				}
-				const data = await res.json();
-				const destData = data.kuliner || data.destination || data;
-				setDestination(destData);
-				setCartDestination(destData);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setIsLoading(false);
+		try {
+			setIsLoading(true);
+			setShowLoadingToast(true);
+			setShowExploreNotification(true);
+			setNotificationType('loading');
+			const res = await fetch(`/api/kuliner/${id}`);
+			if (!res.ok) {
+				throw new Error("Failed to fetch destination");
 			}
+			const data = await res.json();
+			const destData = data.kuliner || data.destination || data;
+			setDestination(destData);
+			setCartDestination(destData);
+			
+			// Show success notification
+			setNotificationType('success');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 2000);
+		} catch (err) {
+			setError(err.message);
+			setNotificationType('error');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 3000);
+		} finally {
+			setIsLoading(false);
+			setShowLoadingToast(false);
+		}
 		};
 
 		if (id) {
@@ -256,7 +276,7 @@ const KulinerContent = () => {
 						</div>
 						<div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 text-center border border-white/60 dark:border-gray-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">
 							<div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2 group-hover:scale-110 transition-transform">
-								{destination.opening_hours ? 'Buka' : '24/7'}
+								{destination.opening_hours || '24/7'}
 							</div>
 							<div className="text-sm text-gray-600 dark:text-gray-400 font-medium">Jam Buka</div>
 						</div>
@@ -662,12 +682,10 @@ const KulinerContent = () => {
 										)}
 
 										{/* Enhanced Cuisine Type */}
-										{destination.cuisine && (
+                                        {destination.cuisine && (
 											<div className="group/item flex items-center gap-4 p-4 bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-2xl border border-pink-200 dark:border-pink-700 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
 												<div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
-													<svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-													</svg>
+                                                    <FaUtensils className="text-white text-lg" />
 												</div>
 												<div className="flex-1">
 													<p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Jenis Masakan</p>
@@ -677,7 +695,7 @@ const KulinerContent = () => {
 										)}
 
 										{/* Enhanced Address */}
-										{destination.address && (
+                                        {destination.address && (
 											<div className="group/item flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl border border-blue-200 dark:border-blue-700 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
 												<div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
 													<BiMap className="text-white text-lg" />
@@ -688,6 +706,8 @@ const KulinerContent = () => {
 												</div>
 											</div>
 										)}
+
+                                        {/* Mini Map preview moved inside MapFallback */}
 
 										{/* Enhanced Opening Hours */}
 										{destination.opening_hours && (
@@ -887,6 +907,30 @@ const KulinerContent = () => {
 			
 			{/* Floating Cart Button */}
 			<FloatingCartButtonWrapper />
+			
+			{/* Loading Toast */}
+			<LoadingToast 
+				show={showLoadingToast}
+				title="Memuat konten kuliner..."
+				message="Mohon tunggu sebentar"
+				onClose={() => setShowLoadingToast(false)}
+			/>
+			
+			{/* Explore Notification */}
+			<ExploreNotification 
+				show={showExploreNotification}
+				title={notificationType === 'loading' ? 'Memuat Konten Kuliner...' : 
+				       notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+				       'Gagal Memuat Konten'}
+				message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+				         notificationType === 'success' ? 'Informasi kuliner telah siap untuk dilihat' : 
+				         'Terjadi kesalahan saat memuat konten'}
+				type={notificationType}
+				onClose={() => setShowExploreNotification(false)}
+				onRefresh={() => window.location.reload()}
+				autoClose={notificationType !== 'loading'}
+				autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+			/>
 		</div>
 	);
 };

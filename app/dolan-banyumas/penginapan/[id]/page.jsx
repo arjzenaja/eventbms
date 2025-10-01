@@ -10,6 +10,8 @@ import ErrorBoundary from "../../../../components/ErrorBoundary";
 import SmartMap from "../../../../components/SmartMap";
 import RatingReviews from "../../../../components/RatingReviews";
 import { useTheme } from "../../../../context/ThemeContext";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 
 const PenginapanDetail = () => {
@@ -21,6 +23,9 @@ const PenginapanDetail = () => {
   const [mapDistance, setMapDistance] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [showLoadingToast, setShowLoadingToast] = useState(false);
+  const [showExploreNotification, setShowExploreNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState('loading');
 
   const roomItems = useMemo(() => {
     if (Array.isArray(destination?.rooms)) return destination.rooms;
@@ -128,6 +133,9 @@ const PenginapanDetail = () => {
     const fetchDestination = async () => {
       try {
         setIsLoading(true);
+        setShowLoadingToast(true);
+        setShowExploreNotification(true);
+        setNotificationType('loading');
         const res = await fetch(`/api/penginapan/${id}`);
         if (!res.ok) {
           throw new Error("Failed to fetch destination");
@@ -167,10 +175,21 @@ const PenginapanDetail = () => {
         }
 
         setDestination(acc);
+        
+        // Show success notification
+        setNotificationType('success');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 2000);
       } catch (err) {
         setError(err.message);
+        setNotificationType('error');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 3000);
       } finally {
         setIsLoading(false);
+        setShowLoadingToast(false);
       }
     };
 
@@ -970,6 +989,30 @@ const PenginapanDetail = () => {
           </div>
         </div>
       </div>
+      
+      {/* Loading Toast */}
+      <LoadingToast 
+        show={showLoadingToast}
+        title="Memuat konten penginapan..."
+        message="Mohon tunggu sebentar"
+        onClose={() => setShowLoadingToast(false)}
+      />
+      
+      {/* Explore Notification */}
+      <ExploreNotification 
+        show={showExploreNotification}
+        title={notificationType === 'loading' ? 'Memuat Konten Penginapan...' : 
+               notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+               'Gagal Memuat Konten'}
+        message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+                 notificationType === 'success' ? 'Informasi penginapan telah siap untuk dilihat' : 
+                 'Terjadi kesalahan saat memuat konten'}
+        type={notificationType}
+        onClose={() => setShowExploreNotification(false)}
+        onRefresh={() => window.location.reload()}
+        autoClose={notificationType !== 'loading'}
+        autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { BiSearch, BiMap, BiPhone, BiStar, BiFilter, BiGrid, BiDownload, BiUser, BiCalendar, BiHeart, BiShare, BiNavigation, BiTime, BiCreditCard, BiCheckCircle, BiHelpCircle, BiRightArrowAlt, BiHome, BiMenu, BiBookOpen, BiInfoCircle } from "react-icons/bi";
+import { FaBook, FaMountain, FaUtensils, FaHotel, FaShoppingBag, FaHome, FaCar, FaLightbulb, FaSearch, FaClipboardList, FaCreditCard } from "react-icons/fa";
 import { useTheme } from '@/context/ThemeContext';
 
 // Custom CSS for animations
@@ -87,7 +88,7 @@ const TutorialPage = () => {
           <div className="relative z-10">
             <div className="mb-12">
               <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-full px-8 py-4 border border-blue-500/30 mb-8 animate-fade-in-up">
-                <span className="text-3xl animate-bounce">📚</span>
+                <FaBook className="text-3xl animate-bounce" />
                 <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent text-2xl md:text-3xl font-bold">
                   Panduan Lengkap
                 </span>
@@ -377,7 +378,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200'} rounded-2xl p-8 border shadow-xl hover:shadow-2xl transition-all duration-300`}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">💡</span>
+                  <FaLightbulb className="text-2xl" />
                 </div>
                 <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>Tips Navigasi</h3>
               </div>
@@ -479,7 +480,10 @@ const TutorialPage = () => {
             </div>
             
             <div className={`${isDark ? 'bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20' : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200'} rounded-2xl p-6 border`}>
-              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4`}>🔍 Tips Pencarian</h3>
+              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>
+                <FaSearch className="text-green-400" />
+                Tips Pencarian
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <BiCheckCircle className="text-green-400 mt-1 flex-shrink-0" />
@@ -523,7 +527,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20' : 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🏞️</span>
+                  <FaMountain className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Objek Wisata</h3>
               </div>
@@ -539,7 +543,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-500/20' : 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🍽️</span>
+                  <FaUtensils className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Kuliner</h3>
               </div>
@@ -555,7 +559,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20' : 'bg-gradient-to-br from-green-50 to-green-100 border-green-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🏨</span>
+                  <FaHotel className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Penginapan</h3>
               </div>
@@ -571,7 +575,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20' : 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🛍️</span>
+                  <FaShoppingBag className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Oleh-Oleh</h3>
               </div>
@@ -587,7 +591,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-teal-500/10 to-teal-600/10 border-teal-500/20' : 'bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-teal-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🏘️</span>
+                  <FaHome className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Desa Wisata</h3>
               </div>
@@ -603,7 +607,7 @@ const TutorialPage = () => {
             <div className={`${isDark ? 'bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 border-indigo-500/20' : 'bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200'} rounded-2xl p-6 border`}>
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🚗</span>
+                  <FaCar className="text-2xl" />
                 </div>
                 <h3 className={`${isDark ? 'text-white' : 'text-slate-800'} font-semibold text-lg`}>Biro Perjalanan</h3>
               </div>
@@ -684,7 +688,10 @@ const TutorialPage = () => {
             </div>
             
             <div className={`${isDark ? 'bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20' : 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-200'} rounded-2xl p-6 border`}>
-              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4`}>📋 Fitur Detail</h3>
+              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>
+                <FaClipboardList className="text-orange-400" />
+                Fitur Detail
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <BiCheckCircle className="text-orange-400 mt-1 flex-shrink-0" />
@@ -781,7 +788,10 @@ const TutorialPage = () => {
             </div>
             
             <div className={`${isDark ? 'bg-gradient-to-br from-red-500/10 to-pink-500/10 border-red-500/20' : 'bg-gradient-to-br from-red-50 to-pink-50 border-red-200'} rounded-2xl p-6 border`}>
-              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4`}>💳 Tips Booking</h3>
+              <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>
+                <FaCreditCard className="text-red-400" />
+                Tips Booking
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <BiCheckCircle className="text-red-400 mt-1 flex-shrink-0" />

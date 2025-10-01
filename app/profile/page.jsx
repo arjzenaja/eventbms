@@ -250,9 +250,9 @@ export default function UserProfile() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Aksi Akun</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-12">
               <Link href="/settings">
-                <button className="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <button className="w-full text-left p-6 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors mb-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-gray-900 dark:text-white">Pengaturan Akun</h4>
@@ -264,7 +264,7 @@ export default function UserProfile() {
               </Link>
 
               <Link href="/change-password">
-                <button className="w-full text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <button className="w-full text-left p-6 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors mb-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-semibold text-gray-900 dark:text-white">Ubah Password</h4>
@@ -277,7 +277,7 @@ export default function UserProfile() {
 
               <button
                 onClick={handleLogout}
-                className="w-full text-left p-4 border border-red-200 dark:border-red-800 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                className="w-full text-left p-6 border border-red-200 dark:border-red-800 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors mb-4"
               >
                 <div className="flex items-center justify-between">
                   <div>

@@ -3,6 +3,33 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { 
+  FaCode, 
+  FaShoppingBag, 
+  FaMountain, 
+  FaHome, 
+  FaCalendarAlt, 
+  FaUtensils, 
+  FaHotel, 
+  FaBus, 
+  FaChalkboardTeacher, 
+  FaUserTie,
+  FaRocket,
+  FaChartLine,
+  FaTrophy,
+  FaMapMarkerAlt,
+  FaGift,
+  FaCar,
+  FaLightbulb,
+  FaMap,
+  FaStar,
+  FaMobileAlt,
+  FaShieldAlt,
+  FaEnvelope,
+  FaWhatsapp,
+  FaBullseye,
+  FaLock
+} from 'react-icons/fa';
 
 const AboutPage = () => {
   return (
@@ -34,14 +61,17 @@ const AboutPage = () => {
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-12">
-            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">🎯 Terpercaya</span>
+            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm flex items-center gap-3">
+              <FaLock className="text-blue-600 dark:text-blue-400" />
+              <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">Terpercaya</span>
             </div>
-            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <span className="text-green-600 dark:text-green-400 font-bold text-lg">🌟 Terdepan</span>
+            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm flex items-center gap-3">
+              <FaStar className="text-green-600 dark:text-green-400" />
+              <span className="text-green-600 dark:text-green-400 font-bold text-lg">Terdepan</span>
             </div>
-            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <span className="text-purple-600 dark:text-purple-400 font-bold text-lg">💡 Inovatif</span>
+            <div className="group bg-white/90 dark:bg-gray-800/90 px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm flex items-center gap-3">
+              <FaLightbulb className="text-purple-600 dark:text-purple-400" />
+              <span className="text-purple-600 dark:text-purple-400 font-bold text-lg">Inovatif</span>
             </div>
           </div>
           
@@ -49,7 +79,7 @@ const AboutPage = () => {
             <Link href="/dolan-banyumas">
               <button className="group bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
                 <span className="flex items-center gap-2">
-                  🗺️ Jelajahi Sekarang
+                  <FaMap className="w-5 h-5" /> Jelajahi Sekarang
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -81,7 +111,7 @@ const AboutPage = () => {
             <div className="group text-center">
               <div className="relative mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xl">
-                  <span className="text-4xl">🚀</span>
+                  <FaRocket className="text-4xl text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                   <span className="text-blue-600 dark:text-blue-400 font-bold text-sm">1</span>
@@ -96,7 +126,7 @@ const AboutPage = () => {
             <div className="group text-center">
               <div className="relative mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xl">
-                  <span className="text-4xl">📈</span>
+                  <FaChartLine className="text-4xl text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
                   <span className="text-green-600 dark:text-green-400 font-bold text-sm">2</span>
@@ -111,7 +141,7 @@ const AboutPage = () => {
             <div className="group text-center">
               <div className="relative mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xl">
-                  <span className="text-4xl">🏆</span>
+                  <FaTrophy className="text-4xl text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
                   <span className="text-purple-600 dark:text-purple-400 font-bold text-sm">3</span>
@@ -148,7 +178,7 @@ const AboutPage = () => {
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
               <div className="text-center mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-4xl">🌟</span>
+                  <FaTrophy className="text-4xl text-white" />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Visi Kami</h2>
               </div>
@@ -176,7 +206,7 @@ const AboutPage = () => {
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
               <div className="text-center mb-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <span className="text-4xl">🎯</span>
+                  <FaRocket className="text-4xl text-white" />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Misi Kami</h2>
               </div>
@@ -224,7 +254,7 @@ const AboutPage = () => {
             {/* Wisata */}
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-3xl">🏞️</span>
+                <FaMountain className="text-3xl text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">Wisata Alam</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-6 leading-relaxed">
@@ -238,7 +268,7 @@ const AboutPage = () => {
             {/* Kuliner */}
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-3xl">🍜</span>
+                <FaUtensils className="text-3xl text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">Kuliner Lokal</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-6 leading-relaxed">
@@ -252,7 +282,7 @@ const AboutPage = () => {
             {/* Penginapan */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🏨</span>
+                <FaHotel className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Penginapan</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -266,7 +296,7 @@ const AboutPage = () => {
             {/* Event */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🎉</span>
+                <FaCalendarAlt className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Event & Festival</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -280,7 +310,7 @@ const AboutPage = () => {
             {/* Desa Wisata */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🏘️</span>
+                <FaHome className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Desa Wisata</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -294,7 +324,7 @@ const AboutPage = () => {
             {/* Oleh-oleh */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🛍️</span>
+                <FaGift className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Oleh-oleh</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -308,7 +338,7 @@ const AboutPage = () => {
             {/* Biro Perjalanan */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🚌</span>
+                <FaBus className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Biro Perjalanan</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -322,7 +352,7 @@ const AboutPage = () => {
             {/* Transportasi */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🚗</span>
+                <FaCar className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Transportasi</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -336,7 +366,7 @@ const AboutPage = () => {
             {/* Tips Wisata */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">💡</span>
+                <FaLightbulb className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Tips Wisata</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -350,7 +380,7 @@ const AboutPage = () => {
             {/* Peta Digital */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">🗺️</span>
+                <FaMap className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Peta Digital</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -364,7 +394,7 @@ const AboutPage = () => {
             {/* Review & Rating */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">⭐</span>
+                <FaStar className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Review & Rating</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -378,7 +408,7 @@ const AboutPage = () => {
             {/* Booking Online */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <span className="text-2xl">📱</span>
+                <FaMobileAlt className="text-2xl text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3 text-center">Booking Online</h3>
               <p className="text-gray-600 dark:text-gray-300 text-center text-sm mb-4">
@@ -461,7 +491,7 @@ const AboutPage = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl">🔒</span>
+                <FaLock className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">Terpercaya</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -476,7 +506,7 @@ const AboutPage = () => {
 
             <div className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl">📱</span>
+                <FaMobileAlt className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">Mudah Digunakan</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -491,7 +521,7 @@ const AboutPage = () => {
 
             <div className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl">💡</span>
+                <FaLightbulb className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">Informasi Lengkap</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -508,48 +538,203 @@ const AboutPage = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-16 px-4 bg-white/50 dark:bg-gray-800/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-              Tim Kami
+      <section className="py-20 px-4 bg-gradient-to-br from-white/80 to-gray-50/80 dark:from-gray-800/80 dark:to-gray-900/80 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/20 to-green-50/20 dark:from-blue-900/10 dark:to-green-900/10"></div>
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 px-4 py-2 rounded-full shadow-lg mb-6">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Tim Dolan Banyumas</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6">
+              Tim <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">SMK Telkom Purwokerto</span> 
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Dedikasi dan passion tim kami untuk menghadirkan yang terbaik
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Siswa-siswa berprestasi SMK Telkom Purwokerto yang mengembangkan platform wisata Dolan Banyumas sebagai proyek pembelajaran
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">👨‍💻</span>
+          {/* Core Team */}
+          <div className="mb-20">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">
+              Tim <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Development</span>
+            </h3>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Lead Developer */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-6">
+                  <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaCode className="text-5xl text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Arjzen Junika Imato</h4>
+                  <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">Full Stack Developer</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Kelas XII PPLG 1</p>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                    Mengembangkan platform Dolan Banyumas dari frontend hingga backend. 
+                    Menguasai teknologi web modern dan database management.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">Next.js</span>
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">React</span>
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">Node.js</span>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">Tim Development</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Mengembangkan platform dengan teknologi terkini dan user experience terbaik
-              </p>
-            </div>
 
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">📸</span>
+              {/* QA - Rasya Haidarulloh */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-6">
+                  <div className="w-32 h-32 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaShieldAlt className="text-5xl text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Rasya Haidarulloh</h4>
+                  <p className="text-red-600 dark:text-red-400 font-semibold text-lg">Quality Assurance</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Kelas XII PPLG 6</p>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
+                    Menguji fitur, menulis test scenario, dan memastikan stabilitas platform sebelum rilis.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">Tim Content</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Menghadirkan konten berkualitas tinggi dan informasi yang akurat
-              </p>
-            </div>
 
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🤝</span>
+              {/* QA - Fadhil Haidar Rais */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-6">
+                  <div className="w-32 h-32 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaShieldAlt className="text-5xl text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Fadhil Haidar Rais</h4>
+                  <p className="text-red-600 dark:text-red-400 font-semibold text-lg">Quality Assurance</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Kelas XII PPLG 2</p>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
+                    Menyusun checklist QA, regression testing, dan validasi pengalaman pengguna.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">Tim Partnership</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Membangun kerjasama dengan mitra lokal dan destinasi wisata
-              </p>
+
             </div>
           </div>
+
+          {/* Support Team */}
+          <div className="mb-20">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">
+              Tim <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Pencarian Data</span>
+            </h3>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Data Oleh-Oleh */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaShoppingBag className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Diaz Nawfal Mu'afa</h4>
+                  <p className="text-orange-600 dark:text-orange-400 font-semibold text-sm">Data Oleh-Oleh</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 2</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan dan mengolah data oleh-oleh khas Banyumas untuk platform.
+                </p>
+              </div>
+
+              {/* Data Objek Wisata */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaMountain className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Fadhil Haidar Rais</h4>
+                  <p className="text-blue-600 dark:text-blue-400 font-semibold text-sm">Data Objek Wisata</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 2</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data objek wisata alam dan budaya di Banyumas.
+                </p>
+              </div>
+
+              {/* Data Desa Wisata */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaHome className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Fawwaz Muhammad Al Khawarizmi</h4>
+                  <p className="text-green-600 dark:text-green-400 font-semibold text-sm">Data Desa Wisata</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 3</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data desa wisata dan potensi wisata pedesaan Banyumas.
+                </p>
+              </div>
+
+              {/* Data Event dan Acara */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaCalendarAlt className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Kent Gianandra Athallah</h4>
+                  <p className="text-purple-600 dark:text-purple-400 font-semibold text-sm">Data Event dan Acara</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 4</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data event, festival, dan acara budaya di Banyumas.
+                </p>
+              </div>
+
+              {/* Data Kuliner */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaUtensils className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Nauval Unggul Lintang Safif</h4>
+                  <p className="text-red-600 dark:text-red-400 font-semibold text-sm">Data Kuliner</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 6</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data kuliner khas dan tempat makan di Banyumas.
+              </p>
+            </div>
+
+              {/* Data Penginapan */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaHotel className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Rafif Bagus Putra Pratama</h4>
+                  <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm">Data Penginapan</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 6</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data hotel, villa, dan penginapan di Banyumas.
+                </p>
+              </div>
+
+              {/* Data Biro Perjalanan */}
+              <div className="group bg-white/90 dark:bg-gray-800/90 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+                <div className="text-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FaBus className="text-3xl text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Rasya Haidarulloh</h4>
+                  <p className="text-teal-600 dark:text-teal-400 font-semibold text-sm">Data Biro Perjalanan</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Kelas XII PPLG 6</p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed">
+                  Mengumpulkan data biro perjalanan dan layanan tour di Banyumas.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -577,7 +762,7 @@ const AboutPage = () => {
                 <Link href="/dolan-banyumas">
                   <button className="group px-10 py-5 bg-white text-blue-600 font-bold text-lg rounded-2xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl transform">
                     <span className="flex items-center gap-3">
-                      🗺️ Jelajahi Sekarang
+                      <FaMap className="w-5 h-5" /> Jelajahi Sekarang
                       <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
@@ -587,7 +772,7 @@ const AboutPage = () => {
                 <Link href="/">
                   <button className="group px-10 py-5 bg-transparent border-2 border-white text-white font-bold text-lg rounded-2xl hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
                     <span className="flex items-center gap-3">
-                      🏠 Kembali ke Beranda
+                      <FaHome className="w-5 h-5" /> Kembali ke Beranda
                       <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
@@ -598,6 +783,8 @@ const AboutPage = () => {
             </div>
           </div>
         </div>
+
+        
       </section>
 
       {/* Contact Info */}
@@ -619,7 +806,7 @@ const AboutPage = () => {
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-3xl">📧</span>
+                <FaEnvelope className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Email</h3>
               <p className="text-gray-600 dark:text-gray-300 font-medium">info@dolanbanyumas.com</p>
@@ -627,7 +814,7 @@ const AboutPage = () => {
             </div>
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-3xl">📱</span>
+                <FaWhatsapp className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">WhatsApp</h3>
               <p className="text-gray-600 dark:text-gray-300 font-medium">+62 812-3456-7890</p>
@@ -635,7 +822,7 @@ const AboutPage = () => {
             </div>
             <div className="group bg-white/90 dark:bg-gray-800/90 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
               <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <span className="text-3xl">📍</span>
+                <FaMapMarkerAlt className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Lokasi</h3>
               <p className="text-gray-600 dark:text-gray-300 font-medium">Banyumas, Jawa Tengah</p>

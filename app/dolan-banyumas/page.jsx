@@ -1,11 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { BiMap, BiSearch, BiFilter, BiGrid, BiStar, BiPhone } from "react-icons/bi";
+import {
+  FaMountain,
+  FaTree,
+  FaLandmark,
+  FaBookOpen,
+  FaIndustry,
+  FaBullseye,
+  FaChurch,
+  FaUtensils,
+  FaCoffee,
+  FaHotel,
+  FaHome,
+  FaGift,
+  FaTshirt,
+  FaCookieBite,
+  FaBus,
+  FaCalendarAlt,
+  FaStar
+} from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import { useTheme } from '@/context/ThemeContext';
+import LoadingToast from "../../components/LoadingToast";
+import ExploreNotification from "../../components/ExploreNotification";
 
 // Loading Skeleton Component
 const DestinationSkeleton = ({ viewMode }) => {
@@ -38,7 +60,7 @@ const DestinationSkeleton = ({ viewMode }) => {
   );
 };
 
-const DestinationsPage = () => {
+const DestinationsPageContent = () => {
   const { isDark } = useTheme();
   const searchParams = useSearchParams();
   const [destinations, setDestinations] = useState({});
@@ -49,6 +71,9 @@ const DestinationsPage = () => {
   const [viewMode, setViewMode] = useState("grid"); // grid or list
   const [sortBy, setSortBy] = useState("name"); // name, rating, location
   const [error, setError] = useState(null);
+  const [showLoadingToast, setShowLoadingToast] = useState(false);
+  const [showExploreNotification, setShowExploreNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState('loading');
 
   // Parse features if it's a string JSON
   const parseFeatures = (features) => {
@@ -90,51 +115,51 @@ const DestinationsPage = () => {
 
   // Type definitions for each category
   const objekWisataTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🏔️' },
-    { value: 'wisata-alam', label: 'Wisata Alam', icon: '🌲' },
-    { value: 'wisata-taman', label: 'Wisata Taman', icon: '🌺' },
-    { value: 'wisata-budaya', label: 'Wisata Budaya', icon: '🏛️' },
-    { value: 'wisata-sejarah', label: 'Wisata Sejarah', icon: '📜' },
-    { value: 'wisata-buatan', label: 'Wisata Buatan', icon: '🎡' },
-    { value: 'wisata-minat-khusus', label: 'Wisata Minat Khusus', icon: '🎯' },
-    { value: 'wisata-religi', label: 'Wisata Religi', icon: '⛪' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaMountain /> },
+    { value: 'wisata-alam', label: 'Wisata Alam', icon: <FaTree /> },
+    { value: 'wisata-taman', label: 'Wisata Taman', icon: <FaTree /> },
+    { value: 'wisata-budaya', label: 'Wisata Budaya', icon: <FaLandmark /> },
+    { value: 'wisata-sejarah', label: 'Wisata Sejarah', icon: <FaBookOpen /> },
+    { value: 'wisata-buatan', label: 'Wisata Buatan', icon: <FaIndustry /> },
+    { value: 'wisata-minat-khusus', label: 'Wisata Minat Khusus', icon: <FaBullseye /> },
+    { value: 'wisata-religi', label: 'Wisata Religi', icon: <FaChurch /> }
   ];
 
   const kulinerTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🍽️' },
-    { value: 'cafe', label: 'Cafe', icon: '☕' },
-    { value: 'resto', label: 'Resto', icon: '🍴' },
-    { value: 'kedai', label: 'Kedai', icon: '🍜' },
-    { value: 'rumah-makan', label: 'Rumah Makan', icon: '🍚' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaUtensils /> },
+    { value: 'cafe', label: 'Cafe', icon: <FaCoffee /> },
+    { value: 'resto', label: 'Resto', icon: <FaUtensils /> },
+    { value: 'kedai', label: 'Kedai', icon: <FaUtensils /> },
+    { value: 'rumah-makan', label: 'Rumah Makan', icon: <FaUtensils /> }
   ];
 
   const penginapanTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🏨' },
-    { value: 'hotel', label: 'Hotel', icon: '🏨' },
-    { value: 'vila', label: 'Vila', icon: '🏡' },
-    { value: 'homestay', label: 'Homestay', icon: '🏘️' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaHotel /> },
+    { value: 'hotel', label: 'Hotel', icon: <FaHotel /> },
+    { value: 'vila', label: 'Vila', icon: <FaHome /> },
+    { value: 'homestay', label: 'Homestay', icon: <FaHome /> }
   ];
 
   const olehOlehTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🛍️' },
-    { value: 'pakaian', label: 'Pakaian', icon: '👕' },
-    { value: 'makanan', label: 'Makanan', icon: '🍪' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaGift /> },
+    { value: 'pakaian', label: 'Pakaian', icon: <FaTshirt /> },
+    { value: 'makanan', label: 'Makanan', icon: <FaCookieBite /> }
   ];
 
   const desaWisataTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🏘️' },
-    { value: 'desa-wisata', label: 'Desa Wisata', icon: '🏘️' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaHome /> },
+    { value: 'desa-wisata', label: 'Desa Wisata', icon: <FaHome /> }
   ];
 
   const biroPerjalananTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🚌' },
-    { value: 'biro-perjalanan', label: 'Biro Perjalanan', icon: '🚌' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaBus /> },
+    { value: 'biro-perjalanan', label: 'Biro Perjalanan', icon: <FaBus /> }
   ];
 
   const eventTypes = [
-    { value: 'semua', label: 'Semua Jenis', icon: '🎉' },
-    { value: 'event-banyumas', label: 'Event Banyumas', icon: '🎊' },
-    { value: 'event', label: 'Event', icon: '🎉' }
+    { value: 'semua', label: 'Semua Jenis', icon: <FaCalendarAlt /> },
+    { value: 'event-banyumas', label: 'Event Banyumas', icon: <FaCalendarAlt /> },
+    { value: 'event', label: 'Event', icon: <FaCalendarAlt /> }
   ];
 
   // Reset type filters when category changes
@@ -201,6 +226,9 @@ const DestinationsPage = () => {
     const fetchDestinations = async () => {
       try {
         setIsLoading(true);
+        setShowLoadingToast(true);
+        setShowExploreNotification(true);
+        setNotificationType('loading');
         setError(null);
         const res = await fetch("/api/destinations");
         if (!res.ok) throw new Error("Failed to fetch destinations");
@@ -217,11 +245,22 @@ const DestinationsPage = () => {
           }));
         });
         setFilteredData(allData);
+        
+        // Show success notification
+        setNotificationType('success');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 2000);
       } catch (error) {
         console.error("Error fetching destinations:", error);
         setError("Gagal memuat data destinasi. Silakan coba lagi.");
+        setNotificationType('error');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 3000);
       } finally {
         setIsLoading(false);
+        setShowLoadingToast(false);
       }
     };
 
@@ -318,15 +357,15 @@ const DestinationsPage = () => {
 
   const getCategoryIcon = (category) => {
     const icons = {
-      "Objek Wisata": "🏞️",
-      "Kuliner": "🍽️",
-      "Penginapan": "🏨",
-      "Oleh-Oleh": "🛍️",
-      "Desa Wisata": "🏘️",
-      "Biro Perjalanan": "🚗",
-      "Events & Acara": "🎉"
+      "Objek Wisata": <FaMountain className="w-4 h-4" />,
+      "Kuliner": <FaUtensils className="w-4 h-4" />,
+      "Penginapan": <FaHotel className="w-4 h-4" />,
+      "Oleh-Oleh": <FaGift className="w-4 h-4" />,
+      "Desa Wisata": <FaHome className="w-4 h-4" />,
+      "Biro Perjalanan": <FaBus className="w-4 h-4" />,
+      "Events & Acara": <FaCalendarAlt className="w-4 h-4" />
     };
-    return icons[category] || "📍";
+    return icons[category] || <BiMap className="w-4 h-4" />;
   };
 
   const getCategoryAccent = (category) => {
@@ -368,7 +407,7 @@ const DestinationsPage = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
-              <div className="text-6xl mb-4">⚠️</div>
+              <div className="text-6xl mb-4 flex justify-center"><FaExclamationTriangle /></div>
               <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-4">Terjadi Kesalahan</h3>
               <p className="text-slate-600 dark:text-gray-300 text-lg mb-6">{error}</p>
               <button
@@ -431,10 +470,10 @@ const DestinationsPage = () => {
         {/* Hero Section - Colorful & Beautiful */}
         <div className="text-center mb-20">
           <div className="mb-10">
-                        <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-400 via-blue-500 via-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent text-2xl md:text-3xl font-black mb-8 animate-bounce">
-              <span className="text-4xl">🌟</span>
+            <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-400 via-blue-500 via-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent text-2xl md:text-3xl font-black mb-8 animate-bounce">
+              <FaStar className="w-6 h-6" />
               <span>JELAJAHI KEINDAHAN</span>
-              <span className="text-4xl">✨</span>
+              <FaStar className="w-6 h-6" />
             </div>
           </div>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
@@ -1313,8 +1352,45 @@ const DestinationsPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Loading Toast */}
+      <LoadingToast 
+        show={showLoadingToast}
+        title="Memuat data destinasi..."
+        message="Mohon tunggu sebentar"
+        onClose={() => setShowLoadingToast(false)}
+      />
+      
+      {/* Explore Notification */}
+      <ExploreNotification 
+        show={showExploreNotification}
+        title={notificationType === 'loading' ? 'Memuat Data Destinasi...' : 
+               notificationType === 'success' ? 'Data Berhasil Dimuat!' : 
+               'Gagal Memuat Data'}
+        message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+                 notificationType === 'success' ? 'Semua destinasi telah siap untuk dijelajahi' : 
+                 'Terjadi kesalahan saat memuat data'}
+        type={notificationType}
+        onClose={() => setShowExploreNotification(false)}
+        onRefresh={() => window.location.reload()}
+        autoClose={notificationType !== 'loading'}
+        autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+      />
     </div>
   );
 };
 
-export default DestinationsPage;
+export default function DestinationsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat halaman...</p>
+        </div>
+      </div>
+    }>
+      <DestinationsPageContent />
+    </Suspense>
+  );
+}

@@ -8,7 +8,7 @@ import { useCulinaryCart } from '../context/CulinaryCartContext';
 import { useNotifications } from './NotificationProvider';
 import { useRouter } from 'next/navigation';
 
-const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm, hideAddToCart = false, hideWhatsAppOrder = false, contextType = 'culinary' }) => {
+const BuyMenuModal = ({ menu, isOpen, onClose, onConfirm, hideAddToCart = false, hideWhatsAppOrder = false, hideDirectBuy = false, hideQuantity = false, contextType = 'culinary' }) => {
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -325,6 +325,7 @@ Apakah masih tersedia? Terima kasih!`;
           )}
 
           {/* Enhanced Quantity Selection */}
+          {!hideQuantity && (
           <div className="mb-6">
             <label className="block text-lg font-bold text-gray-900 dark:text-white mb-4">
               Jumlah Pesanan
@@ -356,6 +357,7 @@ Apakah masih tersedia? Terima kasih!`;
               </p>
             </div>
           </div>
+          )}
 
           {/* Enhanced Special Instructions */}
           <div className="mb-6">
@@ -440,6 +442,7 @@ Apakah masih tersedia? Terima kasih!`;
               </button>
             )}
             
+            {!hideDirectBuy && (
             <button
               onClick={handleConfirm}
               disabled={isProcessing}
@@ -448,6 +451,7 @@ Apakah masih tersedia? Terima kasih!`;
               <BiCart className="text-xl" />
               {isProcessing ? 'Memproses...' : 'Beli Langsung'}
             </button>
+            )}
             
             {!hideWhatsAppOrder && (
               <button

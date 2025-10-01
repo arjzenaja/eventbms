@@ -13,29 +13,49 @@ import WisataPackages from "../../../../components/WisataPackages";
 import BuyTicket from "../../../../components/BuyTicket";
 import RatingReviews from "../../../../components/RatingReviews";
 import { TicketProvider } from "../../../../context/TicketContext";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const WisataDetail = () => {
+  const SHOW_WISATA_TICKET = false; // hide Buy Ticket section (not deleted)
   const { id } = useParams();
   const [destination, setDestination] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mapDistance, setMapDistance] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [showLoadingToast, setShowLoadingToast] = useState(false);
+  const [showExploreNotification, setShowExploreNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState('loading');
 
   useEffect(() => {
     const fetchDestination = async () => {
       try {
         setIsLoading(true);
+        setShowLoadingToast(true);
+        setShowExploreNotification(true);
+        setNotificationType('loading');
         const res = await fetch(`/api/wisata/${id}?t=${Date.now()}` , { cache: 'no-store' });
         if (!res.ok) {
           throw new Error("Failed to fetch destination");
         }
         const data = await res.json();
         setDestination(data.wisata || data.destination || data);
+        
+        // Show success notification
+        setNotificationType('success');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 2000);
       } catch (err) {
         setError(err.message);
+        setNotificationType('error');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 3000);
       } finally {
         setIsLoading(false);
+        setShowLoadingToast(false);
       }
     };
 
@@ -616,8 +636,8 @@ const WisataDetail = () => {
                 </div>
               )}
 
-              {/* Purchase Section */}
-              {destination.entrance_fee && (
+              {/* Purchase Section (hidden by flag) */}
+              {SHOW_WISATA_TICKET && destination.entrance_fee && (
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 backdrop-blur-sm rounded-3xl p-6 border border-blue-200/50 dark:border-blue-700/50 shadow-xl">
                   {/* Header with Icon */}
                   <div className="flex items-center gap-3 mb-6">
@@ -933,6 +953,30 @@ const WisataDetail = () => {
           />
         </div>
       </div>
+      
+      {/* Loading Toast */}
+      <LoadingToast 
+        show={showLoadingToast}
+        title="Memuat konten wisata..."
+        message="Mohon tunggu sebentar"
+        onClose={() => setShowLoadingToast(false)}
+      />
+      
+      {/* Explore Notification */}
+      <ExploreNotification 
+        show={showExploreNotification}
+        title={notificationType === 'loading' ? 'Memuat Konten Wisata...' : 
+               notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+               'Gagal Memuat Konten'}
+        message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+                 notificationType === 'success' ? 'Informasi wisata telah siap untuk dilihat' : 
+                 'Terjadi kesalahan saat memuat konten'}
+        type={notificationType}
+        onClose={() => setShowExploreNotification(false)}
+        onRefresh={() => window.location.reload()}
+        autoClose={notificationType !== 'loading'}
+        autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+      />
     </div>
   );
 };

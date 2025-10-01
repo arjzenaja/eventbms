@@ -2,6 +2,7 @@
 import { BiMap, BiNavigation, BiTime, BiCar, BiWalk, BiCurrentLocation } from 'react-icons/bi';
 
 const MapFallback = ({ destination }) => {
+  const SHOW_WAZE_APPLE = false; // hide Waze & Apple Maps (not removed)
   // Get destination coordinates for fallback
   const getDestinationCoords = () => {
     // First try to get from separate latitude/longitude fields
@@ -84,6 +85,8 @@ const MapFallback = ({ destination }) => {
     });
   };
 
+  const mapEmbedUrl = `https://www.google.com/maps?q=${Number(destinationCoords.lat)},${Number(destinationCoords.lng)}&hl=id&z=16&output=embed`;
+  const mapViewUrl = `https://www.google.com/maps/search/?api=1&query=${Number(destinationCoords.lat)},${Number(destinationCoords.lng)}`;
   return (
     <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-gray-800/90 dark:to-blue-900/20 backdrop-blur-md rounded-3xl p-8 border border-slate-200/50 dark:border-gray-600/50 shadow-2xl relative overflow-hidden group">
       {/* Background decoration */}
@@ -136,6 +139,29 @@ const MapFallback = ({ destination }) => {
         </div>
       </div>
 
+      {/* Mini Map Embed */}
+      <div className="rounded-2xl overflow-hidden border border-slate-200/60 dark:border-gray-600/60 shadow-lg mb-8">
+        <div className="relative" style={{ height: 200 }}>
+          <iframe
+            title="Mini Map"
+            src={mapEmbedUrl}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+          <a
+            href={mapViewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 border border-gray-200/70 dark:border-gray-700/70 shadow"
+          >
+            Lihat di Google Maps
+          </a>
+        </div>
+      </div>
+
       {/* Navigation Buttons */}
       <div className="space-y-4">
         <button
@@ -149,6 +175,7 @@ const MapFallback = ({ destination }) => {
           <span className="text-lg group-hover:tracking-wide transition-all duration-300">Buka di Google Maps</span>
         </button>
         
+        {SHOW_WAZE_APPLE && (
         <button
           onClick={() => openInMaps('waze')}
           className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-blue-500/25 transform hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30 group relative overflow-hidden"
@@ -159,7 +186,9 @@ const MapFallback = ({ destination }) => {
           </div>
           <span className="text-lg group-hover:tracking-wide transition-all duration-300">Buka di Waze</span>
         </button>
+        )}
         
+        {SHOW_WAZE_APPLE && (
         <button
           onClick={() => openInMaps('apple')}
           className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-gray-500/25 transform hover:scale-105 hover:shadow-xl hover:shadow-gray-500/30 group relative overflow-hidden"
@@ -170,6 +199,7 @@ const MapFallback = ({ destination }) => {
           </div>
           <span className="text-lg group-hover:tracking-wide transition-all duration-300">Buka di Apple Maps</span>
         </button>
+        )}
       </div>
 
       {/* Setup Notice - Hidden */}

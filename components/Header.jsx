@@ -20,6 +20,7 @@ const Header = () => {
   const userDropdownRef = useRef(null);
   const paymentDropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const SHOW_PAYMENT_MENU = false; // hide payment menu (not deleted)
 
   const handleLogout = () => {
     // Show logout success notification
@@ -277,7 +278,8 @@ const Header = () => {
                       )}
                     </div>
                     
-                    {/* Payment History Dropdown - Desktop Only */}
+                    {/* Payment History Dropdown - Desktop Only (hidden by flag) */}
+                    {SHOW_PAYMENT_MENU && (
                     <div className="hidden md:block relative" ref={paymentDropdownRef}>
                       <button
                         onClick={() => setIsPaymentDropdownOpen(!isPaymentDropdownOpen)}
@@ -336,6 +338,7 @@ const Header = () => {
                         </div>
                       )}
                     </div>
+                    )}
                     
                     {/* Logout Button - Desktop Only */}
                     <div className="hidden md:block">
@@ -442,7 +445,8 @@ const Header = () => {
                   </div>
                 </Link>
                 
-                {/* Mobile Payment History */}
+                {/* Mobile Payment History (hidden by flag) */}
+                {SHOW_PAYMENT_MENU && (
                 <Link href="/payment-history" onClick={() => setIsMobileMenuOpen(false)}>
                   <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500/20 to-emerald-600/20 backdrop-blur-sm border border-green-500/20">
                     <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
@@ -456,6 +460,7 @@ const Header = () => {
                     </div>
                   </div>
                 </Link>
+                )}
 
                 {/* Mobile Settings */}
                 <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>

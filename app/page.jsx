@@ -11,6 +11,7 @@ import DownloadApp from "@/components/DownloadApp";
 import Image from "next/image";
 import Link from "next/link";
 import { BiMap, BiStar, BiHeart, BiCamera, BiRestaurant, BiHotel, BiGift, BiCar, BiCalendar, BiTrendingUp, BiShield, BiAward } from "react-icons/bi";
+import { FaLightbulb, FaBullseye, FaRocket, FaCalendarAlt } from "react-icons/fa";
  
 
 const Home = () => {
@@ -132,7 +133,7 @@ const Home = () => {
               <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
                 <div className="space-y-8">
                   <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                    <span className="text-2xl">💡</span>
+                    <FaLightbulb className="text-2xl" />
                     <span className="font-semibold">Tentang Kami</span>
                   </div>
                   <h3 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -262,7 +263,7 @@ const Home = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                  <span className="text-2xl">🎯</span>
+                  <FaBullseye className="text-2xl" />
                   <span className="font-semibold">Layanan</span>
                 </div>
                 <h3 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -332,7 +333,7 @@ const Home = () => {
                 <div className="space-y-8">
                   <div className="text-center lg:text-left">
                     <div className="inline-flex items-center gap-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                      <span className="text-2xl">🚀</span>
+                      <FaRocket className="text-2xl" />
                       <span className="font-semibold">Layanan Premium</span>
                     </div>
                     <h3 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -539,7 +540,7 @@ const Home = () => {
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
                 <div className="inline-flex items-center gap-3 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-full mb-6 shadow-lg">
-                  <span className="text-2xl">🎉</span>
+                  <FaCalendarAlt className="text-2xl" />
                   <span className="font-semibold">Event Terbaru</span>
                 </div>
                 <h3 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">

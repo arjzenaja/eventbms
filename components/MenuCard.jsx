@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { BiCart, BiStar, BiTime, BiMoney, BiHeart, BiShare, BiPlus, BiMinus } from 'react-icons/bi';
 import { FaWhatsapp, FaHeart } from 'react-icons/fa';
 
-const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
+const MenuCard = ({ menu, onBuyClick, onAddToCart, hideAddToCart = false, hideDirectBuy = false, hideQuantity = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -254,6 +254,7 @@ const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
         </div>
 
         {/* Quantity Selector */}
+        {!hideQuantity && (
         <div className="mb-4">
           <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 rounded-xl p-2">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah:</span>
@@ -274,10 +275,12 @@ const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
             </div>
           </div>
         </div>
+        )}
 
         {/* Action Buttons - Enhanced Design */}
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
+            {!hideAddToCart && (
             <button
               onClick={handleAddToCart}
               className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3 px-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -285,6 +288,7 @@ const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
               <BiCart className="text-lg" />
               Keranjang
             </button>
+            )}
             <button
               onClick={handleWhatsAppClick}
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -295,6 +299,7 @@ const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
             </button>
           </div>
           
+          {!hideDirectBuy && (
           <button
             onClick={handleBuyClick}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -302,6 +307,7 @@ const MenuCard = ({ menu, onBuyClick, onAddToCart }) => {
             <BiCart className="text-lg" />
             Beli Sekarang
           </button>
+          )}
         </div>
 
         {/* Additional Info - Enhanced Design */}

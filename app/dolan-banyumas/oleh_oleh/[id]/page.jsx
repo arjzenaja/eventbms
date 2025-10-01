@@ -11,6 +11,8 @@ import SmartMap from "../../../../components/SmartMap";
 import RatingReviews from "../../../../components/RatingReviews";
 
 import SimpleSouvenirSection from "../../../../components/SimpleSouvenirSection";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const OlehOlehDetail = () => {
 	const { id } = useParams();
@@ -19,22 +21,39 @@ const OlehOlehDetail = () => {
 	const [error, setError] = useState(null);
 	const [mapDistance, setMapDistance] = useState(null);
 	const [isLiked, setIsLiked] = useState(false);
+	const [showLoadingToast, setShowLoadingToast] = useState(false);
+	const [showExploreNotification, setShowExploreNotification] = useState(false);
+	const [notificationType, setNotificationType] = useState('loading');
 
 	useEffect(() => {
 		const fetchDestination = async () => {
-			try {
-				setIsLoading(true);
-				const res = await fetch(`/api/oleh_oleh/${id}`);
-				if (!res.ok) {
-					throw new Error("Failed to fetch destination");
-				}
-				const data = await res.json();
-				setDestination(data.oleh_oleh || data.destination || data);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setIsLoading(false);
+		try {
+			setIsLoading(true);
+			setShowLoadingToast(true);
+			setShowExploreNotification(true);
+			setNotificationType('loading');
+			const res = await fetch(`/api/oleh_oleh/${id}`);
+			if (!res.ok) {
+				throw new Error("Failed to fetch destination");
 			}
+			const data = await res.json();
+			setDestination(data.oleh_oleh || data.destination || data);
+			
+			// Show success notification
+			setNotificationType('success');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 2000);
+		} catch (err) {
+			setError(err.message);
+			setNotificationType('error');
+			setTimeout(() => {
+				setShowExploreNotification(false);
+			}, 3000);
+		} finally {
+			setIsLoading(false);
+			setShowLoadingToast(false);
+		}
 		};
 
 		if (id) {
@@ -593,6 +612,30 @@ const OlehOlehDetail = () => {
 				destinationTitle={destination.title} 
 				destinationId={id}
 				destinationSlug={destination.slug || destination.title?.toLowerCase().replace(/\s+/g, '-')}
+			/>
+			
+			{/* Loading Toast */}
+			<LoadingToast 
+				show={showLoadingToast}
+				title="Memuat konten oleh-oleh..."
+				message="Mohon tunggu sebentar"
+				onClose={() => setShowLoadingToast(false)}
+			/>
+			
+			{/* Explore Notification */}
+			<ExploreNotification 
+				show={showExploreNotification}
+				title={notificationType === 'loading' ? 'Memuat Konten Oleh-Oleh...' : 
+				       notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+				       'Gagal Memuat Konten'}
+				message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+				         notificationType === 'success' ? 'Informasi oleh-oleh telah siap untuk dilihat' : 
+				         'Terjadi kesalahan saat memuat konten'}
+				type={notificationType}
+				onClose={() => setShowExploreNotification(false)}
+				onRefresh={() => window.location.reload()}
+				autoClose={notificationType !== 'loading'}
+				autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
 			/>
 		</div>
 	);

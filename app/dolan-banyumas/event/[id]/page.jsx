@@ -15,6 +15,8 @@ import Organizers from "../../../../components/Organizers";
 import UpcomingEvents from "../../../../components/UpcomingEvents";
 import RatingReviews from "../../../../components/RatingReviews";
 import { BiMap, BiPhone, BiTime, BiCalendar, BiShare, BiHeart, BiNavigation, BiStar, BiUser } from "react-icons/bi";
+import LoadingToast from "../../../../components/LoadingToast";
+import ExploreNotification from "../../../../components/ExploreNotification";
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -23,6 +25,9 @@ const EventDetails = () => {
   const [error, setError] = useState(null);
   const [mapDistance, setMapDistance] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [showLoadingToast, setShowLoadingToast] = useState(false);
+  const [showExploreNotification, setShowExploreNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState('loading');
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
   const sanitizedPhone = useMemo(() => {
@@ -34,14 +39,28 @@ const EventDetails = () => {
     const fetchEvent = async () => {
       try {
         setIsLoading(true);
+        setShowLoadingToast(true);
+        setShowExploreNotification(true);
+        setNotificationType('loading');
         const res = await fetch(`/api/events/${id}`);
         if (!res.ok) throw new Error("Failed to fetch event");
         const data = await res.json();
         setEvent(data.event || data);
+        
+        // Show success notification
+        setNotificationType('success');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 2000);
       } catch (e) {
         setError(e.message);
+        setNotificationType('error');
+        setTimeout(() => {
+          setShowExploreNotification(false);
+        }, 3000);
       } finally {
         setIsLoading(false);
+        setShowLoadingToast(false);
       }
     };
     if (id) fetchEvent();
@@ -595,6 +614,30 @@ const EventDetails = () => {
       {event && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "Event", name: event.title, location: event.location, startDate: event.date || event.event_date, image: [event.img_lg, event.img_sm].filter(Boolean), url: currentUrl, description: event.description || undefined }) }} />
       )}
+      
+      {/* Loading Toast */}
+      <LoadingToast 
+        show={showLoadingToast}
+        title="Memuat konten event..."
+        message="Mohon tunggu sebentar"
+        onClose={() => setShowLoadingToast(false)}
+      />
+      
+      {/* Explore Notification */}
+      <ExploreNotification 
+        show={showExploreNotification}
+        title={notificationType === 'loading' ? 'Memuat Konten Event...' : 
+               notificationType === 'success' ? 'Konten Berhasil Dimuat!' : 
+               'Gagal Memuat Konten'}
+        message={notificationType === 'loading' ? 'Mohon tunggu sebentar' : 
+                 notificationType === 'success' ? 'Informasi event telah siap untuk dilihat' : 
+                 'Terjadi kesalahan saat memuat konten'}
+        type={notificationType}
+        onClose={() => setShowExploreNotification(false)}
+        onRefresh={() => window.location.reload()}
+        autoClose={notificationType !== 'loading'}
+        autoCloseDelay={notificationType === 'success' ? 2000 : 3000}
+      />
     </div>
   );
 };

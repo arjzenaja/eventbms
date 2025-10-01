@@ -72,6 +72,7 @@ function AdminSidebar() {
     }
   };
 
+  const SHOW_PAYMENT_MENU = false; // hide payment menu (not deleted)
   const navigation = [
     {
       section: 'MAIN',
@@ -95,7 +96,8 @@ function AdminSidebar() {
     {
       section: 'TRANSAKSI',
       items: [
-        { name: 'Pembayaran', href: '/admin/payments', icon: '💳' },
+        // Conditionally include Pembayaran menu (hidden when flag is false)
+        ...(SHOW_PAYMENT_MENU ? [{ name: 'Pembayaran', href: '/admin/payments', icon: '💳' }] : []),
         { name: 'Users', href: '/admin/users', icon: '👥' }
       ]
     },
