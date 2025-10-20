@@ -56612,6 +56612,38 @@
       "verified_at": "2025-09-16T12:57:32.487Z",
       "reset_otp": "318581",
       "reset_otp_expires": 1758027992336
+    },
+    {
+      "id": "12",
+      "name": "imato junika ",
+      "email": "junikaimatoo@gmail.com",
+      "password": "junika1717",
+      "phone": "0813-2957-1256",
+      "address": "53182",
+      "role": "user",
+      "is_active": true,
+      "is_verified": true,
+      "verify_token": "1ca4c775bec214d04158ccd15c558444b97ceec332d5505a",
+      "verify_sent_at": "2025-10-05T05:45:51.435Z",
+      "created_at": "2025-10-05T05:45:51.435Z",
+      "updated_at": "2025-10-05T05:46:41.725Z",
+      "verified_at": "2025-10-05T05:46:41.725Z"
+    },
+    {
+      "id": "13",
+      "name": "Arjzen junika imato",
+      "email": "admin@test.com",
+      "password": "junika3030",
+      "phone": "0813-2957-1256",
+      "address": "53182",
+      "role": "user",
+      "is_active": true,
+      "is_verified": true,
+      "verify_token": "22ba351dd69e960f4543d6309881e73aeda54aa06cea0cee",
+      "verify_sent_at": "2025-10-05T05:47:42.465Z",
+      "created_at": "2025-10-05T05:47:42.465Z",
+      "updated_at": "2025-10-05T05:50:07.609Z",
+      "verified_at": "2025-10-05T05:50:07.609Z"
     }
   ],
   "rooms": [

@@ -255,6 +255,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Hide global horizontal scrollbar */
+html, body {
+  overflow-x: hidden;
+}
+
 /* Ensure hide takes precedence when combined with thumbnail-scroll */
 .thumbnail-scroll.scrollbar-hide {
   scrollbar-width: none !important;
